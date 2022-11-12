@@ -1,0 +1,23 @@
+html {
+  font-size: 18px;
+  color: var(--color-body);
+  font-family: var(--font-interface);
+}
+
+main#appWrap {
+  height: 100vh;
+  background: yellow;
+  display: grid;
+  grid-template-rows: 70vh 1fr;
+}
+.preview {
+  height: 100%;
+  width: 100%;
+  display: block;
+  color: blue;
+}
+
+.meta,
+.available-assets {
+  display: none;
+}

@@ -1,0 +1,33 @@
+{
+  "name": "tool",
+  "version": "0.0.0",
+  "description": "Hypercomics est un  projet de recherche autour de la bande dessinée numérique.",
+  "main": "index.js",
+  "scripts": {
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:css": "postcss --watch src/assets/css/main.css -m -o public/css/styles.css ",
+    "watch:js": "esbuild src/app/app.js --bundle --outfile=./www/js/hypercomicsBuilder.js --serve",
+    "watch:serve": "browser-sync public --server --watch",
+    "watch:html": "copy-and-watch --watch src/html/*.{html,json}  public/ ",
+    "watch:fonts": "copy-and-watch --watch src/assets/fonts/*.*  public/fonts/ "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@deanc/esbuild-plugin-postcss": "^1.0.2",
+    "axios": "^1.1.3",
+    "esbuild": "^0.15.13",
+    "nunjucks-cli": "^1.0.0",
+    "postcss-cli": "^10.0.0",
+    "postcss-import": "^15.0.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.27.10",
+    "copy-and-watch": "^0.1.6",
+    "esbuild-config": "^1.0.1",
+    "esbuild-copy-static-files": "^0.1.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.19"
+  }
+}
