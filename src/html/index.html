@@ -5,18 +5,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="css/styles.css" rel="stylesheet" />
-    <script type="module" src="js/hypercomicsBuilder.js">
+    <!-- <script type="module" src"js/hypercomicsBuilder.js"></script> -->
+    <script type="module" src="js/hypercomicsBuilder.js"></script>
   </head>
   <body>
-    <main id="appWrapp">
+    <main id="appWrap">
+
+     <section id="meta">
       <h1>Welcome to hyper comics</h1>
+      <span class="meta">project: XX, sequence: XX</span>
+     </section> 
 
-      <section class="meta">Meta</section>
-      <section class="preview">preview</section>
+      <section id="preview">
 
-      <section class="banc-montage">montage</section>
+        <h2>preview</h2>
 
-      <section class="available-assets">
+        <section id="previewButtons" class="buttons">
+          <button id="orientationChanger">change orientation</button>
+          <button id="fullPageWatcher">fullpage</button>
+          <button class="previewResizer" data-preview-height="960" data-preview-width="640">Mobile V</button>
+          <button class="previewResizer" data-preview-height="640" data-preview-width="960">Mobile H</button>
+        </section>
+        <section class="screen" id="previewScreen" >
+          <h1 style="font-size: 2em">Welcome to hypercomics</h1> 
+        </section>
+
+      </section>
+
+      <section id="banc-montage" class="show">
+          <button id="showMontage">montage</button>
+        <h2>montage</h2>
+
+
+      <section class="assets">
         <label for="assetsFilter">Filtre: </label>
         <input
           name="assetsFilter"

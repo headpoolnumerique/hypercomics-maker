@@ -1,28 +1,19 @@
 /* fonts */
 
-
 @font-face {
-  font-family: "inter";
+  font-family: 'inter';
   src: url('../fonts/inter.var.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal italic;
 }
 
-
 /* variables */
-
 
 :root {
   --color-main: rgb(215, 105, 140);
   --color-body: #121212;
-  --font-interface: "inter"
+  --font-interface: 'inter';
+  /*screen minimal size*/
+  --min-height: 800px;
+  --min-width: 400px;
 }
-
-
- 
-
-
-
-
-
-

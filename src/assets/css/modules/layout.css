@@ -2,22 +2,75 @@ html {
   font-size: 18px;
   color: var(--color-body);
   font-family: var(--font-interface);
+  scrollbar-gutter: stable;
 }
 
 main#appWrap {
   height: 100vh;
   background: yellow;
-  display: grid;
-  grid-template-rows: 70vh 1fr;
-}
-.preview {
-  height: 100%;
-  width: 100%;
-  display: block;
-  color: blue;
+  display: grid;  scrollbar-gutter: stable;
+  grid-template-rows: [meta-start] 80px [meta-end preview-start] 1fr [preview-end montage-start] auto [montage-end];
+  /*start latyou*/
+  --preview-width: 50vw;
+  --preview-height: 50vh;
 }
 
-.meta,
-.available-assets {
+/*I. preview*/
+#preview {
+  background: darkblue;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+
+#preview #previewScreen {
+  width: var(--preview-width);
+  height: var(--preview-height);
+  /* min-width: var(--min-width); */
+  /* min-height: var(--min-height); */
+  border: 1px solid var(--color-body);
+  margin: auto;
+  background: blue;
+  overflow: hidden;
+  resize: both;
+  position: relative;
+}
+
+#preview.fullscreen #previewScreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#preview.portrait {
+  --min-width: 400px;
+  --min-height: 700px;
+}
+.preview.landscape {
+  --min-width: 800px;
+  --min-height: 450px;
+}
+
+/*keep the button up.*/
+.fullscreen #fullPageWatcher {
+  position: fixed;
+  z-index: 1;
+  display: block;
+  top: 0;
+  left: 0;
+}
+
+#assets {
   display: none;
+}
+
+/*II. montage*/
+
+#banc-montage {
+  height: 100px;
+}
+#banc-montage.show {
+  height: 20vh;
 }

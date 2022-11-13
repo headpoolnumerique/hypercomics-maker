@@ -5,3 +5,17 @@ the first hackathon over night
 2. import block
 3. move block → reorder  (set attribute through html. use data from attribute)
 4. save to db
+
+
+
+
+
+
+
+
+
+import image: https://medium.com/@codefoxx/how-to-upload-and-preview-an-image-with-javascript-749b92711b91
+
+
+then move the image to the strapi server with an id and a couple of data
+import image: fetch from strapi.
