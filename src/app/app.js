@@ -3,7 +3,10 @@ import {
   resizePreview,
   fullPageWatcher,
 } from './modules/preview.js'
+
 import { addPlan, showMontage, selectLink } from './modules/montage.js'
+
+import { startup } from './modules/startup.js'
 
 // list all the things
 const previewSpace = document.querySelector('#preview')
@@ -11,7 +14,8 @@ const previewScreen = document.querySelector('#previewScreen')
 const montageScreen = document.querySelector('#banc-montage')
 const montageList = document.querySelector('#planOrder')
 
-//do all the js
+
+//event and bind
 
 document.querySelectorAll('.previewResizer').forEach((resizeButton) => {
   resizeButton.addEventListener('click', () => {
@@ -36,13 +40,18 @@ document.querySelector('#showMontage').addEventListener('click', () => {
 })
 
 document.querySelector('#addPlan').addEventListener('click', () => {
-  addPlan(montageList)
+  addPlan(montageList, previewScreen)
 })
-document.querySelectorAll('#montageList li').forEach((el) => {
+
+montageList.querySelectorAll('li').forEach((el) => {
   el.addEventListener('click', () => {
-    selectLink(this);
+    selectLink(el)
   })
 })
-// window.onload = () => {
-//   resizeWatcher()
-// }
+
+// starting point
+
+// manage
+//  -----------------START THE APP 
+
+startup()

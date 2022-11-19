@@ -16,6 +16,7 @@ function addPlan(montageList, sequence) {
 }
 
 function selectLink(link) {
+  document.querySelector(".selected")?.classList.remove('selected')
   link.classList.add('selected')
 }
 

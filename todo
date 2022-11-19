@@ -1,10 +1,30 @@
 
-the first hackathon over night
+1. layout of the app → v1 ok.
 
-1. layout of the app
+
+
+
+
+2. create strapi.
+
+→ upload → add images
+→ when upload → add the images to the selected plan (add img element) → each element is then selectionable from the preview to move it aroudn
+→ save the location of each element, and size and rotation ? we’ll see.
+→ 
+
+
+
+
+
+
 2. import block
 3. move block → reorder  (set attribute through html. use data from attribute)
 4. save to db
+
+
+
+Active => image in the url?
+
 
 
 
