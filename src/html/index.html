@@ -13,13 +13,14 @@
 
      <section id="meta">
       <h1>Welcome to hyper comics</h1>
-      <span class="meta">project: XX, sequence: XX</span>
+      <p class="meta"> project: <span id="projectName">projname</span>, sequence: <span id="sequenceNumber">seqnum</span>
           <button id="showMontage">montage</button>
+      <p>
      </section> 
 
       <section id="preview">
 
-        <h2>preview</h2>
+        <!-- <h2>preview</h2> -->
 
         <section id="previewButtons" class="buttons">
           <button id="orientationChanger">change orientation</button>
@@ -47,7 +48,7 @@
       <section id="banc-montage" class="show">
           <button id="addPlan">add plan</button>
 
-        <h2>montage</h2>
+        <!-- <h2>montage</h2> -->
 
         <ol id="planOrder">
           <li><a href="#plan1">1</a></li>
@@ -64,8 +65,17 @@
           <li><a href="#plan12">12</a></li>
         </ol>
 
+      <section id="inputs">
+        <label for="imageInput">upload images:</label>
+        <input
+          name="imageInput"
+          type="file"
+          multiple="true"
+          placeholder="are you looking for something?"
+        />
+      </section>
       <section id="assets">
-        <label for="assetsFilter">Filtre: </label>
+        <label for="assetsFilter">Filtre:</label>
         <input
           name="assetsFilter"
           type="text"
