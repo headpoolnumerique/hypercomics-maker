@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "npm-run-all --parallel watch:*",
     "watch:css": "postcss --watch src/assets/css/main.css -m -o public/css/styles.css ",
-    "watch:js": "esbuild src/app/app.js --bundle  --watch=forever --outfile=public/js/hypercomicsBuilder.js",
+    "watch:js": "esbuild src/app/app.js --bundle --sourcemap --watch=forever --outfile=public/js/hypercomicsBuilder.js",
     "watch:serve": "browser-sync public --server --watch",
     "watch:html": "copy-and-watch --watch src/html/*.{html,json}  public/ ",
     "watch:fonts": "copy-and-watch --watch src/assets/fonts/*.*  public/fonts/ ",

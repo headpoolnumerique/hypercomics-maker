@@ -16,4 +16,14 @@
   /*screen minimal size*/
   --min-height: 800px;
   --min-width: 400px;
+  /*layout coloros*/
+  --color-montage: hsl(0, 0, 20);
+  --color-preview: hsl(0, 0%, 80%);
+  --color-asset: hsl(0, 0%, 80%);
+  --color-app-wrapp: hsl(0, 0%, 80%);
+  --color-preview: hsl(0, 0%, 95%);
+  --color-previewScreen: hsl(0, 0%, 100%);
+  --color-montage-order: hsl(0, 0%, 90%);
+  --color-app-wrapp: hsl(0, 0%, 90%);
+--color-assets-background: hsl(0, 0%, 70%);
 }
