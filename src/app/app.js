@@ -7,16 +7,21 @@ import {
 import { addPlan, showMontage, selectLink } from './modules/montage.js'
 
 import { startup } from './modules/startup.js'
+
 import { uploadToStrapi } from './modules/assetNetwork.js'
 
-// list all the things
-const previewSpace = document.querySelector('#preview')
-const previewScreen = document.querySelector('#previewScreen')
-const montageScreen = document.querySelector('#banc-montage')
-const montageList = document.querySelector('#planOrder')
+import {
+  previewSpace,
+  previewScreen,
+  montageScreen,
+  montageList,
+  imageUploadInputs,
+  imageUpload,
+  assetsList,
+} from './modules/selectors.js'
 
-const imageUploadInputs = document.querySelector('#assetsUpload')
-const imageUpload = document.querySelector('#submitAssets')
+import { addImg } from './modules/createPreviewElement.js'
+// list all the things
 
 //Event and binds
 document.querySelectorAll('.previewResizer').forEach((resizeButton) => {
@@ -45,15 +50,22 @@ document.querySelector('#addPlan').addEventListener('click', () => {
   addPlan(montageList, previewScreen)
 })
 
-imageUpload.addEventListener('click', function(e) {
+imageUpload.addEventListener('click', function (e) {
   e.preventDefault()
-  uploadToStrapi(imageUploadInputs);
+  uploadToStrapi(imageUploadInputs)
 })
 
 montageList.querySelectorAll('li').forEach((el) => {
-  el.addEventListener('click', (e) => {
+  el.addEventListener('click', () => {
     selectLink(el)
   })
+})
+
+assetsList.addEventListener('click', (e) => {
+  console.log(e)
+  if (e.target.tagName == 'IMG') {
+    addImg(e.target, window.location.hash)
+  }
 })
 
 // starting point
