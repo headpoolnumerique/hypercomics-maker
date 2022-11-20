@@ -65,22 +65,26 @@
           <li><a href="#plan12">12</a></li>
         </ol>
 
-      <section id="inputs">
-        <label for="imageInput">upload images:</label>
+      <section id="assets">
+      <form id="inputs" action="" post="">
+        <label for="assetsUpload">upload images:</label>
         <input
-          name="imageInput"
+          id="assetsUpload"
+          name="assetsUpload"
           type="file"
           multiple="true"
-          placeholder="are you looking for something?"
         />
-      </section>
-      <section id="assets">
+        <button id="submitAssets">upload</button>
+      </form>
+
         <label for="assetsFilter">Filtre:</label>
         <input
           name="assetsFilter"
           type="text"
           placeholder="are you looking for something?"
         />
+        <ul id="assetsList">
+        </ul>
       </section>
     </main>
   </body>

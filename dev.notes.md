@@ -14,3 +14,5 @@ on home page add a way to call another page?
 import assets move theme
 
 
+send to strapi
+https://dev.to/melvnl/how-to-upload-a-file-imagepdfzipetc-to-strapi-with-react-35jd

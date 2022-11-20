@@ -1,22 +1,25 @@
+import  {unselect}  from "./helpers.js"
 function showMontage(montage) {
   montage.classList.toggle('show')
 }
 
 function addPlan(montageList, sequence) {
   const number = montageList.querySelectorAll('li').length + 1
+  unselect();
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li><a href="#plan-${number}">${number}</a></li>`
+    `<li><a class="selected" href="#plan-${number}">${number}</a></li>`
   )
   sequence.insertAdjacentHTML(
     'beforeend',
-    `<article id="plan-${number}">plan ${number}</article>`
+    `<article id="plan-${number}"><span class="plan-name">${number}</span></article>`
   )
+
   window.location.hash = `#plan-${number}`
 }
 
 function selectLink(link) {
-  document.querySelector(".selected")?.classList.remove('selected')
+  unselect()
   link.classList.add('selected')
 }
 

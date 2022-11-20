@@ -47,6 +47,7 @@ main#appWrap {
 #preview.fullscreen #previewScreen {
   position: fixed;
   inset: 0;
+  z-index: 1000;
   width: 100vw !important;
   height: 100vh !important;
 }

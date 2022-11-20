@@ -7,6 +7,7 @@ import {
 import { addPlan, showMontage, selectLink } from './modules/montage.js'
 
 import { startup } from './modules/startup.js'
+import { uploadToStrapi } from './modules/assetNetwork.js'
 
 // list all the things
 const previewSpace = document.querySelector('#preview')
@@ -14,9 +15,10 @@ const previewScreen = document.querySelector('#previewScreen')
 const montageScreen = document.querySelector('#banc-montage')
 const montageList = document.querySelector('#planOrder')
 
+const imageUploadInputs = document.querySelector('#assetsUpload')
+const imageUpload = document.querySelector('#submitAssets')
 
-//event and bind
-
+//Event and binds
 document.querySelectorAll('.previewResizer').forEach((resizeButton) => {
   resizeButton.addEventListener('click', () => {
     resizePreview(
@@ -43,8 +45,13 @@ document.querySelector('#addPlan').addEventListener('click', () => {
   addPlan(montageList, previewScreen)
 })
 
+imageUpload.addEventListener('click', function(e) {
+  e.preventDefault()
+  uploadToStrapi(imageUploadInputs);
+})
+
 montageList.querySelectorAll('li').forEach((el) => {
-  el.addEventListener('click', () => {
+  el.addEventListener('click', (e) => {
     selectLink(el)
   })
 })
@@ -52,6 +59,6 @@ montageList.querySelectorAll('li').forEach((el) => {
 // starting point
 
 // manage
-//  -----------------START THE APP 
+//  -----------------START THE APP
 
 startup()
