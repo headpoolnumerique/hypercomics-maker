@@ -9,7 +9,7 @@ async function startup(sequenceID = window.location.hash) {
       `sequences`,
       window.location.hash.replace('#', '')
     )
-    if (!response) {
+    if (response.data == null) {
       let response = await createData(config.strapi.url, `sequences`, {
         title: 'unknown research',
       })
@@ -24,6 +24,7 @@ async function startup(sequenceID = window.location.hash) {
         response.data?.data?.id,
         response.data?.data?.attributes?.title
       )
+      window.location.hash = response.data.id
     }
   }
 
