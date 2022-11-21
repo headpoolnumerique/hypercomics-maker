@@ -1,6 +1,6 @@
 import { unselect, selectLink } from './helpers.js'
 import config from '../config/config.js'
-import { sequenceNumber } from './selectors.js'
+import { sequenceNumber, sequencePreview } from './selectors.js'
 import { createData } from './dataManagement.js'
 
 function showMontage(montage) {
@@ -10,9 +10,8 @@ function showMontage(montage) {
 async function addPlan(montageList, sequence) {
   unselect()
   let data = {
-    order:  montageList.querySelectorAll('li').length + 1,
-    sequence: sequenceNumber.textContent,
-    title: 'nope',
+    order: montageList.querySelectorAll('li').length + 1,
+    sequence: Number(sequenceNumber.textContent),
   }
   let response = await createData(config.strapi.url, 'plans', data)
   console.log(response)
@@ -29,6 +28,20 @@ async function addPlan(montageList, sequence) {
   window.location.hash = `#plan-${number}`
 }
 
+function renderPlan(plan, montageList, sequencePreview) {
+  console.log(plan)
+
+  montageList.insertAdjacentHTML(
+    'beforeend',
+    `<li><a href="#plan-${plan.id}">${plan.attributes.order}</a></li>`
+  )
+  sequencePreview.insertAdjacentHTML(
+    'beforeend',
+    `<article id="plan-${plan.id}"><span class="plan-name">${plan.attributes.order}</span></article>`
+  )
+  window.location.hash = `#plan-${plan.attributes.order}`
+}
+
 function importImgToPlan(img, plan) {}
 
-export { showMontage, addPlan, selectLink }
+export { showMontage, addPlan, selectLink, renderPlan }

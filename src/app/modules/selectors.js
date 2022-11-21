@@ -7,6 +7,7 @@ const imageUpload = document.querySelector('#submitAssets')
 const assetsList = document.querySelector('#assetsList')
 const projectName = document.querySelector('#projectName')
 const sequenceNumber = document.querySelector('#sequenceNumber')
+const sequencePreview = document.querySelector('#previewScreen')
 export {
   previewSpace,
   previewScreen,
@@ -17,4 +18,5 @@ export {
   assetsList,
   projectName,
   sequenceNumber,
+  sequencePreview
 }
