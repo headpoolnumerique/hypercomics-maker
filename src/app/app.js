@@ -4,11 +4,14 @@ import {
   fullPageWatcher,
 } from './modules/preview.js'
 
-import { addPlan, showMontage, selectLink } from './modules/montage.js'
+import { addPlan, showMontage,  } from './modules/montage.js'
 
 import { startup } from './modules/startup.js'
 
 import { uploadToStrapi } from './modules/assetNetwork.js'
+import {unselect, selectLink} from '../app/modules/helpers'
+
+
 
 import {
   previewSpace,
@@ -55,12 +58,12 @@ imageUpload.addEventListener('click', function (e) {
   uploadToStrapi(imageUploadInputs)
 })
 
-montageList.querySelectorAll('li').forEach((el) => {
-  el.addEventListener('click', () => {
-    selectLink(el)
-  })
+montageList.addEventListener('click', (e) => {
+  if (e.target.tagName == 'A') {
+    unselect()
+    selectLink(e.target)
+  }
 })
-
 assetsList.addEventListener('click', (e) => {
   console.log(e)
   if (e.target.tagName == 'IMG') {

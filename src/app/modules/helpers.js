@@ -4,4 +4,12 @@ function unselect() {
   selected.classList.remove('selected')
 }
 
-export { unselect }
+
+function selectLink(link) {
+  console.log(link)
+  unselect()
+  link.classList.add('selected')
+}
+
+
+export { unselect, selectLink }

@@ -5,7 +5,9 @@ const montageList = document.querySelector('#planOrder')
 const imageUploadInputs = document.querySelector('#assetsUpload')
 const imageUpload = document.querySelector('#submitAssets')
 const assetsList = document.querySelector('#assetsList')
-export  {
+const projectName = document.querySelector('#projectName')
+const sequenceNumber = document.querySelector('#sequenceNumber')
+export {
   previewSpace,
   previewScreen,
   montageScreen,
@@ -13,4 +15,6 @@ export  {
   imageUploadInputs,
   imageUpload,
   assetsList,
+  projectName,
+  sequenceNumber,
 }

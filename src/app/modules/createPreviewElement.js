@@ -6,6 +6,8 @@ function addImg(img, plan) {
   newImg.dataset.id = img.id.replace("assetlink", "inuse")
   newImg.src = img.src;
   document.querySelector(plan).insertAdjacentElement('beforeend', newImg)
+
+
 }
 
 export { addImg }

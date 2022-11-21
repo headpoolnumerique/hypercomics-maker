@@ -1,32 +1,33 @@
-import { unselect } from './helpers.js'
+import { unselect, selectLink } from './helpers.js'
+import config from '../config/config.js'
+import { sequenceNumber } from './selectors.js'
+import { createData } from './dataManagement.js'
+
 function showMontage(montage) {
   montage.classList.toggle('show')
 }
 
-function addPlan(montageList, sequence) {
-  const number = montageList.querySelectorAll('li').length + 1
+async function addPlan(montageList, sequence) {
   unselect()
+  let data = {
+    sequence: sequenceNumber.textContent,
+    title: 'nope',
+  }
+  let response = await createData(config.strapi.url, 'plans', data)
+  console.log(response)
+  const number = montageList.querySelectorAll('li').length + 1
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li><a class="selected" href="#plan-${number}">${number}</a></li>`
+    `<li><a class="selected" href="#plan-${response.data.data.id}">${response.data.data.id}</a></li>`
   )
   sequence.insertAdjacentHTML(
     'beforeend',
-    `<article id="plan-${number}"><span class="plan-name">${number}</span></article>`
+    `<article id="plan-${response.data.data.id}"><span class="plan-name">${response.data.data.id}</span></article>`
   )
 
   window.location.hash = `#plan-${number}`
 }
 
-function selectLink(link) {
-  unselect()
-  link.classList.add('selected')
-}
-
-
-function importImgToPlan(img, plan) {
-
-}
-
+function importImgToPlan(img, plan) {}
 
 export { showMontage, addPlan, selectLink }
