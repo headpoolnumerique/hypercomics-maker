@@ -10,6 +10,7 @@ function showMontage(montage) {
 async function addPlan(montageList, sequence) {
   unselect()
   let data = {
+    order:  montageList.querySelectorAll('li').length + 1,
     sequence: sequenceNumber.textContent,
     title: 'nope',
   }
@@ -18,11 +19,11 @@ async function addPlan(montageList, sequence) {
   const number = montageList.querySelectorAll('li').length + 1
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li><a class="selected" href="#plan-${response.data.data.id}">${response.data.data.id}</a></li>`
+    `<li><a class="selected" href="#plan-${response.data.data.id}">${response.data.data.attributes.order}</a></li>`
   )
   sequence.insertAdjacentHTML(
     'beforeend',
-    `<article id="plan-${response.data.data.id}"><span class="plan-name">${response.data.data.id}</span></article>`
+    `<article id="plan-${response.data.data.id}"><span class="plan-name">${response.data.data.attributes.order}</span></article>`
   )
 
   window.location.hash = `#plan-${number}`
