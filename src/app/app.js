@@ -4,14 +4,15 @@ import {
   fullPageWatcher,
 } from './modules/preview.js'
 
-import { addPlan, showMontage,  } from './modules/montage.js'
+// import nanoid from 'nanoid'
+// import { v4 as uuidv4 } from 'uuid';
+
+import { addPlan, showMontage } from './modules/montage.js'
 
 import { startup } from './modules/startup.js'
 
 import { uploadToStrapi } from './modules/assetNetwork.js'
-import {unselect, selectLink} from '../app/modules/helpers'
-
-
+import { unselect, selectLink } from '../app/modules/helpers'
 
 import {
   previewSpace,
@@ -24,6 +25,8 @@ import {
 } from './modules/selectors.js'
 
 import { addImg } from './modules/createPreviewElement.js'
+import { updateData } from './modules/dataManagement.js'
+import config from './config/config.js'
 // list all the things
 
 //Event and binds
@@ -64,10 +67,28 @@ montageList.addEventListener('click', (e) => {
     selectLink(e.target)
   }
 })
+
 assetsList.addEventListener('click', (e) => {
-  console.log(e)
+  
   if (e.target.tagName == 'IMG') {
-    addImg(e.target, window.location.hash)
+
+    let planNumber = document.querySelector('.selected').hash.replace("#plan-", "");
+
+    let data = {
+        title: 'test',
+        assets: {
+          title: 'ok',
+          src: e.target.src,
+          styles: 'background: red;',
+          type: 'front',
+          // id: UUID.nameUUIDFromBytes(e.target.src.getBytes()).toString()
+      },
+    }
+    let response = updateData(config.strapi.url, 'plans', data, planNumber)
+
+    console.log(response)
+
+    addImg(e.target, document.querySelector('.selected').hash)
   }
 })
 

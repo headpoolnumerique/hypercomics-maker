@@ -29,18 +29,26 @@ async function addPlan(montageList, sequence) {
 }
 
 function renderPlan(plan, montageList, sequencePreview) {
-  console.log(plan)
+
+  let previewedPlan = document.createElement(`article`)
+  previewedPlan.id=`plan-${plan.id}`
+  previewedPlan.insertAdjacentHTML('afterbegin', `<span class="plan-name">${plan.attributes.order}</span>`)
+
 
   montageList.insertAdjacentHTML(
     'beforeend',
     `<li><a href="#plan-${plan.id}">${plan.attributes.order}</a></li>`
   )
+
   sequencePreview.insertAdjacentHTML(
     'beforeend',
     `<article id="plan-${plan.id}"><span class="plan-name">${plan.attributes.order}</span></article>`
   )
+  
   window.location.hash = `#plan-${plan.attributes.order}`
 }
+
+
 
 function importImgToPlan(img, plan) {}
 

@@ -21,6 +21,7 @@
     "axios": "^1.1.3",
     "esbuild": "^0.15.13",
     "install": "^0.13.0",
+    "nanoid": "^4.0.0",
     "npm": "^9.1.2",
     "nunjucks-cli": "^1.0.0",
     "postcss-cli": "^10.0.0",

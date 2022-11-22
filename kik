@@ -1,0 +1,9 @@
+const qs = require('qs');
+const query = qs.stringify({
+  populate: '*',
+}, {
+  encodeValuesOnly: true, // prettify URL
+});
+
+await request(`/api/articles?${query}`);
+o${query}
