@@ -5,7 +5,7 @@ import { renderPlan } from './montage.js'
 import { montageList, sequencePreview } from './selectors.js'
 
 async function startup(sequenceID = window.location.hash) {
-  // if there is a hash ,load the sequence
+  // if there is a hash ,load the sequence, else, create a new one
   // problem: this intereferes with the id we use for the moving around.
   // we should change that.
   if (sequenceID) {

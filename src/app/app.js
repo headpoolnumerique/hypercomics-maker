@@ -68,10 +68,14 @@ montageList.addEventListener('click', (e) => {
   }
 })
 
+
+//when clicking an image in the asset list
 assetsList.addEventListener('click', (e) => {
-  
+
+  // if it’s an image
   if (e.target.tagName == 'IMG') {
 
+    // add the image to the plan
     let planNumber = document.querySelector('.selected').hash.replace("#plan-", "");
 
     let data = {
@@ -84,10 +88,13 @@ assetsList.addEventListener('click', (e) => {
           // id: UUID.nameUUIDFromBytes(e.target.src.getBytes()).toString()
       },
     }
+    //inform strapi
     let response = updateData(config.strapi.url, 'plans', data, planNumber)
 
-    console.log(response)
+    //log the response to debug
+    // console.log(response)
 
+    //add the image to the doc
     addImg(e.target, document.querySelector('.selected').hash)
   }
 })

@@ -3,10 +3,13 @@ import config from '../config/config.js'
 import { sequenceNumber, sequencePreview } from './selectors.js'
 import { createData } from './dataManagement.js'
 
+
+//show the montage block
 function showMontage(montage) {
   montage.classList.toggle('show')
 }
 
+//add plan to the sequence
 async function addPlan(montageList, sequence) {
   unselect()
   let data = {
@@ -28,6 +31,8 @@ async function addPlan(montageList, sequence) {
   window.location.hash = `#plan-${number}`
 }
 
+
+// render the plan at startup
 function renderPlan(plan, montageList, sequencePreview) {
 
   let previewedPlan = document.createElement(`article`)
