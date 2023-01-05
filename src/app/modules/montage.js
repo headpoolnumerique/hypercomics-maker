@@ -30,12 +30,16 @@ async function addPlan(montageList, sequence, select = true) {
 
   await sequence.insertAdjacentHTML(
     'beforeend',
-    `<article class="${select ? 'shown' : ''}" id="plan-${response.data.data.id}"><span class="plan-name">${response.data.data.attributes.order}</span></article>`
+    `<article class="${select ? 'shown' : ''}" id="plan-${
+      response.data.data.id
+    }"><span class="plan-name">${
+      response.data.data.attributes.order
+    }</span></article>`
   )
 }
 
-// render the plan at startup
-function renderPlan(plan, montageList, sequencePreview) {
+// render a plan
+function renderPlan(plan, montageList, sequencePreview, select = false) {
   let previewedPlan = document.createElement(`article`)
   previewedPlan.id = `plan-${plan.id}`
   previewedPlan.insertAdjacentHTML(
@@ -45,12 +49,16 @@ function renderPlan(plan, montageList, sequencePreview) {
 
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li><a href="#plan-${plan.id}">${plan.attributes.order}</a></li>`
+    `<li  ><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}">${
+      plan.attributes.order
+    }</a></li>`
   )
 
   sequencePreview.insertAdjacentHTML(
     'beforeend',
-    `<article id="plan-${plan.id}"><span class="plan-name">${plan.attributes.order}</span></article>`
+    `<article class="${select ? 'shown' : ''}" id="plan-${
+      plan.id
+    }"><span class="plan-name">${plan.attributes.order}</span></article>`
   )
 
   // window.location.hash = `#plan-${plan.attributes.order}`

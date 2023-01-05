@@ -54,12 +54,16 @@ async function startup(url = document.location.href) {
 async function fillSequence(sequence) {
   let response = await loadSingle(config.strapi.url, 'sequences', sequence)
   let plans = response.data.data.attributes.plans
-  console.log(plans)
   if (plans.data.length < 1) {
     addPlan(montageList, sequence)
   }
-  plans.data.forEach((plan) => {
-    renderPlan(plan, montageList, sequencePreview)
+  plans.data.forEach((plan, index) => {
+    renderPlan(
+      plan,
+      montageList,
+      sequencePreview,
+      index + 1 == plans.data.length ? true : false
+    )
   })
 
   // check for each plan. add them to the view
