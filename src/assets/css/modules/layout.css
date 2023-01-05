@@ -62,8 +62,12 @@ main#appWrap {
 }
 
 /* /plan */
-#previewScreen article:not(:target) {
+#previewScreen article:not(.shown) {
   display: none;
+}
+
+#previewScreen article.shown {
+  display: block;
 }
 
 /*keep the button up.*/

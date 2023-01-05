@@ -12,7 +12,7 @@ import { addPlan, showMontage } from './modules/montage.js'
 import { startup } from './modules/startup.js'
 
 import { uploadToStrapi } from './modules/assetNetwork.js'
-import { unselect, selectLink } from '../app/modules/helpers'
+import { deselect, selectLink } from '../app/modules/helpers'
 
 import {
   previewSpace,
@@ -62,8 +62,11 @@ imageUpload.addEventListener('click', function (e) {
 })
 
 montageList.addEventListener('click', (e) => {
+
   if (e.target.tagName == 'A') {
-    unselect()
+    //dont change the url of the page because it’s used to define the sequence
+    e.preventDefault()  
+    deselect('.selected')
     selectLink(e.target)
   }
 })
@@ -98,6 +101,8 @@ assetsList.addEventListener('click', (e) => {
     addImg(e.target, document.querySelector('.selected').hash)
   }
 })
+
+
 
 // starting point
 
