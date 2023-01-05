@@ -7,13 +7,12 @@ function deselect(className) {
 
 function showPreview(id) {
   deselect('.shown')
-  document.querySelector(`#${id}`).classList.add('shown');
+  document.querySelector(id).classList.add('shown');
 }
 
 function selectLink(link) {
   deselect('.selected')
-  console.log(link)
-  showPreview(link.href.split('#')[1])
+  showPreview(link.hash)
   link.classList.add('selected')
 }
 

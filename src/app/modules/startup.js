@@ -16,16 +16,26 @@ async function startup(url = document.location.href) {
   // if there is no sequence id, create a new sequence
   if (!sequenceId) {
     let response = await createData(config.strapi.url, `sequences`, {
-      title: 'unknown research',
+      title: 'i am in the desert with the project with name',
+      projectId: projectId ? projectId : '',
     })
 
+    console.log(response.data.data.id)
     // add the sequence to the URL and show it in the url bar (damn you safari)
-    sequenceUrl.sequenceId = response.data.data.id
-    window.location.href = sequenceUrl
+    sequenceUrl.searchParams.set('sequence', response.data.data.id)
+
+    // console.log(sequenceUrl)
+      // console.log(sequenceUrl.toString())
+
+    // TODO → generate projectId before otherwise, it will create a new page.
+
+    history.pushState({}, null, sequenceUrl)
+    window.location = sequenceUrl;
     updateSequenceMeta(
       response.data?.data?.id,
       response.data?.data?.attributes?.title
     )
+
     fillSequence(response.data.data.id)
   } else {
     // if there is a sequenceID in the url, load the sequence from strapi
@@ -38,10 +48,12 @@ async function startup(url = document.location.href) {
         projectId: projectId ? projectId : '',
         id: sequenceId,
       })
+      console.log(sequenceUrl.toString())
 
       //update the sequence url and write in the url bar
       sequenceUrl.sequenceId = response.data.data.id
-      window.location.href = sequenceUrl
+      history.pushState({}, null, sequenceUrl)
+      // window.location.href = sequenceUrl
     }
     updateSequenceMeta(
       response.data?.data?.id,
@@ -52,6 +64,7 @@ async function startup(url = document.location.href) {
 }
 
 async function fillSequence(sequence) {
+console.log(sequence)
   let response = await loadSingle(config.strapi.url, 'sequences', sequence)
   let plans = response.data.data.attributes.plans
   if (plans.data.length < 1) {

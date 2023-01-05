@@ -28,7 +28,7 @@ async function addPlan(montageList, sequence, select = true) {
     }">${response.data.data.attributes.order}</a></li>`
   )
 
-  await sequence.insertAdjacentHTML(
+  sequencePreview.insertAdjacentHTML(
     'beforeend',
     `<article class="${select ? 'shown' : ''}" id="plan-${
       response.data.data.id
@@ -47,6 +47,7 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
     `<span class="plan-name">${plan.attributes.order}</span>`
   )
 
+  console.log(montageList)
   montageList.insertAdjacentHTML(
     'beforeend',
     `<li  ><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}">${
