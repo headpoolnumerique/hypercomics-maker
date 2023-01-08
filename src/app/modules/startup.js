@@ -1,7 +1,9 @@
 import config from '../config/config.js'
 import { loadSingle, loadCollection, createData } from './dataManagement'
+import { addImg, importImg } from './createPreviewElement'
 import { addPlan, renderPlan } from './montage.js'
 import { montageList, sequencePreview } from './selectors.js'
+import { addAssetToTheAssetManager } from './assetManager'
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -17,20 +19,18 @@ async function startup(url = document.location.href) {
   if (!sequenceId) {
     let response = await createData(config.strapi.url, `sequences`, {
       title: 'i am in the desert with the project with name',
-      projectId: projectId ? projectId : '',
-    })
+      projectId: projectId ? projectId : '', })
 
-    console.log(response.data.data.id)
     // add the sequence to the URL and show it in the url bar (damn you safari)
     sequenceUrl.searchParams.set('sequence', response.data.data.id)
 
     // console.log(sequenceUrl)
-      // console.log(sequenceUrl.toString())
+    // console.log(sequenceUrl.toString())
 
     // TODO → generate projectId before otherwise, it will create a new page.
 
     history.pushState({}, null, sequenceUrl)
-    window.location = sequenceUrl;
+    window.location = sequenceUrl
     updateSequenceMeta(
       response.data?.data?.id,
       response.data?.data?.attributes?.title
@@ -48,11 +48,12 @@ async function startup(url = document.location.href) {
         projectId: projectId ? projectId : '',
         id: sequenceId,
       })
+
       console.log(sequenceUrl.toString())
 
       //update the sequence url and write in the url bar
       sequenceUrl.sequenceId = response.data.data.id
-      history.pushState({}, null, sequenceUrl)
+      // history.pushState({}, null, sequenceUrl)
       // window.location.href = sequenceUrl
     }
     updateSequenceMeta(
@@ -64,12 +65,13 @@ async function startup(url = document.location.href) {
 }
 
 async function fillSequence(sequence) {
-console.log(sequence)
   let response = await loadSingle(config.strapi.url, 'sequences', sequence)
   let plans = response.data.data.attributes.plans
+  //if there is no plan, create a plan
   if (plans.data.length < 1) {
     addPlan(montageList, sequence)
   }
+  //create the plan
   plans.data.forEach((plan, index) => {
     renderPlan(
       plan,
@@ -77,6 +79,7 @@ console.log(sequence)
       sequencePreview,
       index + 1 == plans.data.length ? true : false
     )
+    fillPlan(plan)
   })
 
   // check for each plan. add them to the view
@@ -89,6 +92,36 @@ function updateSequenceMeta(id, title) {
   }
   meta.projectName.innerHTML = title
   meta.sequenceNumber.innerHTML = id
+}
+
+function fillPlan(plan) {
+  console.log('tofill', plan.attributes.assets.data)
+  // fille the plan with all the existing images
+  // find the plan
+  let planToFill = preview.querySelector(`#plan-${plan.id}`)
+  let assetsToFillWith = plan.attributes.assets.data
+
+  // fill the asset manager with the image
+  assetsToFillWith.forEach((asset) => {
+    console.log(asset)
+    addAssetToTheAssetManager(
+      asset.attributes.location,
+      asset.id,
+      document.querySelector('#assetsList')
+    )
+
+    console.log(asset)
+    console.log(assetsToFillWith)
+
+    // TODONOW change the code to add an asset on startup OR on update
+    importImg(asset, planToFill)
+  })
+
+  // fill it with the assets
+}
+
+function showImageInTheAssetsManager() {
+  // check the images in the preview and bring them in the asset manager
 }
 
 export { startup }

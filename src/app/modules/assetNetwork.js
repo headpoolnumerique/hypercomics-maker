@@ -1,9 +1,13 @@
 // import axios from '../vendors/setupAxios.js'
 import axios from 'axios'
 import config from '../config/config.js'
-import { createAsset } from './assetManager.js'
+import { addAssetToTheAssetManager } from './assetManager.js'
 
-function uploadToStrapi(input, strapiurl = config.strapi.url) {
+
+
+// manage all the assets in the assets manager : add / remove / change any image in the asset manager.
+
+async function uploadToStrapi(input, strapiurl = config.strapi.url) {
   const formData = new FormData()
 
   const files = input.files
@@ -22,22 +26,29 @@ function uploadToStrapi(input, strapiurl = config.strapi.url) {
   // }
 
   // post all files at once to strapi
-  axios.post(`${strapiurl}/api/upload`, formData).then((response) => {
-    response.data
-      .forEach((file) => {
 
+  //upload to strapi folder
+  axios
+    .post(`${strapiurl}/api/upload`, formData)
+    .then((response) => {
+      console.log(response.data)
+
+      response.data.forEach((file) => {
+        // then add the img db
         axios
           .post(`${strapiurl}/api/assets`, {
             data: {
-              title: `asset-${file.id}`,
+              title: `asset-${file.name}`,
               filename: file.name,
+              location: config.strapi.url + file.url,
             },
           })
-          .then(({ data }) => {
+          .then((response) => {
+            console.log(response.data.data.id)
             //create the asset in the asset list
-            createAsset(
+            addAssetToTheAssetManager(
               file.url,
-              data.data.id,
+              response.data.data.id,
               document.querySelector('#assetsList')
             )
           })
@@ -47,12 +58,12 @@ function uploadToStrapi(input, strapiurl = config.strapi.url) {
             }
           })
       })
-      .catch((error) => {
-        if (error) {
-          console.log(error)
-        }
-      })
-  })
+    })
+    .catch((error) => {
+      if (error) {
+        console.log(error)
+      }
+    })
 }
 
 export { uploadToStrapi }

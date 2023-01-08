@@ -2,7 +2,7 @@ import axios from 'axios'
 
 function updateData(serverUrl, collection, data, id) {
   return axios
-    .put(`${serverUrl}/api/${collection}/${id}`, {
+    .put(`${serverUrl}/api/${collection}/${id}?populate=deep,5`, {
       data,
     })
     .then((response) => {
@@ -15,7 +15,7 @@ function updateData(serverUrl, collection, data, id) {
 
 function createData(serverUrl, collection, data) {
   return axios
-    .post(`${serverUrl}/api/${collection}/`, {
+    .post(`${serverUrl}/api/${collection}/?populate=deep,5`, {
       data,
     })
     .then((response) => {

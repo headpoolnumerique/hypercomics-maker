@@ -47,7 +47,6 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
     `<span class="plan-name">${plan.attributes.order}</span>`
   )
 
-  console.log(montageList)
   montageList.insertAdjacentHTML(
     'beforeend',
     `<li  ><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}">${
@@ -61,10 +60,7 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
       plan.id
     }"><span class="plan-name">${plan.attributes.order}</span></article>`
   )
-
-  // window.location.hash = `#plan-${plan.attributes.order}`
 }
 
-function importImgToPlan(img, plan) {}
 
 export { showMontage, addPlan, selectLink, renderPlan }

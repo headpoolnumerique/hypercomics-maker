@@ -2,24 +2,21 @@ import config from '../config/config.js'
 import { sequencePreview } from './selectors.js'
 
 // data model for the plan:
-
 // title
-// data
+// data → the css for the plan → include the location for all images
 // sequence (it belongs to)
 // order
-//
-// assets
-// title (useful to search later)
-// src (image src)
-// styles (css)
-// type (background, foreground)
-function createAsset(url, assetid, assetList, plan) {
+
+function addAssetToTheAssetManager(url, assetid, assetList) {
   assetList.insertAdjacentHTML(
     `afterbegin`,
-    `<li><img src="${config.strapi.url}${url}" id="assetlink-${assetid}" /></li>`
+    `<li><img src="${url}" id="assetlink-${assetid}" /></li>`
   )
-  // pour chaque image ajoutée → enregistré dans le json.
-  // update plan with asset
+
+  // remove stuff from the asset manager
+  // function removeAssetsFromTheAssetsManager() {}
+
+  // replace from the asset manager
 }
 
-export { createAsset }
+export { addAssetToTheAssetManager }

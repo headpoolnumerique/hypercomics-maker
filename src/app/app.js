@@ -62,47 +62,40 @@ imageUpload.addEventListener('click', function (e) {
 })
 
 montageList.addEventListener('click', (e) => {
-
   if (e.target.tagName == 'A') {
     //dont change the url of the page because it’s used to define the sequence
-    e.preventDefault()  
+    e.preventDefault()
     deselect('.selected')
     selectLink(e.target)
   }
 })
 
-
 //when clicking an image in the asset list
 assetsList.addEventListener('click', (e) => {
-
   // if it’s an image
   if (e.target.tagName == 'IMG') {
-
     // add the image to the plan
-    let planNumber = document.querySelector('.selected').hash.replace("#plan-", "");
+    let planNumber = document
+      .querySelector('.selected')
+      .hash.replace('#plan-', '')
 
     let data = {
-        title: 'test',
-        assets: {
-          title: 'ok',
-          src: e.target.src,
-          styles: 'background: red;',
-          type: 'front',
-          // id: UUID.nameUUIDFromBytes(e.target.src.getBytes()).toString()
-      },
+      assets: Number(e.target.id.split('-')[1])
     }
+
+    
+    console.log(data)
+
     //inform strapi
     let response = updateData(config.strapi.url, 'plans', data, planNumber)
 
+    console.log(response)
     //log the response to debug
-    // console.log(response)
 
     //add the image to the doc
     addImg(e.target, document.querySelector('.selected').hash)
   }
 })
-
-
 
 // starting point
 
