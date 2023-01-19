@@ -116,18 +116,3 @@ main#appWrap {
 }
 
 
-/* III. assets */
-
-#assets {
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 200px;
-  padding: 1em;
-  background: var(--color-assets-background,  unset);
-  display: block;
-}
-
-
-

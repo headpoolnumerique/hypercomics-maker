@@ -19,7 +19,8 @@ async function startup(url = document.location.href) {
   if (!sequenceId) {
     let response = await createData(config.strapi.url, `sequences`, {
       title: 'i am in the desert with the project with name',
-      projectId: projectId ? projectId : '', })
+      projectId: projectId ? projectId : '',
+    })
 
     // add the sequence to the URL and show it in the url bar (damn you safari)
     sequenceUrl.searchParams.set('sequence', response.data.data.id)
@@ -103,15 +104,11 @@ function fillPlan(plan) {
 
   // fill the asset manager with the image
   assetsToFillWith.forEach((asset) => {
-    console.log(asset)
     addAssetToTheAssetManager(
       asset.attributes.location,
       asset.id,
       document.querySelector('#assetsList')
     )
-
-    console.log(asset)
-    console.log(assetsToFillWith)
 
     // TODONOW change the code to add an asset on startup OR on update
     importImg(asset, planToFill)

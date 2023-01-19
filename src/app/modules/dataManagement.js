@@ -53,4 +53,19 @@ function loadSingle(serverUrl, collection, id, populatedeep = true) {
       return err
     })
 }
-export { createData, updateData, loadCollection, loadSingle }
+
+function getAllImageFromPlan(plan) {
+  const imgData = [];
+  plan.querySelectorAll('img').forEach((img) => {
+    imgData.push(Number(img.id.split('-')[1]))
+  })
+  return imgData
+}
+
+export {
+  createData,
+  updateData,
+  loadCollection,
+  loadSingle,
+  getAllImageFromPlan,
+}

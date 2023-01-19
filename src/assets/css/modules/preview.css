@@ -1,3 +1,26 @@
 #previewScreen article > * {
   position: absolute;
 }
+
+#previewScreen button {
+  background: black;
+  color: white;
+  border: 2px solid black;
+  display: flex;
+  margin: auto;
+  font-size: 35px;
+  padding: 0 .5ch;
+}
+
+#previewScreen #previewNext {
+  position: absolute;
+  right: 0;
+  top: 48%;
+  z-index: 1000;
+}
+#previewScreen #previewPrevious {
+  position: absolute;
+  left: 0;
+  top: 48%;
+  z-index: 1000;
+}

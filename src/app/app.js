@@ -25,7 +25,7 @@ import {
 } from './modules/selectors.js'
 
 import { addImg } from './modules/createPreviewElement.js'
-import { updateData } from './modules/dataManagement.js'
+import { updateData, getAllImageFromPlan } from './modules/dataManagement.js'
 import config from './config/config.js'
 // list all the things
 
@@ -79,23 +79,39 @@ assetsList.addEventListener('click', (e) => {
       .querySelector('.selected')
       .hash.replace('#plan-', '')
 
-    let data = {
-      assets: Number(e.target.id.split('-')[1])
-    }
+    let plan = document.querySelector(`#plan-${planNumber}`)
 
-    
-    console.log(data)
+    let imgData = getAllImageFromPlan(plan)
+
+    imgData.push(Number(e.target.id.split('-')[1]))
+
+    let data = {
+      assets: imgData,
+    }
 
     //inform strapi
     let response = updateData(config.strapi.url, 'plans', data, planNumber)
-
-    console.log(response)
-    //log the response to debug
 
     //add the image to the doc
     addImg(e.target, document.querySelector('.selected').hash)
   }
 })
+
+
+
+
+
+
+
+
+//move between blocks
+
+// document.querySelector("#previewNext").addEventListener('click', function() {
+//   document.querySelector('.selected')?.parentElement.nextSibling.querySelector('a').classList.add('selected')
+// }) {
+//   
+// }
+
 
 // starting point
 

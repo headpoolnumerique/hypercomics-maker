@@ -2,6 +2,9 @@
 1. layout of the app → v1 ok.
 
 
+change the way we show the different views not using target.css
+
+
 
 
 
@@ -12,6 +15,9 @@
 → save the location of each element, and size and rotation ? we’ll see.
 → 
 
+
+KEEP AN ARRAY OF THE USED IMAGE IN THE ELEMENT TO ADD IMAGE TO THE ARRAY WHEN NEEDED.
+and push that array on update
 
 
 
