@@ -29,7 +29,12 @@ import {
 } from './modules/selectors.js'
 
 import { addImg } from './modules/createPreviewElement.js'
-import { updateData, getAllImageFromPlan } from './modules/dataManagement.js'
+
+import {
+  updateData,
+  getAllImageFromPlan,
+  connectPlanWithOrder,
+} from './modules/dataManagement.js'
 import config from './config/config.js'
 // list all the things
 
@@ -93,34 +98,31 @@ assetsList.addEventListener('click', (e) => {
       .querySelector('.selected')
       .hash.replace('#plan-', '')
 
-    let plan = document.querySelector(`#plan-${planNumber}`)
+    const assetId = Number(e.target.dataset.strapid)
 
-    let imgData = getAllImageFromPlan(plan)
 
-    imgData.push(Number(e.target.id.split('-')[1]))
+    console.log(assetId);
 
-    let data = {
-      assets: imgData,
+
+    let response = connectPlanWithOrder(config.strapi.url, planNumber, assetId)
+
+    if (response) {
+      addImg(e.target, document.querySelector('.selected').hash)
     }
-
-    //inform strapi
-    let response = updateData(config.strapi.url, 'plans', data, planNumber)
-
     //add the image to the doc
-    addImg(e.target, document.querySelector('.selected').hash)
   }
 })
 
 // moveElementOnThePage
 
-previewScreen.addEventListener('click',  (event) => {
+previewScreen.addEventListener('click', (event) => {
   if (event.target.tagName == 'IMG') {
-    previewScreen.querySelector('.asset-selected')?.classList.remove('asset-selected');
+    previewScreen
+      .querySelector('.asset-selected')
+      ?.classList.remove('asset-selected')
     event.target.classList.add('asset-selected')
-    contextUI.querySelector('main').innerHTML = assetManipulationUi;
-
+    contextUI.querySelector('main').innerHTML = assetManipulationUi
   }
-
 })
 
 //move between blocks

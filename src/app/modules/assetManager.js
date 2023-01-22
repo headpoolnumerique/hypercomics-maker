@@ -10,7 +10,7 @@ import { sequencePreview } from './selectors.js'
 function addAssetToTheAssetManager(url, assetid, assetList) {
   assetList.insertAdjacentHTML(
     `afterbegin`,
-    `<li><img src="${url}" id="assetlink-${assetid}" /></li>`
+    `<li><img data-strapId="${assetid}" src="${url}" id="assetlink-${assetid}" /></li>`
   )
 
   // remove stuff from the asset manager

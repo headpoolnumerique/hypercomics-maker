@@ -26,6 +26,33 @@ function createData(serverUrl, collection, data) {
     })
 }
 
+function connectPlanWithOrder(serverUrl, planId, assetId, position) {
+  console.log('assetId', assetId)
+  let data = {
+    assets: {
+      connect: [
+        {
+          id: assetId,
+        },
+      ],
+    },
+  }
+
+  if (position) {
+    data.assets.connect.position = position
+  }
+
+  return axios
+    .put(`${serverUrl}/api/plans/${planId}`, {
+      data,
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((err) => {
+      return err
+    })
+}
 function loadCollection(serverUrl, collection, query) {
   //load with a query
   return axios
@@ -38,6 +65,7 @@ function loadCollection(serverUrl, collection, query) {
       return err
     })
 }
+
 function loadSingle(serverUrl, collection, id, populatedeep = true) {
   return axios
     .get(
@@ -55,7 +83,7 @@ function loadSingle(serverUrl, collection, id, populatedeep = true) {
 }
 
 function getAllImageFromPlan(plan) {
-  const imgData = [];
+  const imgData = []
   plan.querySelectorAll('img').forEach((img) => {
     imgData.push(Number(img.id.split('-')[1]))
   })
@@ -68,4 +96,5 @@ export {
   loadCollection,
   loadSingle,
   getAllImageFromPlan,
+  connectPlanWithOrder,
 }
