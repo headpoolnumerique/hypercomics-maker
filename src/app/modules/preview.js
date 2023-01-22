@@ -19,9 +19,6 @@ function resizePreview(previewEl, width, height) {
   previewEl.style.setProperty('--preview-height', height + `px`)
 }
 
-
-
-
 // add image → save dataset
 // move image → save dataset
 // do something → save all the time.

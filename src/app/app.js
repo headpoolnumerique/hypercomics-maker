@@ -7,7 +7,7 @@ import {
 // import nanoid from 'nanoid'
 // import { v4 as uuidv4 } from 'uuid';
 
-import { addPlan, showMontage } from './modules/montage.js'
+import { addPlan } from './modules/montage.js'
 
 import { startup } from './modules/startup.js'
 
@@ -52,8 +52,9 @@ document.querySelector('#fullPageWatcher').addEventListener('click', () => {
   fullPageWatcher(previewSpace)
 })
 
+//show hide montage
 document.querySelector('#showMontage').addEventListener('click', () => {
-  showMontage(montageScreen)
+  showHideBlock(montageScreen)
 })
 
 //show hide contextual id
@@ -108,6 +109,18 @@ assetsList.addEventListener('click', (e) => {
     //add the image to the doc
     addImg(e.target, document.querySelector('.selected').hash)
   }
+})
+
+// moveElementOnThePage
+
+previewScreen.addEventListener('click',  (event) => {
+  if (event.target.tagName == 'IMG') {
+    previewScreen.querySelector('.asset-selected')?.classList.remove('asset-selected');
+    event.target.classList.add('asset-selected')
+    contextUI.querySelector('main').innerHTML = assetManipulationUi;
+
+  }
+
 })
 
 //move between blocks

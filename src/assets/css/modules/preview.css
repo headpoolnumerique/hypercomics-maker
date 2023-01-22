@@ -9,7 +9,7 @@
   display: flex;
   margin: auto;
   font-size: 35px;
-  padding: 0 .5ch;
+  padding: 0 0.5ch;
 }
 
 #previewScreen #previewNext {
@@ -23,4 +23,8 @@
   left: 0;
   top: 48%;
   z-index: 1000;
+}
+
+#previewScreen .asset-selected {
+  border: 1px solid red;
 }
