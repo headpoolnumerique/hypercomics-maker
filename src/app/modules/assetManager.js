@@ -8,10 +8,14 @@ import { sequencePreview } from './selectors.js'
 // order
 
 function addAssetToTheAssetManager(url, assetid, assetList) {
-  assetList.insertAdjacentHTML(
-    `afterbegin`,
-    `<li><img data-strapId="${assetid}" src="${url}" id="assetlink-${assetid}" /></li>`
-  )
+  if (assetList.querySelector(`[data-strapId="${assetid}"]`)) {
+    return
+  } else {
+    assetList.insertAdjacentHTML(
+      `afterbegin`,
+      `<li><img data-strapId="${assetid}" src="${url}" id="assetlink-${assetid}" /></li>`
+    )
+  }
 
   // remove stuff from the asset manager
   // function removeAssetsFromTheAssetsManager() {}
