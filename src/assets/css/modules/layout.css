@@ -80,7 +80,6 @@ main#appWrap {
   z-index: 10000;
 }
 
-
 /*II. montage*/
 
 #banc-montage {
@@ -115,4 +114,20 @@ main#appWrap {
   text-decoration: none;
 }
 
+/* 3. the contextual menu */
+
+#contextualUI {
+  padding: 2em 2ch;
+  width: 30vh;
+  min-height: auto;
+  z-index: 1000;
+  background: white;
+  box-shadow: 0 0 0 3px red;
+  position:fixed;
+  display: none;
+}
+
+#contextualUI.show {
+  display: block;
+}
 

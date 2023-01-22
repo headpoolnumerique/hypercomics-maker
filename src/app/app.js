@@ -13,6 +13,9 @@ import { startup } from './modules/startup.js'
 
 import { uploadToStrapi } from './modules/assetNetwork.js'
 import { deselect, selectLink } from '../app/modules/helpers'
+import { showHideBlock } from './modules/helpers.js'
+
+import { assetManipulationUi } from './modules/assetManipulation'
 
 import {
   previewSpace,
@@ -22,6 +25,7 @@ import {
   imageUploadInputs,
   imageUpload,
   assetsList,
+  contextUI,
 } from './modules/selectors.js'
 
 import { addImg } from './modules/createPreviewElement.js'
@@ -51,6 +55,15 @@ document.querySelector('#fullPageWatcher').addEventListener('click', () => {
 document.querySelector('#showMontage').addEventListener('click', () => {
   showMontage(montageScreen)
 })
+
+//show hide contextual id
+document
+  .querySelectorAll('#showContextualUI, #closeContextualUI')
+  .forEach((caller) => {
+    caller.addEventListener('click', () => {
+      showHideBlock(contextUI)
+    })
+  })
 
 document.querySelector('#addPlan').addEventListener('click', () => {
   addPlan(montageList, previewScreen)
@@ -97,21 +110,13 @@ assetsList.addEventListener('click', (e) => {
   }
 })
 
-
-
-
-
-
-
-
 //move between blocks
 
 // document.querySelector("#previewNext").addEventListener('click', function() {
 //   document.querySelector('.selected')?.parentElement.nextSibling.querySelector('a').classList.add('selected')
 // }) {
-//   
+//
 // }
-
 
 // starting point
 

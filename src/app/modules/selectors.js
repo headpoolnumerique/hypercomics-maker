@@ -8,6 +8,7 @@ const assetsList = document.querySelector('#assetsList')
 const projectName = document.querySelector('#projectName')
 const sequenceNumber = document.querySelector('#sequenceNumber')
 const sequencePreview = document.querySelector('#previewScreen')
+const contextUI = document.querySelector('#contextualUI')
 export {
   previewSpace,
   previewScreen,
@@ -18,5 +19,6 @@ export {
   assetsList,
   projectName,
   sequenceNumber,
-  sequencePreview
+  sequencePreview,
+  contextUI,
 }
