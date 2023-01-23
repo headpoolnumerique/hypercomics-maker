@@ -4,7 +4,7 @@
 function addImg(img, planId) {
   const newImg = document.createElement('img')
   newImg.id = img.id.replace('assetlink', 'inuse')
-  newImg.dataset.strapId = img.id.replace('assetlink', '')
+  newImg.dataset.strapId = img.id.replace('assetlink-', '')
   newImg.src = img.src
   newImg.classList.add('asset')
   document.querySelector(planId).insertAdjacentElement('beforeend', newImg)

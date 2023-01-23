@@ -15,8 +15,13 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
   //if there is no file do nothing
   if (files.length < 1) return
 
+  let uploadedFiles = document.querySelector('#assets')
   // append the file to the form data for each file
+
   for (let i = 0; i < files.length; i++) {
+    if(uploadedFiles.querySelector(`[src*="${files[i].name}"]`)) {
+      return
+    }
     formData.append('files', files[i], files[i].name)
     console.log(formData)
   }
@@ -24,6 +29,8 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
   // for (const value of formData.values()) {
   //   console.log(value)
   // }
+
+  
 
   // post all files at once to strapi
 
@@ -45,10 +52,12 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
           })
           .then((response) => {
             console.log(response.data.data)
+            console.log(response.data.data.attributes.filename)
             //create the asset in the asset list
             addAssetToTheAssetManager(
               response.data.data.attributes.location,
               response.data.data.id,
+              response.data.data.attributes.filename,
               document.querySelector('#assetsList')
             )
           })

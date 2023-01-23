@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-function updateData(serverUrl, collection, data, id) {
+async function updateData(serverUrl, collection, data, id) {
   return axios
     .put(`${serverUrl}/api/${collection}/${id}?populate=deep,5`, {
       data,
@@ -13,7 +13,7 @@ function updateData(serverUrl, collection, data, id) {
     })
 }
 
-function createData(serverUrl, collection, data) {
+async function createData(serverUrl, collection, data) {
   return axios
     .post(`${serverUrl}/api/${collection}/?populate=deep,5`, {
       data,
@@ -27,7 +27,7 @@ function createData(serverUrl, collection, data) {
 }
 
 // remove asset from the plan in strapi
-function removeAssetFromPlan(serverUrl, planId, assetId) {
+async function removeAssetFromPlan(serverUrl, planId, assetId) {
   let data = {
     assets: {
       disconnect: [
@@ -50,7 +50,7 @@ function removeAssetFromPlan(serverUrl, planId, assetId) {
     })
 }
 
-function connectPlanWithOrder(serverUrl, planId, assetId, position) {
+async function connectPlanWithOrder(serverUrl, planId, assetId, position) {
   console.log('assetId', assetId)
   let data = {
     assets: {
@@ -77,7 +77,7 @@ function connectPlanWithOrder(serverUrl, planId, assetId, position) {
       return err
     })
 }
-function loadCollection(serverUrl, collection, query) {
+async function loadCollection(serverUrl, collection, query) {
   //load with a query
   return axios
     .get(`${serverUrl}/api/${collection}${query ? '?' + query : ''}`)
@@ -90,7 +90,7 @@ function loadCollection(serverUrl, collection, query) {
     })
 }
 
-function loadSingle(serverUrl, collection, id, populatedeep = true) {
+async function loadSingle(serverUrl, collection, id, populatedeep = true) {
   return axios
     .get(
       `${serverUrl}/api/${collection}/${id}${

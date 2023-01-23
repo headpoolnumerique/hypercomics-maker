@@ -75,6 +75,7 @@ document.querySelector('#addPlan').addEventListener('click', () => {
 })
 
 imageUpload.addEventListener('click', function (e) {
+
   e.preventDefault()
   uploadToStrapi(imageUploadInputs)
 })
@@ -97,7 +98,7 @@ assetsList.addEventListener('click', (e) => {
       .querySelector('.selected')
       .hash.replace('#plan-', '')
 
-    const assetId = Number(e.target.dataset.strapid)
+    const assetId = e.target.dataset.strapid
 
     console.log(assetId)
 
@@ -112,13 +113,19 @@ assetsList.addEventListener('click', (e) => {
 
 // moveElementOnThePage
 
-previewScreen.addEventListener('click', (event) => {
+preview.addEventListener('click', (event) => {
   if (event.target.tagName == 'IMG') {
     previewScreen
       .querySelector('.asset-selected')
       ?.classList.remove('asset-selected')
     event.target.classList.add('asset-selected')
     contextUI.querySelector('main').innerHTML = assetManipulationUi
+  }
+  else {
+    previewScreen
+      .querySelector('.asset-selected')
+      ?.classList.remove('asset-selected')
+    contextUI.querySelector('main').innerHTML = "";
   }
 })
 

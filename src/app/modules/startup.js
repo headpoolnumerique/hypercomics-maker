@@ -107,6 +107,7 @@ function fillPlan(plan) {
     addAssetToTheAssetManager(
       asset.attributes.location,
       asset.id,
+      asset.attributes.filename,
       document.querySelector('#assetsList')
     )
 

@@ -7,13 +7,14 @@
 // sequence (it belongs to)
 // order
 
-function addAssetToTheAssetManager(url, assetid, assetList) {
-  if (assetList.querySelector(`[data-strapId="${assetid}"]`)) {
+function addAssetToTheAssetManager(url, assetid, filename, assetList) {
+  console.log(filename)
+  if (assetList.querySelector(`[data-filename="${filename}"]`)) {
     return
   } else {
     assetList.insertAdjacentHTML(
       `afterbegin`,
-      `<li><img data-strapId="${assetid}" src="${url}" id="assetlink-${assetid}" /></li>`
+      `<li><img  data-filename="${filename}" data-strapId="${assetid}" src="${url}" id="assetlink-${assetid}" /></li>`
     )
   }
 
