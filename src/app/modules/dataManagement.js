@@ -26,6 +26,30 @@ function createData(serverUrl, collection, data) {
     })
 }
 
+// remove asset from the plan in strapi
+function removeAssetFromPlan(serverUrl, planId, assetId) {
+  let data = {
+    assets: {
+      disconnect: [
+        {
+          id: assetId,
+        },
+      ],
+    },
+  }
+
+  return axios
+    .put(`${serverUrl}/api/plans/${planId}`, {
+      data,
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((err) => {
+      return err
+    })
+}
+
 function connectPlanWithOrder(serverUrl, planId, assetId, position) {
   console.log('assetId', assetId)
   let data = {
@@ -97,4 +121,5 @@ export {
   loadSingle,
   getAllImageFromPlan,
   connectPlanWithOrder,
+  removeAssetFromPlan,
 }

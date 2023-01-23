@@ -9,7 +9,7 @@ const projectName = document.querySelector('#projectName')
 const sequenceNumber = document.querySelector('#sequenceNumber')
 const sequencePreview = document.querySelector('#previewScreen')
 const contextUI = document.querySelector('#contextualUI')
-// const contextUI = document.querySelector('#closeContextualId')
+
 export {
   previewSpace,
   previewScreen,

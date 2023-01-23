@@ -15,7 +15,7 @@ import { uploadToStrapi } from './modules/assetNetwork.js'
 import { deselect, selectLink } from '../app/modules/helpers'
 import { showHideBlock } from './modules/helpers.js'
 
-import { assetManipulationUi } from './modules/assetManipulation'
+import { assetManipulationUi, deleteAsset } from './modules/assetManipulation'
 
 import {
   previewSpace,
@@ -31,10 +31,9 @@ import {
 import { addImg } from './modules/createPreviewElement.js'
 
 import {
-  updateData,
-  getAllImageFromPlan,
   connectPlanWithOrder,
 } from './modules/dataManagement.js'
+
 import config from './config/config.js'
 // list all the things
 
@@ -100,9 +99,7 @@ assetsList.addEventListener('click', (e) => {
 
     const assetId = Number(e.target.dataset.strapid)
 
-
-    console.log(assetId);
-
+    console.log(assetId)
 
     let response = connectPlanWithOrder(config.strapi.url, planNumber, assetId)
 
@@ -122,6 +119,14 @@ previewScreen.addEventListener('click', (event) => {
       ?.classList.remove('asset-selected')
     event.target.classList.add('asset-selected')
     contextUI.querySelector('main').innerHTML = assetManipulationUi
+  }
+})
+
+// contextUI
+
+contextUI.addEventListener('click', function (event) {
+  if (event.target.id == 'deleteAsset') {
+    deleteAsset()
   }
 })
 
