@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import {isNumeric} from './helpers.js'
 async function updateData(serverUrl, collection, data, id) {
   return axios
     .put(`${serverUrl}/api/${collection}/${id}?populate=deep,5`, {
@@ -37,6 +37,56 @@ async function removeAssetFromPlan(serverUrl, planId, assetId) {
       ],
     },
   }
+
+  return axios
+    .put(`${serverUrl}/api/plans/${planId}`, {
+      data,
+    })
+    .then((response) => {
+      return response
+    })
+    .catch((err) => {
+      return err
+    })
+}
+
+
+// remove asset from the plan in strapi
+async function reorderAssetFromPlan(serverUrl, planId, assetId, position,relativeTo) {
+
+  let savedPosition;
+
+  switch(position) {
+    case 'farest':
+      savedPosition = { start:true }
+      break
+    case 'closest':
+      savedPosition = { end:true }
+      break
+    case 'after':
+      savedPosition = {after: Number(relativeTo)}
+      break
+    case 'before':
+      savedPosition = {before: Number(relativeTo)}
+      break
+    default: 
+      console.log(position)
+  }
+
+
+
+  let data = {
+    assets: {
+      connect: [
+        {
+          id: Number(assetId),
+          position: savedPosition
+        },
+      ],
+    },
+  }
+ 
+
 
   return axios
     .put(`${serverUrl}/api/plans/${planId}`, {
@@ -122,4 +172,5 @@ export {
   getAllImageFromPlan,
   connectPlanWithOrder,
   removeAssetFromPlan,
+  reorderAssetFromPlan
 }

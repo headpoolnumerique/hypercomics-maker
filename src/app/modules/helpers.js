@@ -50,4 +50,8 @@ function px2screenSize(valueInPixel, orientation, unit) {
   return 100 * (valueInPixel / screenValue)
 }
 
-export { updateInteractiveUI, deselect, selectLink, showHideBlock }
+var isNumeric = function(num){
+    return (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);  
+}
+
+export { isNumeric, updateInteractiveUI, deselect, selectLink, showHideBlock }

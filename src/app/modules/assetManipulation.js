@@ -1,4 +1,4 @@
-import { removeAssetFromPlan } from './dataManagement.js'
+import { reorderAssetFromPlan, removeAssetFromPlan } from './dataManagement.js'
 import interact from 'interactjs'
 import config from '../config/config.js'
 
@@ -18,8 +18,10 @@ import config from '../config/config.js'
 const assetManipulationUi = `<div>
 <button id="rotate">Rotate</button>
 <button id="resize">Resize</button>
-<button id="moveFurther">plus loin</button>
+<button id="moveFarther">plus loin</button>
+<button id="moveFarest">au fond</button>
 <button id="moveCloser">plus près</button>
+<button id="moveClosest">au premier plan</button>
 <button id="move">Move</button>
 <button id="deleteAsset">Delete</button>
 </div>`
@@ -73,7 +75,87 @@ function interactAsset(asset) {
     })
 }
 
-function moveToLayer(asset, plan, layer, position) {
+function moveToLayer(asset, plan, position) {
+  // v2: get the order from the index of the element in the domObject
+  // further ------ closest
+  // first  ------- last
+
+  switch (position) {
+    case 'farest':
+      reorderAssetFromPlan(
+        config.strapi.url,
+        plan.id.split('-')[1],
+        asset.dataset.strapId,
+        'farest'
+      )
+        .then(plan.insertAdjacentElement('afterbegin', asset))
+        .catch((error) => {
+          if (error) {
+            console.log(error)
+          }
+        })
+      break
+
+    case 'closest':
+      // reorderAssetFromPlan(asset, plan, 'closest')
+      reorderAssetFromPlan(
+        config.strapi.url,
+        plan.id.split('-')[1],
+        asset.dataset.strapId,
+        'closest'
+      )
+        .then(plan.insertAdjacentElement('beforeend', asset))
+        .catch((error) => {
+          if (error) {
+            console.log(error)
+          }
+        })
+      break
+
+    case 'closer':
+      if (asset.nextElementSibling != null) {
+        reorderAssetFromPlan(
+          config.strapi.url,
+          plan.id.split('-')[1],
+          asset.dataset.strapId,
+          'after',
+          asset.nextElementSibling.dataset.strapId
+        )
+          .then(
+            asset.nextElementSibling.insertAdjacentElement('afterend', asset)
+          )
+          .catch((error) => {
+            if (error) {
+              console.log(error)
+            }
+          })
+      }
+      break
+
+    case 'farther':
+      if (asset.previousElementSibling != null) {
+        reorderAssetFromPlan(
+          config.strapi.url,
+          plan.id.split('-')[1],
+          asset.dataset.strapId,
+          'before',
+          asset.previousElementSibling.dataset.strapId
+        )
+          .then(
+            asset.previousElementSibling.insertAdjacentElement(
+              'beforebegin',
+              asset
+            )
+          )
+          .catch((error) => {
+            if (error) {
+              console.log(error)
+            }
+          })
+      }
+      break
+  }
+
   // check plan total layer and save it as plan.dataset.layersTotal
   // do we need to know the total amount if we only move them and save their exact places?
   // not so sure. We can simply move thing, and not send if it’s first going back or last going top.
@@ -116,4 +198,4 @@ async function deleteAsset() {
   ).then(asset.remove())
 }
 
-export { assetManipulationUi, deleteAsset, interactAsset }
+export { assetManipulationUi, deleteAsset, interactAsset, moveToLayer }

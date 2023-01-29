@@ -32,9 +32,7 @@ async function addPlan(montageList, select = true) {
     'beforeend',
     `<article class="${select ? 'shown' : ''}" id="plan-${
       response.data.data.id
-    }"><span class="plan-name">${
-      response.data.data.attributes.order
-    }</span></article>`
+    }"></article>`
   )
 }
 
@@ -50,7 +48,7 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert a link to the plan in the montage panel
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li  ><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}">${
+    `<li><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}">${
       plan.attributes.order
     }</a></li>`
   )
@@ -58,12 +56,9 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert the plan in the preview plan
   sequencePreview.insertAdjacentHTML(
     'beforeend',
-    `<article class="${select ? 'shown' : ''}" id="plan-${
-      plan.id
-    }"><span class="plan-name">${plan.attributes.order}</span></article>`
+    `<article class="${select ? 'shown' : ''}" id="plan-${plan.id}">
+    </article>`
   )
 }
-
-
 
 export { addPlan, selectLink, renderPlan }

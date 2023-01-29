@@ -3,8 +3,6 @@ import axios from 'axios'
 import config from '../config/config.js'
 import { addAssetToTheAssetManager } from './assetManager.js'
 
-
-
 // manage all the assets in the assets manager : add / remove / change any image in the asset manager.
 
 async function uploadToStrapi(input, strapiurl = config.strapi.url) {
@@ -19,7 +17,7 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
   // append the file to the form data for each file
 
   for (let i = 0; i < files.length; i++) {
-    if(uploadedFiles.querySelector(`[src*="${files[i].name}"]`)) {
+    if (uploadedFiles.querySelector(`[src*="${files[i].name}"]`)) {
       return
     }
     formData.append('files', files[i], files[i].name)
@@ -29,8 +27,6 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
   // for (const value of formData.values()) {
   //   console.log(value)
   // }
-
-  
 
   // post all files at once to strapi
 
@@ -51,9 +47,8 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
             },
           })
           .then((response) => {
-            console.log(response.data.data)
-            console.log(response.data.data.attributes.filename)
-            //create the asset in the asset list
+
+            /* Create the asset in the asset list */
             addAssetToTheAssetManager(
               response.data.data.attributes.location,
               response.data.data.id,
