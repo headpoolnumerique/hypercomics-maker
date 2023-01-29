@@ -15,7 +15,11 @@ import { uploadToStrapi } from './modules/assetNetwork.js'
 import { deselect, selectLink } from '../app/modules/helpers'
 import { showHideBlock } from './modules/helpers.js'
 
-import { assetManipulationUi, deleteAsset } from './modules/assetManipulation'
+import {
+  assetManipulationUi,
+  interactAsset,
+  deleteAsset,
+} from './modules/assetManipulation'
 
 import {
   previewSpace,
@@ -30,9 +34,7 @@ import {
 
 import { addImg } from './modules/createPreviewElement.js'
 
-import {
-  connectPlanWithOrder,
-} from './modules/dataManagement.js'
+import { connectPlanWithOrder } from './modules/dataManagement.js'
 
 import config from './config/config.js'
 // list all the things
@@ -75,7 +77,6 @@ document.querySelector('#addPlan').addEventListener('click', () => {
 })
 
 imageUpload.addEventListener('click', function (e) {
-
   e.preventDefault()
   uploadToStrapi(imageUploadInputs)
 })
@@ -114,26 +115,46 @@ assetsList.addEventListener('click', (e) => {
 // moveElementOnThePage
 
 preview.addEventListener('click', (event) => {
+
   if (event.target.tagName == 'IMG') {
     previewScreen
       .querySelector('.asset-selected')
       ?.classList.remove('asset-selected')
     event.target.classList.add('asset-selected')
+    interactAsset(event.target)
+    //update context menu
     contextUI.querySelector('main').innerHTML = assetManipulationUi
-  }
-  else {
+  } else {
     previewScreen
       .querySelector('.asset-selected')
       ?.classList.remove('asset-selected')
-    contextUI.querySelector('main').innerHTML = "";
+
+    //update context menu
+    contextUI.querySelector('main').innerHTML = ''
   }
 })
 
 // contextUI
 
 contextUI.addEventListener('click', function (event) {
-  if (event.target.id == 'deleteAsset') {
-    deleteAsset()
+  switch (event.target.id) {
+    case 'rotate':
+      break
+    case 'resize':
+      break
+    case 'moveFurther':
+      
+      break
+    case 'moveCloser':
+      break
+    case 'move':
+      break
+    case 'deleteAsset':
+      deleteAsset()
+      break
+
+    default:
+      console.log('not there yet')
   }
 })
 

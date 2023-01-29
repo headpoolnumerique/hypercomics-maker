@@ -17,7 +17,7 @@ function selectLink(link) {
 }
 
 function updateInteractiveUI(interactiveUI, data) {
-  console.log("fun")
+  console.log('fun')
   console.log(interactiveUI)
   interactiveUI.innerHTML = data
 }
@@ -28,6 +28,26 @@ function updateInteractiveUI(interactiveUI, data) {
  */
 function showHideBlock(block) {
   block.classList.toggle('show')
+}
+
+function value2percent(valueInPixel, objectValue) {
+  //remove the px if there is a px in the value
+  valueInPixel = valueInPixel.replace('px', '')
+
+  // get the %
+  return 100 * (valueInPixel / objectValue)
+}
+
+function px2screenSize(valueInPixel, orientation, unit) {
+  let screenValue
+  if (orientation == 'left') {
+    screenValue = window.innerWidth
+  } else if (orientation == 'top') {
+    screenValue = window.innerHeight
+  }
+
+  valueInPixel = valueInPixel.replace('px', '')
+  return 100 * (valueInPixel / screenValue)
 }
 
 export { updateInteractiveUI, deselect, selectLink, showHideBlock }
