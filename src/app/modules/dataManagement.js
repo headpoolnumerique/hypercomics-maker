@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {isNumeric} from './helpers.js'
+import { isNumeric } from './helpers.js'
 async function updateData(serverUrl, collection, data, id) {
   return axios
     .put(`${serverUrl}/api/${collection}/${id}?populate=deep,5`, {
@@ -26,6 +26,9 @@ async function createData(serverUrl, collection, data) {
     })
 }
 
+
+
+
 // remove asset from the plan in strapi
 async function removeAssetFromPlan(serverUrl, planId, assetId) {
   let data = {
@@ -50,43 +53,43 @@ async function removeAssetFromPlan(serverUrl, planId, assetId) {
     })
 }
 
-
 // remove asset from the plan in strapi
-async function reorderAssetFromPlan(serverUrl, planId, assetId, position,relativeTo) {
+async function reorderAssetFromPlan(
+  serverUrl,
+  planId,
+  assetId,
+  position,
+  relativeTo
+) {
+  let savedPosition
 
-  let savedPosition;
-
-  switch(position) {
+  switch (position) {
     case 'farest':
-      savedPosition = { start:true }
+      savedPosition = { start: true }
       break
     case 'closest':
-      savedPosition = { end:true }
+      savedPosition = { end: true }
       break
     case 'after':
-      savedPosition = {after: Number(relativeTo)}
+      savedPosition = { after: Number(relativeTo) }
       break
     case 'before':
-      savedPosition = {before: Number(relativeTo)}
+      savedPosition = { before: Number(relativeTo) }
       break
-    default: 
+    default:
       console.log(position)
   }
-
-
 
   let data = {
     assets: {
       connect: [
         {
           id: Number(assetId),
-          position: savedPosition
+          position: savedPosition,
         },
       ],
     },
   }
- 
-
 
   return axios
     .put(`${serverUrl}/api/plans/${planId}`, {
@@ -172,5 +175,5 @@ export {
   getAllImageFromPlan,
   connectPlanWithOrder,
   removeAssetFromPlan,
-  reorderAssetFromPlan
+  reorderAssetFromPlan,
 }

@@ -1,47 +1,17 @@
 
-1. layout of the app → v1 ok.
+
+## impossible question with the prototype
+
+Use the same image multiple times on the layout? what should we do about it? the way we set up the data makes it impossible as we use strapi link.
+How can we do that?
+
+how to manage the css?
+
+the css we wanna save is a bunch of data that belong to the sequence. 
 
 
-change the way we show the different views not using target.css
-
-
-
-
-
-2. create strapi.
-
-→ upload → add images
-→ when upload → add the images to the selected plan (add img element) → each element is then selectionable from the preview to move it aroudn
-→ save the location of each element, and size and rotation ? we’ll see.
-→ 
-
-
-KEEP AN ARRAY OF THE USED IMAGE IN THE ELEMENT TO ADD IMAGE TO THE ARRAY WHEN NEEDED.
-and push that array on update
-
-
-
-
-
-2. import block
-3. move block → reorder  (set attribute through html. use data from attribute)
-4. save to db
-
-
-
-Active => image in the url?
-
-
-
-
-
-
-
-
-
-
-import image: https://medium.com/@codefoxx/how-to-upload-and-preview-an-image-with-javascript-749b92711b91
-
-
-then move the image to the strapi server with an id and a couple of data
-import image: fetch from strapi.
+THE ROAD FOR THE STYLES
+create style sheet when there is a new sequence
+add css rules for each move/resize
+push the css rules to the cssOM stylesheet.
+save that style sheet.

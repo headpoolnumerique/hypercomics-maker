@@ -1,14 +1,42 @@
 import { deselect, selectLink } from './helpers.js'
 import config from '../config/config.js'
 import { sequenceNumber, sequencePreview } from './selectors.js'
-import { createData } from './dataManagement.js'
-
+import { createData, loadSingle } from './dataManagement.js'
+import axios from 'axios'
 /*
 // add plan to the sequence 
 // montageList = montage list in the montage pane,
 // sequence → sequence id, 
 // select → if the new plan is selected by default
 */
+
+async function deletePlan() {
+  let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
+  let planId = Number(document.querySelector('.shown').dataset.strapId)
+  console.log(planId)
+  let data = {
+    plans: {
+      disconnect: [
+        {
+          id: planId,
+        },
+      ],
+    },
+  }
+
+  return axios
+    .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
+      data,
+    })
+    .then((response) => {
+      document.querySelector('.shown').remove()
+      document.querySelector('.selected').closest('li').remove()
+      console.log(response)
+    })
+    .catch((err) => {
+      return err
+    })
+}
 
 async function addPlan(montageList, select = true) {
   if (select) {
@@ -36,8 +64,65 @@ async function addPlan(montageList, select = true) {
   )
 }
 
+async function duplicatePlan(montageList, planId) {
+  let oldData = await loadSingle(config.strapi.url, 'plans', planId, true)
+
+  const plan = document.querySelector('.shown')
+  plan.classList.add('sourcePlan')
+  plan.classList.remove('shown')
+  document.querySelector('.selected').classList.remove('selected')
+
+  let assetsID = []
+  for (let asset of oldData.data.data.attributes.assets.data) {
+    assetsID.push(asset.id)
+  }
+
+  let data = {
+    data: {
+      sequence: Number(document.querySelector('#sequenceNumber').textContent),
+      assets: {
+        connect: assetsID,
+      },
+    },
+  }
+  return axios
+    .post(`${config.strapi.url}/api/plans/?populate=deep,5`, data)
+    .then((response) => {
+      console.log(response)
+      let newPlan = response.data.data
+      renderPlan(newPlan, montageList, sequencePreview, true)
+      console.log(newPlan.attributes.assets)
+      for (asset of newPlan.attributes.assets.data) {
+        console.log(asset)
+        importImg(asset, plan)
+      }
+      return response
+    })
+    .catch((err) => {
+      return err
+    })
+
+  // let data = {
+  //     assets: oldData.data.data.attributes.assets.data,
+  // }
+  // console.log(data)
+
+  //duplicate
+  //
+
+  //duplicate plan
+  //duplicate content
+  //duplicate CSS
+
+  // createPlan and fill it with the data,
+
+  // connect the plan to the sequence at the right order
+  //create a new plan and fill it with the data from the previous one
+}
+
 // render a plan when loading up the app
 function renderPlan(plan, montageList, sequencePreview, select = false) {
+  console.log(plan)
   let previewedPlan = document.createElement(`article`)
   previewedPlan.id = `plan-${plan.id}`
   previewedPlan.insertAdjacentHTML(
@@ -56,9 +141,11 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert the plan in the preview plan
   sequencePreview.insertAdjacentHTML(
     'beforeend',
-    `<article class="${select ? 'shown' : ''}" id="plan-${plan.id}">
+    `<article data-strap-id=${plan.id} class="${
+      select ? 'shown' : ''
+    }" id="plan-${plan.id}">
     </article>`
   )
 }
 
-export { addPlan, selectLink, renderPlan }
+export { addPlan, deletePlan, duplicatePlan, selectLink, renderPlan }

@@ -179,7 +179,15 @@ function moveToLayer(asset, plan, position) {
   // move the element on the right layer (moveAfter, moveBefore)
 }
 
-function writeCSS(asset, rules) {
+function writeCSS(plan, asset, rules) {
+
+  // where to save the css?
+
+  // check the asset
+  // asset has 
+  // create the stylesheet
+
+
   // assetId = planID + assetId
 }
 

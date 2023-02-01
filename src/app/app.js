@@ -7,7 +7,7 @@ import {
 // import nanoid from 'nanoid'
 // import { v4 as uuidv4 } from 'uuid';
 
-import { addPlan } from './modules/montage.js'
+import { deletePlan, addPlan, duplicatePlan } from './modules/montage.js'
 
 import { startup } from './modules/startup.js'
 
@@ -19,7 +19,7 @@ import {
   assetManipulationUi,
   interactAsset,
   deleteAsset,
-  moveToLayer
+  moveToLayer,
 } from './modules/assetManipulation.js'
 
 import {
@@ -77,6 +77,14 @@ document.querySelector('#addPlan').addEventListener('click', () => {
   addPlan(montageList, previewScreen)
 })
 
+document.querySelector('#deletePlan').addEventListener('click', () => {
+  deletePlan();
+})
+
+document.querySelector('#duplicatePlan').addEventListener('click', () => {
+  console.log('click')
+  duplicatePlan(montageList, document.querySelector('.shown')?.dataset.strapId)
+})
 imageUpload.addEventListener('click', function (e) {
   e.preventDefault()
   uploadToStrapi(imageUploadInputs)
@@ -102,8 +110,6 @@ assetsList.addEventListener('click', (e) => {
 
     const assetId = e.target.dataset.strapid
 
-    console.log(assetId)
-
     let response = connectPlanWithOrder(config.strapi.url, planNumber, assetId)
 
     if (response) {
@@ -116,7 +122,6 @@ assetsList.addEventListener('click', (e) => {
 // moveElementOnThePage
 
 preview.addEventListener('click', (event) => {
-
   if (event.target.tagName == 'IMG') {
     previewScreen
       .querySelector('.asset-selected')
@@ -139,24 +144,24 @@ preview.addEventListener('click', (event) => {
 
 contextUI.addEventListener('click', function (event) {
   const asset = previewScreen.querySelector('.asset-selected'),
-  plan = previewScreen.querySelector('.shown');
-  
+    plan = previewScreen.querySelector('.shown')
+
   switch (event.target.id) {
     case 'rotate':
       break
     case 'resize':
       break
     case 'moveFarther':
-      moveToLayer(asset,plan,"farther")
+      moveToLayer(asset, plan, 'farther')
       break
     case 'moveCloser':
-      moveToLayer(asset,plan,"closer")
+      moveToLayer(asset, plan, 'closer')
       break
     case 'moveFarest':
-      moveToLayer(asset,plan,"farest")
+      moveToLayer(asset, plan, 'farest')
       break
     case 'moveClosest':
-      moveToLayer(asset,plan,"closest")
+      moveToLayer(asset, plan, 'closest')
       break
     case 'move':
       break
