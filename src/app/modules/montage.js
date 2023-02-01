@@ -2,6 +2,7 @@ import { deselect, selectLink } from './helpers.js'
 import config from '../config/config.js'
 import { sequenceNumber, sequencePreview } from './selectors.js'
 import { createData, loadSingle } from './dataManagement.js'
+import { importImg } from './createPreviewElement.js'
 import axios from 'axios'
 /*
 // add plan to the sequence 
@@ -10,6 +11,30 @@ import axios from 'axios'
 // select → if the new plan is selected by default
 */
 
+async function deleteAllPlans() {
+  let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
+  let data = {
+    plans: {
+      set: [],
+    },
+  }
+
+  return axios
+    .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
+      data,
+    })
+    .then((response) => {
+      document.querySelectorAll('#previewScreen article').forEach((article) => {
+        article.remove()
+      })
+      document.querySelectorAll('#planOrder li').forEach((el) => {
+        el.remove()
+      })
+    })
+    .catch((err) => {
+      return err
+    })
+}
 async function deletePlan() {
   let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
   let planId = Number(document.querySelector('.shown').dataset.strapId)
@@ -77,6 +102,7 @@ async function duplicatePlan(montageList, planId) {
     assetsID.push(asset.id)
   }
 
+  console.log(assetsID)
   let data = {
     data: {
       sequence: Number(document.querySelector('#sequenceNumber').textContent),
@@ -91,11 +117,12 @@ async function duplicatePlan(montageList, planId) {
       console.log(response)
       let newPlan = response.data.data
       renderPlan(newPlan, montageList, sequencePreview, true)
-      console.log(newPlan.attributes.assets)
-      for (asset of newPlan.attributes.assets.data) {
-        console.log(asset)
-        importImg(asset, plan)
-      }
+      console.log('newplan', newPlan.attributes.assets)
+      console.log('newplan', newPlan.attributes.assets.data[0])
+      newPlan.attributes.assets.data.forEach((asset) => {
+        console.log('asset', asset)
+        importImg(asset, document.querySelector('.shown'))
+      })
       return response
     })
     .catch((err) => {
@@ -148,4 +175,11 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
   )
 }
 
-export { addPlan, deletePlan, duplicatePlan, selectLink, renderPlan }
+export {
+  addPlan,
+  deletePlan,
+  deleteAllPlans,
+  duplicatePlan,
+  selectLink,
+  renderPlan,
+}

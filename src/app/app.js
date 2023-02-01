@@ -7,7 +7,12 @@ import {
 // import nanoid from 'nanoid'
 // import { v4 as uuidv4 } from 'uuid';
 
-import { deletePlan, addPlan, duplicatePlan } from './modules/montage.js'
+import {
+  deletePlan,
+  deleteAllPlans,
+  addPlan,
+  duplicatePlan,
+} from './modules/montage.js'
 
 import { startup } from './modules/startup.js'
 
@@ -78,7 +83,11 @@ document.querySelector('#addPlan').addEventListener('click', () => {
 })
 
 document.querySelector('#deletePlan').addEventListener('click', () => {
-  deletePlan();
+  deletePlan()
+})
+
+document.querySelector('#deleteAllPlans').addEventListener('click', () => {
+  deleteAllPlans()
 })
 
 document.querySelector('#duplicatePlan').addEventListener('click', () => {
