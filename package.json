@@ -13,6 +13,7 @@
     "build": "npm-run-all --parallel build:*",
     "build:js": "esbuild src/app/app.js --bundle --outfile=public/js/hypercomicsBuilder.js",
     "build:fonts": "copy-and-watch src/assets/fonts/*.*  public/fonts/ ",
+    "build:css": "postcss  src/assets/css/main.css -m -o public/css/styles.css ",
     "build:html": "copy-and-watch src/html/*.{html,json}  public/ "
   },
   "keywords": [],
