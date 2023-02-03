@@ -183,6 +183,34 @@ contextUI.addEventListener('click', function (event) {
   }
 })
 
+document
+  .querySelector('#previewPrevious')
+  .addEventListener('click', function () {
+    let shownPlan = document.querySelector('.shown')
+    let shownLink = document.querySelector('.selected')
+    console.log(shownPlan, shownLink)
+    if (!shownPlan.previousElementSibling) {
+      return false
+    }
+
+    shownPlan.classList.remove('shown')
+    shownLink.classList.remove('selected')
+    shownPlan.previousElementSibling.classList.add('shown')
+    shownLink.closest('li').previousElementSibling.querySelector('a').classList.add('selected')
+  })
+
+document.querySelector('#previewNext').addEventListener('click', function () {
+  let shownPlan = document.querySelector('.shown')
+  let shownLink = document.querySelector('.selected')
+  console.log(shownPlan, shownLink)
+  if (!shownPlan.nextElementSibling) {
+    return false
+  }
+  shownPlan.classList.remove('shown')
+  shownLink.classList.remove('selected')
+  shownPlan.nextElementSibling.classList.add('shown')
+  shownLink.closest('li').nextElementSibling.querySelector('a').classList.add('selected')
+})
 //move between blocks
 
 // document.querySelector("#previewNext").addEventListener('click', function() {

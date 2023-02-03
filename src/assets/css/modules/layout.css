@@ -143,3 +143,8 @@ counter-increment: planNum;
   display: block;
 }
 
+
+.moveButton {
+  position: absolute;
+  top:50%;
+}

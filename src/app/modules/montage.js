@@ -78,9 +78,9 @@ async function addPlan(montageList, select = true) {
     'beforeend',
     `<li><a class=${select ? 'selected' : ''} href="#plan-${
       response.data.data.id
-    }"><span class="orderid">${
-      response.data.data.attributes.order
-    }</span></a></li>`
+    }">
+
+    </a></li>`
   )
 
   sequencePreview.insertAdjacentHTML(
@@ -93,6 +93,7 @@ async function addPlan(montageList, select = true) {
 
 async function duplicatePlan(montageList, planId) {
   let oldData = await loadSingle(config.strapi.url, 'plans', planId, true)
+  console.log(oldData)
 
   const plan = document.querySelector('.shown')
   plan.classList.add('sourcePlan')
