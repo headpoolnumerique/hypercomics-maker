@@ -109,7 +109,7 @@ function interactAsset(asset) {
         },
         },
       },
-    })
+    )
 }
 
 function moveToLayer(asset, plan, position) {
