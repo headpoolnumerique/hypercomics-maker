@@ -27,6 +27,8 @@ async function createData(serverUrl, collection, data) {
 }
 
 
+// loadCSS 
+
 
 
 // remove asset from the plan in strapi
