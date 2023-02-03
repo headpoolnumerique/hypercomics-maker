@@ -12,6 +12,10 @@ the css we wanna save is a bunch of data that belong to the sequence.
 
 THE ROAD FOR THE STYLES
 create style sheet when there is a new sequence
+put the sequence in a style element, 
 add css rules for each move/resize
 push the css rules to the cssOM stylesheet.
-save that style sheet.
+save that style sheet. 
+
+
+THE STYLESHEET AND FIX LA TAILLE

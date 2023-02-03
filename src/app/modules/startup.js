@@ -11,6 +11,7 @@ async function startup(url = document.location.href) {
   const projectId = sequenceUrl.searchParams.get('project')
   const sequenceId = sequenceUrl.searchParams.get('sequence')
 
+    document.body.id = `sequence-${sequenceId}`
   // sequenceId is enough because it belongs by default to a project
   // [TODO] link sequence to project
 
@@ -67,9 +68,9 @@ async function startup(url = document.location.href) {
     config.strapi.url,
     Number(document.querySelector('#sequenceNumber').textContent)
   )
-  let styling = document.createElement('style');
-  styling.id = 'sequenceStyles';
-  styling.innerHTML = styles;
+  let styling = document.createElement('style')
+  styling.id = 'sequenceStyles'
+  styling.innerHTML = styles
   document.head.insertAdjacentElement('beforeend', styling)
 }
 

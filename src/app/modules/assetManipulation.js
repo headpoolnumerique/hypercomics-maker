@@ -1,6 +1,7 @@
 import { reorderAssetFromPlan, removeAssetFromPlan } from './dataManagement.js'
 import interact from 'interactjs'
 import config from '../config/config.js'
+import axios from 'axios'
 
 // function
 
@@ -27,6 +28,7 @@ const assetManipulationUi = `<div>
 </div>`
 
 function interactAsset(asset) {
+  let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
   // wait for the image to appear to attach a interact
   const position = { x: asset.offsetLeft, y: asset.offsetTop }
   interact(asset)
@@ -44,7 +46,24 @@ function interactAsset(asset) {
           event.target.style.left = `${position.x}px `
         },
         end(event) {
-          console.log(event)
+          let planId = document.querySelector('.shown').id
+          console.log(planId)
+
+          let data = {
+            sequence: {
+              connect: [
+                {
+                  id: sequenceId,
+                },
+              ],
+            },
+            rule: `#sequence-${sequenceId} #${planId} #${event.target.id}{
+          top: ${event.target.style.top};
+          left: ${event.target.style.left};
+          }`,
+          }
+
+          addRuleToSequence(sequenceId, planId, data)
         },
       },
     })
@@ -69,7 +88,25 @@ function interactAsset(asset) {
           Object.assign(event.target.dataset, { x, y })
         },
         end: function (event) {
-          console.log(event)
+          let planId = document.querySelector('.shown').id
+          console.log(planId)
+
+          let data = {
+            sequence: {
+              connect: [
+                {
+                  id: sequenceId,
+                },
+              ],
+            },
+            rule: `#sequence-${sequenceId} #${planId} #${event.target.id}{
+          width: ${event.rect.width}px;
+          height: ${event.rect.height}px;
+          }`,
+          }
+
+          addRuleToSequence(sequenceId, planId, data)
+        },
         },
       },
     })
@@ -180,14 +217,10 @@ function moveToLayer(asset, plan, position) {
 }
 
 function writeCSS(plan, asset, rules) {
-
   // where to save the css?
-
   // check the asset
-  // asset has 
+  // asset has
   // create the stylesheet
-
-
   // assetId = planID + assetId
 }
 
@@ -204,6 +237,20 @@ async function deleteAsset() {
     plan.id.split('-')[1],
     asset.dataset.strapId
   ).then(asset.remove())
+}
+
+function addRuleToSequence(sequenceId, planId,  data) {
+  return axios
+    .post(`${config.strapi.url}/api/cssrules/`, {
+      data,
+    })
+    .then((response) => {
+      console.log(response)
+      return response
+    })
+    .catch((err) => {
+      return err
+    })
 }
 
 export { assetManipulationUi, deleteAsset, interactAsset, moveToLayer }
