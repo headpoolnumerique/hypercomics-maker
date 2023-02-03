@@ -78,7 +78,9 @@ async function addPlan(montageList, select = true) {
     'beforeend',
     `<li><a class=${select ? 'selected' : ''} href="#plan-${
       response.data.data.id
-    }">${response.data.data.attributes.order}</a></li>`
+    }"><span class="orderid">${
+      response.data.data.attributes.order
+    }</span></a></li>`
   )
 
   sequencePreview.insertAdjacentHTML(
@@ -160,9 +162,9 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert a link to the plan in the montage panel
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}">${
-      plan.attributes.order
-    }</a></li>`
+    `<li><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}"> 
+
+  </a></li>`
   )
 
   // insert the plan in the preview plan

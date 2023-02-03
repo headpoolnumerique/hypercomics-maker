@@ -112,6 +112,18 @@ main#appWrap {
   margin: auto;
   border: 1px solid black;
   text-decoration: none;
+  /* color: ; */
+  
+  /* position: absolute; */
+}
+
+#planOrder {
+  counter-reset: planNum;
+}
+
+#banc-montage #planOrder li a::after {
+content: counter(planNum);
+counter-increment: planNum;
 }
 
 /* 3. the contextual menu */
