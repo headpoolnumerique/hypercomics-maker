@@ -29,7 +29,10 @@ const assetManipulationUi = `<div>
 
 function interactAsset(asset) {
   let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
+  let previewScreen = document.querySelector("#previewScreen");
+  let previewScreenSize = {height : previewScreen.offsetHeight, width: previewScreen.offsetWidth};
   // wait for the image to appear to attach a interact
+  console.log(previewScreenSize)
   const position = { x: asset.offsetLeft, y: asset.offsetTop }
   interact(asset)
     .draggable({
@@ -42,28 +45,23 @@ function interactAsset(asset) {
           position.x += event.dx
           position.y += event.dy
           //write css here? and save css
-          event.target.style.top = `${position.y}px `
-          event.target.style.left = `${position.x}px `
+          event.target.style.top = `${percentage(position.y, previewScreenSize.height)}%`
+          event.target.style.left = `${percentage(position.x, previewScreenSize.width)}%`
         },
         end(event) {
           let planId = document.querySelector('.shown').id
           console.log(planId)
 
           let data = {
-            sequence: {
-              connect: [
-                {
-                  id: sequenceId,
-                },
-              ],
-            },
-            rule: `#sequence-${sequenceId} #${planId} #${event.target.id}{
-          top: ${event.target.style.top};
-          left: ${event.target.style.left};
+            cssrule: `#sequence-${sequenceId} #${event.target.id}{
+          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
+          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
+          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
+          left: ${percentage(event.target.offsetLeft, previewScreenSize.width)}%;
           }`,
           }
-
           addRuleToSequence(sequenceId, planId, data)
+          addRuleToAsset(event.target.dataset.strapId, data)
         },
       },
     })
@@ -80,9 +78,8 @@ function interactAsset(asset) {
           y = (parseFloat(y) || 0) + event.deltaRect.top
 
           Object.assign(event.target.style, {
-            width: `${event.rect.width}px`,
-            height: `${event.rect.height}px`,
-            transform: `translate(${x}px, ${y}px)`,
+            width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
+            height: `${percentage(event.rect.height, previewScreenSize.height)}%`,
           })
 
           Object.assign(event.target.dataset, { x, y })
@@ -92,24 +89,19 @@ function interactAsset(asset) {
           console.log(planId)
 
           let data = {
-            sequence: {
-              connect: [
-                {
-                  id: sequenceId,
-                },
-              ],
-            },
-            rule: `#sequence-${sequenceId} #${planId} #${event.target.id}{
-          width: ${event.rect.width}px;
-          height: ${event.rect.height}px;
+            cssrule: `#sequence-${sequenceId}  #${event.target.id}{
+          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
+          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
+          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
+          left: ${percentage(event.target.offsetLeft, previewScreenSize.width)}%;
           }`,
           }
 
-          addRuleToSequence(sequenceId, planId, data)
-        },
+          // addRuleToSequence(sequenceId, planId, data)
+          addRuleToAsset(event.target.dataset.strapId, data)
         },
       },
-    )
+    })
 }
 
 function moveToLayer(asset, plan, position) {
@@ -239,7 +231,7 @@ async function deleteAsset() {
   ).then(asset.remove())
 }
 
-function addRuleToSequence(sequenceId, planId,  data) {
+function addRuleToSequence(sequenceId, planId, data) {
   return axios
     .post(`${config.strapi.url}/api/cssrules/`, {
       data,
@@ -252,5 +244,24 @@ function addRuleToSequence(sequenceId, planId,  data) {
       return err
     })
 }
+
+function addRuleToAsset(assetId, data) {
+  return axios
+    .put(`${config.strapi.url}/api/assets/${assetId}`, {
+      data,
+    })
+    .then((response) => {
+      console.log(response)
+      return response
+    })
+    .catch((err) => {
+      return err
+    })
+}
+
+
+function percentage(partialValue, totalValue) {
+   return (100 * partialValue) / totalValue;
+} 
 
 export { assetManipulationUi, deleteAsset, interactAsset, moveToLayer }

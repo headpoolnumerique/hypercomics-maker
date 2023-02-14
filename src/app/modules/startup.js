@@ -64,14 +64,22 @@ async function startup(url = document.location.href) {
     fillSequence(response.data.data.id)
   }
 
-  let styles = await loadCSS(
-    config.strapi.url,
-    Number(document.querySelector('#sequenceNumber').textContent)
-  )
-  let styling = document.createElement('style')
-  styling.id = 'sequenceStyles'
-  styling.innerHTML = styles
-  document.head.insertAdjacentElement('beforeend', styling)
+  //dont generate css but set styles for each element based on the css rule.
+  // the css rule should be a json object right? you pull it on load, and every change gets updated
+
+
+
+
+
+
+  // let styles = await loadCSS(
+  //   config.strapi.url,
+  //   Number(document.querySelector('#sequenceNumber').textContent)
+  // )
+  // let styling = document.createElement('style')
+  // styling.id = 'sequenceStyles'
+  // styling.innerHTML = styles
+  // document.head.insertAdjacentElement('beforeend', styling)
 }
 
 async function fillSequence(sequence) {
@@ -95,17 +103,17 @@ async function fillSequence(sequence) {
   // check for each plan. add them to the view
 }
 
-async function loadCSS(serverUrl, sequenceID) {
-  let styles = await loadSingle(serverUrl, 'sequences', sequenceID)
-  let rules = ''
-  styles.data.data.attributes.cssrules.data.forEach((rule) => {
-    console.log('rule', rule.attributes.rule)
-    rules = rules + rule.attributes.rule
-  })
-
-  console.debug('rules', rules)
-  return rules
-}
+// async function loadCSS(serverUrl, sequenceID) {
+//   let styles = await loadSingle(serverUrl, 'sequences', sequenceID)
+//   let rules = ''
+//   styles.data.data.attributes.cssrules.data.forEach((rule) => {
+//     console.log('rule', rule.attributes.rule)
+//     rules = rules + rule.attributes.rule
+//   })
+//
+//   console.debug('rules', rules)
+//   return rules
+// }
 
 function updateSequenceMeta(id, title) {
   const meta = {
@@ -125,6 +133,7 @@ function fillPlan(plan) {
 
   // fill the asset manager with the image
   assetsToFillWith.forEach((asset) => {
+    document.querySelector("#sequenceStyles").textContent = document.querySelector("#sequenceStyles").textContent + " " + asset.attributes.cssrule; 
     addAssetToTheAssetManager(
       asset.attributes.location,
       asset.id,

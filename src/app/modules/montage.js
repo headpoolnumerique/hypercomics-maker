@@ -101,17 +101,25 @@ async function duplicatePlan(montageList, planId) {
   document.querySelector('.selected').classList.remove('selected')
 
   let assetsID = []
+
+  //where is the css to clone?
+
   for (let asset of oldData.data.data.attributes.assets.data) {
     assetsID.push(asset.id)
   }
+
+
+
 
   console.log(assetsID)
   let data = {
     data: {
       sequence: Number(document.querySelector('#sequenceNumber').textContent),
+      cssrules: "",
       assets: {
         connect: assetsID,
       },
+      
     },
   }
   return axios

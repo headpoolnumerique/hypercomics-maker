@@ -27,7 +27,6 @@ async function createData(serverUrl, collection, data) {
 }
 
 
-// loadCSS 
 
 
 
