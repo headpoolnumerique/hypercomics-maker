@@ -3,30 +3,22 @@ import {
   resizePreview,
   fullPageWatcher,
 } from './modules/preview.js'
-
-// import nanoid from 'nanoid'
-// import { v4 as uuidv4 } from 'uuid';
-
 import {
   deletePlan,
   deleteAllPlans,
   addPlan,
   duplicatePlan,
 } from './modules/montage.js'
-
 import { startup } from './modules/startup.js'
-
 import { uploadToStrapi } from './modules/assetNetwork.js'
 import { deselect, selectLink } from '../app/modules/helpers'
 import { showHideBlock } from './modules/helpers.js'
-
 import {
   assetManipulationUi,
   interactAsset,
   deleteAsset,
   moveToLayer,
 } from './modules/assetManipulation.js'
-
 import {
   previewSpace,
   previewScreen,
@@ -37,15 +29,13 @@ import {
   assetsList,
   contextUI,
 } from './modules/selectors.js'
-
 import { addImg } from './modules/createPreviewElement.js'
-
 import { connectPlanWithOrder } from './modules/dataManagement.js'
-
 import config from './config/config.js'
-// list all the things
 
+// list all the things
 //Event and binds
+
 document.querySelectorAll('.previewResizer').forEach((resizeButton) => {
   resizeButton.addEventListener('click', () => {
     resizePreview(
@@ -196,7 +186,10 @@ document
     shownPlan.classList.remove('shown')
     shownLink.classList.remove('selected')
     shownPlan.previousElementSibling.classList.add('shown')
-    shownLink.closest('li').previousElementSibling.querySelector('a').classList.add('selected')
+    shownLink
+      .closest('li')
+      .previousElementSibling.querySelector('a')
+      .classList.add('selected')
   })
 
 document.querySelector('#previewNext').addEventListener('click', function () {
@@ -209,19 +202,10 @@ document.querySelector('#previewNext').addEventListener('click', function () {
   shownPlan.classList.remove('shown')
   shownLink.classList.remove('selected')
   shownPlan.nextElementSibling.classList.add('shown')
-  shownLink.closest('li').nextElementSibling.querySelector('a').classList.add('selected')
+  shownLink
+    .closest('li')
+    .nextElementSibling.querySelector('a')
+    .classList.add('selected')
 })
-//move between blocks
-
-// document.querySelector("#previewNext").addEventListener('click', function() {
-//   document.querySelector('.selected')?.parentElement.nextSibling.querySelector('a').classList.add('selected')
-// }) {
-//
-// }
-
-// starting point
-
-// manage
-//  -----------------START THE APP
 
 startup()

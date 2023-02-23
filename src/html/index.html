@@ -12,15 +12,19 @@
     <style id="sequenceStyles"></style>
     <main id="appWrap">
 
-     <section id="meta">
-      <h1>Welcome to hyper comics</h1>
+      <section id="buttonList">
+
+      </section>
+
+     <section id="sequence" class="moveable">
+      <h2>Sequence</h2>
       <p class="meta"> project: <span id="projectName">projname</span>, sequence: <span id="sequenceNumber">seqnum</span>
           <button id="showMontage">montage</button>
           <button id="showContextualUI">ui</button>
       <p>
      </section> 
 
-     <section id="contextualUI" class="show">
+     <section id="contextualUI" class="show moveable">
 
 
        <h2>The contextual menu!</h2>
@@ -36,7 +40,7 @@
 
         <!-- <h2>preview</h2> -->
 
-        <section id="previewButtons" class="buttons">
+        <section id="previewButtons" class="buttons moveable">
           <button id="orientationChanger">change orientation</button>
           <button id="fullPageWatcher">fullpage</button>
           <button class="previewResizer" data-preview-height="960" data-preview-width="640">Mobile V</button>
@@ -50,8 +54,9 @@
 
       </section>
 
-      <section id="banc-montage" class="show">
+      <section id="banc-montage" class="show moveable">
 
+      <h2>montage</h2>
         <!-- <h2>montage</h2> -->
 
           <button id="addPlan">add plan</button>
@@ -62,7 +67,10 @@
           <!-- <li><a href="#plan12">12</a></li> -->
         </ol>
 
-      <section id="assets">
+      </section> 
+
+      <section id="assets" class="moveable">
+      <h2>Assets</h2>
       <form id="inputs" action="" post="">
         <label for="assetsUpload">upload images:</label>
         <input

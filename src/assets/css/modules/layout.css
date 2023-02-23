@@ -9,10 +9,11 @@ html {
 
 main#appWrap {
   height: 100vh;
-  background: var(--color-app-wrapp);
-  display: grid;
+  /* background: var(--color-app-wrapp); */
+  /* display: grid; */
+  display: flex;
   scrollbar-gutter: stable;
-  grid-template-rows: [meta-start] 80px [meta-end preview-start] 1fr [preview-end montage-start] auto [montage-end];
+  /* grid-template-rows: [meta-start] 80px [meta-end preview-start] 1fr [preview-end montage-start] auto [montage-end]; */
   /*start latyou*/
   --preview-width: 50vw;
   --preview-height: 50vh;
@@ -22,27 +23,21 @@ main#appWrap {
 #preview {
   background: var(--color-preview, unset);
   display: block;
-  width: 100%;
-  height: 100%;
   margin: auto;
-  display: grid;
-  grid-template-rows: 80px 1fr;
-  grid-template-columns: 1fr 1fr;
 }
 
 #preview #previewScreen {
   width: var(--preview-width);
   height: var(--preview-height);
-  /* min-width: var(--min-width); */
-  /* min-height: var(--min-height); */
   border: 1px solid var(--color-body);
   margin: auto;
   background: var(--color-previewScreen, unset);
-  overflow: hidden;
   resize: both;
   position: relative;
   grid-column: 1/-1;
+  box-shadow: 0 0 0 5ch rgb(200,200,200,0.7);
 }
+
 
 #preview.fullscreen #previewScreen {
   position: fixed;
@@ -84,21 +79,22 @@ main#appWrap {
 
 #banc-montage {
   display: none;
+
+  background: var(--color-montage-order, white);
 }
 #banc-montage.show {
   display: unset;
-  height: 20vh;
+  min-height: 200px;
 }
 
 #banc-montage #planOrder {
-  background: var(--color-montage-order, unset);
   list-style-type: none;
   display: flex;
   padding: 1em 2ch;
   margin: 0 auto 1em;
-  gap: 3ch;
-  width: 90vw;
-  /* flex: 1 1 1; */
+  gap: 2ch;
+  width: 80%;
+
   align-items: space-around;
   overflow-x: auto;
 }
@@ -129,12 +125,9 @@ counter-increment: planNum;
 /* 3. the contextual menu */
 
 #contextualUI {
-  padding: 2em 2ch;
-  width: 30vh;
   min-height: auto;
   z-index: 1000;
   background: white;
-  box-shadow: 0 0 0 3px red;
   position:fixed;
   display: none;
 }

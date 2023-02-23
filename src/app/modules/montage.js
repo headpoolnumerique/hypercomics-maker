@@ -1,4 +1,4 @@
-import { deselect, selectLink } from './helpers.js'
+import { deselect, selectLink, activatePlan } from './helpers.js'
 import config from '../config/config.js'
 import { sequenceNumber, sequencePreview } from './selectors.js'
 import { createData, loadSingle } from './dataManagement.js'
@@ -37,8 +37,9 @@ async function deleteAllPlans() {
 }
 async function deletePlan() {
   let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
+  let previousPlan = document.querySelector('.shown').previousElementSibling.id.split('-')[1];
+  console.log(previousPlan)
   let planId = Number(document.querySelector('.shown').dataset.strapId)
-  console.log(planId)
   let data = {
     plans: {
       disconnect: [
@@ -56,7 +57,10 @@ async function deletePlan() {
     .then((response) => {
       document.querySelector('.shown').remove()
       document.querySelector('.selected').closest('li').remove()
-      console.log(response)
+      //show previousPlan if it exists
+      if (previousPlan) {
+        activatePlan(previousPlan)
+      }
     })
     .catch((err) => {
       return err
@@ -76,9 +80,9 @@ async function addPlan(montageList, select = true) {
 
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li><a class=${select ? 'selected' : ''} href="#plan-${
-      response.data.data.id
-    }">
+    `<li id="link-${response.data.data.id}"><a class=${
+      select ? 'selected' : ''
+    } href="#plan-${response.data.data.id}" >
 
     </a></li>`
   )
@@ -87,7 +91,7 @@ async function addPlan(montageList, select = true) {
     'beforeend',
     `<article class="${select ? 'shown' : ''}" id="plan-${
       response.data.data.id
-    }"></article>`
+    }" data-strap-id="${response.data.data.id}"></article>`
   )
 }
 
@@ -108,18 +112,14 @@ async function duplicatePlan(montageList, planId) {
     assetsID.push(asset.id)
   }
 
-
-
-
   console.log(assetsID)
   let data = {
     data: {
       sequence: Number(document.querySelector('#sequenceNumber').textContent),
-      cssrules: "",
+      cssrules: '',
       assets: {
         connect: assetsID,
       },
-      
     },
   }
   return axios
@@ -171,7 +171,9 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert a link to the plan in the montage panel
   montageList.insertAdjacentHTML(
     'beforeend',
-    `<li><a class="${select ? 'selected' : ''}" href="#plan-${plan.id}"> 
+    `<li id="link-${plan.id}"><a class="${
+      select ? 'selected' : ''
+    }" href="#plan-${plan.id}"> 
 
   </a></li>`
   )

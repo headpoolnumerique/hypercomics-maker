@@ -10,7 +10,8 @@
   background: var(--color-assets-background, unset);
   background: white;
   display: block;
-  height: 100vh;
+  min-height: 400px;
+  max-height:90vh;
   
 }
 

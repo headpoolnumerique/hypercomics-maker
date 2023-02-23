@@ -1,0 +1,26 @@
+.moveable {
+  position: fixed;
+  border: 2px solid var(--color-body);
+  z-index: 400000;
+}
+.moveable h2 {
+  padding:.3em 2ch;
+  background: black;
+  font-size: 0.8em;
+  letter-spacing: .2ch;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 1em;
+}
+
+
+button {
+  border: 1px solid var(--color-body);
+  background: white;
+  padding: .2em 1ch;
+}
+
+button:hover {
+  background: var(--color-main);
+  color:white;
+}

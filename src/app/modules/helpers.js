@@ -22,6 +22,13 @@ function updateInteractiveUI(interactiveUI, data) {
   interactiveUI.innerHTML = data
 }
 
+
+function activatePlan(planId) {
+  document.querySelector(`#plan-${planId}`).classList.add('shown');
+  document.querySelector(`#link-${planId}`).classList.add('selected');
+}
+
+
 /*
  * show/hide any block of UI
  * @param {DOMobject} block - the element to show/hide by adding a custom show / hide class
@@ -54,4 +61,4 @@ var isNumeric = function(num){
     return (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num);  
 }
 
-export { isNumeric, updateInteractiveUI, deselect, selectLink, showHideBlock }
+export { isNumeric, activatePlan, updateInteractiveUI, deselect, selectLink, showHideBlock }
