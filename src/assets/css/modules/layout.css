@@ -33,9 +33,10 @@ main#appWrap {
   margin: auto;
   background: var(--color-previewScreen, unset);
   resize: both;
+  overflow: hidden;
   position: relative;
   grid-column: 1/-1;
-  box-shadow: 0 0 0 5ch rgb(200,200,200,0.7);
+  box-shadow: 0 0 0 10px rgb(200,200,200,0.2);
 }
 
 
@@ -78,9 +79,8 @@ main#appWrap {
 /*II. montage*/
 
 #banc-montage {
-  display: none;
-
   background: var(--color-montage-order, white);
+  max-width: 800px;
 }
 #banc-montage.show {
   display: unset;
@@ -90,13 +90,12 @@ main#appWrap {
 #banc-montage #planOrder {
   list-style-type: none;
   display: flex;
-  padding: 1em 2ch;
+  padding-left: 0;
   margin: 0 auto 1em;
   gap: 2ch;
-  width: 80%;
-
+  flex-wrap: wrap;
+  width: 100%;
   align-items: space-around;
-  overflow-x: auto;
 }
 
 #banc-montage #planOrder li a {
@@ -108,9 +107,6 @@ main#appWrap {
   margin: auto;
   border: 1px solid black;
   text-decoration: none;
-  /* color: ; */
-  
-  /* position: absolute; */
 }
 
 #planOrder {

@@ -4,7 +4,7 @@ import { addImg, importImg } from './createPreviewElement'
 import { addPlan, renderPlan } from './montage.js'
 import { montageList, sequencePreview } from './selectors.js'
 import { addAssetToTheAssetManager } from './assetManager'
-import { moveToolbars } from './toolbarsManipulations.js'
+import { moveToolbars,toggleToolbars } from './toolbarsManipulations.js'
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -64,6 +64,7 @@ async function startup(url = document.location.href) {
     fillSequence(response.data.data.id)
   }
   moveToolbars()
+  toggleToolbars()
 }
 
 async function fillSequence(sequence) {

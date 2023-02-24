@@ -1,8 +1,35 @@
 import interact from 'interactjs'
 
 
+function toggleToolbars() {
+  document.querySelector('#homeButtonsList').addEventListener('click', function(event) {
+  switch (event.target.id) {
+    case 'showSequence':
+      console.log(event.target.id)
+      toggleToolbar(document.querySelector('#sequence'))
+      break
+    case 'showContextual':
+      console.log(event.target.id)
+      toggleToolbar(document.querySelector('#contextualUI'))
+      break
+    case 'showAssets':
+      console.log(event.target.id)
+      toggleToolbar(document.querySelector('#assets'))
+      break
+    case 'showMontage':
+      console.log(event.target.id)
+      toggleToolbar(document.querySelector('#banc-montage'))
+      break
+    default:
+      console.log(event.target.id)
+      console.log('not there yet')
+  }
+  })
+}
 
-
+function toggleToolbar(toolbarElement) {
+  toolbarElement.classList.toggle('hide');
+}
 
 
 function moveToolbars() {
@@ -32,5 +59,5 @@ function closeToolbar(el){
   console.log(el)
 }
 
-export { moveToolbars, closeToolbar }
+export { moveToolbars, toggleToolbars }
 

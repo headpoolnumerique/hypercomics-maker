@@ -2,12 +2,9 @@
 
 #assets {
   position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 200px;
+  top:30vh;
+  left: 30vw;
   padding: 1em;
-  background: var(--color-assets-background, unset);
   background: white;
   display: block;
   min-height: 400px;
@@ -16,19 +13,21 @@
 }
 
 #assets #assetsList {
-  display: grid;
+  display: flex;
   padding: 0;
   margin: 0;
   margin-top:3em;
   gap: 10px;
-  grid-template-columns: 1fr 1fr;
   list-style-type: none;
   overflow-y: auto;
   max-height: 80vh;
+  flex-wrap: wrap;
   
 }
 
 #assets #assetsList li {
   border: 1px solid black;
   padding:10px;
+  max-width: 150px;
+  min-width: 200px;
 }

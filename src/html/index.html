@@ -11,76 +11,80 @@
   <body>
     <style id="sequenceStyles"></style>
     <main id="appWrap">
-
-      <section id="buttonList">
-
+      <section id="homeButtonsList">
+        <button id="showSequence">sequence</button>
+        <button id="showContextual">contextual</button>
+        <button id="showMontage">montage</button>
+        <button id="showAssets">assets</button>
       </section>
 
-     <section id="sequence" class="moveable">
-      <h2>Sequence</h2>
-      <p class="meta"> project: <span id="projectName">projname</span>, sequence: <span id="sequenceNumber">seqnum</span>
-          <button id="showMontage">montage</button>
-          <button id="showContextualUI">ui</button>
-      <p>
-     </section> 
+      <section id="sequence" class="moveable hide">
+        <h2>Sequence</h2>
+        <p class="meta">
+          project: <span id="projectName">projname</span>, sequence:
 
-     <section id="contextualUI" class="show moveable">
+          <span id="sequenceNumber">seqnum</span>
+        </p>
 
+        <p></p>
+      </section>
 
-       <h2>The contextual menu!</h2>
-
-       <div class="button-list">
-         <button id="moveContextualUI">M</button>
-         <button id="closeContextualUI">C</button>
-       </div>
-       <main>content</main>
-
-       </section>
+      <section id="contextualUI" class="show moveable hide">
+        <h2>The contextual menu!</h2>
+        <div class="button-list"></div>
+        <main><em>select something to see options</em></main>
+      </section>
+      <section id="previewButtons" class="buttons moveable hide">
+        <h2>Screen size</h2>
+        <button id="orientationChanger">change orientation</button>
+        <button id="fullPageWatcher">fullpage</button>
+        <button
+          class="previewResizer"
+          data-preview-height="960"
+          data-preview-width="640"
+        >
+          Mobile V
+        </button>
+        <button
+          class="previewResizer"
+          data-preview-height="640"
+          data-preview-width="960"
+        >
+          Mobile H
+        </button>
+      </section>
       <section id="preview">
-
         <!-- <h2>preview</h2> -->
 
-        <section id="previewButtons" class="buttons moveable">
-          <button id="orientationChanger">change orientation</button>
-          <button id="fullPageWatcher">fullpage</button>
-          <button class="previewResizer" data-preview-height="960" data-preview-width="640">Mobile V</button>
-          <button class="previewResizer" data-preview-height="640" data-preview-width="960">Mobile H</button>
-        </section>
-
-        <button class="moveButton" id="previewPrevious"><</button> 
-         <button class="moveButton" id="previewNext">></button> 
-        <section class="screen" id="previewScreen" >
-        </section>
-
+        <button class="moveButton" id="previewPrevious"><</button>
+        <button class="moveButton" id="previewNext">></button>
+        <section class="screen" id="previewScreen"></section>
       </section>
 
-      <section id="banc-montage" class="show moveable">
+      <section id="banc-montage" class="show moveable hide">
+        <h2>montage</h2>
 
-      <h2>montage</h2>
-        <!-- <h2>montage</h2> -->
-
-          <button id="addPlan">add plan</button>
-          <button id="deletePlan">delete plan</button>
-          <button id="deleteAllPlans">delete all plans !careful! </button>
-          <button id="duplicatePlan">duplicate plan</button>
+        <button id="addPlan">add plan</button>
+        <button id="deletePlan">delete plan</button>
+        <button id="deleteAllPlans">delete all plans !careful!</button>
+        <button id="duplicatePlan">duplicate plan</button>
         <ol id="planOrder">
           <!-- <li><a href="#plan12">12</a></li> -->
         </ol>
+      </section>
 
-      </section> 
-
-      <section id="assets" class="moveable">
-      <h2>Assets</h2>
-      <form id="inputs" action="" post="">
-        <label for="assetsUpload">upload images:</label>
-        <input
-          id="assetsUpload"
-          name="assetsUpload"
-          type="file"
-          multiple="true"
-        />
-        <button id="submitAssets">upload</button>
-      </form>
+      <section id="assets" class="moveable hide">
+        <h2>Assets</h2>
+        <form id="inputs" action="" post="">
+          <label for="assetsUpload">upload images:</label>
+          <input
+            id="assetsUpload"
+            name="assetsUpload"
+            type="file"
+            multiple="true"
+          />
+          <button id="submitAssets">upload</button>
+        </form>
 
         <label for="assetsFilter">Filtre:</label>
         <input
@@ -88,8 +92,7 @@
           type="text"
           placeholder="are you looking for something?"
         />
-        <ul id="assetsList">
-        </ul>
+        <ul id="assetsList"></ul>
       </section>
     </main>
   </body>

@@ -2,25 +2,47 @@
   position: fixed;
   border: 2px solid var(--color-body);
   z-index: 400000;
+  overflow:auto;
+  resize:both;
+  background: white;
 }
 .moveable h2 {
-  padding:.3em 2ch;
+  padding: 0.3em 2ch;
   background: black;
   font-size: 0.8em;
-  letter-spacing: .2ch;
+  letter-spacing: 0.2ch;
   text-transform: uppercase;
   color: white;
   margin-bottom: 1em;
 }
 
-
 button {
   border: 1px solid var(--color-body);
   background: white;
-  padding: .2em 1ch;
+  padding: 0.2em 1ch;
 }
 
 button:hover {
   background: var(--color-main);
-  color:white;
+  color: white;
+}
+
+#homeButtonsList {
+  font-size: 0.8em;
+  display: flex;
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 10000000000;
+}
+#homeButtonsList button {
+  text-transform: uppercase;
+  margin-left:4ch;
+  border: 2px solid black;
+  border-bottom: 6px solid black;
+}
+
+
+.hide {
+  display: none !important;
 }
