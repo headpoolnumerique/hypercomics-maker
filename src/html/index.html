@@ -16,23 +16,38 @@
         <button id="showContextual">contextual</button>
         <button id="showMontage">montage</button>
         <button id="showAssets">assets</button>
+        <button id="showPelure">show previous</button>
       </section>
 
       <section id="sequence" class="moveable hide">
         <h2>Sequence</h2>
         <p class="meta">
           project: <span id="projectName">projname</span>, sequence:
-
           <span id="sequenceNumber">seqnum</span>
         </p>
-
-        <p></p>
       </section>
 
-      <section id="contextualUI" class="show moveable hide">
+      <section id="contextualUI" class="show moveable">
         <h2>The contextual menu!</h2>
         <div class="button-list"></div>
-        <main><em>select something to see options</em></main>
+        <main>
+          <div class="manip">
+            <button id="moveFarest">au fond</button>
+            <button id="moveFarther">plus loin</button>
+            <button id="moveCloser">plus près</button>
+            <button id="moveClosest">au premier plan</button>
+            <button id="deleteAsset">Delete</button>
+
+            <label for="x">x</label>
+            <input id="inputx" name="x" type="number" step="0.01" />
+            <label for="y">y</label>
+            <input id="inputy" name="y" type="number" step="0.01" />
+            <label for="width">width</label>
+            <input id="inputwidth" name="width" type="number" step="0.01" />
+            <label for="height">height</label>
+            <input id="inputheight" name="height" type="number" step="0.01" />
+          </div>
+        </main>
       </section>
       <section id="previewButtons" class="buttons moveable hide">
         <h2>Screen size</h2>
@@ -64,15 +79,16 @@
       <section id="banc-montage" class="show moveable hide">
         <h2>montage</h2>
 
+        <button id="showPreviousPlan">show previous plan</button>
         <button id="addPlan">add plan</button>
         <button id="deletePlan">delete plan</button>
         <button id="deleteAllPlans">delete all plans !careful!</button>
         <button id="duplicatePlan">duplicate plan</button>
-        <ol id="planOrder">
-          <!-- <li><a href="#plan12">12</a></li> -->
-        </ol>
       </section>
 
+      <ol id="planOrder">
+        <!-- <li><a href="#plan12">12</a></li> -->
+      </ol>
       <section id="assets" class="moveable hide">
         <h2>Assets</h2>
         <form id="inputs" action="" post="">

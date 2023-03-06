@@ -14,10 +14,11 @@ import { uploadToStrapi } from './modules/assetNetwork.js'
 import { deselect, selectLink } from '../app/modules/helpers'
 import { showHideBlock } from './modules/helpers.js'
 import {
-  assetManipulationUi,
+  // assetManipulationUi,
   interactAsset,
   deleteAsset,
   moveToLayer,
+updateFromUi
 } from './modules/assetManipulation.js'
 import {
   previewSpace,
@@ -128,14 +129,14 @@ preview.addEventListener('click', (event) => {
     event.target.classList.add('asset-selected')
     interactAsset(event.target)
     //update context menu
-    contextUI.querySelector('main').innerHTML = assetManipulationUi
+    // contextUI.querySelector('main').innerHTML = assetManipulationUi
   } else {
     previewScreen
       .querySelector('.asset-selected')
       ?.classList.remove('asset-selected')
 
     //update context menu
-    contextUI.querySelector('main').innerHTML = ''
+    // contextUI.querySelector('main').innerHTML = ''
   }
 })
 
@@ -173,6 +174,7 @@ contextUI.addEventListener('click', function (event) {
   }
 })
 
+// show hide/plan
 document
   .querySelector('#previewPrevious')
   .addEventListener('click', function () {
@@ -183,9 +185,13 @@ document
       return false
     }
 
+    document.querySelector('.oldshown')?.classList.remove('oldshown')
     shownPlan.classList.remove('shown')
     shownLink.classList.remove('selected')
     shownPlan.previousElementSibling.classList.add('shown')
+    shownPlan.previousElementSibling?.previousElementSibling?.classList.add(
+      'oldshown'
+    )
     shownLink
       .closest('li')
       .previousElementSibling.querySelector('a')
@@ -201,7 +207,9 @@ document.querySelector('#previewNext').addEventListener('click', function () {
   }
   shownPlan.classList.remove('shown')
   shownLink.classList.remove('selected')
+  document.querySelector('.oldshown')?.classList.remove('oldshown')
   shownPlan.nextElementSibling.classList.add('shown')
+  shownPlan.classList.add('oldshown')
   shownLink
     .closest('li')
     .nextElementSibling.querySelector('a')
@@ -209,3 +217,4 @@ document.querySelector('#previewNext').addEventListener('click', function () {
 })
 
 startup()
+updateFromUi()

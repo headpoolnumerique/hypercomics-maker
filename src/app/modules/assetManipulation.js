@@ -16,23 +16,30 @@ import axios from 'axios'
 
 // when cllick an asset, it becomes asset-selected → all change in the UI will affect the img.
 
-const assetManipulationUi = `<div>
-<button id="rotate">Rotate</button>
-<button id="resize">Resize</button>
-<button id="moveFarther">plus loin</button>
-<button id="moveFarest">au fond</button>
-<button id="moveCloser">plus près</button>
-<button id="moveClosest">au premier plan</button>
-<button id="move">Move</button>
-<button id="deleteAsset">Delete</button>
-</div>`
+// const assetManipulationUi = `<div class="manip">
+// <button id="moveFarest">au fond</button>
+// <button id="moveFarther">plus loin</button>
+// <button id="moveCloser">plus près</button>
+// <button id="moveClosest">au premier plan</button>
+// <button id="deleteAsset">Delete</button>
+//
+// <input id="inputx" name="x" type="number" step="0.01">
+// <input id="inputy" name="y" type="number" step="0.01">
+// <input id="inputwidth" name="width" type="number" step="0.01">
+// <input id="inputheight" name="height" type="number" step="0.01">
+//
+// </div>`
 
 function interactAsset(asset) {
   let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
-  let previewScreen = document.querySelector("#previewScreen");
-  let previewScreenSize = {height : previewScreen.offsetHeight, width: previewScreen.offsetWidth};
-  // wait for the image to appear to attach a interact
-  console.log(previewScreenSize)
+  let previewScreen = document.querySelector('#previewScreen')
+  let previewScreenSize = {
+    height: previewScreen.offsetHeight,
+    width: previewScreen.offsetWidth,
+  }
+
+  // TODO: wait for the image to appear to attach a interact
+
   const position = { x: asset.offsetLeft, y: asset.offsetTop }
   interact(asset)
     .draggable({
@@ -44,11 +51,34 @@ function interactAsset(asset) {
         move(event) {
           position.x += event.dx
           position.y += event.dy
-          //write css here? and save css
-          event.target.style.top = `${percentage(position.y, previewScreenSize.height)}%`
-          event.target.style.left = `${percentage(position.x, previewScreenSize.width)}%`
+
+          event.target.style.left = `${percentage(
+            position.x,
+            previewScreenSize.width
+          )}%`
+          event.target.style.top = `${percentage(
+            position.y,
+            previewScreenSize.height
+          )}%`
         },
         end(event) {
+          document.querySelector('#inputx').value = percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputy').value = percentage(
+            event.target.offsetTop,
+            previewScreenSize.height
+          )
+          document.querySelector('#inputwidth').value = percentage(
+            event.rect.width,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputheight').value = percentage(
+            event.rect.height,
+            previewScreenSize.height
+          )
+
           let planId = document.querySelector('.shown').id
           console.log(planId)
 
@@ -57,10 +87,13 @@ function interactAsset(asset) {
           width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(event.target.offsetLeft, previewScreenSize.width)}%;
+          left: ${percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width
+          )}%;
           }`,
           }
-          addRuleToSequence(sequenceId, planId, data)
+          // addRuleToSequence(sequenceId, planId, data)
           addRuleToAsset(event.target.dataset.strapId, data)
         },
       },
@@ -79,7 +112,10 @@ function interactAsset(asset) {
 
           Object.assign(event.target.style, {
             width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
-            height: `${percentage(event.rect.height, previewScreenSize.height)}%`,
+            height: `${percentage(
+              event.rect.height,
+              previewScreenSize.height
+            )}%`,
           })
 
           Object.assign(event.target.dataset, { x, y })
@@ -88,12 +124,32 @@ function interactAsset(asset) {
           let planId = document.querySelector('.shown').id
           console.log(planId)
 
+          document.querySelector('#inputx').value = percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputy').value = percentage(
+            event.target.offsetTop,
+            previewScreenSize.height
+          )
+          document.querySelector('#inputwidth').value = percentage(
+            event.rect.width,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputheight').value = percentage(
+            event.rect.height,
+            previewScreenSize.height
+          )
+
           let data = {
-            cssrule: `#sequence-${sequenceId}  #${event.target.id}{
+            cssrule: `#sequence-${sequenceId} #${event.target.id}{
           width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(event.target.offsetLeft, previewScreenSize.width)}%;
+          left: ${percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width
+          )}%;
           }`,
           }
 
@@ -259,9 +315,27 @@ function addRuleToAsset(assetId, data) {
     })
 }
 
-
 function percentage(partialValue, totalValue) {
-   return (100 * partialValue) / totalValue;
-} 
+  return ((100 * partialValue) / totalValue).toFixed(2)
+}
 
-export { assetManipulationUi, deleteAsset, interactAsset, moveToLayer }
+function updateFromUi() {
+  document.querySelector('#inputx').addEventListener('change', () => {
+    document.querySelector('.asset-selected').style.left =
+      document.querySelector('#inputx').value + "%"
+  })
+  document.querySelector('#inputy').addEventListener('change', () => {
+    document.querySelector('.asset-selected').style.top =
+      document.querySelector('#inputy').value + "%"
+  })
+  document.querySelector('#inputwidth').addEventListener('change', () => {
+    document.querySelector('.asset-selected').style.width =
+      document.querySelector('#inputwidth').value  + "%"
+  })
+  document.querySelector('#inputheight').addEventListener('change', () => {
+    document.querySelector('.asset-selected').style.height =
+      document.querySelector('#inputheight').value + "%"
+  })
+}
+
+export { deleteAsset, interactAsset, moveToLayer, updateFromUi }

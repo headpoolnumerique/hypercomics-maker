@@ -20,6 +20,14 @@ function toggleToolbars() {
       console.log(event.target.id)
       toggleToolbar(document.querySelector('#banc-montage'))
       break
+    case 'showPelure':
+      console.log(event.target.id)
+      if(document.querySelector('.oldShow')) {
+        document.querySelector('.oldshown')?.classList.remove('.oldshown')
+      }
+      document.querySelector('main').classList.toggle('showPrevious')
+      document.querySelector('.shown').previousElementSibling?.classList.add('oldshown')
+      break
     default:
       console.log(event.target.id)
       console.log('not there yet')
@@ -55,9 +63,9 @@ function moveToolbars() {
         }
     }).allowFrom('h2');
 }
-function closeToolbar(el){
-  console.log(el)
-}
+
+
+
 
 export { moveToolbars, toggleToolbars }
 

@@ -37,7 +37,9 @@ async function deleteAllPlans() {
 }
 async function deletePlan() {
   let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
-  let previousPlan = document.querySelector('.shown').previousElementSibling.id.split('-')[1];
+  let previousPlan = document
+    .querySelector('.shown')
+    .previousElementSibling.id.split('-')[1]
   console.log(previousPlan)
   let planId = Number(document.querySelector('.shown').dataset.strapId)
   let data = {
@@ -112,7 +114,6 @@ async function duplicatePlan(montageList, planId) {
     assetsID.push(asset.id)
   }
 
-  console.log(assetsID)
   let data = {
     data: {
       sequence: Number(document.querySelector('#sequenceNumber').textContent),

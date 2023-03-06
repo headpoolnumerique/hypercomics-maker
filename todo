@@ -1,5 +1,4 @@
 
-
 ## impossible question with the prototype
 
 Use the same image multiple times on the layout? what should we do about it? the way we set up the data makes it impossible as we use strapi link.
@@ -8,6 +7,31 @@ How can we do that?
 how to manage the css?
 
 the css we wanna save is a bunch of data that belong to the sequence. 
+
+
+we want to set the CSS not to the sequence, but to the plan.
+
+So an plan has an item, and that item can be of mutiple type:
+
+> image (and then has a link, a style, etc.)
+> text (and then has a text, a sytles, etc.)
+> baloon
+
+
+make an object to manage the multiple size
+
+
+an object:
+
+each plan has an asset. 
+each plan can only save one css
+each css is connected to the asset?
+should we connect the css to the plan?
+
+Plan to other plan needs to have options (the speed of changing plans for example)
+
+Or is it better to give the css to the plan?
+(css to the parent)
 
 
 THE ROAD FOR THE STYLES
@@ -23,3 +47,13 @@ Clean the css rules once in a while.
 
 on duplicate plan, duplicate the css rules?
 or assume tht they’ll move around
+
+
+
+
+!!!!!! 
+
+
+create a block that stay on inside the contextual menu that contains the value of the element
+hide and show it instead of recreate it on the fly
+

@@ -36,9 +36,8 @@ main#appWrap {
   overflow: hidden;
   position: relative;
   grid-column: 1/-1;
-  box-shadow: 0 0 0 10px rgb(200,200,200,0.2);
+  box-shadow: 0 0 0 10px rgb(200, 200, 200, 0.2);
 }
-
 
 #preview.fullscreen #previewScreen {
   position: fixed;
@@ -58,7 +57,7 @@ main#appWrap {
 }
 
 /* /plan */
-#previewScreen article:not(.shown) {
+#previewScreen article {
   display: none;
 }
 
@@ -66,7 +65,22 @@ main#appWrap {
   display: block;
 }
 
+/* pelure d’oignon */
+
+.showPrevious #previewScreen article.oldshown {
+  display: block !important;
+}
+.showPrevious #previewScreen article.oldshown * {
+  opacity: 0.4;
+  background: cyan;
+  mix-blend-mode: multiply;
+}
+.showPrevious .oldshown + .shown {
+  opacity: 0.6;
+}
+
 /*keep the button up.*/
+
 .fullscreen #fullPageWatcher {
   position: fixed;
   z-index: 1;
@@ -87,25 +101,30 @@ main#appWrap {
   min-height: 200px;
 }
 
-#banc-montage #planOrder {
+#planOrder {
+  position: fixed;
+  bottom: 0;
   list-style-type: none;
   display: flex;
   padding-left: 0;
   margin: 0 auto 1em;
-  gap: 2ch;
+  gap: 1ch;
   flex-wrap: wrap;
   width: 100%;
   align-items: space-around;
+  height: 2em;
+  overflow-y: scroll;
+  font-size: 0.8em;
 }
 
-#banc-montage #planOrder li a {
+#planOrder li a {
+  color: inherit;
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: auto;
-  border: 1px solid black;
   text-decoration: none;
 }
 
@@ -113,27 +132,41 @@ main#appWrap {
   counter-reset: planNum;
 }
 
-#banc-montage #planOrder li a::after {
-content: counter(planNum);
-counter-increment: planNum;
+#planOrder li a::after {
+  content: counter(planNum);
+  counter-increment: planNum;
+}
+
+#planOrder li a.selected {
+  color: var(--color-main);
+  font-weight: 900;
 }
 
 /* 3. the contextual menu */
 
 #contextualUI {
+  font-size: 0.8em;
+  top: 2em;
+  left: 2em;
   min-height: auto;
   z-index: 1000;
   background: white;
-  position:fixed;
-  display: none;
+  position: fixed;
+  /* display: none; */
 }
 
-#contextualUI.show {
-  display: block;
+#contextualUI.show .manip {
+  display: flex;
+  flex-direction: column;
 }
 
+#contextualUI .manip button {
+  text-transform: uppercase;
+  width: 80%;
+  margin: 1em auto;
+}
 
 .moveButton {
   position: absolute;
-  top:50%;
+  top: 50%;
 }

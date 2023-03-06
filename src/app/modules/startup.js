@@ -4,7 +4,7 @@ import { addImg, importImg } from './createPreviewElement'
 import { addPlan, renderPlan } from './montage.js'
 import { montageList, sequencePreview } from './selectors.js'
 import { addAssetToTheAssetManager } from './assetManager'
-import { moveToolbars,toggleToolbars } from './toolbarsManipulations.js'
+import { moveToolbars, toggleToolbars } from './toolbarsManipulations.js'
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -26,9 +26,6 @@ async function startup(url = document.location.href) {
 
     // add the sequence to the URL and show it in the url bar (damn you safari)
     sequenceUrl.searchParams.set('sequence', response.data.data.id)
-
-    // console.log(sequenceUrl)
-    // console.log(sequenceUrl.toString())
 
     // TODO → generate projectId before otherwise, it will create a new page.
 
@@ -76,6 +73,7 @@ async function fillSequence(sequence) {
   }
   //create the plan
   plans.data.forEach((plan, index) => {
+    console.log('renderPlan', plan)
     renderPlan(
       plan,
       montageList,
@@ -98,13 +96,12 @@ function updateSequenceMeta(id, title) {
 }
 
 function fillPlan(plan) {
-  console.log('tofill', plan.attributes.assets.data)
   // fille the plan with all the existing images
   // find the plan
   let planToFill = preview.querySelector(`#plan-${plan.id}`)
   let assetsToFillWith = plan.attributes.assets.data
 
-  // fill the asset manager with the image
+  // fill the asset manager with the images
   assetsToFillWith.forEach((asset) => {
     document.querySelector('#sequenceStyles').textContent =
       document.querySelector('#sequenceStyles').textContent +
@@ -116,8 +113,12 @@ function fillPlan(plan) {
       asset.attributes.filename,
       document.querySelector('#assetsList')
     )
+    //importTheAsset
+    planToFill.insertAdjacentHTML(
+      'beforeend',
+      `<img id="inuse-${plan.id}-${asset.id}" data-strap-id="${asset.id}" src="${asset.attributes.location}" class="asset">`
+    )
   })
 }
-
 
 export { startup }
