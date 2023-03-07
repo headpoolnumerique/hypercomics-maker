@@ -106,8 +106,8 @@ async function connectObjectToPlan(serverUrl, planId, assetId) {
     assets: assetId,
   }
 
-  let newObject = await axios
-    .post(`${serverUrl}/api/objects/?populate=deep,5`, {
+  const newObject = await axios
+    .post(`${serverUrl}/api/objects/`, {
       data,
     })
     .then((response) => {
@@ -117,6 +117,7 @@ async function connectObjectToPlan(serverUrl, planId, assetId) {
     .catch((err) => {
       return err
     })
+  return newObject
 }
 
 // async function connectObjectToPlan(serverUrl, planId, objectId, position) {

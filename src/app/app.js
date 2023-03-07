@@ -100,7 +100,7 @@ montageList.addEventListener('click', (e) => {
 })
 
 //when clicking an image in the asset list
-assetsList.addEventListener('click', (e) => {
+assetsList.addEventListener('click', async (e) => {
   // if it’s an image
   if (e.target.tagName == 'IMG') {
     // add the image to the plan
@@ -111,10 +111,12 @@ assetsList.addEventListener('click', (e) => {
     const assetId = e.target.dataset.strapid
 
     console.log(assetId);
-    let response = connectObjectToPlan(config.strapi.url, planNumber, assetId)
+    let strapisResponse = await connectObjectToPlan(config.strapi.url, planNumber, assetId)
 
-    if (response) {
-      addImg(e.target, document.querySelector('.selected').hash)
+    if (strapisResponse) {
+      console.log(strapisResponse)
+      debugger
+      addImg(e.target, document.querySelector('.selected').hash, strapisResponse.data.data.id)
     }
   }
 })
