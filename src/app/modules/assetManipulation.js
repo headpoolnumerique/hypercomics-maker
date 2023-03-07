@@ -1,34 +1,7 @@
-import { reorderAssetFromPlan, removeAssetFromPlan } from './dataManagement.js'
+import { reorderObjectFromPlan, removeObjectFromPlan } from './dataManagement.js'
 import interact from 'interactjs'
 import config from '../config/config.js'
 import axios from 'axios'
-
-// function
-
-// move element
-// resize element
-// delete element
-// rotate element
-
-// const uiData
-
-// asset manipulation
-
-// when cllick an asset, it becomes asset-selected → all change in the UI will affect the img.
-
-// const assetManipulationUi = `<div class="manip">
-// <button id="moveFarest">au fond</button>
-// <button id="moveFarther">plus loin</button>
-// <button id="moveCloser">plus près</button>
-// <button id="moveClosest">au premier plan</button>
-// <button id="deleteAsset">Delete</button>
-//
-// <input id="inputx" name="x" type="number" step="0.01">
-// <input id="inputy" name="y" type="number" step="0.01">
-// <input id="inputwidth" name="width" type="number" step="0.01">
-// <input id="inputheight" name="height" type="number" step="0.01">
-//
-// </div>`
 
 function interactAsset(asset) {
   let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
@@ -40,7 +13,7 @@ function interactAsset(asset) {
 
   // TODO: wait for the image to appear to attach a interact
 
-  const position = { x: asset.offsetLeft, y: asset.offsetTop }
+  const position = { x: object.offsetLeft, y: object.offsetTop }
   interact(asset)
     .draggable({
       listeners: {
@@ -80,21 +53,16 @@ function interactAsset(asset) {
           )
 
           let planId = document.querySelector('.shown').id
-          console.log(planId)
 
           let data = {
-            cssrule: `#sequence-${sequenceId} #${event.target.id}{
-          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
-          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
-          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width
-          )}%;
-          }`,
-          }
+          width: ${percentage(event.rect.width, previewScreenSize.width)}%,
+          height: ${percentage(event.rect.height, previewScreenSize.height)}%,
+          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%,
+          left: ${percentage(event.target.offsetLeft, previewScreenSize.width)}%,
+          },
+          
           // addRuleToSequence(sequenceId, planId, data)
-          addRuleToAsset(event.target.dataset.strapId, data)
+          addRuleToObject(event.target.dataset.strapId, data)
         },
       },
     })
