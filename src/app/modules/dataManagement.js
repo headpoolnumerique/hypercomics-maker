@@ -26,10 +26,6 @@ async function createData(serverUrl, collection, data) {
     })
 }
 
-
-
-
-
 // remove asset from the plan in strapi
 async function removeAssetFromPlan(serverUrl, planId, assetId) {
   let data = {
@@ -104,33 +100,67 @@ async function reorderAssetFromPlan(
     })
 }
 
-async function connectPlanWithOrder(serverUrl, planId, assetId, position) {
-  console.log('assetId', assetId)
+async function connectObjectToPlan(serverUrl, planId, assetId) {
   let data = {
-    assets: {
-      connect: [
-        {
-          id: assetId,
-        },
-      ],
-    },
+    plan: planId,
+    assets: assetId,
   }
 
-  if (position) {
-    data.assets.connect.position = position
-  }
-
-  return axios
-    .put(`${serverUrl}/api/plans/${planId}`, {
+  let newObject = await axios
+    .post(`${serverUrl}/api/objects/?populate=deep,5`, {
       data,
     })
     .then((response) => {
+      console.log(response)
       return response
     })
     .catch((err) => {
       return err
     })
 }
+
+// async function connectObjectToPlan(serverUrl, planId, objectId, position) {
+//   // 1. creer object
+//   // 2. lier l’asset au object
+//   // 3. render l’object
+//
+//   let data = {
+//     object: {
+//       plan: planId,
+//       asset: assetId,
+//     },
+//
+//
+//   let newObject = await axios
+//     .post(`${serverUrl}/api/objects/?populate=deep,5`, {
+//       data
+//     })
+//     .then((response) => {
+//       return response
+//     })
+//     .catch((err) => {
+//       return err
+//     })
+//
+//   // create an object, link the asset to it,
+//   }
+//
+//   if (position) {
+//     data.assets.connect.position = position
+//   }
+//
+//   return axios
+//     .put(`${serverUrl}/api/plans/${planId}`, {
+//       data,
+//     })
+//     .then((response) => {
+//       return response
+//     })
+//     .catch((err) => {
+//       return err
+//     })
+// }
+
 async function loadCollection(serverUrl, collection, query) {
   //load with a query
   return axios
@@ -174,7 +204,7 @@ export {
   loadCollection,
   loadSingle,
   getAllImageFromPlan,
-  connectPlanWithOrder,
+  connectObjectToPlan,
   removeAssetFromPlan,
   reorderAssetFromPlan,
 }

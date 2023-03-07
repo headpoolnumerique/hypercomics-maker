@@ -1,4 +1,4 @@
-import { reorderObjectFromPlan, removeObjectFromPlan } from './dataManagement.js'
+import { reorderAssetFromPlan, removeAssetFromPlan } from './dataManagement.js'
 import interact from 'interactjs'
 import config from '../config/config.js'
 import axios from 'axios'
@@ -13,7 +13,7 @@ function interactAsset(asset) {
 
   // TODO: wait for the image to appear to attach a interact
 
-  const position = { x: object.offsetLeft, y: object.offsetTop }
+  const position = { x: asset.offsetLeft, y: asset.offsetTop }
   interact(asset)
     .draggable({
       listeners: {
@@ -55,14 +55,19 @@ function interactAsset(asset) {
           let planId = document.querySelector('.shown').id
 
           let data = {
-          width: ${percentage(event.rect.width, previewScreenSize.width)}%,
-          height: ${percentage(event.rect.height, previewScreenSize.height)}%,
-          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%,
-          left: ${percentage(event.target.offsetLeft, previewScreenSize.width)}%,
-          },
-          
+            cssrule: `#sequence-${sequenceId} #${event.target.id}{
+          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
+          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
+          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
+          left: ${percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width
+          )}%;
+          }`,
+          }
+
           // addRuleToSequence(sequenceId, planId, data)
-          addRuleToObject(event.target.dataset.strapId, data)
+          addRuleToAsset(event.target.dataset.strapId, data)
         },
       },
     })
@@ -290,19 +295,19 @@ function percentage(partialValue, totalValue) {
 function updateFromUi() {
   document.querySelector('#inputx').addEventListener('change', () => {
     document.querySelector('.asset-selected').style.left =
-      document.querySelector('#inputx').value + "%"
+      document.querySelector('#inputx').value + '%'
   })
   document.querySelector('#inputy').addEventListener('change', () => {
     document.querySelector('.asset-selected').style.top =
-      document.querySelector('#inputy').value + "%"
+      document.querySelector('#inputy').value + '%'
   })
   document.querySelector('#inputwidth').addEventListener('change', () => {
     document.querySelector('.asset-selected').style.width =
-      document.querySelector('#inputwidth').value  + "%"
+      document.querySelector('#inputwidth').value + '%'
   })
   document.querySelector('#inputheight').addEventListener('change', () => {
     document.querySelector('.asset-selected').style.height =
-      document.querySelector('#inputheight').value + "%"
+      document.querySelector('#inputheight').value + '%'
   })
 }
 

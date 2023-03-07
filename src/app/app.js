@@ -31,7 +31,7 @@ import {
   contextUI,
 } from './modules/selectors.js'
 import { addImg } from './modules/createPreviewElement.js'
-import { connectPlanWithOrder } from './modules/dataManagement.js'
+import { connectObjectToPlan } from './modules/dataManagement.js'
 import config from './config/config.js'
 
 // list all the things
@@ -110,12 +110,12 @@ assetsList.addEventListener('click', (e) => {
 
     const assetId = e.target.dataset.strapid
 
-    let response = connectPlanWithOrder(config.strapi.url, planNumber, assetId)
+    console.log(assetId);
+    let response = connectObjectToPlan(config.strapi.url, planNumber, assetId)
 
     if (response) {
       addImg(e.target, document.querySelector('.selected').hash)
     }
-    //add the image to the doc
   }
 })
 
