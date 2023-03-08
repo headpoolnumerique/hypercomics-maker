@@ -72,7 +72,7 @@ main#appWrap {
 }
 .showPrevious #previewScreen article.oldshown * {
   opacity: 0.4;
-  background: cyan;
+  /* background: cyan; */
   mix-blend-mode: multiply;
 }
 .showPrevious .oldshown + .shown {

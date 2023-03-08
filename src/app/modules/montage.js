@@ -106,22 +106,12 @@ async function duplicatePlan(montageList, planId) {
   plan.classList.remove('shown')
   document.querySelector('.selected').classList.remove('selected')
 
-  let assetsID = []
+  let objectsID = []
 
   //where is the css to clone?
 
-  for (let asset of oldData.data.data.attributes.assets.data) {
-    assetsID.push(asset.id)
-  }
-
-  let data = {
-    data: {
-      sequence: Number(document.querySelector('#sequenceNumber').textContent),
-      cssrules: '',
-      assets: {
-        connect: assetsID,
-      },
-    },
+  for (let object of oldData.data.data.attributes.objects.data) {
+    objectsID.push(object.id)
   }
   return axios
     .post(`${config.strapi.url}/api/plans/?populate=deep,5`, data)
@@ -129,11 +119,11 @@ async function duplicatePlan(montageList, planId) {
       console.log(response)
       let newPlan = response.data.data
       renderPlan(newPlan, montageList, sequencePreview, true)
-      console.log('newplan', newPlan.attributes.assets)
-      console.log('newplan', newPlan.attributes.assets.data[0])
-      newPlan.attributes.assets.data.forEach((asset) => {
-        console.log('asset', asset)
-        importImg(asset, document.querySelector('.shown'))
+      console.log('newplan', newPlan.attributes.objects)
+      console.log('newplan', newPlan.attributes.objects.data[0])
+      newPlan.attributes.objects.data.forEach((object) => {
+        console.log('object', object)
+        importImg(object, document.querySelector('.shown'))
       })
       return response
     })

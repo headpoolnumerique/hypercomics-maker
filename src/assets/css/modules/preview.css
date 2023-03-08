@@ -26,6 +26,7 @@
 }
 #previewScreen .asset-selected {
   box-shadow: 0 0 0 1px red;
+  z-index: 100;
 }
 
 
