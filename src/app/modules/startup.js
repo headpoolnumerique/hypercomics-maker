@@ -117,7 +117,14 @@ function fillPlan(plan) {
       )
       planToFill.insertAdjacentHTML(
         'beforeend',
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" data-assetId="${asset.id}" src="${asset.attributes.location}" class="asset" >`
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+          object.id
+        }" data-assetId="${asset.id}" src="${
+          asset.attributes.location
+        }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ''}
+        ${object.attributes.height ? `height:${object.attributes.height}` : ''}
+        ${object.attributes.top ? `top:${object.attributes.top}` : ''}
+        ${object.attributes.left ? `left:${object.attributes.left}` : ''}" >`
       )
     })
   })
