@@ -55,6 +55,19 @@ function interactObject(object) {
           let planId = document.querySelector('.shown').id
 
           let data = {
+            width: `${percentage(event.rect.width, previewScreenSize.width)}%;`,
+            height: `${percentage(
+              event.rect.height,
+              previewScreenSize.height
+            )}%;`,
+            top: `${percentage(
+              event.target.offsetTop,
+              previewScreenSize.height
+            )}%;`,
+            left: `${percentage(
+              event.target.offsetLeft,
+              previewScreenSize.width
+            )}%;`,
             cssrule: `#sequence-${sequenceId} #${event.target.id}{
           width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
@@ -67,7 +80,7 @@ function interactObject(object) {
           }
 
           // addRuleToSequence(sequenceId, planId, data)
-          addRuleToObject(event.target.dataset.objectId, data)
+          addRuleToObject(event.target.dataset.objectid, data)
         },
       },
     })
@@ -115,6 +128,19 @@ function interactObject(object) {
           )
 
           let data = {
+            width: `${percentage(event.rect.width, previewScreenSize.width)}%;`,
+            height: `${percentage(
+              event.rect.height,
+              previewScreenSize.height
+            )}%;`,
+            top: `${percentage(
+              event.target.offsetTop,
+              previewScreenSize.height
+            )}%;`,
+            left: `${percentage(
+              event.target.offsetLeft,
+              previewScreenSize.width
+            )}%;`,
             cssrule: `#sequence-${sequenceId} #${event.target.id}{
           width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
@@ -127,7 +153,7 @@ function interactObject(object) {
           }
 
           // addRuleToSequence(sequenceId, planId, data)
-          addRuleToObject(event.target.dataset.objectId, data)
+          addRuleToObject(event.target.dataset.objectid, data)
         },
       },
     })
@@ -143,7 +169,7 @@ function moveToLayer(object, plan, position) {
       reorderObjectInPlan(
         config.strapi.url,
         plan.id.split('-')[1],
-        object.dataset.objectId,
+        object.dataset.objectid,
         'farest'
       )
         .then(plan.insertAdjacentElement('afterbegin', object))
@@ -158,7 +184,7 @@ function moveToLayer(object, plan, position) {
       reorderObjectInPlan(
         config.strapi.url,
         plan.id.split('-')[1],
-        object.dataset.objectId,
+        object.dataset.objectid,
         'closest'
       )
         .then(plan.insertAdjacentElement('beforeend', object))
@@ -170,13 +196,13 @@ function moveToLayer(object, plan, position) {
       break
 
     case 'closer':
-      if (object.nextElementSibling != null) {
+      if (object?.nextElementSibling != null) {
         reorderObjectInPlan(
           config.strapi.url,
           plan.id.split('-')[1],
-          object.dataset.objectId,
+          object.dataset.objectid,
           'after',
-          object.nextElementSibling.dataset.objectId
+          object.nextElementSibling.dataset.objectid
         )
           .then(
             object.nextElementSibling.insertAdjacentElement('afterend', object)
@@ -194,9 +220,9 @@ function moveToLayer(object, plan, position) {
         reorderObjectInPlan(
           config.strapi.url,
           plan.id.split('-')[1],
-          object.dataset.objectId,
+          object.dataset.objectid,
           'before',
-          object.previousElementSibling.dataset.objectId
+          object.previousElementSibling.dataset.objectid
         )
           .then(
             object.previousElementSibling.insertAdjacentElement(
@@ -255,13 +281,13 @@ async function deleteObject() {
   removeObjectFromPlan(
     config.strapi.url,
     plan.id.split('-')[1],
-    object.dataset.objectId
+    object.dataset.objectid
   ).then(object.remove())
 }
 
-function addRuleToObject(objectId, data) {
+function addRuleToObject(objectid, data) {
   return axios
-    .put(`${config.strapi.url}/api/objects/${objectId}`, {
+    .put(`${config.strapi.url}/api/objects/${objectid}`, {
       data,
     })
     .then((response) => {
