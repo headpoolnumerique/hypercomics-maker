@@ -19,6 +19,7 @@ import {
   deleteObject,
   moveToLayer,
   updateFromUi,
+  updateTheUI
 } from './modules/assetManipulation.js'
 import {
   previewSpace,
@@ -108,7 +109,7 @@ assetsList.addEventListener('click', async (e) => {
       .querySelector('.selected')
       .hash.replace('#plan-', '')
 
-    const assetId = e.target.dataset.assetid;
+    const assetId = e.target.dataset.assetid
 
     let strapisResponse = await connectObjectToPlan(
       config.strapi.url,
@@ -135,6 +136,9 @@ preview.addEventListener('click', (event) => {
       .querySelector('.asset-selected')
       ?.classList.remove('asset-selected')
     event.target.classList.add('asset-selected')
+
+    updateTheUI(event.target)
+
     interactObject(event.target)
     //update context menu
     // contextUI.querySelector('main').innerHTML = assetManipulationUi
@@ -171,8 +175,8 @@ contextUI.addEventListener('click', function (event) {
     case 'moveClosest':
       moveToLayer(asset, plan, 'closest')
       break
-    case 'move':
-      break
+    // case 'move':
+    //   break
     case 'deleteAsset':
       deleteObject()
       break

@@ -18,8 +18,22 @@ function interactObject(object) {
     .draggable({
       listeners: {
         start(event) {
-          // console.log(event.rect)
-          // console.log(event.type, event.target)
+          document.querySelector('#inputx').value = percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputy').value = percentage(
+            event.target.offsetTop,
+            previewScreenSize.height
+          )
+          document.querySelector('#inputwidth').value = percentage(
+            event.rect.width,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputheight').value = percentage(
+            event.rect.height,
+            previewScreenSize.height
+          )
         },
         move(event) {
           position.x += event.dx
@@ -90,6 +104,24 @@ function interactObject(object) {
       invert: 'reposition',
 
       listeners: {
+        start(event) {
+          document.querySelector('#inputx').value = percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputy').value = percentage(
+            event.target.offsetTop,
+            previewScreenSize.height
+          )
+          document.querySelector('#inputwidth').value = percentage(
+            event.rect.width,
+            previewScreenSize.width
+          )
+          document.querySelector('#inputheight').value = percentage(
+            event.rect.height,
+            previewScreenSize.height
+          )
+        },
         move: function (event) {
           let { x, y } = event.target.dataset
 
@@ -322,4 +354,28 @@ function updateFromUi() {
   })
 }
 
-export { deleteObject, interactObject, moveToLayer, updateFromUi }
+function updateTheUI(element) {
+  let previewScreen = document.querySelector('#previewScreen')
+  let previewScreenSize = {
+    height: previewScreen.offsetHeight,
+    width: previewScreen.offsetWidth,
+  }
+  document.querySelector('#inputx').value = percentage(
+    element.offsetLeft,
+    previewScreenSize.width
+  )
+  document.querySelector('#inputy').value = percentage(
+    element.offsetTop,
+    previewScreenSize.height
+  )
+  document.querySelector('#inputwidth').value = percentage(
+    element.width,
+    previewScreenSize.width
+  )
+  document.querySelector('#inputheight').value = percentage(
+    element.height,
+    previewScreenSize.height
+  )
+}
+
+export { deleteObject, interactObject, moveToLayer, updateFromUi, updateTheUI }

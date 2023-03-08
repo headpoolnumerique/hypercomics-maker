@@ -20,7 +20,7 @@ async function startup(url = document.location.href) {
   // if there is no sequence id, create a new sequence
   if (!sequenceId) {
     let response = await createData(config.strapi.url, `sequences`, {
-      title: 'i am in the desert with the project with name',
+      title: 'Title X',
       projectId: projectId ? projectId : '',
     })
 
@@ -121,7 +121,9 @@ function fillPlan(plan) {
           object.id
         }" data-assetId="${asset.id}" src="${
           asset.attributes.location
-        }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ''}
+        }" class="asset" style="${
+          object.attributes.width ? `width:${object.attributes.width}` : ''
+        }
         ${object.attributes.height ? `height:${object.attributes.height}` : ''}
         ${object.attributes.top ? `top:${object.attributes.top}` : ''}
         ${object.attributes.left ? `left:${object.attributes.left}` : ''}" >`
@@ -129,25 +131,5 @@ function fillPlan(plan) {
     })
   })
 }
-
-// generate css after
-
-// generateCSS /
-
-// styles =
-
-// --width:
-// --height:
-// --left:
-// --top:
-// --bottom:
-// --right
-
-//   // document.querySelector('#sequenceStyles').textContent =
-//   //   document.querySelector('#sequenceStyles').textContent +
-//   //   ' ' +
-//   //   asset.attributes.asset
-//   //importTheAsset
-// })
 
 export { startup }
