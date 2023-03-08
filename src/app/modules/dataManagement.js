@@ -26,13 +26,13 @@ async function createData(serverUrl, collection, data) {
     })
 }
 
-// remove asset from the plan in strapi
-async function removeAssetFromPlan(serverUrl, planId, assetId) {
+// remove object from the plan in strapi
+async function removeObjectFromPlan(serverUrl, planId, objectId) {
   let data = {
-    assets: {
+    objects: {
       disconnect: [
         {
-          id: assetId,
+          id: objectId,
         },
       ],
     },
@@ -50,11 +50,11 @@ async function removeAssetFromPlan(serverUrl, planId, assetId) {
     })
 }
 
-// remove asset from the plan in strapi
-async function reorderAssetFromPlan(
+// remove object from the plan in strapi
+async function reorderObjectInPlan(
   serverUrl,
   planId,
-  assetId,
+  objectId,
   position,
   relativeTo
 ) {
@@ -78,10 +78,10 @@ async function reorderAssetFromPlan(
   }
 
   let data = {
-    assets: {
+    objects: {
       connect: [
         {
-          id: Number(assetId),
+          id: Number(objectId),
           position: savedPosition,
         },
       ],
@@ -101,6 +101,7 @@ async function reorderAssetFromPlan(
 }
 
 async function connectObjectToPlan(serverUrl, planId, assetId) {
+
   let data = {
     plan: planId,
     assets: assetId,
@@ -206,6 +207,6 @@ export {
   loadSingle,
   getAllImageFromPlan,
   connectObjectToPlan,
-  removeAssetFromPlan,
-  reorderAssetFromPlan,
+  removeObjectFromPlan,
+  reorderObjectInPlan
 }

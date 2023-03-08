@@ -96,29 +96,51 @@ function updateSequenceMeta(id, title) {
 }
 
 function fillPlan(plan) {
+  console.log('fill the plan on load from the objects')
   // fille the plan with all the existing images
   // find the plan
   let planToFill = preview.querySelector(`#plan-${plan.id}`)
-  let assetsToFillWith = plan.attributes.assets.data
+  let objectsToFillWith = plan.attributes.objects.data
+  console.log(objectsToFillWith)
 
-  // fill the asset manager with the images
-  assetsToFillWith.forEach((asset) => {
-    document.querySelector('#sequenceStyles').textContent =
-      document.querySelector('#sequenceStyles').textContent +
-      ' ' +
-      asset.attributes.cssrule
-    addAssetToTheAssetManager(
-      asset.attributes.location,
-      asset.id,
-      asset.attributes.filename,
-      document.querySelector('#assetsList')
-    )
-    //importTheAsset
-    planToFill.insertAdjacentHTML(
-      'beforeend',
-      `<img id="inuse-${plan.id}-${asset.id}" data-strap-id="${asset.id}" src="${asset.attributes.location}" class="asset">`
-    )
+  //
+  // // fill the asset manager with the images
+  objectsToFillWith.forEach((object) => {
+    console.log(object)
+
+    object.attributes.assets.data.forEach((asset) => {
+      addAssetToTheAssetManager(
+        asset.attributes.location,
+        asset.id,
+        asset.attributes.filename,
+        document.querySelector('#assetsList')
+      )
+      planToFill.insertAdjacentHTML(
+        'beforeend',
+        `<img id="inuse-${plan.id}-${asset.id}" data-objectId="${object.id}" data-assetId="${asset.id}" src="${asset.attributes.location}" class="asset" >`
+      )
+    })
   })
 }
+
+// generate css after
+
+// generateCSS /
+
+// styles =
+
+// --width:
+// --height:
+// --left:
+// --top:
+// --bottom:
+// --right
+
+//   // document.querySelector('#sequenceStyles').textContent =
+//   //   document.querySelector('#sequenceStyles').textContent +
+//   //   ' ' +
+//   //   asset.attributes.asset
+//   //importTheAsset
+// })
 
 export { startup }

@@ -2,32 +2,39 @@
 
 #assets {
   position: fixed;
-  top:30vh;
+  top: 30vh;
   left: 30vw;
   padding: 1em;
   background: white;
   display: block;
   min-height: 400px;
-  max-height:90vh;
-  
+  max-height: 90vh;
 }
 
 #assets #assetsList {
-  display: flex;
   padding: 0;
   margin: 0;
-  margin-top:3em;
+  margin-top: 3em;
   gap: 10px;
   list-style-type: none;
   overflow-y: auto;
   max-height: 80vh;
   flex-wrap: wrap;
-  
 }
 
 #assets #assetsList li {
-  border: 1px solid black;
-  padding:10px;
-  max-width: 150px;
-  min-width: 200px;
+  display: grid;
+  width: 100%;
+  align-items: baseline;
+  grid-template-columns: [img-start] 100px [img-end name-start] 1fr [name-end];
+  border-bottom: 1px solid grey;
+  gap: 0 2ch;
+  align-items: end;
+  padding-bottom: .4em;
+}
+
+#assets #assetsList li img {
+  padding: 0.2em 0.4ch;
+  border: 1px solid grey;
+  cursor: pointer;
 }

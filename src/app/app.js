@@ -15,10 +15,10 @@ import { deselect, selectLink } from '../app/modules/helpers'
 import { showHideBlock } from './modules/helpers.js'
 import {
   // assetManipulationUi,
-  interactAsset,
-  deleteAsset,
+  interactObject,
+  deleteObject,
   moveToLayer,
-updateFromUi
+  updateFromUi,
 } from './modules/assetManipulation.js'
 import {
   previewSpace,
@@ -108,15 +108,21 @@ assetsList.addEventListener('click', async (e) => {
       .querySelector('.selected')
       .hash.replace('#plan-', '')
 
-    const assetId = e.target.dataset.strapid
+    const assetId = e.target.dataset.assetid;
 
-    console.log(assetId);
-    let strapisResponse = await connectObjectToPlan(config.strapi.url, planNumber, assetId)
+    let strapisResponse = await connectObjectToPlan(
+      config.strapi.url,
+      planNumber,
+      assetId
+    )
 
     if (strapisResponse) {
       console.log(strapisResponse)
-      debugger
-      addImg(e.target, document.querySelector('.selected').hash, strapisResponse.data.data.id)
+      addImg(
+        e.target,
+        document.querySelector('.selected').hash,
+        strapisResponse.data.data.id
+      )
     }
   }
 })
@@ -129,7 +135,7 @@ preview.addEventListener('click', (event) => {
       .querySelector('.asset-selected')
       ?.classList.remove('asset-selected')
     event.target.classList.add('asset-selected')
-    interactAsset(event.target)
+    interactObject(event.target)
     //update context menu
     // contextUI.querySelector('main').innerHTML = assetManipulationUi
   } else {
@@ -168,7 +174,7 @@ contextUI.addEventListener('click', function (event) {
     case 'move':
       break
     case 'deleteAsset':
-      deleteAsset()
+      deleteObject()
       break
 
     default:

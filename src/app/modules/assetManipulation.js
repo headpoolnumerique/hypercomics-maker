@@ -1,9 +1,9 @@
-import { reorderAssetFromPlan, removeAssetFromPlan } from './dataManagement.js'
+import { reorderObjectInPlan, removeObjectFromPlan } from './dataManagement.js'
 import interact from 'interactjs'
 import config from '../config/config.js'
 import axios from 'axios'
 
-function interactAsset(asset) {
+function interactObject(object) {
   let sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
   let previewScreen = document.querySelector('#previewScreen')
   let previewScreenSize = {
@@ -13,8 +13,8 @@ function interactAsset(asset) {
 
   // TODO: wait for the image to appear to attach a interact
 
-  const position = { x: asset.offsetLeft, y: asset.offsetTop }
-  interact(asset)
+  const position = { x: object.offsetLeft, y: object.offsetTop }
+  interact(object)
     .draggable({
       listeners: {
         start(event) {
@@ -67,7 +67,7 @@ function interactAsset(asset) {
           }
 
           // addRuleToSequence(sequenceId, planId, data)
-          addRuleToAsset(event.target.dataset.strapId, data)
+          addRuleToObject(event.target.dataset.objectId, data)
         },
       },
     })
@@ -127,26 +127,26 @@ function interactAsset(asset) {
           }
 
           // addRuleToSequence(sequenceId, planId, data)
-          addRuleToAsset(event.target.dataset.strapId, data)
+          addRuleToObject(event.target.dataset.objectId, data)
         },
       },
     })
 }
 
-function moveToLayer(asset, plan, position) {
+function moveToLayer(object, plan, position) {
   // v2: get the order from the index of the element in the domObject
   // further ------ closest
   // first  ------- last
 
   switch (position) {
     case 'farest':
-      reorderAssetFromPlan(
+      reorderObjectInPlan(
         config.strapi.url,
         plan.id.split('-')[1],
-        asset.dataset.strapId,
+        object.dataset.objectId,
         'farest'
       )
-        .then(plan.insertAdjacentElement('afterbegin', asset))
+        .then(plan.insertAdjacentElement('afterbegin', object))
         .catch((error) => {
           if (error) {
             console.log(error)
@@ -155,14 +155,13 @@ function moveToLayer(asset, plan, position) {
       break
 
     case 'closest':
-      // reorderAssetFromPlan(asset, plan, 'closest')
-      reorderAssetFromPlan(
+      reorderObjectInPlan(
         config.strapi.url,
         plan.id.split('-')[1],
-        asset.dataset.strapId,
+        object.dataset.objectId,
         'closest'
       )
-        .then(plan.insertAdjacentElement('beforeend', asset))
+        .then(plan.insertAdjacentElement('beforeend', object))
         .catch((error) => {
           if (error) {
             console.log(error)
@@ -171,16 +170,16 @@ function moveToLayer(asset, plan, position) {
       break
 
     case 'closer':
-      if (asset.nextElementSibling != null) {
-        reorderAssetFromPlan(
+      if (object.nextElementSibling != null) {
+        reorderObjectInPlan(
           config.strapi.url,
           plan.id.split('-')[1],
-          asset.dataset.strapId,
+          object.dataset.objectId,
           'after',
-          asset.nextElementSibling.dataset.strapId
+          object.nextElementSibling.dataset.objectId
         )
           .then(
-            asset.nextElementSibling.insertAdjacentElement('afterend', asset)
+            object.nextElementSibling.insertAdjacentElement('afterend', object)
           )
           .catch((error) => {
             if (error) {
@@ -191,18 +190,18 @@ function moveToLayer(asset, plan, position) {
       break
 
     case 'farther':
-      if (asset.previousElementSibling != null) {
-        reorderAssetFromPlan(
+      if (object.previousElementSibling != null) {
+        reorderObjectInPlan(
           config.strapi.url,
           plan.id.split('-')[1],
-          asset.dataset.strapId,
+          object.dataset.objectId,
           'before',
-          asset.previousElementSibling.dataset.strapId
+          object.previousElementSibling.dataset.objectId
         )
           .then(
-            asset.previousElementSibling.insertAdjacentElement(
+            object.previousElementSibling.insertAdjacentElement(
               'beforebegin',
-              asset
+              object
             )
           )
           .catch((error) => {
@@ -219,7 +218,7 @@ function moveToLayer(asset, plan, position) {
   // not so sure. We can simply move thing, and not send if it’s first going back or last going top.
 
   if (!plan.dataset.layersTotal) {
-    plan.dataset.layersTotal = plan.querySelectorAll('.asset').length
+    plan.dataset.layersTotal = plan.querySelectorAll('.object').length
   }
   // console.log(plan.dataset.layersToral)
   const totalLayer = plan.dataset.layersTotal
@@ -237,7 +236,7 @@ function moveToLayer(asset, plan, position) {
   // move the element on the right layer (moveAfter, moveBefore)
 }
 
-function writeCSS(plan, asset, rules) {
+function writeCSS(plan, object, rules) {
   // where to save the css?
   // check the asset
   // asset has
@@ -249,34 +248,20 @@ function writeCSS(plan, asset, rules) {
 deteleAsset
 @params domObject asset - the removedasset 
 */
-async function deleteAsset() {
+async function deleteObject() {
   const plan = document.querySelector('#previewScreen article.shown')
-  const asset = document.querySelector('.asset-selected')
+  const object = document.querySelector('.asset-selected')
   // send info to strapi
-  removeAssetFromPlan(
+  removeObjectFromPlan(
     config.strapi.url,
     plan.id.split('-')[1],
-    asset.dataset.strapId
-  ).then(asset.remove())
+    object.dataset.objectId
+  ).then(object.remove())
 }
 
-function addRuleToSequence(sequenceId, planId, data) {
+function addRuleToObject(objectId, data) {
   return axios
-    .post(`${config.strapi.url}/api/cssrules/`, {
-      data,
-    })
-    .then((response) => {
-      console.log(response)
-      return response
-    })
-    .catch((err) => {
-      return err
-    })
-}
-
-function addRuleToAsset(assetId, data) {
-  return axios
-    .put(`${config.strapi.url}/api/assets/${assetId}`, {
+    .put(`${config.strapi.url}/api/objects/${objectId}`, {
       data,
     })
     .then((response) => {
@@ -311,4 +296,4 @@ function updateFromUi() {
   })
 }
 
-export { deleteAsset, interactAsset, moveToLayer, updateFromUi }
+export { deleteObject, interactObject, moveToLayer, updateFromUi }

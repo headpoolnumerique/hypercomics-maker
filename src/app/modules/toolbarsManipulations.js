@@ -64,8 +64,5 @@ function moveToolbars() {
     }).allowFrom('h2');
 }
 
-
-
-
 export { moveToolbars, toggleToolbars }
 

@@ -3,7 +3,7 @@ import axios from 'axios'
 import config from '../config/config.js'
 import { addAssetToTheAssetManager } from './assetManager.js'
 
-// manage all the assets in the assets manager : add / remove / change any image in the asset manager.
+// Upload the asset to strapi
 
 async function uploadToStrapi(input, strapiurl = config.strapi.url) {
   const formData = new FormData()
