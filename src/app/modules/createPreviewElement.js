@@ -7,6 +7,7 @@ function addImg(img, planId, objectId) {
   newImg.id = `inuse-${planId}-${objectId}`
   newImg.dataset.assetid = img.id.replace('assetlink-', '')
   newImg.dataset.objectid = objectId
+  newImg.dataset.planid = planId
   newImg.src = img.src
   newImg.classList.add('asset')
   document.querySelector(planId).insertAdjacentElement('beforeend', newImg)

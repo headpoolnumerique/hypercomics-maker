@@ -4,6 +4,7 @@ import { sequenceNumber, sequencePreview } from './selectors.js'
 import { createData, loadSingle } from './dataManagement.js'
 import { importImg } from './createPreviewElement.js'
 import axios from 'axios'
+import { fillPlan } from './startup.js'
 /*
 // add plan to the sequence 
 // montageList = montage list in the montage pane,
@@ -85,7 +86,6 @@ async function addPlan(montageList, select = true) {
     `<li id="link-${response.data.data.id}"><a class=${
       select ? 'selected' : ''
     } href="#plan-${response.data.data.id}" >
-
     </a></li>`
   )
 
@@ -111,13 +111,26 @@ async function duplicatePlan(montageList, planToDuplicateId, sequenceId) {
   const newPlanId = await axios
     .post(`${config.strapi.url}/api/plans/`, data)
     .then((response) => {
+      let oldplan = document.querySelector('.shown')
+
+      deselect('.selected')
+      deselect('.shown')
+
+      montageList.insertAdjacentHTML(
+        'beforeend',
+        `<li id="link-${response.data.data.id}"><a class='selected' href="#plan-${response.data.data.id}" > </a></li>`
+      )
+
+      sequencePreview.insertAdjacentHTML(
+        'beforeend',
+        `<article class="shown" id="plan-${response.data.data.id}" data-strap-id="${response.data.data.id}"></article>`
+      )
       return response.data.data.id
     })
 
   // console.log('new plan', newPlanId)
 
   // 2. load all object with filter of plan ID,
-  // http://localhost:1337/api/objects/?populate=deep,5&filters[plan]=807
   const objectsOfThePlan = await axios
     .get(
       `${config.strapi.url}/api/objects?populate=deep,5&filters[plan]=${planToDuplicateId}`
@@ -144,19 +157,15 @@ async function duplicatePlan(montageList, planToDuplicateId, sequenceId) {
 
     // Push! /
     await axios
-      .post(`${config.strapi.url}/api/objects`, { data })
+      .post(`${config.strapi.url}/api/objects?populate=deep,5`, { data })
       .then((response) => {
-        console.log(response)
-
-        // render the plan 
-        // show the objects!
+        console.log
       })
+
       .catch((err) => {
         console.log(err)
       })
   })
-
-
 }
 
 // render a plan when loading up the app

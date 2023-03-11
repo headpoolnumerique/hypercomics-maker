@@ -119,7 +119,8 @@ function fillPlan(plan) {
         'beforeend',
         `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
           object.id
-        }" data-assetId="${asset.id}" src="${
+        }" data-planid="${plan.id}"
+        data-assetid="${asset.id}" src="${
           asset.attributes.location
         }" class="asset" style="${
           object.attributes.width ? `width:${object.attributes.width}` : ''
@@ -132,4 +133,4 @@ function fillPlan(plan) {
   })
 }
 
-export { startup }
+export { startup, fillPlan }
