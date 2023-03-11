@@ -84,7 +84,8 @@ document.querySelector('#deleteAllPlans').addEventListener('click', () => {
 
 document.querySelector('#duplicatePlan').addEventListener('click', () => {
   console.log('click')
-  duplicatePlan(montageList, document.querySelector('.shown')?.dataset.strapId)
+  const sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
+  duplicatePlan(montageList, document.querySelector('.shown')?.dataset.strapId, sequenceId)
 })
 imageUpload.addEventListener('click', function (e) {
   e.preventDefault()

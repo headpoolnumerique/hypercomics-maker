@@ -101,12 +101,12 @@ function fillPlan(plan) {
   // find the plan
   let planToFill = preview.querySelector(`#plan-${plan.id}`)
   let objectsToFillWith = plan.attributes.objects.data
-  console.log(objectsToFillWith)
+  // console.log(objectsToFillWith)
 
   //
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
-    console.log(object)
+    // console.log(object)
 
     object.attributes.assets.data.forEach((asset) => {
       addAssetToTheAssetManager(

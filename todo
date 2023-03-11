@@ -50,10 +50,6 @@ or assume tht they’ll move around
 
 
 
+DUPLICATE AN OBJECT: GET then POST the same data but the id.
 
-!!!!!! 
-
-
-create a block that stay on inside the contextual menu that contains the value of the element
-hide and show it instead of recreate it on the fly
-
+it will put everyting at the right place

@@ -97,56 +97,66 @@ async function addPlan(montageList, select = true) {
   )
 }
 
-async function duplicatePlan(montageList, planId) {
-  let oldData = await loadSingle(config.strapi.url, 'plans', planId, true)
-  console.log(oldData)
+async function duplicatePlan(montageList, planToDuplicateId, sequenceId) {
+  // create a new plan and connect it right after the plan you’re ducplicating
+  // 1. load the plan
 
-  const plan = document.querySelector('.shown')
-  plan.classList.add('sourcePlan')
-  plan.classList.remove('shown')
-  document.querySelector('.selected').classList.remove('selected')
-
-  let objectsID = []
-
-  //where is the css to clone?
-
-  for (let object of oldData.data.data.attributes.objects.data) {
-    objectsID.push(object.id)
+  let data = {
+    data: {
+      sequence: sequenceId,
+    },
   }
-  return axios
-    .post(`${config.strapi.url}/api/plans/?populate=deep,5`, data)
+
+  //  1.b create a plan based on the loading plan.
+  const newPlanId = await axios
+    .post(`${config.strapi.url}/api/plans/`, data)
     .then((response) => {
-      console.log(response)
-      let newPlan = response.data.data
-      renderPlan(newPlan, montageList, sequencePreview, true)
-      console.log('newplan', newPlan.attributes.objects)
-      console.log('newplan', newPlan.attributes.objects.data[0])
-      newPlan.attributes.objects.data.forEach((object) => {
-        console.log('object', object)
-        importImg(object, document.querySelector('.shown'))
-      })
+      return response.data.data.id
+    })
+
+  // console.log('new plan', newPlanId)
+
+  // 2. load all object with filter of plan ID,
+  // http://localhost:1337/api/objects/?populate=deep,5&filters[plan]=807
+  const objectsOfThePlan = await axios
+    .get(
+      `${config.strapi.url}/api/objects?populate=deep,5&filters[plan]=${planToDuplicateId}`
+    )
+    .then((response) => {
       return response
     })
     .catch((err) => {
-      return err
+      console.log(err)
     })
 
-  // let data = {
-  //     assets: oldData.data.data.attributes.assets.data,
-  // }
-  // console.log(data)
+  objectsOfThePlan.data.data.forEach(async (obj) => {
+    let oldData = obj.attributes
 
-  //duplicate
-  //
+    let data = { ...oldData }
+    data.plan = newPlanId
+    data.assets = []
 
-  //duplicate plan
-  //duplicate content
-  //duplicate CSS
+    //set assets
+    for (let asset of oldData.assets.data) {
+      console.log('the id', asset.id)
+      data.assets.push(asset.id)
+    }
 
-  // createPlan and fill it with the data,
+    // Push! /
+    await axios
+      .post(`${config.strapi.url}/api/objects`, { data })
+      .then((response) => {
+        console.log(response)
 
-  // connect the plan to the sequence at the right order
-  //create a new plan and fill it with the data from the previous one
+        // render the plan 
+        // show the objects!
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  })
+
+
 }
 
 // render a plan when loading up the app
