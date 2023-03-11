@@ -1,7 +1,7 @@
 // import {assetsList} from "./selectors.js"
 
 // add image to the plan
-// image will have a dataset objectId to manipulate the object and not the asset 
+// image will have a dataset objectId to manipulate the object and not the asset
 function addImg(img, planId, objectId) {
   const newImg = document.createElement('img')
   newImg.id = `inuse-${planId}-${objectId}`
@@ -14,7 +14,7 @@ function addImg(img, planId, objectId) {
 }
 
 // import Image to the plan
-// image will have a dataset objectId to manipulate the object and not the asset 
+// image will have a dataset objectId to manipulate the object and not the asset
 function importImg(imgId, planId, objectId) {
   const newImg = document.createElement('img')
   newImg.objectId = objectId
@@ -26,4 +26,16 @@ function importImg(imgId, planId, objectId) {
   planId.insertAdjacentElement('beforeend', newImg)
 }
 
-export { addImg, importImg }
+function renderAssetImage(object, asset, plan) {
+  let element = document.createElement('img')
+  element.id = `inuse-${planId}-${objectId}`
+  element.dataset = {
+    assetid: asset.id,
+    objectid: object.id,
+  }
+  element.src = asset.location
+
+  console.log(element)
+}
+
+export { addImg, importImg, renderAssetImage }

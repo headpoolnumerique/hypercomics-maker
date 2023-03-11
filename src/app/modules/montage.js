@@ -81,6 +81,7 @@ async function addPlan(montageList, select = true) {
   }
   let response = await createData(config.strapi.url, 'plans', data)
 
+  // insert the new plan
   montageList.insertAdjacentHTML(
     'beforeend',
     `<li id="link-${response.data.data.id}"><a class=${
@@ -107,7 +108,7 @@ async function duplicatePlan(montageList, planToDuplicateId, sequenceId) {
     },
   }
 
-  //  1.b create a plan based on the loading plan.
+  //  1.b create a plan based on the loading plan, and select it.
   const newPlanId = await axios
     .post(`${config.strapi.url}/api/plans/`, data)
     .then((response) => {
@@ -130,7 +131,7 @@ async function duplicatePlan(montageList, planToDuplicateId, sequenceId) {
 
   // console.log('new plan', newPlanId)
 
-  // 2. load all object with filter of plan ID,
+  // 2. load all object with filter of the previous plan ID,
   const objectsOfThePlan = await axios
     .get(
       `${config.strapi.url}/api/objects?populate=deep,5&filters[plan]=${planToDuplicateId}`
@@ -144,28 +145,59 @@ async function duplicatePlan(montageList, planToDuplicateId, sequenceId) {
 
   objectsOfThePlan.data.data.forEach(async (obj) => {
     let oldData = obj.attributes
-
     let data = { ...oldData }
     data.plan = newPlanId
     data.assets = []
 
     //set assets
     for (let asset of oldData.assets.data) {
-      console.log('the id', asset.id)
       data.assets.push(asset.id)
     }
 
-    // Push! /
+    // Push the new objects ! /
     await axios
-      .post(`${config.strapi.url}/api/objects?populate=deep,5`, { data })
-      .then((response) => {
-        console.log
-      })
+      .post(`${config.strapi.url}/api/objects`, { data })
+      .then((response) => {})
 
       .catch((err) => {
         console.log(err)
       })
   })
+  console.log(newPlanId)
+  axios
+    .get(`${config.strapi.url}/api/plans/${newPlanId}?populate=deep,5`)
+    .then(response => {
+      let plan = response.data.data
+      let planToFill = preview.querySelector(`#plan-${plan.id}`)
+      let objectsToFillWith = plan.attributes.objects.data
+      // console.log(objectsToFillWith)
+      //
+      // // fill the asset manager with the images
+      objectsToFillWith.forEach((object) => {
+        // console.log(object)
+
+        object.attributes.assets.data.forEach((asset) => {
+          planToFill.insertAdjacentHTML(
+            'beforeend',
+            `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+              object.id
+            }" data-planid="${plan.id}"
+        data-assetid="${asset.id}" src="${
+              asset.attributes.location
+            }" class="asset" style="${
+              object.attributes.width ? `width:${object.attributes.width}` : ''
+            }
+        ${object.attributes.height ? `height:${object.attributes.height}` : ''}
+        ${object.attributes.top ? `top:${object.attributes.top}` : ''}
+        ${object.attributes.left ? `left:${object.attributes.left}` : ''}" >`
+          )
+        })
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
 }
 
 // render a plan when loading up the app

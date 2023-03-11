@@ -101,7 +101,6 @@ async function reorderObjectInPlan(
 }
 
 async function connectObjectToPlan(serverUrl, planId, assetId) {
-
   let data = {
     plan: planId,
     assets: assetId,
@@ -208,5 +207,5 @@ export {
   getAllImageFromPlan,
   connectObjectToPlan,
   removeObjectFromPlan,
-  reorderObjectInPlan
+  reorderObjectInPlan,
 }
