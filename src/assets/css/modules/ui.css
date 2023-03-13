@@ -2,10 +2,14 @@
   position: fixed;
   border: 2px solid var(--color-body);
   z-index: 400000;
-  overflow:auto;
-  resize:both;
   background: white;
 }
+
+.resizable {
+  overflow: auto;
+  resize: both;
+}
+
 .moveable h2 {
   padding: 0.3em 2ch;
   background: black;
@@ -37,12 +41,69 @@ button:hover {
 }
 #homeButtonsList button {
   text-transform: uppercase;
-  margin-left:4ch;
+  margin-left: 4ch;
   border: 2px solid black;
   border-bottom: 6px solid black;
 }
 
-
 .hide {
   display: none !important;
+}
+
+.manip button {
+}
+
+.manip input[type='number'] {
+  border: 0px solid transparent;
+  border-bottom: 2px solid black;
+  max-width: 10ch;
+  display: inline;
+}
+.manip label {
+}
+
+.manip details {
+  margin-bottom: 2em;
+}
+.manip details summary {
+  border-bottom: 1px solid black;
+  margin-bottom: 0.5em;
+}
+
+.manip details.location div {
+  max-width: fit-content;
+  margin: auto;
+  gap: 0.5em 0.5em;
+  display: grid;
+  grid-template-columns: [label-start] 8ch [label-end input-start] 1fr [input-end];
+}
+
+.manip .location summary {
+  grid-column: 1 / -1;
+}
+
+.manip .location label {
+  grid-column: label;
+}
+
+.manip .location input {
+  grid-column: input;
+}
+.manip .zindex {
+  display: flex;
+}
+
+.manip details {
+  padding: 0 3ch;
+}
+
+.manip details {
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.manip .zindex button {
+  display: inline;
+  width: 30px;
 }

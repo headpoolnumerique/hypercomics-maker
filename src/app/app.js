@@ -19,7 +19,7 @@ import {
   deleteObject,
   moveToLayer,
   updateFromUi,
-  updateTheUI
+  updateTheUI,
 } from './modules/assetManipulation.js'
 import {
   previewSpace,
@@ -84,8 +84,14 @@ document.querySelector('#deleteAllPlans').addEventListener('click', () => {
 
 document.querySelector('#duplicatePlan').addEventListener('click', () => {
   console.log('click')
-  const sequenceId = Number(document.querySelector('#sequenceNumber').textContent)
-  duplicatePlan(montageList, document.querySelector('.shown')?.dataset.strapId, sequenceId)
+  const sequenceId = Number(
+    document.querySelector('#sequenceNumber').textContent
+  )
+  duplicatePlan(
+    montageList,
+    document.querySelector('.shown')?.dataset.strapId,
+    sequenceIdindex
+  )
 })
 imageUpload.addEventListener('click', function (e) {
   e.preventDefault()

@@ -15,8 +15,8 @@ main#appWrap {
   scrollbar-gutter: stable;
   /* grid-template-rows: [meta-start] 80px [meta-end preview-start] 1fr [preview-end montage-start] auto [montage-end]; */
   /*start latyou*/
-  --preview-width: 50vw;
-  --preview-height: 50vh;
+  --preview-width: 1000px;
+  --preview-height: 700px;
 }
 
 /*I. preview*/
@@ -32,11 +32,12 @@ main#appWrap {
   border: 1px solid var(--color-body);
   margin: auto;
   background: var(--color-previewScreen, unset);
-  resize: both;
   overflow: hidden;
   position: relative;
   grid-column: 1/-1;
   box-shadow: 0 0 0 10px rgb(200, 200, 200, 0.2);
+  /* resize: both; */
+
 }
 
 #preview.fullscreen #previewScreen {
