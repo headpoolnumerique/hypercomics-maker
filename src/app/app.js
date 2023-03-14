@@ -90,7 +90,7 @@ document.querySelector('#duplicatePlan').addEventListener('click', () => {
   duplicatePlan(
     montageList,
     document.querySelector('.shown')?.dataset.strapId,
-    sequenceIdindex
+    sequenceId
   )
 })
 imageUpload.addEventListener('click', function (e) {
