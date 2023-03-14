@@ -6,12 +6,12 @@
   "scripts": {
     "watch": "npm-run-all --parallel watch:*",
     "watch:css": "postcss --watch src/assets/css/main.css -m -o public/css/styles.css ",
-    "watch:js": "esbuild src/app/app.js --bundle --sourcemap --watch=forever --outfile=public/js/hypercomicsBuilder.js",
+    "watch:js": "esbuild src/app/app.js --bundle --sourcemap --watch=forever --outfile=public/js/hypercomicsbuilder.js",
     "watch:serve": "browser-sync public --server --watch --port 8080",
     "watch:html": "copy-and-watch --watch src/html/*.{html,json}  public/ ",
     "watch:fonts": "copy-and-watch --watch src/assets/fonts/*.*  public/fonts/ ",
     "build": "npm-run-all --parallel build:*",
-    "build:js": "esbuild src/app/app.js --bundle --outfile=public/js/hypercomicsBuilder.js",
+    "build:js": "esbuild src/app/app.js --bundle --outfile=public/js/hypercomicsbuilder.js",
     "build:fonts": "copy-and-watch src/assets/fonts/*.*  public/fonts/ ",
     "build:css": "postcss  src/assets/css/main.css -m -o public/css/styles.css ",
     "build:html": "copy-and-watch src/html/*.{html,json}  public/ "
