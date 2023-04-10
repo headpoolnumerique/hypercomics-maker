@@ -1,16 +1,16 @@
-import axios from 'axios'
-import { isNumeric } from './helpers.js'
+import axios from "axios";
+import { isNumeric } from "./helpers.js";
 async function updateData(serverUrl, collection, data, id) {
   return axios
     .put(`${serverUrl}/api/${collection}/${id}?populate=deep,5`, {
       data,
     })
     .then((response) => {
-      return response
+      return response;
     })
     .catch((err) => {
-      return err
-    })
+      return err;
+    });
 }
 
 async function createData(serverUrl, collection, data) {
@@ -19,11 +19,11 @@ async function createData(serverUrl, collection, data) {
       data,
     })
     .then((response) => {
-      return response
+      return response;
     })
     .catch((err) => {
-      return err
-    })
+      return err;
+    });
 }
 
 // remove object from the plan in strapi
@@ -36,18 +36,18 @@ async function removeObjectFromPlan(serverUrl, planId, objectId) {
         },
       ],
     },
-  }
+  };
 
   return axios
     .put(`${serverUrl}/api/plans/${planId}`, {
       data,
     })
     .then((response) => {
-      return response
+      return response;
     })
     .catch((err) => {
-      return err
-    })
+      return err;
+    });
 }
 
 // remove object from the plan in strapi
@@ -58,23 +58,23 @@ async function reorderObjectInPlan(
   position,
   relativeTo
 ) {
-  let savedPosition
+  let savedPosition;
 
   switch (position) {
-    case 'farest':
-      savedPosition = { start: true }
-      break
-    case 'closest':
-      savedPosition = { end: true }
-      break
-    case 'after':
-      savedPosition = { after: Number(relativeTo) }
-      break
-    case 'before':
-      savedPosition = { before: Number(relativeTo) }
-      break
+    case "farest":
+      savedPosition = { start: true };
+      break;
+    case "closest":
+      savedPosition = { end: true };
+      break;
+    case "after":
+      savedPosition = { after: Number(relativeTo) };
+      break;
+    case "before":
+      savedPosition = { before: Number(relativeTo) };
+      break;
     default:
-      console.log(position)
+      console.log(position);
   }
 
   let data = {
@@ -86,38 +86,38 @@ async function reorderObjectInPlan(
         },
       ],
     },
-  }
+  };
 
   return axios
     .put(`${serverUrl}/api/plans/${planId}`, {
       data,
     })
     .then((response) => {
-      return response
+      return response;
     })
     .catch((err) => {
-      return err
-    })
+      return err;
+    });
 }
 
 async function connectObjectToPlan(serverUrl, planId, assetId) {
   let data = {
     plan: planId,
     assets: assetId,
-  }
+  };
 
   const newObject = await axios
     .post(`${serverUrl}/api/objects/`, {
       data,
     })
     .then((response) => {
-      console.log(response)
-      return response
+      console.log(response);
+      return response;
     })
     .catch((err) => {
-      return err
-    })
-  return newObject
+      return err;
+    });
+  return newObject;
 }
 
 // async function connectObjectToPlan(serverUrl, planId, objectId, position) {
@@ -165,14 +165,14 @@ async function connectObjectToPlan(serverUrl, planId, assetId) {
 async function loadCollection(serverUrl, collection, query) {
   //load with a query
   return axios
-    .get(`${serverUrl}/api/${collection}${query ? '?' + query : ''}`)
+    .get(`${serverUrl}/api/${collection}${query ? "?" + query : ""}`)
     .then((response) => {
       // console.log(response)
-      return response
+      return response;
     })
     .catch((err) => {
-      return err
-    })
+      return err;
+    });
 }
 
 async function loadSingle(serverUrl, collection, id, populatedeep = true) {
@@ -184,19 +184,19 @@ async function loadSingle(serverUrl, collection, id, populatedeep = true) {
     )
     .then((response) => {
       // console.log(response)
-      return response
+      return response;
     })
     .catch((err) => {
-      return err
-    })
+      return err;
+    });
 }
 
 function getAllImageFromPlan(plan) {
-  const imgData = []
-  plan.querySelectorAll('img').forEach((img) => {
-    imgData.push(Number(img.id.split('-')[1]))
-  })
-  return imgData
+  const imgData = [];
+  plan.querySelectorAll("img").forEach((img) => {
+    imgData.push(Number(img.id.split("-")[1]));
+  });
+  return imgData;
 }
 
 export {
@@ -208,4 +208,4 @@ export {
   connectObjectToPlan,
   removeObjectFromPlan,
   reorderObjectInPlan,
-}
+};
