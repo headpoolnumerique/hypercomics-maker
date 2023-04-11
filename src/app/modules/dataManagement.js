@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { isNumeric } from './helpers.js'
+
 async function updateData(serverUrl, collection, data, id) {
   return axios
     .put(`${serverUrl}/api/${collection}/${id}?populate=deep,5`, {
