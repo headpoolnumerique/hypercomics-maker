@@ -30,7 +30,8 @@
     "nunjucks-cli": "^1.0.0",
     "postcss-cli": "^10.0.0",
     "postcss-import": "^15.0.0",
-    "qs": "^6.11.0"
+    "qs": "^6.11.0",
+    "sortablejs": "^1.15.0"
   },
   "devDependencies": {
     "browser-sync": "^2.27.5",

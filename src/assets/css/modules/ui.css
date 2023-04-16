@@ -107,3 +107,7 @@ button:hover {
   display: inline;
   width: 30px;
 }
+
+.toDrag {
+  box-shadow: 0 0 0 5px #eee; 
+}
