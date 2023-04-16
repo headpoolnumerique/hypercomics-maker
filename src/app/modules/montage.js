@@ -12,7 +12,7 @@ import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 //
 //
 
-function dragAndPlanReorder(wrappingElement) {
+function dragAndPlanReorder(wrappingElement, sequenceNumber) {
   var sortable = Sortable.create(wrappingElement, {
     animation: 300,
     multiDrag: true, // Enable the plugin
@@ -20,20 +20,41 @@ function dragAndPlanReorder(wrappingElement) {
     multiDragKey: "shift", // Key that must be down for items to be selected
     avoidImplicitDeselect: true, // true - if you don't want to deselect items on outside click
     onEnd: function (event) {
-      console.log(event);
-      let items = [...wrappingElement.querySelectorAll("li")];
-      console.log(items);
+      resetOrder(wrappingElement);
+
+      // let updatedData =
+
+      // await updateData(
+      //   config.strapi.url,
+      //   "sequences",
+      //   updatedData,
+      //   Number(sequenceNumber.textContent)
+      // );
       // send a new order to the server /
       // reorder the plan in the top bar
     },
   });
-
-  // reorder visually the blocks
-  // document.querySelectore
-
-  //
 }
 
+function resetOrder(wrappingElement) {
+  let updatedOrder = [];
+  wrappingElement.querySelectorAll("li").forEach((item) => {
+    updatedOrder.push(Number(item.id.replace("link-", "")));
+  });
+  console.log(updatedOrder);
+  let data = {
+    plans: {
+      set: updatedOrder,
+    },
+  };
+
+  updateData(
+    config.strapi.url,
+    "sequences",
+    data,
+    Number(sequenceNumber.textContent)
+  );
+}
 /*
 // add plan to the sequence 
 // montageList = montage list in the montage pane,
