@@ -1,6 +1,6 @@
 import config from "../config/config.js";
 import { loadSingle, createData } from "./dataManagement.js";
-import { addPlan, renderPlan } from "./montage.js";
+import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
 import { montageList, sequencePreview } from "./selectors.js";
 import { addAssetToTheAssetManager } from "./assetManager";
 import { moveToolbars, toggleToolbars } from "./toolbarsManipulations.js";
@@ -59,6 +59,8 @@ async function startup(url = document.location.href) {
   }
   moveToolbars();
   toggleToolbars();
+  dragAndPlanReorder(montageList) 
+  
 }
 
 async function fillSequence(sequence) {
