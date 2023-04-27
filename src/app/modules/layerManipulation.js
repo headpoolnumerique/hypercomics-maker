@@ -37,6 +37,11 @@ function layerInteract(layerWrapper = layerList) {
     deselect(".selectedLayer");
     const target = e.target;
 
+
+    if (!target.closest("li")){
+      return
+    }
+
     let objectid = target.closest("li").dataset.objectid;
 
     if (target.classList.contains("identifier")) {

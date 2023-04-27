@@ -34,3 +34,10 @@ img {
 }
 
 
+
+img.asset-hidden {
+  opacity: 0;
+}
+img.asset-hidden.asset-selected {
+  opacity: 0.05;
+}
