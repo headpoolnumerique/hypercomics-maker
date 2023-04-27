@@ -1,5 +1,10 @@
+#layer-space {
+  min-width: 40ch;
+  max-height: 89vh;
+}
 .selectedLayer {
-  background: #ccc;
+  background: #eee;
+  color: var(--color-main);
 }
 
 .confirm {
@@ -10,3 +15,5 @@
 .hidden {
   color: lightgrey; 
 }
+
+

@@ -14,7 +14,7 @@ function addLayer(asset) {
   appendLayer(asset.id);
 }
 
-function appendLayer(id, layerWrapper = layerList, top = true) {
+function appendLayer(id, layerWrapper = layerList, top = false) {
   layerWrapper.insertAdjacentHTML(
     // put the first at the bottom
     top ? "beforeend" : "afterbegin",

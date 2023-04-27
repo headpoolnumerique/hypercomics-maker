@@ -138,7 +138,8 @@ assetsList.addEventListener("click", async (e) => {
         document.querySelector(".selected").hash,
         strapisResponse.data.data.id
       );
-      appendLayer(strapisResponse.data.data.id);
+
+      appendLayer(strapisResponse.data.data.id, layerList, false);
     }
   }
 });
