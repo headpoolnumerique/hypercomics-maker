@@ -4,6 +4,7 @@ import { sequenceNumber, sequencePreview, montageList, previewScreen } from "./s
 import { createData, updateData } from "./dataManagement.js";
 import axios from "axios";
 import Sortable from "sortablejs/modular/sortable.complete.esm.js";
+import { updateLayers } from "./layerManipulation.js";
 
 // reorder the plan, visually, then send an update to the order using set in the sequence, and reorder the whole blocks
 //
@@ -15,7 +16,7 @@ import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 function dragAndPlanReorder(wrappingElement, sequenceNumber) {
   var sortable = Sortable.create(wrappingElement, {
     animation: 300,
-    multiDrag: true, // Enable the plugin
+    multiDrag: true, // Enable the pluginsortable
     selectedClass: "toDrag",
     multiDragKey: "shift", // Key that must be down for items to be selected
     avoidImplicitDeselect: true, // true - if you don't want to deselect items on outside click
@@ -400,6 +401,7 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
     }" id="plan-${plan.id}">
     </article>`
   );
+
 }
 
 // move plan using drag and drop

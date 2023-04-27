@@ -1,9 +1,15 @@
 import config from "../config/config.js";
 import { loadSingle, createData } from "./dataManagement.js";
 import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
-import { montageList, sequenceNumber, sequencePreview } from "./selectors.js";
+import {
+  layerList,
+  montageList,
+  sequenceNumber,
+  sequencePreview,
+} from "./selectors.js";
 import { addAssetToTheAssetManager } from "./assetManager";
 import { moveToolbars, toggleToolbars } from "./toolbarsManipulations.js";
+import { addLayer, layerInteract, reorderLayer, updateLayers } from "./layerManipulation.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -59,8 +65,9 @@ async function startup(url = document.location.href) {
   }
   moveToolbars();
   toggleToolbars();
-  dragAndPlanReorder(montageList, sequenceNumber)
-  
+  dragAndPlanReorder(montageList, sequenceNumber);
+  reorderLayer(layerList);
+  layerInteract()
 }
 
 async function fillSequence(sequence) {
@@ -82,6 +89,7 @@ async function fillSequence(sequence) {
     fillPlan(plan);
   });
 
+  updateLayers();
   // check for each plan. add them to the view
 }
 
@@ -97,13 +105,12 @@ function updateSequenceMeta(id, title) {
 function fillPlan(plan) {
   console.log(`fill the plan ${plan.id} on load from the objects`);
 
-  // fille the plan with all the existing images
+  // fill the plan with all the existing images
   // find the plan
   let planToFill = preview.querySelector(`#plan-${plan.id}`);
   let objectsToFillWith = plan.attributes.objects?.data;
   console.log(plan.attributes, objectsToFillWith);
 
-  //
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
     // console.log(object)
@@ -117,13 +124,10 @@ function fillPlan(plan) {
       );
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-          object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
         }" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="${
-          asset.attributes.location
-        }" class="asset" style="${
-          object.attributes.width ? `width:${object.attributes.width}` : ""
+        data-assetid="${asset.id}" src="${asset.attributes.location
+        }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ""
         }
         ${object.attributes.height ? `height:${object.attributes.height}` : ""}
         ${object.attributes.top ? `top:${object.attributes.top}` : ""}

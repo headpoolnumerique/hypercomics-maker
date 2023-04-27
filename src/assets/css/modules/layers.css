@@ -1,0 +1,8 @@
+.selectedLayer {
+  background: #ccc;
+}
+
+.confirm {
+  font-weight: 600;
+  color: red;
+}

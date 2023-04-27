@@ -1,3 +1,36 @@
 img {
-  object-fit:contain;
+  object-fit: contain;
 }
+
+#layer-space {
+  font-size: 0.8em;
+}
+
+#layer-space h2 {
+  margin: 0;
+}
+
+#layer-space ul {
+  /* font-size: 0.8em; */
+  margin: 0;
+  padding: 10px;
+  list-style-type: none;
+}
+
+#layer-space li {
+  border-bottom: 1px solid gray;
+  display: grid;
+  gap: 1ch;
+  grid-template-columns: 3ch auto 2ch 2ch;
+}
+
+.hidebutton {
+  margin-left: auto;
+  text-align: right;
+}
+
+#layer-space {
+  font-size: .dfkkkdf;
+}
+
+

@@ -34,6 +34,7 @@ import {
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
 import config from "./config/config.js";
+import { addLayer, updateLayers } from "./modules/layerManipulation.js";
 
 // list all the things
 //Event and binds
@@ -131,7 +132,9 @@ assetsList.addEventListener("click", async (e) => {
         document.querySelector(".selected").hash,
         strapisResponse.data.data.id
       );
+      addLayer(assetId)
     }
+
   }
 });
 
@@ -199,7 +202,7 @@ document
   .addEventListener("click", function() {
     let shownPlan = document.querySelector(".shown");
     let shownLink = document.querySelector(".selected");
-    console.log(shownPlan, shownLink);
+
     if (!shownPlan.previousElementSibling) {
       return false;
     }
@@ -215,12 +218,13 @@ document
       .closest("li")
       .previousElementSibling.querySelector("a")
       .classList.add("selected");
+
+    updateLayers();
   });
 
 document.querySelector("#previewNext").addEventListener("click", function() {
   let shownPlan = document.querySelector(".shown");
   let shownLink = document.querySelector(".selected");
-  console.log(shownPlan, shownLink);
   if (!shownPlan.nextElementSibling) {
     return false;
   }
@@ -233,6 +237,8 @@ document.querySelector("#previewNext").addEventListener("click", function() {
     .closest("li")
     .nextElementSibling.querySelector("a")
     .classList.add("selected");
+
+  updateLayers();
 });
 
 startup();

@@ -9,6 +9,7 @@ const projectName = document.querySelector('#projectName')
 const sequenceNumber = document.querySelector('#sequenceNumber')
 const sequencePreview = document.querySelector('#previewScreen')
 const contextUI = document.querySelector('#contextualUI')
+const layerList = document.querySelector("#layers")
 
 export {
   previewSpace,
@@ -22,4 +23,5 @@ export {
   sequenceNumber,
   sequencePreview,
   contextUI,
+  layerList
 }
