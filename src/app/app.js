@@ -138,7 +138,7 @@ assetsList.addEventListener("click", async (e) => {
         document.querySelector(".selected").hash,
         strapisResponse.data.data.id
       );
-      appendLayer(strapisResponse.data.data.id)
+      appendLayer(strapisResponse.data.data.id);
     }
   }
 });
@@ -147,7 +147,13 @@ assetsList.addEventListener("click", async (e) => {
 preview.addEventListener("click", (event) => {
   if (event.target.tagName == "IMG") {
     deselect(".confirm");
-    if(event.target.classList.contains("asset-selected")) return 
+    if (
+      event.target.dataset.objectid !=
+      document.querySelector(".selectedLayer")?.dataset.objectid
+    ) {
+      deselect(".selectedLayer");
+    }
+    if (event.target.classList.contains("asset-selected")) return;
     deselect(".asset-selected");
     event.target.classList.add("asset-selected");
     updateTheUI(event.target);
@@ -156,7 +162,7 @@ preview.addEventListener("click", (event) => {
   } else {
     deselect(".asset-selected");
     deselect(".confirm");
-
+    deselect(".selectedLayer");
   }
 });
 

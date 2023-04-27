@@ -29,19 +29,16 @@ function appendLayer(id, layerWrapper = layerList, top = true) {
 
 function selectLayer(layerWrapper = "layerList", id) {
   deselect(".selectedlayer");
-  layerWrapper.querySelector(`[data-objectid="${id}"]`);
+  layerWrapper.querySelector(`li[data-objectid="${id}"]`).classList.add("selectedLayer");
 }
 
 function layerInteract(layerWrapper = layerList) {
-  console.log(layerWrapper);
-
   layerWrapper.addEventListener("click", function(e) {
     deselect(".selectedLayer");
     const target = e.target;
 
     let objectid = target.closest("li").dataset.objectid;
 
-    console.log("objectid", objectid);
     if (target.classList.contains("identifier")) {
       target.closest("li").classList.add("selectedLayer");
       deselect(".confirm");
@@ -51,29 +48,21 @@ function layerInteract(layerWrapper = layerList) {
       );
       selectedObject.classList.add("asset-selected");
       updateTheUI(selectedObject);
-
-
     } else if (target.classList.contains("hidebutton")) {
-
       target.closest("li").classList.add("selectedLayer");
-      console.log("hiddend");
       deselect(".asset-selected");
-      const removableObject = document.querySelector(
+      const hidingObject = document.querySelector(
         `.shown [data-objectid="${objectid}"]`
       );
-      removableObject.classList.add(["asset-hidden"]);
-      target.closest("li").classList.add("hidden");
-
+      hidingObject.classList.toggle(["asset-hidden"]);
+      target.closest("li").classList.toggle("hidden");
     } else if (target.classList.contains("delete")) {
-
       target.closest("li").classList.add("selectedLayer");
       deselect(".asset-selected");
-
       const removableObject = document.querySelector(
         `.shown [data-objectid="${objectid}"]`
       );
       removableObject.classList.add(["asset-selected"]);
-
       if (target.classList.contains("confirm")) {
         deleteObject();
         target.closest("li").remove();
