@@ -27,6 +27,11 @@ function appendLayer(id, layerWrapper = layerList, top = true) {
   );
 }
 
+function selectLayer(layerWrapper = "layerList", id) {
+  deselect(".selectedlayer");
+  layerWrapper.querySelector(`[data-objectid="${id}"]`);
+}
+
 function layerInteract(layerWrapper = layerList) {
   console.log(layerWrapper);
 
@@ -46,7 +51,10 @@ function layerInteract(layerWrapper = layerList) {
       );
       selectedObject.classList.add("asset-selected");
       updateTheUI(selectedObject);
+
+
     } else if (target.classList.contains("hidebutton")) {
+
       target.closest("li").classList.add("selectedLayer");
       console.log("hiddend");
       deselect(".asset-selected");
@@ -54,8 +62,10 @@ function layerInteract(layerWrapper = layerList) {
         `.shown [data-objectid="${objectid}"]`
       );
       removableObject.classList.add(["asset-hidden"]);
-      target.classList.add("confirm");
+      target.closest("li").classList.add("hidden");
+
     } else if (target.classList.contains("delete")) {
+
       target.closest("li").classList.add("selectedLayer");
       deselect(".asset-selected");
 
@@ -63,10 +73,12 @@ function layerInteract(layerWrapper = layerList) {
         `.shown [data-objectid="${objectid}"]`
       );
       removableObject.classList.add(["asset-selected"]);
+
       if (target.classList.contains("confirm")) {
         deleteObject();
         target.closest("li").remove();
       }
+      deselect(".confirm");
       target.classList.add("confirm");
     }
   });
@@ -106,4 +118,11 @@ function reorderLayer(wrappingElement) {
   });
 }
 
-export { reorderLayer, updateLayers, addLayer, appendLayer, layerInteract };
+export {
+  selectLayer,
+  reorderLayer,
+  updateLayers,
+  addLayer,
+  appendLayer,
+  layerInteract,
+};

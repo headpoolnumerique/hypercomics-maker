@@ -30,11 +30,17 @@ import {
   imageUpload,
   assetsList,
   contextUI,
+  layerList,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
 import config from "./config/config.js";
-import { addLayer, updateLayers } from "./modules/layerManipulation.js";
+import {
+  addLayer,
+  appendLayer,
+  selectLayer,
+  updateLayers,
+} from "./modules/layerManipulation.js";
 
 // list all the things
 //Event and binds
@@ -126,39 +132,31 @@ assetsList.addEventListener("click", async (e) => {
     );
 
     if (strapisResponse) {
-      console.log(strapisResponse);
+      // console.log(strapisResponse);
       addImg(
         e.target,
         document.querySelector(".selected").hash,
         strapisResponse.data.data.id
       );
-      addLayer(assetId)
+      appendLayer(strapisResponse.data.data.id)
     }
-
   }
 });
 
-// moveElementOnThePage
-
+// select object if it’s an image
 preview.addEventListener("click", (event) => {
   if (event.target.tagName == "IMG") {
-    previewScreen
-      .querySelector(".asset-selected")
-      ?.classList.remove("asset-selected");
+    deselect(".confirm");
+    if(event.target.classList.contains("asset-selected")) return 
+    deselect(".asset-selected");
     event.target.classList.add("asset-selected");
-
     updateTheUI(event.target);
-
+    selectLayer(layerList, event.target.dataset.objectid);
     interactObject(event.target);
-    //update context menu
-    // contextUI.querySelector('main').innerHTML = assetManipulationUi
   } else {
-    previewScreen
-      .querySelector(".asset-selected")
-      ?.classList.remove("asset-selected");
+    deselect(".asset-selected");
+    deselect(".confirm");
 
-    //update context menu
-    // contextUI.querySelector('main').innerHTML = ''
   }
 });
 
