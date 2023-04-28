@@ -13,6 +13,7 @@
     <main id="appWrap">
       <section id="homeButtonsList">
         <button id="showSequence">sequence</button>
+        <button id="showLayers">Layers</button>
         <button id="showContextual">contextual</button>
         <button id="showMontage">montage</button>
         <button id="showAssets">assets</button>
@@ -32,13 +33,13 @@
         <div class="button-list"></div>
         <main>
           <div class="manip">
-            <details class="zindex">
-              <summary>Z-index</summary>
-              <button id="moveClosest">↑↑</button>
-              <button id="moveCloser">↑</button>
-              <button id="moveFarther">↓</button>
-              <button id="moveFarest">↓↓</button>
-            </details>
+            <!-- <details class="zindex"> -->
+            <!--   <summary>Z-index</summary> -->
+            <!--   <button id="moveClosest">↑↑</button> -->
+            <!--   <button id="moveCloser">↑</button> -->
+            <!--   <button id="moveFarther">↓</button> -->
+            <!--   <button id="moveFarest">↓↓</button> -->
+            <!-- </details> -->
             <details open class="location">
               <summary>Coordinates</summary>
               <div>
@@ -97,7 +98,16 @@
       </section>
 
       <section id="layer-space" class="show moveable">
+
         <h2>Layers</h2>
+
+            <details class="zindex">
+              <summary>Z-index</summary>
+              <button id="moveClosest">↑↑</button>
+              <button id="moveCloser">↑</button>
+              <button id="moveFarther">↓</button>
+              <button id="moveFarest">↓↓</button>
+            </details>
         <ul id="layers"></ul>
       </section>
 

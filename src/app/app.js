@@ -167,40 +167,6 @@ preview.addEventListener("click", (event) => {
   }
 });
 
-// contextUI
-
-contextUI.addEventListener("click", function(event) {
-  const asset = previewScreen.querySelector(".asset-selected"),
-    plan = previewScreen.querySelector(".shown");
-
-  switch (event.target.id) {
-    case "rotate":
-      break;
-    case "resize":
-      break;
-    case "moveFarther":
-      moveToLayer(asset, plan, "farther");
-      break;
-    case "moveCloser":
-      moveToLayer(asset, plan, "closer");
-      break;
-    case "moveFarest":
-      moveToLayer(asset, plan, "farest");
-      break;
-    case "moveClosest":
-      moveToLayer(asset, plan, "closest");
-      break;
-    // case 'move':
-    //   break
-    case "deleteAsset":
-      deleteObject();
-      break;
-
-    default:
-      console.log("not there yet");
-  }
-});
-
 // show hide/plan
 document
   .querySelector("#previewPrevious")

@@ -1,7 +1,9 @@
-import { layerList, previewScreen } from "./selectors";
+import { layerList, previewScreen, zindexInteraction } from "./selectors";
 import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 import { deselect } from "./helpers";
-import { deleteObject, updateTheUI } from "./objectManipulations";
+import { deleteObject, moveToLayer, updateTheUI } from "./objectManipulations";
+import config from "../config/config";
+import { updateData } from "./dataManagement";
 
 // how is the layer list created?
 // is it the layer list that maintains everything or is the layer list based on the preview block
@@ -26,20 +28,43 @@ function appendLayer(id, layerWrapper = layerList, top = false) {
     </li>`
   );
 }
-
 function selectLayer(layerWrapper = "layerList", id) {
   deselect(".selectedlayer");
-  layerWrapper.querySelector(`li[data-objectid="${id}"]`).classList.add("selectedLayer");
+  layerWrapper
+    .querySelector(`li[data-objectid="${id}"]`)
+    .classList.add("selectedLayer");
 }
 
 function layerInteract(layerWrapper = layerList) {
+  // layer buttons
+  zindexInteraction.addEventListener("click", function(event) {
+    const asset = previewScreen.querySelector(".asset-selected"),
+      plan = previewScreen.querySelector(".shown");
+    switch (event.target.id) {
+      case "moveFarther":
+        moveToLayer(asset, plan, "farther");
+        break;
+      case "moveCloser":
+        moveToLayer(asset, plan, "closer");
+        break;
+      case "moveFarest":
+        moveToLayer(asset, plan, "farest");
+        break;
+      case "moveClosest":
+        moveToLayer(asset, plan, "closest");
+        break;
+      default:
+        console.log("not there yet");
+    }
+  });
+
+  // layer selection, hide/show,. deletion
   layerWrapper.addEventListener("click", function(e) {
     deselect(".selectedLayer");
     const target = e.target;
 
-
-    if (!target.closest("li")){
-      return
+    if (!target.closest("li")) {
+      return;
     }
 
     let objectid = target.closest("li").dataset.objectid;
@@ -106,10 +131,59 @@ function reorderLayer(wrappingElement) {
 
     onEnd: function(event) {
       console.log(event);
+      saveLayerOrder(
+        config.strapi.url,
+        document.querySelector(".shown").dataset.strapId,
+        layerList
+      );
       // reorder the plan
       // send the new order to the axios
     },
   });
+}
+
+function saveLayerOrder(strapiUrl, planId, layerWrapper) {
+  let orderedObjs = [];
+  // get the order of the layers in the plan. reverse the order as html is set the opposite way,
+  layerWrapper.querySelectorAll("li").forEach((obj) => {
+    // create the orderedList of all the assets
+    orderedObjs.push(obj.dataset.objectid);
+  });
+
+  // plan
+  const plan = document.querySelector(".shown");
+
+  // list of asset not needed
+  // const assets = plan.querySelectorAll(".asset");
+
+  // strapi call
+  console.log(orderedObjs);
+  let data = {
+    objects: {
+      set: orderedObjs,
+    },
+  };
+
+  updateData(
+    config.strapi.url,
+    "plans",
+    data,
+    Number(plan.dataset.strapId)
+  ).then((response) => {
+    if (response.status == 200) {
+      // reorder on screen when the response is ok
+      orderedObjs.forEach((assetInOrder) => {
+        const element = plan.querySelector(
+          `.asset[data-objectid="${assetInOrder}"]`
+        );
+        plan.appendChild(element);
+      });
+    }
+  });
+
+  // get the plan id
+  // rest the pln order
+  // reorder the plan preview
 }
 
 export {

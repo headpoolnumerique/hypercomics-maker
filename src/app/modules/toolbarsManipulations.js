@@ -4,6 +4,10 @@ import interact from 'interactjs'
 function toggleToolbars() {
   document.querySelector('#homeButtonsList').addEventListener('click', function(event) {
   switch (event.target.id) {
+    case 'showLayers':
+      console.log(event.target.id)
+      toggleToolbar(document.querySelector('#layer-space'))
+      break
     case 'showSequence':
       console.log(event.target.id)
       toggleToolbar(document.querySelector('#sequence'))

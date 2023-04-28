@@ -10,8 +10,10 @@ const sequenceNumber = document.querySelector('#sequenceNumber')
 const sequencePreview = document.querySelector('#previewScreen')
 const contextUI = document.querySelector('#contextualUI')
 const layerList = document.querySelector("#layers")
+const zindexInteraction = document.querySelector(".zindex")
 
 export {
+  zindexInteraction,
   previewSpace,
   previewScreen,
   montageScreen,
