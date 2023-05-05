@@ -25,8 +25,9 @@
   z-index: 1000;
 }
 #previewScreen .asset-selected {
-  box-shadow: 0 0 0 1px red;
-  z-index: 100;
+  box-shadow: 0 0 0 3px var(--color-main);
+  /* z-index: 100; */
+  /* opacity: .6 */
 }
 
 

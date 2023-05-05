@@ -4,6 +4,8 @@ img {
 
 #layer-space {
   font-size: 0.8em;
+  min-width: 40ch;
+  max-height: 89vh;
 }
 
 #layer-space h2 {
@@ -21,7 +23,7 @@ img {
   border-bottom: 1px solid gray;
   display: grid;
   gap: 1ch;
-  grid-template-columns: 3ch auto 2ch 2ch;
+  grid-template-columns: 2ch 3ch auto 2ch 2ch ;
 }
 
 .hidebutton {
@@ -29,15 +31,36 @@ img {
   text-align: right;
 }
 
-#layer-space {
-  font-size: .dfkkkdf;
+.selectedLayer {
+  background: #eee;
+  color: black;
+  font-weight: 600;
+}
+
+.confirm {
+  font-weight: 800;
+  color: red;
 }
 
 
-
+/* hidden */
+.hidden {
+  color: lightgrey;
+}
 img.asset-hidden {
   opacity: 0;
+  z-index: -100;
 }
 img.asset-hidden.asset-selected {
   opacity: 0.05;
 }
+
+/*previewOnTop*/
+.previewedTop .preview {
+  color: var(--color-main);
+}
+.asset.previewTop {
+  z-index: 100;
+  border: 2px dashed grey;
+}
+

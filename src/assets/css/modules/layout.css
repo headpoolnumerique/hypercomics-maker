@@ -37,7 +37,6 @@ main#appWrap {
   grid-column: 1/-1;
   box-shadow: 0 0 0 10px rgb(200, 200, 200, 0.2);
   /* resize: both; */
-
 }
 
 #preview.fullscreen #previewScreen {
@@ -113,9 +112,12 @@ main#appWrap {
   flex-wrap: wrap;
   width: 100%;
   align-items: space-around;
-  height: 2em;
+  height: 3em;
   /* overflow-y: auto; */
   font-size: 0.8em;
+  padding-top: 12px;
+  border-top: 1px solid grey;
+  background: white;
 }
 
 #planOrder li a {
