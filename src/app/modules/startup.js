@@ -8,8 +8,17 @@ import {
   sequencePreview,
 } from "./selectors.js";
 import { addAssetToTheAssetManager } from "./assetManager";
-import { moveToolbars, resizeMontagePaneVertically, toggleToolbars } from "./toolbarsManipulations.js";
-import { addLayer, layerInteract, reorderLayer, updateLayers } from "./layerManipulation.js";
+import {
+  moveToolbars,
+  resizeMontagePaneVertically,
+  toggleToolbars,
+} from "./toolbarsManipulations.js";
+import {
+  layerInteract,
+  reorderLayer,
+  updateLayers,
+} from "./layerManipulation.js";
+import { handleDelays } from "./delay.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -67,8 +76,9 @@ async function startup(url = document.location.href) {
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
   reorderLayer(layerList);
-  layerInteract()
-  resizeMontagePaneVertically()
+  layerInteract();
+  resizeMontagePaneVertically();
+  handleDelays();
 }
 
 async function fillSequence(sequence) {

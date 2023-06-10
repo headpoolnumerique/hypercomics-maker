@@ -1,0 +1,32 @@
+.popup {
+  display: none;
+}
+
+#layers li {
+  position: relative;
+}
+
+#layers li > span {
+  cursor: pointer;
+}
+
+#layers li > span:hover .popup {
+  animation: fadeIn 400ms;
+  color: red;
+  position: absolute;
+  display: block;
+  bottom: -2.5em;
+  background: black;
+  color: white;
+  z-index: 2;
+  padding: 0.2em 0.5ch;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -98,28 +98,26 @@
       </section>
 
       <section id="layer-space" class="show moveable">
-
         <h2>Layers</h2>
-
-            <details class="zindex">
-              <summary>Z-index</summary>
-              <button id="moveClosest">↑↑</button>
-              <button id="moveCloser">↑</button>
-              <button id="moveFarther">↓</button>
-              <button id="moveFarest">↓↓</button>
-            </details>
+        <!-- <details class="zindex"> -->
+        <!--   <summary>Z-index</summary> -->
+        <!-- <button id="moveClosest">↑↑</button> -->
+        <!-- <button id="moveCloser">↑</button> -->
+        <!-- <button id="moveFarther">↓</button> -->
+        <!-- <button id="moveFarest">↓↓</button> -->
+        <!-- </details> -->
         <ul id="layers"></ul>
       </section>
 
       <section id="banc-montage" class="show moveable hide">
         <h2>montage</h2>
 
-        <button id="showPreviousPlan">show previous plan</button>
         <button id="addPlan">add plan</button>
-        <!-- <button id="insertPlan">insert plan after</button> -->
         <button id="deletePlan">delete plan</button>
-        <button id="deleteAllPlans">delete all plans !careful!</button>
+        <!-- <button id="deleteAllPlans">delete all plans</button> -->
         <button id="duplicatePlan">duplicate plan</button>
+        <label for="minimal-delay" min="0" step="50">minimual delay in millisecond</label>
+        <input id="planDelay" type="number" name="minimal-delay"></input>
       </section>
 
       <ol id="planOrder">

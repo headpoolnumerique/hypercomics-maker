@@ -21,11 +21,11 @@ function appendLayer(id, layerWrapper = layerList, top = false) {
     // put the first at the bottom
     top ? "beforeend" : "afterbegin",
     `<li data-objectid="${id}">
-        <span class="moveIcon">M</span>
-        <span class="previewTop">P</span>
+<span class="moveIcon">M<span class="popup">move</span></span>
+        <span class="previewTop"><span class="popup">preview on top</span>P</span>
         <span class="identifier">#${id}</span>
-        <span class="hidebutton">S</span>
-        <span class="delete">D</delete>
+        <span class="hidebutton"><span class="popup">hide</span>S</span>
+        <span class="delete"><span class="popup">delete</span>D</delete>
     </li>`
   );
 }
@@ -38,7 +38,7 @@ function selectLayer(layerWrapper = "layerList", id) {
 
 function layerInteract(layerWrapper = layerList) {
   // layer buttons
-  zindexInteraction.addEventListener("click", function(event) {
+  zindexInteraction?.addEventListener("click", function(event) {
     const asset = previewScreen.querySelector(".asset-selected"),
       plan = previewScreen.querySelector(".shown");
     switch (event.target.id) {
