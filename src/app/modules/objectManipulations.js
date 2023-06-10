@@ -338,6 +338,7 @@ function percentage(partialValue, totalValue) {
 }
 
 function updateFromUi() {
+  // update the element selected from the ui 
   document.querySelector("#inputx").addEventListener("change", () => {
     document.querySelector(".asset-selected").style.left =
       document.querySelector("#inputx").value + "%";
@@ -357,6 +358,7 @@ function updateFromUi() {
 }
 
 function updateTheUI(element) {
+  // update the ui from the selected element
   let previewScreen = document.querySelector("#previewScreen");
   let previewScreenSize = {
     height: previewScreen.offsetHeight,

@@ -85,7 +85,7 @@ document.querySelector("#deletePlan").addEventListener("click", () => {
   deletePlan();
 });
 
-document.querySelector("#deleteAllPlans").addEventListener("click", () => {
+document.querySelector("#deleteAllPlans")?.addEventListener("click", () => {
   deleteAllPlans();
 });
 
@@ -110,7 +110,10 @@ montageList.addEventListener("click", (e) => {
     //dont change the url of the page because it’s used to define the sequence
     e.preventDefault();
     deselect(".selected");
+
     selectLink(e.target);
+    updateLayers()
+    // update the Layers pane
   }
 });
 
