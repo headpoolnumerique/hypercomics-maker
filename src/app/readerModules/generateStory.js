@@ -17,18 +17,8 @@ async function generateStory() {
   );
 
   // get the data for the plans (with the weirdest ui from strapi. maybe filtering would make more sense.)
-  let plansdata = sequencedata.data.data.attributes.plans.data;
-  let firstPlan = "";
-
-  plansdata.forEach((plan, index) => {
-    console.log()
-    if (index === 0) {
-      firstPlan = `#plan-${plan.id}`;
-    }
-    renderPlan(plan, toc, story);
-    fillPlan(plan);
-  });
-
+  const plans = sequencedata.data.data.attributes.plans.data;
+  let firstPlan = renderPlans(plans, toc, story);
   window.location.hash = firstPlan;
   // create a preview
   // put all the plan in the preview
@@ -36,6 +26,7 @@ async function generateStory() {
   // use css to show / hide :target
   // import image
   // import css
+  //
 }
 
 function getSequenceNumberFromUrl(url) {
@@ -104,23 +95,37 @@ function fillPlan(plan) {
 //
 //
 
-function renderPlan(plan, toc, story) {
-  let newPlan = document.createElement(`article`);
-  newPlan.classList.add("plan");
-  newPlan.id = `plan-${plan.id}`;
+function renderPlans(plans, toc, story) {
+  let firstPlan = "";
+  plans.forEach((plan, index) => {
+    if (index === 0) {
+      firstPlan = `#plan-${plan.id}`;
+    }
+    let newPlan = document.createElement(`article`);
+    newPlan.classList.add("plan");
+    newPlan.id = `plan-${plan.id}`;
 
-  // insert a link to the plan in the montage panel
-  toc.insertAdjacentHTML(
-    "beforeend",
-    `<li id="link-${plan.id}"><a class="" href="#plan-${plan.id}"></a></li>`
-  );
+    const previousPlan = plans[index - 1] ? `#plan-${plans[index - 1].id}` : false;
+    const nextPlan = plans[index + 1] ? `#plan-${plans[index + 1].id}` : false;
 
-  // insert the plan in the preview plan
-  story.insertAdjacentHTML(
-    "beforeend",
-    `<article data-strap-id=${plan.id} class="plan" id="plan-${plan.id}">
+    // insert a link to the plan in the montage panel
+    toc.insertAdjacentHTML(
+      "beforeend",
+      `<li id="link-${plan.id}"><a class="" href="#plan-${plan.id}"></a></li>`
+    );
+
+    // insert the plan in the preview plan
+    story.insertAdjacentHTML(
+      "beforeend",
+      `<article data-strap-id=${plan.id} class="plan" id="plan-${plan.id}">
+        ${previousPlan ? `<a href="${previousPlan}"> <- </a>` : ""}
+        ${nextPlan ? `<a href="${nextPlan}"> -> </a>` : ""}
+
     </article>`
-  );
-}
+    );
+    fillPlan(plan);
+  });
 
+  return firstPlan;
+}
 export { generateStory };
