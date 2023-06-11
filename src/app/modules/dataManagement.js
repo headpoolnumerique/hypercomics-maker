@@ -6,6 +6,7 @@ async function updateData(serverUrl, collection, data, id) {
       data,
     })
     .then((response) => {
+      console.log(response)
       return response;
     })
     .catch((err) => {

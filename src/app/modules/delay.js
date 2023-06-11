@@ -7,19 +7,29 @@ async function handleDelays() {
   const plandelay = document.querySelector("#planDelay");
   plandelay.addEventListener("input", async (event) => {
     const value = event.target.value;
-    console.log('value change')
+    if (!value || isNaN(value)) return console.log("the delay is not a number");
+    console.log("value change");
     // debounce doesnt seem to work. will try it again
     // debounce(async (value) => {
-      const planId = document.querySelector(".shown").dataset.strapId;
-      // Make an Axios request to update the server
-      const data = {
-        delay: value,
-      };
+    const plan = document.querySelector(".shown");
+    // Make an Axios request to update the server
+    const data = {
+      delay: value,
+    };
 
-      console.log(data);
-      console.log(updateData(config.strapi.url, "plans", data, planId));
+    console.log(
+      updateData(config.strapi.url, "plans", data, plan.dataset.strapId)
+    );
+    await updateData(
+      config.strapi.url,
+      "plans",
+      data,
+      plan.dataset.strapId
+    ).then((response) => {
+      console.log(response);
+      plan.dataset.delay = value;
+    });
 
-      await updateData(config.strapi.url, "plans", data, planId);
     // debounce doesnt seem to work
     // }, 1000);
   });
@@ -36,4 +46,9 @@ function debounce(callback, delay) {
   };
 }
 
-export { handleDelays };
+function updateDelayUI() {
+  const plan = document.querySelector(".shown");
+  document.querySelector("#planDelay").value = plan.dataset.delay;
+}
+
+export { handleDelays, updateDelayUI };

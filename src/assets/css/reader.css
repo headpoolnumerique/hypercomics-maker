@@ -1,0 +1,26 @@
+@import url(./modules/reset.css);
+
+img {
+  position: absolute;
+  object-fit: contain;
+}
+
+.plan {
+  display: none;
+}
+
+.plan:target {
+  display: block;
+}
+
+html {
+  font-size: 18px;
+  color: var(--color-body);
+  font-family: var(--font-interface);
+  scrollbar-gutter: stable;
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+

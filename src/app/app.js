@@ -41,6 +41,7 @@ import {
   selectLayer,
   updateLayers,
 } from "./modules/layerManipulation.js";
+import { updateDelayUI } from "./modules/delay.js";
 
 // list all the things
 //Event and binds
@@ -112,7 +113,7 @@ montageList.addEventListener("click", (e) => {
     deselect(".selected");
 
     selectLink(e.target);
-    updateLayers()
+    updateLayers();
     // update the Layers pane
   }
 });
@@ -194,6 +195,7 @@ document
       .classList.add("selected");
 
     updateLayers();
+    updateDelayUI();
   });
 
 document.querySelector("#previewNext").addEventListener("click", function() {
@@ -213,7 +215,8 @@ document.querySelector("#previewNext").addEventListener("click", function() {
     .classList.add("selected");
 
   updateLayers();
+  updateDelayUI();
 });
 
-startup();
 updateFromUi();
+startup();

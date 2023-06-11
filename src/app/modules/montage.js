@@ -1,6 +1,11 @@
 import { deselect, selectLink, activatePlan } from "./helpers.js";
 import config from "../config/config.js";
-import { sequenceNumber, sequencePreview, montageList, previewScreen } from "./selectors.js";
+import {
+  sequenceNumber,
+  sequencePreview,
+  montageList,
+  previewScreen,
+} from "./selectors.js";
 import { createData, updateData } from "./dataManagement.js";
 import axios from "axios";
 import Sortable from "sortablejs/modular/sortable.complete.esm.js";
@@ -22,7 +27,7 @@ function dragAndPlanReorder(wrappingElement, sequenceNumber) {
     avoidImplicitDeselect: true, // true - if you don't want to deselect items on outside click
     onEnd: function(event) {
       resetOrder(wrappingElement);
-      // reorder the sequence preview 
+      // reorder the sequence preview
 
       // let updatedData =
 
@@ -43,9 +48,12 @@ function resetOrder(wrappingElement) {
   wrappingElement.querySelectorAll("li").forEach((item) => {
     updatedOrder.push(Number(item.id.replace("link-", "")));
   });
-  updatedOrder.forEach(id => {
-    previewScreen.insertAdjacentElement("beforeend", previewScreen.querySelector(`#plan-${id}`))
-  })
+  updatedOrder.forEach((id) => {
+    previewScreen.insertAdjacentElement(
+      "beforeend",
+      previewScreen.querySelector(`#plan-${id}`)
+    );
+  });
   console.log(updatedOrder);
   let data = {
     plans: {
@@ -94,16 +102,9 @@ async function deleteAllPlans() {
     });
 }
 
-
 // todo delete multiple plan from the to drag
 
-
-
-
 async function deletePlan() {
-
-
-
   let sequenceId = Number(
     document.querySelector("#sequenceNumber").textContent
   );
@@ -393,11 +394,10 @@ function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert the plan in the preview plan
   sequencePreview.insertAdjacentHTML(
     "beforeend",
-    `<article data-strap-id=${plan.id} class="${select ? "shown" : ""
+    `<article data-strap-id=${plan.id} class="plan ${select ? "shown" : ""
     }" id="plan-${plan.id}">
     </article>`
   );
-
 }
 
 // move plan using drag and drop
