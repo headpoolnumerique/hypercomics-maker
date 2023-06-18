@@ -4,6 +4,9 @@ function readingTools() {
   let canMoveForward = true; // Flag variable to track if moveForward is allowed
   //handling keyboard
   window.addEventListener("keyup", function (e) {
+    const hashElement = document.querySelector(window.location.hash);
+    const delay = hashElement.dataset.storyDelay || 100;
+    console.log(delay);
     if (!canMoveForward) {
       return; // If moveForward is not allowed, exit early
     }
@@ -27,40 +30,20 @@ function readingTools() {
 
     // Disable moveForward for 5 seconds
     canMoveForward = false;
-    console.log("go")
+    console.log("go");
     setTimeout(() => {
       canMoveForward = true;
-    }, 1000); // 5 seconds delay
+    }, delay); // 5 seconds delay
   });
 
-  // allow some waiting time
-
-  let scrollDelay = 100;
-  let scrollTimeout;
-  let delayActive = false; // Flag variable to indicate if delay is active
-
-  // Set delay active and start the delay
-  delayActive = true;
-  setTimeout(() => {
-    delayActive = false;
-  }, scrollDelay);
-
-  function delayedScroll(e, scrollTimeout, scrollDelay) {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(handleScroll(e), scrollDelay);
-  }
-
-  function handleScroll(e) {
-    // console.log(delayActive);
-    if (delayActive) {
-      return; // If delay is active, do not handle the scroll event
+  // on scroll
+  window.addEventListener("wheel", function (e) {
+    e.preventDefault();
+    const hashElement = document.querySelector(window.location.hash);
+    const delay = hashElement.dataset.storyDelay || 100;
+    if (!canMoveForward) {
+      return; // If moveForward is not allowed, exit early
     }
-
-    console.log("Scroll event triggered");
-    // move forward/backward on wheel move
-    // get waitingTime from section
-    // lock minimal time
-    // e.preventDefault();
 
     //get waitign time and set waiting time
     // setWaitingTime();
@@ -73,25 +56,17 @@ function readingTools() {
       moveForward();
     }
 
-    // detect mouse wheel direction
-    function detectMouseWheelDirection(e) {
-      if (!e) {
-        // if the event is not provided, we get it from the window object
-        e = window.event;
-      }
-      let direction;
-      if (e.deltaY !== null) {
-        return (direction = e.deltaY > 0 ? "down" : "up");
-      }
-      return direction;
-    }
-  }
-  // on scroll
-  window.addEventListener("wheel", function (e) {
-    console.log("scroll");
-    delayedScroll(e, scrollTimeout, scrollDelay);
+    //move with the scroll using delay
+
+    // Disable moveForward for the time set in the db
+    canMoveForward = false;
+    console.log("go");
+    setTimeout(() => {
+      canMoveForward = true;
+    }, delay); // 5 seconds delay
   });
 }
+
 export { readingTools };
 
 // move to next plan
@@ -112,4 +87,17 @@ function moveBackward() {
   elementToMoveTo.classList.add("selected");
   elementToMoveFrom.classList.remove("selected");
   window.location.hash = new URL(elementToMoveTo.querySelector("a").href).hash;
+}
+
+//detect the direction of the mouse wheel
+function detectMouseWheelDirection(e) {
+  if (!e) {
+    // if the event is not provided, we get it from the window object
+    e = window.event;
+  }
+  let direction;
+  if (e.deltaY !== null) {
+    return (direction = e.deltaY > 0 ? "down" : "up");
+  }
+  return direction;
 }
