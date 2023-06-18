@@ -1,100 +1,115 @@
 function readingTools() {
   console.log("setting up reading tools");
 
+  let canMoveForward = true; // Flag variable to track if moveForward is allowed
+  //handling keyboard
   window.addEventListener("keyup", function (e) {
+    if (!canMoveForward) {
+      return; // If moveForward is not allowed, exit early
+    }
     switch (e.code) {
       case "ArrowLeft":
         moveBackward();
         break;
 
       case "ArrowUp":
-        console.log(e.code);
         moveBackward();
         break;
 
       case "ArrowRight":
         moveForward();
         break;
+
       case "ArrowDown":
         moveForward();
         break;
     }
+
+    // Disable moveForward for 5 seconds
+    canMoveForward = false;
+    console.log("go")
+    setTimeout(() => {
+      canMoveForward = true;
+    }, 1000); // 5 seconds delay
   });
 
   // allow some waiting time
-  let waitingTime = false;
 
-  // move forward/backward on wheel move
-  window.addEventListener("wheel", function (e) {
-    // if you need to wait, dont accept the wheel changed
-    if (waitingTime) {
-      return;
+  let scrollDelay = 100;
+  let scrollTimeout;
+  let delayActive = false; // Flag variable to indicate if delay is active
+
+  // Set delay active and start the delay
+  delayActive = true;
+  setTimeout(() => {
+    delayActive = false;
+  }, scrollDelay);
+
+  function delayedScroll(e, scrollTimeout, scrollDelay) {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(handleScroll(e), scrollDelay);
+  }
+
+  function handleScroll(e) {
+    // console.log(delayActive);
+    if (delayActive) {
+      return; // If delay is active, do not handle the scroll event
     }
+
+    console.log("Scroll event triggered");
+    // move forward/backward on wheel move
     // get waitingTime from section
     // lock minimal time
-    e.preventDefault();
+    // e.preventDefault();
 
     //get waitign time and set waiting time
     // setWaitingTime();
     //
-    if (detectMouseWheelDirection() == "up") {
+    if (detectMouseWheelDirection(e) == "up") {
       console.log("up");
       moveBackward();
     } else {
       console.log("down");
       moveForward();
     }
-  });
 
-  // wait!
-  function setWaitingTime(lapsingTime) {
-    // TODO get the time value from
-    waitingTime = true;
-    setTimeout(function (lapsingTime) {
-      if (!lapsingTime) {
-        lapsingTime = 2000;
+    // detect mouse wheel direction
+    function detectMouseWheelDirection(e) {
+      if (!e) {
+        // if the event is not provided, we get it from the window object
+        e = window.event;
       }
-      waitingTime = false;
-      console.log("you can now");
-    }, lapsingTime);
-  }
-
-  function moveForward() {
-    let old = document.querySelector(".selected");
-    if (!old || !old.nextElementSibling) return;
-    old.nextElementSibling?.classList.add("selected");
-    old.classList.remove("selected");
-    window.location.hash = new URL(old.nextElementSibling.querySelector('a').href).hash;
-  }
-  function moveBackward() {
-    let old = document.querySelector(".selected");
-    if (!old || !old.previousElementSibling) return;
-    old.classList.remove("selected");
-    old.previousElementSibling.classList.add("selected");
-    window.location.hash = new URL(old.previousElementSibling.querySelector('a').href).hash;
-  }
-
-  function detectMouseWheelDirection(e) {
-    if (!e) {
-      // if the event is not provided, we get it from the window object
-      e = window.event;
+      let direction;
+      if (e.deltaY !== null) {
+        return (direction = e.deltaY > 0 ? "down" : "up");
+      }
+      return direction;
     }
-    let direction;
-    if (e.deltaY !== null) {
-      return (direction = e.deltaY > 0 ? "down" : "up");
-    }
-    return direction;
   }
+  // on scroll
+  window.addEventListener("wheel", function (e) {
+    console.log("scroll");
+    delayedScroll(e, scrollTimeout, scrollDelay);
+  });
+}
+export { readingTools };
 
-  function waitForMe(milisec) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("");
-      }, milisec);
-    });
-  }
-
-  function highlightPlanNumber() {}
+// move to next plan
+function moveForward() {
+  let elementToMoveFrom = document.querySelector(".selected");
+  let elementToMoveTo = elementToMoveFrom.nextElementSibling;
+  if (!elementToMoveFrom || !elementToMoveTo) return;
+  elementToMoveTo.classList.add("selected");
+  elementToMoveFrom.classList.remove("selected");
+  window.location.hash = new URL(elementToMoveTo.querySelector("a").href).hash;
 }
 
-export { readingTools };
+// move to previous plan
+function moveBackward() {
+  let elementToMoveFrom = document.querySelector(".selected");
+  let elementToMoveTo = elementToMoveFrom.previousElementSibling;
+  if (!elementToMoveFrom || !elementToMoveTo) return;
+  elementToMoveTo.classList.add("selected");
+  elementToMoveFrom.classList.remove("selected");
+  window.location.hash = new URL(elementToMoveTo.querySelector("a").href).hash;
+}

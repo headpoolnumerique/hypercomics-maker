@@ -19,13 +19,9 @@ async function generateStory() {
   // get the data for the plans (with the weirdest ui from strapi. maybe filtering would make more sense.)
   const plans = sequencedata.data.data.attributes.plans.data;
   let firstPlan = renderPlans(plans, toc, story);
+  // show the first plan
   window.location.hash = firstPlan;
-  // create a preview
-  // put all the plan in the preview
-  // create a toc with link
-  // use css to show / hide :target
-  // import image
-  // import css
+  // import css for responsive things
   //
 }
 
@@ -42,28 +38,6 @@ async function loadProject(apiUrl, projectId, sequenceId) {
   return await loadSingle(apiUrl, "sequences", sequenceId);
 }
 
-// fill the sequence with all the plans, and for each plan, fill it with the assets, and object
-async function fillSequence(plans) {
-  //create the plan
-  plans.data.forEach((plan, index) => {
-    console.log("renderPlan", plan);
-    renderPlan(
-      plan,
-      montageList,
-      sequencePreview,
-      index + 1 == plans.data.length ? true : false
-    );
-    fillPlan(plan);
-  });
-}
-
-// async function startup(url = document.location.href) {
-//     fillSequence(response.data.data.id);
-//     document.querySelector(".plan").classList.add("shown");
-//   }
-// }
-//
-//
 function fillPlan(plan) {
   console.log(`fill the plan ${plan.id} on load from the objects`);
 
@@ -124,7 +98,11 @@ function renderPlans(plans, toc, story) {
     // insert the plan in the preview plan
     story.insertAdjacentHTML(
       "beforeend",
-      `<article data-strap-id=${plan.id} class="plan" id="plan-${plan.id}">
+      `<article ${
+        plan.attributes.delay
+          ? `data-story-delay="${plan.attributes.delay}"`
+          : ""
+      } data-strap-id="${plan.id}" class="plan" id="plan-${plan.id}">
         ${
           previousPlan
             ? `<a class="previousPlan" href="${previousPlan}">←</a>`
