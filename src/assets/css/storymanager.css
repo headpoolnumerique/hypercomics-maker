@@ -1,0 +1,41 @@
+@import url("./modules/reset.css");
+@import url("./modules/variables.css");
+
+html {
+  font-size: 18px;
+  color: var(--color-body);
+  font-family: var(--font-interface);
+  scrollbar-gutter: stable;
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+body  {
+  display: grid;
+  grid-template-columns:  30vw 1fr;
+}
+
+header {
+  padding: 2em 2ch;
+  background: white;
+}
+
+.project {
+  background: var(--color-body);
+  color: white;
+  display: none;
+}
+
+.project:target {
+  display: block;
+}
+
+.project {
+  padding: 3em 2ch;
+}
+
+.project input {
+  display: block;
+  margin-bottom:2em;
+}

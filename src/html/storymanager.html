@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/storymanager.css" rel="stylesheet" />
+    <script type="module" src="/js/storymanager.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>welcome to hypercomics</h1>
+
+      <section id="projects-list">
+        <h3>Projects</h3>
+        <ul>
+          <li>
+            <a href="#new-project">Create a new project</a>
+          </li>
+          <li><a href="#projectid">name of the project</a></li>
+          <li><a href="#projectid2">name of the second project</a></li>
+          <li><a href="#projectid3">name of the third project</a></li>
+        </ul>
+      </section>
+    </header>
+
+    <!-- for each project do this -->
+    <section id="projectid" class="project">
+      <!-- for each sequence in project  -->
+      <ul class="sequences">
+        <li>
+          <span>id</span><span>sequence title</span>
+          <a href="#edit">edit</a>
+          <a href="#preview">preview</a>
+        </li>
+        <li>
+          <span>id</span><span>sequence title</span>
+          <a href="#edit">edit</a>
+          <a href="#preview">preview</a>
+        </li>
+        <li>
+          <span>id</span><span>sequence title</span>
+          <a href="#edit">edit</a>
+          <a href="#preview">preview</a>
+        </li>
+        <li>
+          <span>id</span><span>sequence title</span>
+          <a href="#edit">edit</a>
+          <a href="#preview">preview</a>
+        </li>
+      </ul>
+      <!--  reorder the sequences here -->
+    </section>
+
+    <section id="new-project" class="project">
+      <form enctype="multipart/form-data" id="form" method="post">
+        <label>
+          <span>Title</span>
+          <input class="usedvalue" type="text" name="title" />
+        </label>
+        <label>
+          <span>Author</span>
+          <input class="usedvalue" type="text" name="author" />
+        </label>
+        <label style="opacity: var(--hidden)">
+          <span>don’t fill</span>
+          <input
+            type="hidden"
+            autocomplete="off"
+            name="enrico"
+            aria-label="Please do not fill this in"
+            class="nah"
+          />
+        </label>
+        <input type="submit" id="submit" value="submit" />
+      </form>
+    </section>
+
+    <!-- create project -->
+  </body>
+</html>

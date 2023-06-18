@@ -5,9 +5,9 @@ function readingTools() {
   //handling keyboard
   window.addEventListener("keyup", function (e) {
     const hashElement = document.querySelector(window.location.hash);
-    const delay = hashElement.dataset.storyDelay || 100;
+    const delay = hashElement.dataset.storyDelay || 0;
     console.log(delay);
-    if (!canMoveForward) {
+    if (delay && !canMoveForward) {
       return; // If moveForward is not allowed, exit early
     }
     switch (e.code) {
@@ -30,7 +30,6 @@ function readingTools() {
 
     // Disable moveForward for 5 seconds
     canMoveForward = false;
-    console.log("go");
     setTimeout(() => {
       canMoveForward = true;
     }, delay); // 5 seconds delay
@@ -41,7 +40,7 @@ function readingTools() {
     e.preventDefault();
     const hashElement = document.querySelector(window.location.hash);
     const delay = hashElement.dataset.storyDelay || 100;
-    if (!canMoveForward) {
+    if (delay && !canMoveForward) {
       return; // If moveForward is not allowed, exit early
     }
 
@@ -49,18 +48,13 @@ function readingTools() {
     // setWaitingTime();
     //
     if (detectMouseWheelDirection(e) == "up") {
-      console.log("up");
       moveBackward();
     } else {
-      console.log("down");
       moveForward();
     }
 
-    //move with the scroll using delay
-
     // Disable moveForward for the time set in the db
     canMoveForward = false;
-    console.log("go");
     setTimeout(() => {
       canMoveForward = true;
     }, delay); // 5 seconds delay

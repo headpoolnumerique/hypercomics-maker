@@ -1,7 +1,7 @@
 import { readingTools } from "./readerModules/anim.js";
 import { generateStory } from "./readerModules/generateStory.js";
 
-start()
+start();
 
 async function start() {
   generateStory().then(readingTools());

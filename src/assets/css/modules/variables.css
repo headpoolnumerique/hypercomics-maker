@@ -26,4 +26,6 @@
   --color-montage-order: white;
   --color-app-wrapp: hsl(0, 0%, 90%);
 --color-assets-background: hsl(0, 0%, 70%);
+
+--hidden: 0;
 }
