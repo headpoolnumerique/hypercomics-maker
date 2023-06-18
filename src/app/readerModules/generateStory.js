@@ -80,10 +80,13 @@ function fillPlan(plan) {
     object.attributes.assets.data.forEach((asset) => {
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+          object.id
         }" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="${asset.attributes.location
-        }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ""
+        data-assetid="${asset.id}" src="${
+          asset.attributes.location
+        }" class="asset" style="${
+          object.attributes.width ? `width:${object.attributes.width}` : ""
         }
         ${object.attributes.height ? `height:${object.attributes.height}` : ""}
         ${object.attributes.top ? `top:${object.attributes.top}` : ""}
@@ -105,21 +108,29 @@ function renderPlans(plans, toc, story) {
     newPlan.classList.add("plan");
     newPlan.id = `plan-${plan.id}`;
 
-    const previousPlan = plans[index - 1] ? `#plan-${plans[index - 1].id}` : false;
+    const previousPlan = plans[index - 1]
+      ? `#plan-${plans[index - 1].id}`
+      : false;
     const nextPlan = plans[index + 1] ? `#plan-${plans[index + 1].id}` : false;
 
     // insert a link to the plan in the montage panel
     toc.insertAdjacentHTML(
       "beforeend",
-      `<li id="link-${plan.id}"><a class="" href="#plan-${plan.id}"></a></li>`
+      `<li ${index == 0 ? `class="selected"` : ""} id="link-${
+        plan.id
+      }"><a class="" href="#plan-${plan.id}">${index + 1}</a></li>`
     );
 
     // insert the plan in the preview plan
     story.insertAdjacentHTML(
       "beforeend",
       `<article data-strap-id=${plan.id} class="plan" id="plan-${plan.id}">
-        ${previousPlan ? `<a href="${previousPlan}"> <- </a>` : ""}
-        ${nextPlan ? `<a href="${nextPlan}"> -> </a>` : ""}
+        ${
+          previousPlan
+            ? `<a class="previousPlan" href="${previousPlan}">←</a>`
+            : ""
+        }
+        ${nextPlan ? `<a class="nextPlan" href="${nextPlan}">→</a>` : ""}
 
     </article>`
     );

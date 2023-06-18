@@ -1,6 +1,21 @@
 @import url(./modules/reset.css);
 
+:root {
+  --color-main: aquamarine;
+  --font-sans: sans-serif;
+}
+
+html {
+  font-size: 18px;
+  color: var(--color-body);
+  font-family: var(--font-interface);
+  scrollbar-gutter: stable;
+  height: 100vh;
+  overflow: hidden;
+}
+
 img {
+  /* // to keep the same idea than the builder */
   position: absolute;
   object-fit: contain;
 }
@@ -13,14 +28,51 @@ img {
   display: block;
 }
 
-html {
-  font-size: 18px;
-  color: var(--color-body);
-  font-family: var(--font-interface);
-  scrollbar-gutter: stable;
-  height: 100vh;
-  overflow: hidden;
+.previousPlan,
+.nextPlan {
+  position: fixed;
+  top: 48vh;
+  font-size:1.3em;
+  background: white;
+
+
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-main);
+}
+
+.previousPlan {
+  left:2ch;
+}
+.nextPlan {
+  right: 2ch;
+}
+
+
+/* // toc */
+
+#sequence-toc {
+  font-family:var(--font-sans);
+  width: 100vw;
+  padding:0;
+  margin: 0;
+  position: fixed;
+  /* background: aquamarine; */
+  bottom: 0;
+  display: flex;
+  font-size:1.2em;
+  gap:0 1ch ;
+  list-style-type: none;
+}
+
+#sequence-toc .selected {
+  color: orange;
+}
 
 
