@@ -61,15 +61,17 @@ function readingTools() {
 
   function moveForward() {
     let old = document.querySelector(".selected");
-    if (!old || !old.nextElementSibling ) return;
+    if (!old || !old.nextElementSibling) return;
     old.nextElementSibling?.classList.add("selected");
     old.classList.remove("selected");
+    window.location.hash = new URL(old.nextElementSibling.querySelector('a').href).hash;
   }
   function moveBackward() {
     let old = document.querySelector(".selected");
-    if (!old || !old.previousElementSibling ) return;
+    if (!old || !old.previousElementSibling) return;
     old.classList.remove("selected");
     old.previousElementSibling.classList.add("selected");
+    window.location.hash = new URL(old.previousElementSibling.querySelector('a').href).hash;
   }
 
   function detectMouseWheelDirection(e) {
