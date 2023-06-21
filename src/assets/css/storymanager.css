@@ -6,36 +6,139 @@ html {
   color: var(--color-body);
   font-family: var(--font-interface);
   scrollbar-gutter: stable;
-  height: 100vh;
-  overflow: hidden;
+  /* height: 100vh; */
 }
 
+body {
+  /* display: grid; */
+  /* grid-template-columns: 40vw 1fr; */
+}
 
-body  {
-  display: grid;
-  grid-template-columns:  30vw 1fr;
+#menu {
+  padding: 2em 4ch;
+  display: flex;
+  flex-direction: column;
+  gap: 4ch;
+  overflow-y: scroll;
 }
 
 header {
-  padding: 2em 2ch;
+  padding: 2em 3ch;
+  grid-column: 1 / -1;
+  top: 0;
+  z-index: 3;
+  background: white;
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+}
+
+header h1 {
+  font-weight: 300;
   background: white;
 }
 
+#projects {
+  /* display: none; */
+  /* grid-column: 1; */
+}
+
+#newproject-link {
+  padding: 0.5em 2ch 0.5em;
+  border: 1px solid var(--color-body);
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+#newproject-link:hover {
+  background: var(--color-main) L;
+}
+
+#projects-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 2em;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2em 3ch;
+}
+
+#projects-list li {
+  font-size: 1.3em;
+  margin-bottom: 0.8em;
+  margin-bottom: 1em;
+  color: inherit;
+  text-decoration: none;
+}
+
+#projects-list a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#projects-list a:hover {
+  color: var(--color-main);
+  text-decoration: none;
+}
+
+/*projects*/
+
 .project {
-  background: var(--color-body);
-  color: white;
+  position: sticky;
+  top: 5em;
+  overflow-y: auto;
+  /* height: 100vh; */
+  /* grid-column: 2; */
+  padding: 3em 2ch;
+  /* margin: auto; */
   display: none;
 }
 
 .project:target {
   display: block;
+  scroll-margin: 5em;
 }
-
-.project {
-  padding: 3em 2ch;
-}
-
 .project input {
   display: block;
-  margin-bottom:2em;
+  margin-bottom: 2em;
+}
+
+datetime {
+  display: block;
+  font-size: 0.5em;
+  color: var(--color-main);
+}
+
+.project ul {
+  list-style-type: none;
+}
+
+.project .buttons {
+  display: flex;
+  justify-content: end;
+  gap: 0 3ch;
+}
+
+.project ul li {
+  display: grid;
+  border-bottom: 1px solid red;
+  margin-bottom: 1em;
+  gap: 2em 0;
+  grid-template-columns: [id-start] 4ch [id-end title-start] 70% [title-end buttons-start] 1fr [buttons-end];
+}
+.project ul span.sequence-id {
+  font-size: 0.8em;
+  margin-right: 4ch;
+}
+.project ul span.sequence-title {
+  font-weight: 500;
+}
+
+#projectback {
+  display: block;
+  margin-bottom: 2em;
+  color: inherit;
+  text-decoration: none;
 }
