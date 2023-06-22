@@ -17,7 +17,6 @@ async function createProject() {
       data[input.name] = input.value;
     });
 
-
     axios
       .post(`${config.strapi.url}/api/projects/`, { data: data })
       .then(function(response) {
@@ -29,7 +28,7 @@ async function createProject() {
   });
 }
 
-async function loadAllProjects(serverUrl, collection, query) {
+async function loadAllProjects(serverUrl) {
   //load with a query
   return axios
     .get(`${serverUrl}/api/projects?populate=deep`)
@@ -42,4 +41,22 @@ async function loadAllProjects(serverUrl, collection, query) {
     });
 }
 
-export { createProject, loadAllProjects };
+async function removeSequenceFromProject(projectId, sequenceId) {
+  // set up form
+  await axios
+    .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
+      data: {
+        project: {
+          disconnect: [{ id: projectId }],
+        },
+      },
+    })
+    .then(function(response) {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+export { createProject, loadAllProjects, removeSequenceFromProject };
