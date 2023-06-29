@@ -1,5 +1,12 @@
 import config from "../config/config.js";
 import axios from "axios";
+import { renderDate } from "../modules/helpers.js";
+
+// selectors
+let projectsList = document.querySelector("#projects-list");
+let projectSequence = document.querySelector("#projectSequences");
+
+
 
 async function createProject() {
   // set up form
@@ -20,6 +27,8 @@ async function createProject() {
     axios
       .post(`${config.strapi.url}/api/projects/`, { data: data })
       .then(function(response) {
+        // console.log("new", response.data.data);
+        renderEmptyProject(response.data.data);
         return response;
       })
       .catch((error) => {
@@ -31,7 +40,7 @@ async function createProject() {
 async function loadAllProjects(serverUrl) {
   //load with a query
   return axios
-    .get(`${serverUrl}/api/projects?populate=deep`)
+    .get(`${serverUrl}/api/projects?populate=deep,5&filters[archived][$eq]=false`)
     .then((response) => {
       // console.log(response)
       return response;
@@ -59,4 +68,48 @@ async function removeSequenceFromProject(projectId, sequenceId) {
     });
 }
 
-export { createProject, loadAllProjects, removeSequenceFromProject };
+async function renderEmptyProject(project) {
+  console.log(project);
+  projectsList.insertAdjacentHTML(
+    "beforeend",
+    ` <li> <datetime>${renderDate(
+      project.attributes.updatedAt
+    )}</datetime> <a href="#project${project.id}">${project.attributes.title
+    }</a> 
+
+    <button onclick="deleteProject(${project.id})">remove project</button>
+
+</li> `
+  );
+
+  // project for each sequence: create a list imenm
+
+  const projectSequenceContent = `<section id="project${project.id}" class="project">
+  <a id="projectback" href="#projects">Back to projects</a>
+  <h2>${project.attributes.title}</h2>
+  <button  data-projectid="${project.id}" onclic="addSequence(${project.id})" class="createSequence" >Add a sequence</button>
+  <ul class="sequences-list"></ul>
+  </section>`;
+
+  projectSequence.innerHTML += projectSequenceContent;
+}
+
+async function archiveProject(id) {
+  return axios
+    .put(`${config.strapi.url}/api/projects/${id}`, {
+      data: { archived: true },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
+}
+
+export {
+  archiveProject,
+  createProject,
+  loadAllProjects,
+  removeSequenceFromProject,
+};

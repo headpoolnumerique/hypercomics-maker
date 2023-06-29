@@ -1,0 +1,598 @@
+/* thanks to the one and only Andy Bell */
+
+/* Box sizing rules */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* fonts */
+
+@font-face {
+  font-family: 'inter';
+  src: url('../fonts/inter.var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal italic;
+}
+
+/* variables */
+
+:root {
+  --color-main: rgb(215, 105, 140, 1);
+  --color-body: #121212;
+  --font-interface: 'inter';
+  /*screen minimal size*/
+  --min-height: 800px;
+  --min-width: 400px;
+  /*layout coloros*/
+  --color-montage: white;
+  --color-preview: hsl(0, 0%, 80%);
+  --color-asset: hsl(0, 0%, 80%);
+  --color-app-wrapp: hsl(0, 0%, 80%);
+  --color-preview: hsl(0, 0%, 95%);
+  --color-previewScreen: hsl(0, 0%, 100%);
+  --color-montage-order: white;
+  --color-app-wrapp: hsl(0, 0%, 90%);
+--color-assets-background: hsl(0, 0%, 70%);
+
+--hidden: 0;
+}
+
+html {
+  font-size: 18px;
+  color: var(--color-body);
+  font-family: var(--font-interface);
+  scrollbar-gutter: stable;
+  height: 100vh;
+  overflow: hidden;
+}
+
+main#appWrap {
+  height: 100vh;
+  /* background: var(--color-app-wrapp); */
+  /* display: grid; */
+  display: flex;
+  scrollbar-gutter: stable;
+  /* grid-template-rows: [meta-start] 80px [meta-end preview-start] 1fr [preview-end montage-start] auto [montage-end]; */
+  /*start latyou*/
+  --preview-width: 1000px;
+  --preview-height: 700px;
+}
+
+/*I. preview*/
+
+#preview {
+  background: var(--color-preview, unset);
+  display: block;
+  margin: auto;
+}
+
+#preview #previewScreen {
+  width: var(--preview-width);
+  height: var(--preview-height);
+  border: 1px solid var(--color-body);
+  margin: auto;
+  background: var(--color-previewScreen, unset);
+  overflow: hidden;
+  position: relative;
+  grid-column: 1/-1;
+  box-shadow: 0 0 0 10px rgb(200, 200, 200, 0.2);
+  /* resize: both; */
+}
+
+#preview.fullscreen #previewScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+#preview.portrait {
+  --min-width: 400px;
+  --min-height: 700px;
+}
+
+#preview.landscape {
+  --min-width: 800px;
+  --min-height: 450px;
+}
+
+/* /plan */
+
+#previewScreen article {
+  display: none;
+}
+
+#previewScreen article.shown {
+  display: block;
+}
+
+/* pelure d’oignon */
+
+.showPrevious #previewScreen article.oldshown {
+  display: block !important;
+}
+
+.showPrevious #previewScreen article.oldshown * {
+  opacity: 0.4;
+  /* background: cyan; */
+  mix-blend-mode: multiply;
+}
+
+.showPrevious .oldshown + .shown {
+  opacity: 0.6;
+}
+
+/*keep the button up.*/
+
+.fullscreen #fullPageWatcher {
+  position: fixed;
+  z-index: 1;
+  display: block;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+}
+
+/*II. montage*/
+
+#banc-montage {
+  background: var(--color-montage-order, white);
+  max-width: 800px;
+}
+
+#banc-montage.show {
+  display: unset;
+  min-height: 200px;
+}
+
+#planOrder {
+  position: fixed;
+  bottom: 0;
+  list-style-type: none;
+  display: flex;
+  padding-left: 0;
+  margin: 0 auto;
+  gap: 1ch;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: space-around;
+  height: 3em;
+  /* overflow-y: auto; */
+  font-size: 0.8em;
+  padding-top: 12px;
+  border-top: 1px solid grey;
+  background: white;
+  overflow-y: scroll;
+}
+
+#planOrder li a {
+  color: inherit;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  text-decoration: none;
+}
+
+#planOrder {
+  counter-reset: planNum;
+}
+
+#planOrder li a::after {
+  content: counter(planNum);
+  counter-increment: planNum;
+}
+
+#planOrder li a.selected {
+  color: var(--color-main);
+  font-weight: 900;
+}
+
+/* 3. the contextual menu */
+
+#contextualUI {
+  font-size: 0.8em;
+  top: 2em;
+  left: 2em;
+  min-height: auto;
+  z-index: 1000;
+  background: white;
+  position: fixed;
+  /* display: none; */
+}
+
+#contextualUI.show .manip {
+  display: flex;
+  flex-direction: column;
+}
+
+#contextualUI .manip button {
+  text-transform: uppercase;
+  width: 80%;
+  margin: 1em auto;
+}
+
+.moveButton {
+  position: absolute;
+  top: 50%;
+}
+
+.popup {
+  display: none;
+}
+
+#layers li {
+  position: relative;
+}
+
+#layers li > span {
+  cursor: pointer;
+}
+
+#layers li > span:hover .popup {
+  animation: fadeIn 400ms;
+  color: red;
+  position: absolute;
+  display: block;
+  bottom: -2.5em;
+  background: black;
+  color: white;
+  z-index: 2;
+  padding: 0.2em 0.5ch;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* III. assets */
+
+#assets {
+  position: fixed;
+  top: 30vh;
+  left: 30vw;
+  padding: 1em;
+  background: white;
+  display: block;
+  min-height: 400px;
+  max-height: 90vh;
+}
+
+#assets #assetsList {
+  padding: 0;
+  margin: 0;
+  margin-top: 3em;
+  gap: 10px;
+  list-style-type: none;
+  overflow-y: auto;
+  max-height: 80vh;
+  flex-wrap: wrap;
+}
+
+#assets #assetsList li {
+  display: grid;
+  width: 100%;
+  align-items: baseline;
+  grid-template-columns: [img-start] 100px [img-end name-start] 1fr [name-end];
+  border-bottom: 1px solid grey;
+  gap: 0 2ch;
+  align-items: end;
+  padding-bottom: .4em;
+}
+
+#assets #assetsList li img {
+  padding: 0.2em 0.4ch;
+  border: 1px solid grey;
+  cursor: pointer;
+}
+
+#previewScreen article > * {
+  position: absolute;
+}
+
+.movebutton {
+  background: black;
+  color: white;
+  border: 2px solid black;
+  display: flex;
+  margin: auto;
+  font-size: 35px;
+  padding: 0 0.5ch;
+}
+
+#previewNext {
+  position: absolute;
+  right: 0;
+  top: 48%;
+  z-index: 1000;
+}
+
+#previewPrevious {
+  position: absolute;
+  left: 0;
+  top: 48%;
+  z-index: 1000;
+}
+
+#previewScreen .asset-selected {
+  box-shadow: 0 0 0 3px var(--color-main);
+  /* z-index: 100; */
+  /* opacity: .6 */
+}
+
+img {
+  object-fit: contain;
+}
+
+#layer-space {
+  font-size: 0.8em;
+  min-width: 40ch;
+  max-height: 89vh;
+}
+
+#layer-space h2 {
+  margin: 0;
+}
+
+#layer-space ul {
+  /* font-size: 0.8em; */
+  margin: 0;
+  padding: 10px;
+  list-style-type: none;
+}
+
+#layer-space li {
+  border-bottom: 1px solid gray;
+  display: grid;
+  gap: 1ch;
+  grid-template-columns: 2ch 3ch auto 2ch 2ch ;
+}
+
+.hidebutton {
+  margin-left: auto;
+  text-align: right;
+}
+
+.selectedLayer {
+  background: #eee;
+  color: black;
+  font-weight: 600;
+}
+
+.confirm {
+  font-weight: 800;
+  color: red;
+}
+
+/* hidden */
+
+.hidden {
+  color: lightgrey;
+}
+
+img.asset-hidden {
+  opacity: 0;
+  z-index: -100;
+}
+
+img.asset-hidden.asset-selected {
+  opacity: 0.05;
+}
+
+/*previewOnTop*/
+
+.previewedTop .preview {
+  color: var(--color-main);
+}
+
+.asset.previewTop {
+  z-index: 100;
+  border: 2px dashed grey;
+}
+
+.moveable {
+  position: fixed;
+  border: 2px solid var(--color-body);
+  z-index: 400000;
+  background: white;
+}
+
+.resizable {
+  overflow: auto;
+  resize: both;
+}
+
+.moveable h2 {
+  padding: 0.3em 2ch;
+  background: black;
+  font-size: 0.8em;
+  letter-spacing: 0.2ch;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 1em;
+}
+
+button {
+  border: 1px solid var(--color-body);
+  background: white;
+  padding: 0.2em 1ch;
+}
+
+button:hover {
+  background: var(--color-main);
+  color: white;
+}
+
+#homeButtonsList {
+  font-size: 0.8em;
+  display: flex;
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  z-index: 10000000000;
+}
+
+#homeButtonsList button {
+  text-transform: uppercase;
+  margin-left: 4ch;
+  border: 2px solid black;
+  border-bottom: 6px solid black;
+}
+
+.hide {
+  display: none !important;
+}
+
+.manip button {
+}
+
+.manip input[type='number'] {
+  border: 0px solid transparent;
+  border-bottom: 2px solid black;
+  max-width: 10ch;
+  display: inline;
+}
+
+.manip label {
+}
+
+.manip details {
+  margin-bottom: 2em;
+}
+
+.manip details summary {
+  border-bottom: 1px solid black;
+  margin-bottom: 0.5em;
+}
+
+.manip details.location div {
+  max-width: fit-content;
+  margin: auto;
+  gap: 0.5em 0.5em;
+  display: grid;
+  grid-template-columns: [label-start] 8ch [label-end input-start] 1fr [input-end];
+}
+
+.manip .location summary {
+  grid-column: 1 / -1;
+}
+
+.manip .location label {
+  grid-column: label;
+}
+
+.manip .location input {
+  grid-column: input;
+}
+
+.manip .zindex {
+  display: flex;
+}
+
+.manip details {
+  padding: 0 3ch;
+}
+
+.manip details {
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.manip .zindex button {
+  display: inline;
+  width: 30px;
+}
+
+.toDrag {
+  box-shadow: 0 0 0 5px #eee; 
+}
+
+/* @import url("./modules/layers.css"); */

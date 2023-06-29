@@ -1,5 +1,7 @@
 import {
+  archiveProject,
   createProject,
+  // archiveProject,
   loadAllProjects,
   removeSequenceFromProject,
 } from "./api/api-projects.js";
@@ -14,20 +16,21 @@ let projectSequence = document.querySelector("#projectSequences");
 
 async function start() {
   // load all projects
+  let projects = await loadAllProjects(config.strapi.url);
 
-  let projects = await loadAllProjects(
-    config.strapi.url,
-    "projects",
-    "?populate=deep,5"
-  );
-
-  renderProjects(projects);
+  console.log(projects);
+  loadProjects(projects);
   createProject();
-  addSequences();
-  deleteSequences();
+  // addSequences();
+  // deleteSequences();
+
+  window.deleteProject = deleteProject;
+  window.addSequence = addSequence;
+  window.deleteSequence = deleteSequence;
 }
 
-function renderProjects(data) {
+// load project
+function loadProjects(data) {
   let projects = data.data.data;
   projectsList.innerHTML = "";
   projects.forEach((es) => {
@@ -36,14 +39,25 @@ function renderProjects(data) {
   });
 }
 
+// delete project
+function deleteProject(id) {
+  // archive on strapi
+  archiveProject(id);
+  // remove the project
+  event.target.closest("li").remove();
+}
+
+// render the project
 async function renderProject(project) {
-  console.log(project);
+  // insert project in the project list
   projectsList.insertAdjacentHTML(
     "beforeend",
     ` <li> <datetime>${renderDate(
       project.attributes.updatedAt
     )}</datetime> <a href="#project${project.id}">${project.attributes.title
-    }</a> </li> `
+    }</a> 
+    <button onclick="deleteProject(${project.id})">remove project</button>
+    </li>`
   );
 
   // project for each sequence: create a list imenm
@@ -56,13 +70,15 @@ async function renderProject(project) {
     }" class="project">
   <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
-  <button  data-projectid="${project.id
-    }" class="createSequence" >Add a sequence</button>
+  <button  data-projectid="${project.id}"
+onclick="addSequence(${project.id})"
+class="createSequence" >Add a sequence</button>
   <ul class="sequences-list">${renderedSequences.join("")}</ul>
   </section>`;
 
   projectSequence.innerHTML += projectSequenceContent;
 }
+
 function generateSequence(sequence, project) {
   return `<li>
 <span class="sequence-id">${sequence.id}</span>
@@ -70,41 +86,30 @@ function generateSequence(sequence, project) {
 <div class="buttons"> 
 <a href="editor.html?sequence=${sequence.id}">edit</a> 
 <a href="reader.html?sequence=${sequence.id}">preview</a>
-<button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}">delete</button>
+<button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button>
 </div> 
 </li>`;
 }
 
-async function addSequences() {
-  document.querySelectorAll(".createSequence").forEach((button) => {
-    button.addEventListener("click", async function(e) {
-      let newSeq = await createSequence(e.target.dataset.projectid);
-      console.log(newSeq.data.data);
-      console.log(newSeq.data.data.attributes);
-      e.target.nextElementSibling.insertAdjacentHTML(
-        "beforeend",
-        `<li>
+async function addSequence(projectNumber) {
+  let button = event.target;
+  let newSeq = await createSequence(projectNumber);
+  button.nextElementSibling.insertAdjacentHTML(
+    "beforeend",
+    `<li>
 <span class="sequence-id">${newSeq.data.data.id}</span>
 <span class="sequence-title">${newSeq.data.data.attributes.title}</span> 
 <div class="buttons"> 
 <a href="editor.html?sequence=${newSeq.data.data.id}">edit</a> 
 <a href="reader.html?sequence=${newSeq.data.data.id}">preview</a>
-<button class="deleteSeq" data-project-id="${e.target.dataset.projectid}" data-sequence-id="${newSeq.data.data.id}">delete</button>
+<button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})" >delete</button>
 </div> 
 </li>`
-      );
-      // generateSequence(response.data);
-    });
-  });
+  );
 }
-async function deleteSequences() {
-  document.querySelectorAll(".deleteSeq").forEach((button) => {
-    button.addEventListener("click", async function(e) {
-      const projectId = e.target.dataset.projectId;
-      const sequenceId = e.target.dataset.sequenceId;
-      removeSequenceFromProject(projectId, sequenceId).then(
-        e.target.closest("li").remove()
-      );
-    });
-  });
+
+async function deleteSequence(projectId, sequenceId) {
+  removeSequenceFromProject(projectId, sequenceId).then(
+    event.target.closest("li").remove()
+  );
 }

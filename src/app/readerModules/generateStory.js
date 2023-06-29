@@ -19,10 +19,9 @@ async function generateStory() {
   // get the data for the plans (with the weirdest ui from strapi. maybe filtering would make more sense.)
   const plans = sequencedata.data.data.attributes.plans.data;
   let firstPlan = renderPlans(plans, toc, story);
+
   // show the first plan
   window.location.hash = firstPlan;
-  // import css for responsive things
-  //
 }
 
 function getSequenceNumberFromUrl(url) {
@@ -30,7 +29,6 @@ function getSequenceNumberFromUrl(url) {
   const projectId = sequenceUrl.searchParams.get("project");
   const sequenceId = sequenceUrl.searchParams.get("sequence");
   return { sequenceId, projectId };
-  // then use the project id and the sequence id to generate the pages
 }
 
 async function loadProject(apiUrl, projectId, sequenceId) {
