@@ -87,7 +87,7 @@ async function renderEmptyProject(project) {
   const projectSequenceContent = `<section id="project${project.id}" class="project">
   <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
-  <button  data-projectid="${project.id}" onclic="addSequence(${project.id})" class="createSequence" >Add a sequence</button>
+  <button  data-projectid="${project.id}" onclick="addSequence(${project.id})" class="createSequence" >Add a sequence</button>
   <ul class="sequences-list"></ul>
   </section>`;
 
