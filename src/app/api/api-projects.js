@@ -44,7 +44,10 @@ async function loadAllProjects(serverUrl) {
     .then((response) => {
       // console.log(response)
       return response;
-    })
+    }).
+    finally(
+      document.querySelector("#loading")?.remove()
+    )
     .catch((err) => {
       return err;
     });

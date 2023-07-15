@@ -1,5 +1,6 @@
 @import url(./modules/reset.css);
 
+@import url("./modules/loading.css");
 :root {
   --color-main: aquamarine;
   --font-sans: sans-serif;

@@ -53,6 +53,9 @@ async function startup(url = document.location.href) {
     // if there is a sequenceID in the url, load the sequence from strapi
     let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
+    if (response.data.data) {
+      document.querySelector("#loading")?.remove();
+    }
     // if the sequence number doesnt exist in strapi, create it
     if (response.data == null) {
       let response = await createData(config.strapi.url, `sequences`, {

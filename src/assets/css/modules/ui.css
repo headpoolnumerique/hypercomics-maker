@@ -37,7 +37,7 @@ button,  #returnhome {
   position: fixed;
   top: 1em;
   right: 1em;
-  z-index: 10000000000;
+  z-index: 999999998;
 }
 #homeButtonsList :is(button, #returnhome)  {
   text-decoration: none;

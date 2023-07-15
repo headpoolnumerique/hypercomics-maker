@@ -1,0 +1,79 @@
+#loading {
+  inset: 0;
+  position: fixed;
+  z-index: 2000;
+  background: rgb(230, 230, 230, 0.9);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  z-index: 999999999999999999999999999999;
+}
+
+.box {
+  margin: auto;
+  display: flex;
+  background: white;
+  border-radius: 3em;
+  min-width: 30vw;
+  height: 100px;
+  position: relative;
+}
+#dots {
+  margin: auto;
+  display: flex;
+  /* height: 5em; */
+  align-items: center;
+  justify-content: space-around;
+}
+
+.box::after {
+  position: absolute;
+  height: 40px;
+  width: 70px;
+  background: white;
+  display: block;
+  bottom: -2em;
+  right: 3vw;
+  content: "";
+  clip-path: polygon(0 0, 0% 100%, 42% 0);
+  justify-content: space-around;
+}
+.dot {
+  opacity: 0;
+  width: 20px;
+  height: 20px;
+  display: block;
+  border-radius: 50%;
+  background: grey;
+  margin: 0 10px;
+  animation: blink 1000ms infinite;
+}
+#dot1 {
+  animation-delay: 50ms;
+}
+
+#dot2 {
+  animation-delay: 100ms;
+}
+#dot3 {
+  animation-delay: 150ms;
+}
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+
+  33% {
+    opacity: 1;
+  }
+  66% {
+    opacity: 1;
+  }
+  /* 80% { */
+  /**/
+  /*  opacity: 1; */
+  /* } */
+  100% {
+    opacity: 0;
+  }
+}
