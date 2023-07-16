@@ -6,46 +6,49 @@
   margin: 0;
   padding: 0;
   display: flex;
+  align-items: center;
+  /* justify-content: space-around; */
+  justify-content: space-evenly;
+  flex-direction: column;
   z-index: 999999999999999999999999999999;
 }
 
 .box {
-  margin: auto;
+  /* margin: auto; */
   display: flex;
   background: white;
   border-radius: 3em;
-  min-width: 30vw;
-  height: 100px;
+  flex-direction: column;
+  /* height: 100px; */
   position: relative;
+  padding: 1em;
 }
 #dots {
   margin: auto;
   display: flex;
-  /* height: 5em; */
   align-items: center;
-  justify-content: space-around;
 }
 
 .box::after {
   position: absolute;
-  height: 40px;
-  width: 70px;
+  height: 30px;
+  width: 40px;
   background: white;
   display: block;
-  bottom: -2em;
-  right: 3vw;
+  bottom: -20px;
+  right: 0;
   content: "";
   clip-path: polygon(0 0, 0% 100%, 42% 0);
   justify-content: space-around;
 }
 .dot {
   opacity: 0;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   display: block;
   border-radius: 50%;
   background: grey;
-  margin: 0 10px;
+  margin: 0 5px;
   animation: blink 1000ms infinite;
 }
 #dot1 {
@@ -76,4 +79,10 @@
   100% {
     opacity: 0;
   }
+}
+
+#loading p {
+  
+  font-style: italic;
+  text-align: center;
 }

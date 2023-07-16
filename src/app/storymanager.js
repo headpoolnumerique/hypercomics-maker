@@ -18,7 +18,12 @@ async function start() {
   // load all projects
   let projects = await loadAllProjects(config.strapi.url);
 
-  console.log(projects);
+  if (projects.data) {
+    document.querySelector("#loading")?.remove();
+  } else {
+    console.log("loading error");
+  }
+
   loadProjects(projects);
   createProject();
   // addSequences();
@@ -46,7 +51,7 @@ function deleteProject(id) {
   // remove the project
   event.target.closest("li").remove();
   // remove the projectlist
-  document.querySelector(`sequenceList${id}`).remove()
+  document.querySelector(`sequenceList${id}`).remove();
 }
 
 // render the project
@@ -75,7 +80,8 @@ async function renderProject(project) {
   <button  data-projectid="${project.id}"
 onclick="addSequence(${project.id})"
 class="createSequence" >Add a sequence</button>
-  <ul class="sequences-list" id="sequenceList${project.id}">${renderedSequences.join("")}</ul>
+  <ul class="sequences-list" id="sequenceList${project.id
+    }">${renderedSequences.join("")}</ul>
   </section>`;
 
   projectSequence.innerHTML += projectSequenceContent;

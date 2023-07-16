@@ -6,8 +6,6 @@ import { renderDate } from "../modules/helpers.js";
 let projectsList = document.querySelector("#projects-list");
 let projectSequence = document.querySelector("#projectSequences");
 
-
-
 async function createProject() {
   // set up form
   const formElement = document.querySelector("#form");
@@ -40,14 +38,13 @@ async function createProject() {
 async function loadAllProjects(serverUrl) {
   //load with a query
   return axios
-    .get(`${serverUrl}/api/projects?populate=deep,5&filters[archived][$eq]=false`)
+    .get(
+      `${serverUrl}/api/projects?populate=deep,5&filters[archived][$eq]=false`
+    )
     .then((response) => {
       // console.log(response)
       return response;
-    }).
-    finally(
-      document.querySelector("#loading")?.remove()
-    )
+    })
     .catch((err) => {
       return err;
     });
