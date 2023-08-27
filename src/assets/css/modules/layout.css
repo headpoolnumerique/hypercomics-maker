@@ -39,6 +39,23 @@ main#appWrap {
   resize: both;
 }
 
+#preview #previewScreen::before {
+  position: absolute;
+  content: "" attr(data-width) "px × " attr(data-height) "px";
+  position: absolute;
+  text-align: right;
+  width: 100%;
+  margin: 0;
+  display: block;
+  bottom: 0;
+  font-size:.7em;
+  left: 0;
+  background: lightgrey;
+  padding: .3em .5ch;
+  width: max-content; 
+  z-index: 1em;
+}
+
 #preview.fullscreen #previewScreen {
   position: fixed;
   inset: 0;

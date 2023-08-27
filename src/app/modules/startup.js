@@ -4,6 +4,7 @@ import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
 import {
   layerList,
   montageList,
+  previewScreen,
   sequenceNumber,
   sequencePreview,
 } from "./selectors.js";
@@ -19,6 +20,7 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
+import { getSize } from "./resize.js"
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -82,6 +84,7 @@ async function startup(url = document.location.href) {
   layerInteract();
   resizeMontagePaneVertically();
   handleDelays();
+  getSize();
 }
 
 async function fillSequence(sequence) {
