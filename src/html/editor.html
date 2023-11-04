@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en">
   <head>
-    <title></title>
+    <title>hypercomics | Editor</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="css/styles.css" rel="stylesheet" />
@@ -18,7 +18,7 @@
         </div>
       </div>
     </aside>
-    <style id="sequenceStyles"></style>
+    <!-- <style id="sequenceStyles"></style> -->
     <main id="appWrap">
       <section id="homeButtonsList">
         <button id="showSequence">sequence</button>
@@ -27,10 +27,57 @@
         <button id="showMontage">montage</button>
         <button id="showAssets">assets</button>
         <button id="showPelure">show previous</button>
+        <button id="showScreens">show screens</button>
         <a id="returnhome" href="/">return to home</a>
       </section>
 
-      <section id="sequence" class="moveable resizable hide">
+      <section
+        id="screen-ui"
+        style="top: 30%; left: 30%"
+        class="moveable block-ui resizable"
+      >
+        <h2>screen</h2>
+        <form id="screensform">
+          <label required min="200" for="screenwidth">
+            <span>max-width</span>
+            <input
+              min="200"
+              type="number"
+              name="screenwidth"
+              id="screenwidth"
+            />
+          </label>
+          <label  for="screenratio"
+            ><span>ratio</span>
+            <input
+              type="number"
+              name="screenratio"
+              id="screenratio"
+            />
+          </label>
+          <button type="submit" id="newscreen">add screen</button>
+        </form>
+        <ul id="screens">
+          <li class="header">
+            <span>name</span>
+            <span>width</span>
+            <span>height</span>
+            <span>ratio</span>
+            <span>remove</span>
+            <span>update</span>
+          </li>
+          <li id="screenname">
+            <span>name</span>
+            <span>100</span>
+            <span>200</span>
+            <span>ratio</span>
+            <span class="remove">R</span>
+            <span class="deactivate">D</span>
+          </li>
+        </ul>
+      </section>
+
+      <section id="sequence" class="moveable block-ui resizable hide">
         <h2>Sequence</h2>
         <p class="meta">
           project: <span id="projectName">projname</span>, sequence:
@@ -38,38 +85,107 @@
         </p>
       </section>
 
-      <section id="contextualUI" class="show moveable">
+      <section id="contextualUI" class="hide moveable block-ui">
         <h2>The contextual menu!</h2>
-        <div class="button-list"></div>
-        <main>
+
+        <section id="main">
           <div class="manip">
-            <!-- <details class="zindex"> -->
-            <!--   <summary>Z-index</summary> -->
-            <!--   <button id="moveClosest">↑↑</button> -->
-            <!--   <button id="moveCloser">↑</button> -->
-            <!--   <button id="moveFarther">↓</button> -->
-            <!--   <button id="moveFarest">↓↓</button> -->
-            <!-- </details> -->
-            <details open class="location">
-              <summary>Coordinates</summary>
+            <details open class="screen resolution">
+              <summary>Screen resolution</summary>
+
               <div>
-                <label for="x">x</label>
-                <input id="inputx" name="x" type="number" step="0.01" />
-
-                <label for="y">y</label>
-                <input id="inputy" name="y" type="number" step="0.01" />
-
-                <label for="width">width</label>
-                <input id="inputwidth" name="width" type="number" step="0.01" />
-
-                <label for="height">height</label>
+                <label for="screenWidth">screen width</label>
                 <input
-                  id="inputheight"
-                  name="height"
+                  id="screenWidth"
+                  name="screenWidth"
                   type="number"
-                  step="0.01"
+                  step="1"
                 />
               </div>
+              <div>
+                <label for="screenHeight">screen height</label>
+                <input
+                  id="screenHeight"
+                  name="screenHeight"
+                  type="number"
+                  step="1"
+                />
+              </div>
+              <div>
+                <label for="screenRatio">screen ratio</label>
+                <input
+                  disabled
+                  id="screenRatio"
+                  name="screenRatio"
+                  type="text"
+                />
+              </div>
+
+              <div class="sizes">
+                <button id="createSize">create size</button>
+              </div>
+            </details>
+            <details open class="location">
+              <summary>size</summary>
+
+              <label for="inputwidth">width</label>
+              <input id="inputwidth" name="width" type="number" step="0.01" />
+
+              <label for="inputheight">height</label>
+              <input id="inputheight" name="height" type="number" step="0.01" />
+            </details>
+
+            <!-- Locations and anchors -->
+            <details id="anchors">
+              <div>
+                <h2>location</h2>
+                <label for="inputx">x</label>
+                <input id="inputx" name="x" type="number" step="0.01" />
+
+                <label for="inputy">y</label>
+                <input id="inputy" name="y" type="number" step="0.01" />
+              </div>
+              <summary>locations</summary>
+              <h2>vertical anchor</h2>
+              <label>
+                <!-- / save to anchor veritcal -->
+                <span>top</span>
+                <input
+                  class="anchorInput"
+                  type="radio"
+                  name="verticalAnchor"
+                  value="top"
+                />
+              </label>
+              <label>
+                <span>bottom</span>
+                <input
+                  class="anchorInput"
+                  type="radio"
+                  name="verticalAnchor"
+                  value="bottom"
+                />
+              </label>
+
+              <h2>horizohtal anchor</h2>
+              <label>
+                <span>left</span>
+                <input
+                  class="anchorInput"
+                  type="radio"
+                  name="horizontalAnchor"
+                  value="left"
+                />
+              </label>
+              <label>
+                <span>right</span>
+                <input
+                  class="anchorInput"
+                  type="radio"
+                  name="horizontalAnchor"
+                  value="right"
+                />
+              </label>
             </details>
 
             <details class="objManagemenet">
@@ -78,9 +194,12 @@
               <!-- <button id="duplicateAsset">Duplicate (soon)</button> -->
             </details>
           </div>
-        </main>
+        </section>
       </section>
-      <section id="previewButtons" class="buttons moveable resizable hide">
+      <section
+        id="previewButtons"
+        class="buttons moveable block-ui resizable hide"
+      >
         <h2>Screen size</h2>
         <button id="orientationChanger">change orientation</button>
         <button id="fullPageWatcher">fullpage</button>
@@ -100,55 +219,39 @@
         </button>
       </section>
       <section id="preview">
-        <!-- <h2>preview</h2> -->
-
-        <button class="moveButton" id="previewPrevious"><</button>
-        <button class="moveButton" id="previewNext">></button>
+        <button class="moveButton" id="previewPrevious">&lt;</button>
+        <button class="moveButton" id="previewNext">&gt;</button>
         <section class="screen" id="previewScreen"></section>
       </section>
 
-      <section id="layer-space" class="show moveable">
+      <section id="layer-space" class="hide moveable block-ui">
         <h2>Layers</h2>
-        <!-- <details class="zindex"> -->
-        <!--   <summary>Z-index</summary> -->
-        <!-- <button id="moveClosest">↑↑</button> -->
-        <!-- <button id="moveCloser">↑</button> -->
-        <!-- <button id="moveFarther">↓</button> -->
-        <!-- <button id="moveFarest">↓↓</button> -->
-        <!-- </details> -->
         <ul id="layers"></ul>
       </section>
 
-      <section id="banc-montage" class="show moveable hide">
+      <section id="banc-montage" class="show moveable block-ui hide">
         <h2>montage</h2>
-
         <button id="addPlan">add plan</button>
         <button id="deletePlan">delete plan</button>
-        <!-- <button id="deleteAllPlans">delete all plans</button> -->
         <button id="duplicatePlan">duplicate plan</button>
-        <label for="minimal-delay" min="0" step="50">minimual delay in millisecond</label>
-        <input id="planDelay" type="number" name="minimal-delay"></input>
-
+        <label for="minimaldelay">minimual delay in millisecond</label>
+        <input id="minimaldelay" type="number" name="minimaldelay" />
       </section>
 
       <ol id="planOrder">
         <!-- <li><a href="#plan12">12</a></li> -->
       </ol>
-      <section id="assets" class="moveable hide">
+      <section id="assets" class="moveable block-ui hide">
         <h2>Assets</h2>
-        <form id="inputs" action="" post="">
+        <form id="inputs">
           <label for="assetsUpload">upload images:</label>
-          <input
-            id="assetsUpload"
-            name="assetsUpload"
-            type="file"
-            multiple="true"
-          />
+          <input id="assetsUpload" name="assetsUpload" type="file" multiple />
           <button id="submitAssets">upload</button>
         </form>
 
         <label for="assetsFilter">Filtre:</label>
         <input
+          id="assetsFilter"
           name="assetsFilter"
           type="text"
           placeholder="are you looking for something?"

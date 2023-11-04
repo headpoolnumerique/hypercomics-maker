@@ -36,6 +36,7 @@ async function start() {
 
 // load project
 function loadProjects(data) {
+  console.log(data)
   let projects = data.data.data;
   projectsList.innerHTML = "";
   projects.forEach((es) => {
@@ -61,7 +62,8 @@ async function renderProject(project) {
     "beforeend",
     ` <li> <datetime>${renderDate(
       project.attributes.updatedAt
-    )}</datetime> <a href="#project${project.id}">${project.attributes.title
+    )}</datetime> <a href="#project${project.id}">${
+      project.attributes.title
     }</a> 
     <button onclick="deleteProject(${project.id})">remove project</button>
     </li>`
@@ -73,15 +75,17 @@ async function renderProject(project) {
     return generateSequence(sequence, project);
   });
 
-  const projectSequenceContent = `<section id="project${project.id
-    }" class="project">
+  const projectSequenceContent = `<section id="project${
+    project.id
+  }" class="project">
   <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
   <button  data-projectid="${project.id}"
 onclick="addSequence(${project.id})"
 class="createSequence" >Add a sequence</button>
-  <ul class="sequences-list" id="sequenceList${project.id
-    }">${renderedSequences.join("")}</ul>
+  <ul class="sequences-list" id="sequenceList${
+    project.id
+  }">${renderedSequences.join("")}</ul>
   </section>`;
 
   projectSequence.innerHTML += projectSequenceContent;

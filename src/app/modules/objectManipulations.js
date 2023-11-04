@@ -3,195 +3,6 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 
-function interactObject(object) {
-  let sequenceId = Number(
-    document.querySelector("#sequenceNumber").textContent
-  );
-  let previewScreen = document.querySelector("#previewScreen");
-  let previewScreenSize = {
-    height: previewScreen.offsetHeight,
-    width: previewScreen.offsetWidth,
-  };
-
-  // TODO: wait for the image to appear to attach a interact
-
-  const position = { x: object.offsetLeft, y: object.offsetTop };
-  interact(object)
-    .draggable({
-      listeners: {
-        start(event) {
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height
-          );
-        },
-        move(event) {
-          position.x += event.dx;
-          position.y += event.dy;
-
-          event.target.style.left = `${percentage(
-            position.x,
-            previewScreenSize.width
-          )}%`;
-          event.target.style.top = `${percentage(
-            position.y,
-            previewScreenSize.height
-          )}%`;
-        },
-        end(event) {
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height
-          );
-
-          let planId = document.querySelector(".shown").id;
-
-          let data = {
-            width: `${percentage(event.rect.width, previewScreenSize.width)}%;`,
-            height: `${percentage(
-              event.rect.height,
-              previewScreenSize.height
-            )}%;`,
-            top: `${percentage(
-              event.target.offsetTop,
-              previewScreenSize.height
-            )}%;`,
-            left: `${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width
-            )}%;`,
-            cssrule: `#sequence-${sequenceId} #${event.target.id}{
-          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
-          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
-          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width
-          )}%;
-          }`,
-          };
-
-          // addRuleToSequence(sequenceId, planId, data)
-          addRuleToObject(event.target.dataset.objectid, data);
-        },
-      },
-    })
-
-    .resizable({
-      edges: { top: true, left: true, bottom: true, right: true },
-      invert: "reposition",
-
-      listeners: {
-        start(event) {
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height
-          );
-        },
-        move: function (event) {
-          let { x, y } = event.target.dataset;
-
-          x = (parseFloat(x) || 0) + event.deltaRect.left;
-          y = (parseFloat(y) || 0) + event.deltaRect.top;
-
-          Object.assign(event.target.style, {
-            width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
-            height: `${percentage(
-              event.rect.height,
-              previewScreenSize.height
-            )}%`,
-          });
-
-          Object.assign(event.target.dataset, { x, y });
-        },
-        end: function (event) {
-          let planId = document.querySelector(".shown").id;
-          console.log(planId);
-
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height
-          );
-
-          let data = {
-            width: `${percentage(event.rect.width, previewScreenSize.width)}%;`,
-            height: `${percentage(
-              event.rect.height,
-              previewScreenSize.height
-            )}%;`,
-            top: `${percentage(
-              event.target.offsetTop,
-              previewScreenSize.height
-            )}%;`,
-            left: `${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width
-            )}%;`,
-            cssrule: `#sequence-${sequenceId} #${event.target.id}{
-          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
-          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
-          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width
-          )}%;
-          }`,
-          };
-
-          // addRuleToSequence(sequenceId, planId, data)
-          addRuleToObject(event.target.dataset.objectid, data);
-        },
-      },
-    });
-}
 
 function moveToLayer(object, plan, position) {
   // v2: get the order from the index of the element in the domObject
@@ -204,7 +15,7 @@ function moveToLayer(object, plan, position) {
         config.strapi.url,
         plan.id.split("-")[1],
         object.dataset.objectid,
-        "farest"
+        "farest",
       )
         .then(plan.insertAdjacentElement("afterbegin", object))
         .catch((error) => {
@@ -219,7 +30,7 @@ function moveToLayer(object, plan, position) {
         config.strapi.url,
         plan.id.split("-")[1],
         object.dataset.objectid,
-        "closest"
+        "closest",
       )
         .then(plan.insertAdjacentElement("beforeend", object))
         .catch((error) => {
@@ -236,10 +47,10 @@ function moveToLayer(object, plan, position) {
           plan.id.split("-")[1],
           object.dataset.objectid,
           "after",
-          object.nextElementSibling.dataset.objectid
+          object.nextElementSibling.dataset.objectid,
         )
           .then(
-            object.nextElementSibling.insertAdjacentElement("afterend", object)
+            object.nextElementSibling.insertAdjacentElement("afterend", object),
           )
           .catch((error) => {
             if (error) {
@@ -256,13 +67,13 @@ function moveToLayer(object, plan, position) {
           plan.id.split("-")[1],
           object.dataset.objectid,
           "before",
-          object.previousElementSibling.dataset.objectid
+          object.previousElementSibling.dataset.objectid,
         )
           .then(
             object.previousElementSibling.insertAdjacentElement(
               "beforebegin",
-              object
-            )
+              object,
+            ),
           )
           .catch((error) => {
             if (error) {
@@ -315,7 +126,7 @@ async function deleteObject() {
   removeObjectFromPlan(
     config.strapi.url,
     plan.id.split("-")[1],
-    object.dataset.objectid
+    object.dataset.objectid,
   ).then(object.remove());
 }
 
@@ -338,7 +149,16 @@ function percentage(partialValue, totalValue) {
 }
 
 function updateFromUi() {
-  // update the element selected from the ui 
+  // update the element selected when there are some changes in the UI form
+  //if anchor top : keep top and bottom = unset
+  //if anchor bottom : keep bottom and top = unset
+  //if anchor right : keep right and left = unset
+  //if anchor left : keep left and right = unset
+
+  document.querySelector("#inputx").addEventListener("change", () => {
+    document.querySelector(".asset-selected").style.left =
+      document.querySelector("#inputx").value + "%";
+  });
   document.querySelector("#inputx").addEventListener("change", () => {
     document.querySelector(".asset-selected").style.left =
       document.querySelector("#inputx").value + "%";
@@ -366,20 +186,20 @@ function updateTheUI(element) {
   };
   document.querySelector("#inputx").value = percentage(
     element.offsetLeft,
-    previewScreenSize.width
+    previewScreenSize.width,
   );
   document.querySelector("#inputy").value = percentage(
     element.offsetTop,
-    previewScreenSize.height
+    previewScreenSize.height,
   );
   document.querySelector("#inputwidth").value = percentage(
     element.width,
-    previewScreenSize.width
+    previewScreenSize.width,
   );
   document.querySelector("#inputheight").value = percentage(
     element.height,
-    previewScreenSize.height
+    previewScreenSize.height,
   );
 }
 
-export { deleteObject, interactObject, moveToLayer, updateFromUi, updateTheUI };
+export { deleteObject, moveToLayer, updateFromUi, updateTheUI };

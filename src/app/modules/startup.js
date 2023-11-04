@@ -20,7 +20,8 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
-import { getSize } from "./resize.js"
+import { getSize, setAnchor } from "./resize.js";
+import {  manageStyleSheets } from "./preview.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -47,7 +48,7 @@ async function startup(url = document.location.href) {
     window.location = sequenceUrl;
     updateSequenceMeta(
       response.data?.data?.id,
-      response.data?.data?.attributes?.title
+      response.data?.data?.attributes?.title,
     );
 
     fillSequence(response.data.data.id);
@@ -73,7 +74,7 @@ async function startup(url = document.location.href) {
     }
     updateSequenceMeta(
       response.data?.data?.id,
-      response.data?.data?.attributes?.title
+      response.data?.data?.attributes?.title,
     );
     fillSequence(response.data.data.id);
   }
@@ -85,6 +86,9 @@ async function startup(url = document.location.href) {
   resizeMontagePaneVertically();
   handleDelays();
   getSize();
+  setAnchor();
+
+  manageStyleSheets();
 }
 
 async function fillSequence(sequence) {
@@ -101,7 +105,7 @@ async function fillSequence(sequence) {
       plan,
       montageList,
       sequencePreview,
-      index + 1 == plans.data.length ? true : false
+      index + 1 == plans.data.length ? true : false,
     );
     fillPlan(plan);
   });
@@ -137,18 +141,43 @@ function fillPlan(plan) {
         asset.attributes.location,
         asset.id,
         asset.attributes.filename,
-        document.querySelector("#assetsList")
+        document.querySelector("#assetsList"),
       );
+      //check if asset is top or bottom
+
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+          object.id
         }" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="${asset.attributes.location
-        }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ""
-        }
+        data-assetid="${asset.id}" src="${asset.attributes.location}"
+        data-anchor-horizontal="${
+          asset.attributes.anchorVertical
+            ? asset.attributes.anchorVertical
+            : "left"
+        }" 
+        data-anchor-vertical="${
+          asset.attributes.anchorHorizontal
+            ? asset.attributes.anchorHorizontal
+            : "top"
+        }"
+
+
+class= "asset" style = "
+        ${object.attributes.width ? `width:${object.attributes.width}` : ""}
         ${object.attributes.height ? `height:${object.attributes.height}` : ""}
-        ${object.attributes.top ? `top:${object.attributes.top}` : ""}
-        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`
+
+        ${
+          object.attributes.anchor == "top"
+            ? `top:${object.attributes.top};`
+            : `bottom:${object.attributes.bottom};`
+        }
+        ${
+          object.attributes.anchor == "left"
+            ? `left:${object.attributes.left};`
+            : `right:${object.attributes.right};`
+        }
+        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`,
       );
     });
   });

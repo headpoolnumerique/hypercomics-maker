@@ -10,23 +10,14 @@
   resize: both;
 }
 
-.moveable h2 {
-  padding: 0.3em 2ch;
-  background: black;
-  font-size: 0.8em;
-  letter-spacing: 0.2ch;
-  text-transform: uppercase;
-  color: white;
-  margin-bottom: 1em;
-}
-
-button,  #returnhome {
+button,
+#returnhome {
   border: 1px solid var(--color-body);
   background: white;
   padding: 0.2em 1ch;
 }
 
-:is(button, #returnhome):hover  {
+:is(button, #returnhome):hover {
   background: var(--color-main);
   color: white;
 }
@@ -39,7 +30,7 @@ button,  #returnhome {
   right: 1em;
   z-index: 999999998;
 }
-#homeButtonsList :is(button, #returnhome)  {
+#homeButtonsList :is(button, #returnhome) {
   text-decoration: none;
   text-transform: uppercase;
   margin-left: 4ch;
@@ -54,7 +45,7 @@ button,  #returnhome {
 .manip button {
 }
 
-.manip input[type='number'] {
+.manip input[type="number"] {
   border: 0px solid transparent;
   border-bottom: 2px solid black;
   max-width: 10ch;
@@ -110,5 +101,40 @@ button,  #returnhome {
 }
 
 .toDrag {
-  box-shadow: 0 0 0 5px #eee; 
+  box-shadow: 0 0 0 5px #eee;
+}
+
+/* ui in blocks */
+
+.block-ui {
+  padding: 0 2ch 2em;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.block-ui ul {
+  /* margin: 4em 0; */
+  padding: 0;
+}
+.block-ui button {
+  background: #ccc;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin: auto;
+}
+
+.block-ui h2 {
+  padding: 0.3em 2ch;
+  background: black;
+  font-size: 0.8em;
+  letter-spacing: 0.2ch;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 1em;
+}
+
+.block-ui li.header {
+  font-weight:800;
+  margin-bottom:.3em;
 }

@@ -31,3 +31,7 @@
 }
 
 
+.disabled {
+  color: grey;
+  color: red;
+}

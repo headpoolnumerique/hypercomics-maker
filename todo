@@ -1,3 +1,22 @@
+Screen sizes.
+
+when you want to add a screen size, 
+add a screen size.
+set its width and height
+auto fill with the width and height available on screen, and set max or minus
+update that screen size system
+
+
+
+anchor: top and bottom need to be set separately.
+
+
+# the screensize includes a css thing that 
+
+
+
+
+
 
 ## impossible question with the prototype
 
@@ -5,8 +24,9 @@ Use the same image multiple times on the layout? what should we do about it? the
 How can we do that?
 
 how to manage the css?
-
 the css we wanna save is a bunch of data that belong to the sequence. 
+and the lines are created by updating the element.
+
 
 
 we want to set the CSS not to the sequence, but to the plan.

@@ -1,0 +1,25 @@
+#anchors {
+  width: 100%;
+  display: block;
+}
+#anchors label {
+  display: block;
+}
+
+/* body {color: red !important} */
+
+/*not possible with css, just dont add/remove style when updating element place with the anchors setup */
+[data-anchor-vertical="top"] {
+  /* not needed weith aspect ratio */
+  /* object-position: top; */
+}
+[data-anchor-vertical="bottom"] {
+  /* not needed weith aspect ratio */
+  /* object-position: bottom; */
+}
+[data-anchor-vertical="top"] {
+  /* bottom: initial !important; */
+}
+[data-anchor-vertical="bottom"] {
+  /* top: initial !important; */
+}

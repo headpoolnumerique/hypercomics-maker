@@ -1,18 +1,19 @@
-axios as esmodules to have import and no require
-
-%% npm install @bundled-es-modules/axios
 
 
+// new system
+
+1. responsive.
+
+- add button to create a mediaquery.
+- that media query has multiple css.
+- each css = elementObj, top, left, width, heigth.
+
+- everytime you change add a size, you create a block,
+
+by default.
+
+1. 
 
 
 
-router with vanilla js → is it needed?
-https://dev.to/kodnificent/how-to-build-a-router-with-vanilla-javascript-2a18
 
-on home page add a way to call another page?
-
-import assets move theme
-
-
-send to strapi
-https://dev.to/melvnl/how-to-upload-a-file-imagepdfzipetc-to-strapi-with-react-35jd
