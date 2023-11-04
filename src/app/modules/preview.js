@@ -21,10 +21,9 @@ async function manageStyleSheets() {
   loadStyleSheet(sequenceNumber.innerText);
 
   async function loadStyleSheet(sequenceId) {
-    //load with a query
-
+    //load all style sheet and bring them on the table
     const response = await axios
-      .get(`${serverUrl}/api/stylesheets?populate=deep,5`)
+      .get(`${serverUrl}/api/stylesheets?populate=deep,2`)
       .then((response) => {
         return response;
       })
@@ -34,16 +33,15 @@ async function manageStyleSheets() {
 
     // get the stylesheet
     response.data.data.forEach((stylesheet) => {
-      const data = stylesheet.attributes;
-      data.strapid = stylesheet.id;
-
-      
-      console.log(stylesheet);
-      const sequenceId = stylesheet.attributes.sequenceId;
-      console.log(sequenceId)
-      if (data.sequenceId == sequenceId) {
-      addStyleSheetToList(data);
-      }
+      // const data = stylesheet.attributes;
+      // data.strapid = stylesheet.id;
+      // console.log(data);
+      // console.log(parseInt(sequenceNumber.textContent, 10))
+      // console.log(parseInt(data.sequenceId.data.id,10))
+      // console.log(parseInt(data.sequenceId ,10) = parseInt(sequenceNumber.textContent, 10))
+      // if (data.sequenceId == sequenceNumber.textContent) {
+      //   addStyleSheetToList(data);
+      // }
     });
   }
 
@@ -58,17 +56,6 @@ async function manageStyleSheets() {
     }
   });
 
-  async function removeStylesheet(target) {
-    const id = target.closest("li").dataset.strapid;
-
-    const data = {
-      disabled: true,
-    };
-
-    const response = await updateData(serverUrl, "stylesheets", data, id);
-    console.log(response);
-  }
-
   // check if inputs are valid
   newScreenForm.addEventListener("input", validateInputs());
   function validateInputs() {
@@ -81,9 +68,7 @@ async function manageStyleSheets() {
 
   newScreenForm.addEventListener("submit", async function(event) {
     event.preventDefault();
-
-    console.log("this", previewScreen);
-
+    // if (!validateInputs()) return;
     // get the data from the form and from the inputs
     const data = {
       maxwidth: Number(maxwidthInput.value),
@@ -96,14 +81,12 @@ async function manageStyleSheets() {
     if (!response.data) return console.log(`nothing got saved`);
 
     // show the response in the log
-    console.log(response);
 
     // add screen to the list
     // add stylesheet to the sequence,
     const responsedata = response.data.data.attributes;
     const strapid = response.data.data.id;
     responsedata.strapid = response.data.data.id;
-    console.log(responsedata);
 
     addStyleSheetToList(responsedata);
     // use that attribute to manipulate the css you need
@@ -186,4 +169,13 @@ function previewResize() {
 
 // function changePreviewSize(width, height) {}
 
-export { changeOrientation, fullPageWatcher, resizePreview, manageStyleSheets };
+async function removeStylesheet(target) {
+  const id = target.closest("li").dataset.strapid;
+
+  const data = {
+    disabled: true,
+  };
+
+  const response = await updateData(serverUrl, "stylesheets", data, id);
+}
+export { changeOrientation, fullPageWatcher, resizePreview, manageStyleSheets, addStyleSheetToList };

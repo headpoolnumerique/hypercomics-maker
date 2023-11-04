@@ -21,7 +21,7 @@ import {
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
 import { getSize, setAnchor } from "./resize.js";
-import {  manageStyleSheets } from "./preview.js";
+import {  addStyleSheetToList, manageStyleSheets } from "./preview.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -59,6 +59,8 @@ async function startup(url = document.location.href) {
     if (response.data.data) {
       document.querySelector("#loading")?.remove();
     }
+
+
     // if the sequence number doesnt exist in strapi, create it
     if (response.data == null) {
       let response = await createData(config.strapi.url, `sequences`, {
@@ -76,8 +78,29 @@ async function startup(url = document.location.href) {
       response.data?.data?.id,
       response.data?.data?.attributes?.title,
     );
+
+
+    //fillStylesheet
+
+
+    const stylesheets = response.data.data.attributes.stylesheets.data;
+    // for stylesheet 
+    // addStyleSheetToList
+    console.log(stylesheets)
+    stylesheets.forEach(stylesheet => {
+      stylesheet.attributes.strapid = stylesheet.id
+     addStyleSheetToList(stylesheet.attributes ) 
+
+  })
+
+    console.log(response.data.data)
+
     fillSequence(response.data.data.id);
   }
+
+
+
+
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
