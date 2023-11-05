@@ -21,7 +21,7 @@ import {
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
 import { getSize, setAnchor } from "./resize.js";
-import {  addStyleSheetToList, manageStyleSheets } from "./preview.js";
+import { addStyleSheetToList, manageStyleSheets } from "./preview.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -60,7 +60,6 @@ async function startup(url = document.location.href) {
       document.querySelector("#loading")?.remove();
     }
 
-
     // if the sequence number doesnt exist in strapi, create it
     if (response.data == null) {
       let response = await createData(config.strapi.url, `sequences`, {
@@ -79,27 +78,28 @@ async function startup(url = document.location.href) {
       response.data?.data?.attributes?.title,
     );
 
-
     //fillStylesheet
 
-
     const stylesheets = response.data.data.attributes.stylesheets.data;
-    // for stylesheet 
+    // for stylesheet
     // addStyleSheetToList
-    console.log(stylesheets)
-    stylesheets.forEach(stylesheet => {
-      stylesheet.attributes.strapid = stylesheet.id
-     addStyleSheetToList(stylesheet.attributes ) 
+    console.log(stylesheets);
 
-  })
+    // sort: show all  
+      const orderedstylesheets = stylesheets.sort((a, b) => {
+        console.log(a.attributes.maxwidth)
+        return a.attributes.maxwidth - b.attributes.maxwidth;
+      });
+    orderedstylesheets.forEach((stylesheet) => {
+      stylesheet.attributes.strapid = stylesheet.id;
+      // add the stylesheets to the list
+      addStyleSheetToList(stylesheet.attributes);
+    });
 
-    console.log(response.data.data)
+    console.log(response.data.data);
 
     fillSequence(response.data.data.id);
   }
-
-
-
 
   moveToolbars();
   toggleToolbars();
@@ -170,19 +170,16 @@ function fillPlan(plan) {
 
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-          object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
         }" data-planid="${plan.id}"
         data-assetid="${asset.id}" src="${asset.attributes.location}"
-        data-anchor-horizontal="${
-          asset.attributes.anchorVertical
-            ? asset.attributes.anchorVertical
-            : "left"
+        data-anchor-horizontal="${asset.attributes.anchorVertical
+          ? asset.attributes.anchorVertical
+          : "left"
         }" 
-        data-anchor-vertical="${
-          asset.attributes.anchorHorizontal
-            ? asset.attributes.anchorHorizontal
-            : "top"
+        data-anchor-vertical="${asset.attributes.anchorHorizontal
+          ? asset.attributes.anchorHorizontal
+          : "top"
         }"
 
 
@@ -190,15 +187,13 @@ class= "asset" style = "
         ${object.attributes.width ? `width:${object.attributes.width}` : ""}
         ${object.attributes.height ? `height:${object.attributes.height}` : ""}
 
-        ${
-          object.attributes.anchor == "top"
-            ? `top:${object.attributes.top};`
-            : `bottom:${object.attributes.bottom};`
+        ${object.attributes.anchor == "top"
+          ? `top:${object.attributes.top};`
+          : `bottom:${object.attributes.bottom};`
         }
-        ${
-          object.attributes.anchor == "left"
-            ? `left:${object.attributes.left};`
-            : `right:${object.attributes.right};`
+        ${object.attributes.anchor == "left"
+          ? `left:${object.attributes.left};`
+          : `right:${object.attributes.right};`
         }
         ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`,
       );

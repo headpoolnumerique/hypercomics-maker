@@ -30,6 +30,9 @@
   /* opacity: .6 */
 }
 
+.activeStylesheet {
+  font-weight:800;
+}
 
 .disabled {
   color: grey;

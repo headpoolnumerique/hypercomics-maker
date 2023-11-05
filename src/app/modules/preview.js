@@ -14,36 +14,22 @@ import {
 
 const serverUrl = config.strapi.url;
 
+// the output of the style element
+const stylesheetNewEl = (data, itemclasses, newest) => `
+<li data-strapid="${data.strapid}" 
+data-maxwidth=${data.maxwidth} 
+data-default-height=${data.defaultHeight} 
+class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${data.strapid
+  }>
+<span class="name">${data.strapid}</span>
+<span class="width">w: ${data.maxwidth}</span>
+<span class="height">h: ${data.defaultHeight}</span>
+<span class="remove">R</span>
+</li>`;
+
 async function manageStyleSheets() {
   // load all stylesheet. TODO: only load filtered stylesheets!
-  console.log(sequenceNumber);
-
-  loadStyleSheet(sequenceNumber.innerText);
-
-  async function loadStyleSheet(sequenceId) {
-    //load all style sheet and bring them on the table
-    const response = await axios
-      .get(`${serverUrl}/api/stylesheets?populate=deep,2`)
-      .then((response) => {
-        return response;
-      })
-      .catch((err) => {
-        return err;
-      });
-
-    // get the stylesheet
-    response.data.data.forEach((stylesheet) => {
-      // const data = stylesheet.attributes;
-      // data.strapid = stylesheet.id;
-      // console.log(data);
-      // console.log(parseInt(sequenceNumber.textContent, 10))
-      // console.log(parseInt(data.sequenceId.data.id,10))
-      // console.log(parseInt(data.sequenceId ,10) = parseInt(sequenceNumber.textContent, 10))
-      // if (data.sequenceId == sequenceNumber.textContent) {
-      //   addStyleSheetToList(data);
-      // }
-    });
-  }
+  // loadStyleSheet(sequenceNumber.innerText);
 
   /*check existing stylesheet and merge them? */
   /*create a screen = create a stylesheet*/
@@ -51,8 +37,17 @@ async function manageStyleSheets() {
   /*remove a stylesheet*/
   screensList.addEventListener("click", function(event) {
     if (event.target.classList == "remove") {
-      removeStylesheet(event.target);
+      // removeStylesheet(event.target);
       event.target.closest("li").classList.toggle("disabled");
+
+    } else if (event.target.closest("li"))  {
+      activateStylesheet(event.target.closest("li"))
+      resizePreview(previewScreen, event.target.closest("li").dataset.maxwidth, event.target.closest("li").dataset.defaultHeight) 
+    }
+
+    else if (event.target.tagName == "LI" ) {
+      activateStylesheet(event.target);
+      resizePreview(previewScreen, event.target.closest("li").dataset.maxwidth, event.target.closest("li").dataset.defaultHeight) 
     }
   });
 
@@ -76,35 +71,71 @@ async function manageStyleSheets() {
       defaultHeight: previewScreen.dataset.height,
     };
 
-    // create the data
+    // create the stylesheet
     const response = await createData(serverUrl, "stylesheets", data);
     if (!response.data) return console.log(`nothing got saved`);
 
-    // show the response in the log
-
-    // add screen to the list
     // add stylesheet to the sequence,
     const responsedata = response.data.data.attributes;
     const strapid = response.data.data.id;
     responsedata.strapid = response.data.data.id;
 
-    addStyleSheetToList(responsedata);
+    insertStylesheetToList(responsedata);
     // use that attribute to manipulate the css you need
   });
 }
 
+function insertStylesheetToList(data) {
+  console.log(data);
+  const itemclasses = data.disabled ? "disabled" : "";
+  // find where to place the stylesheet base on size
+  //
+  // get the max-width of the element
+  const newMaxWidth = data.maxwidth;
+
+  // () and place the element just before the stylesheet with a bigger screen
+  let nextMaxWidth = [...screensList.querySelectorAll("li")].filter((el) => {
+    return Number(el.dataset.maxwidth) > Number(newMaxWidth);
+  });
+
+  console.log(nextMaxWidth);
+
+  if (nextMaxWidth.length > 0) {
+    // create a item in the screens list
+    screensList
+      .querySelector(".activeStylesheet")
+      ?.classList.remove("activeStylesheet");
+    nextMaxWidth[0]?.insertAdjacentHTML(
+      "beforebegin",
+      stylesheetNewEl(data, itemclasses, true),
+    );
+  } else {
+    screensList
+      .querySelector(".activeStylesheet")
+      ?.classList.remove("activeStylesheet");
+    screensList.insertAdjacentHTML(
+      "beforeend",
+      stylesheetNewEl(data, itemclasses, true),
+    );
+  }
+
+  // selectAdded;
+}
+
 function addStyleSheetToList(data) {
   const itemclasses = data.disabled ? "disabled" : "";
+  // find where to place the stylesheet base on size
+  // get the max-height() and place the element just before the bigger screen
 
-  // create a item in the screens list
   screensList.insertAdjacentHTML(
     "beforeend",
-    `<li data-strapid="${data.strapid}" class="${itemclasses}" id="screen-${data.strapid}>
-<span class="name">${data.strapid}</span>
-<span class="width">w: ${data.maxwidth}</span>
-<span class="height">h: ${data.defaultHeight}</span>
-<span class="remove">R</span>
-</li>`,
+    stylesheetNewEl(data, itemclasses),
+    //     `<li data-strapid="${data.strapid}" data-maxwidth=${data.maxwidth} class="${itemclasses}" id="screen-${data.strapid}>
+    // <span class="name">${data.strapid}</span>
+    // <span class="width">w: ${data.maxwidth}</span>
+    // <span class="height">h: ${data.defaultHeight}</span>
+    // <span class="remove">R</span>
+    // </li>`,
   );
 }
 
@@ -126,6 +157,15 @@ function resizePreview(previewEl, width, height) {
   previewEl.style.height = "var(--preview-height)";
   previewEl.style.setProperty("--preview-width", width + `px`);
   previewEl.style.setProperty("--preview-height", height + `px`);
+}
+
+function activateStylesheet(stylesheet) {
+  screensList
+    .querySelector(".activeStylesheet")
+    ?.classList.remove("activeStylesheet");
+  stylesheet.classList.add("activeStylesheet");
+
+  // pour une raison inconnue, les layers disparaissent à certaine moment après un double click
 }
 
 //resize event observer!
@@ -169,13 +209,21 @@ function previewResize() {
 
 // function changePreviewSize(width, height) {}
 
-async function removeStylesheet(target) {
-  const id = target.closest("li").dataset.strapid;
+// async function removeStylesheet(target) {
+//   const id = target.closest("li").dataset.strapid;
+//
+//   const data = {
+//     disabled: true,
+//   };
+//
+//   const response = await updateData(serverUrl, "stylesheets", data, id);
+//   c
+// }
 
-  const data = {
-    disabled: true,
-  };
-
-  const response = await updateData(serverUrl, "stylesheets", data, id);
-}
-export { changeOrientation, fullPageWatcher, resizePreview, manageStyleSheets, addStyleSheetToList };
+export {
+  changeOrientation,
+  fullPageWatcher,
+  resizePreview,
+  manageStyleSheets,
+  addStyleSheetToList,
+};

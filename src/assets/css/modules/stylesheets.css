@@ -36,5 +36,5 @@
   border-bottom: 1px solid gray;
   display: grid;
   gap: 1ch;
-  grid-template-columns: repeat(6, auto);
+  grid-template-columns: repeat(4, max-content);
 }
