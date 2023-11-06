@@ -1,4 +1,4 @@
-import { previewScreen, anchors, maxwidthInput } from "./selectors.js";
+import { previewScreen, anchors, maxwidthInput, defaultHeight } from "./selectors.js";
 
 // the code that describe what happens when a new size is found
 
@@ -59,6 +59,8 @@ function getSize() {
 
         //set the new add screen wax width
         maxwidthInput.value = newWidth;
+        defaultHeight.value = newHeight;
+
 
         // instead of the ratio tell if it’s portrait or landscape
         // and save that information

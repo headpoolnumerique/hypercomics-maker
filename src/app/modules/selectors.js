@@ -15,7 +15,7 @@ const plandelay = document.querySelector("#minimaldelay");
 
 /*screen size*/
 const maxwidthInput = document.querySelector("#screenwidth");
-const ratioInput = document.querySelector("#screenratio");
+const defaultHeight = document.querySelector("#screenDefaultHeight");
 const screensList = document.querySelector("#screens");
 const newScreenUi = document.querySelector("#screen-ui");
 const newScreenForm = document.querySelector("#screensform");
@@ -50,7 +50,7 @@ export {
   bottomAnchorRadio,
   leftAnchorRadio,
   maxwidthInput,
-  ratioInput,
+  defaultHeight,
   screensList,
   newScreenButton,
   newScreenForm,
