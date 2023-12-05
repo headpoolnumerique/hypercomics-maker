@@ -4,8 +4,8 @@ import { generateStory } from "./readerModules/generateStory.js";
 start();
 
 async function start() {
-  generateStory()
-    .then(readingTools())
-    .finally(document.querySelector("#loading")?.remove());
+  await generateStory();
+  await readingTools();
+  document.querySelector("#loading")?.remove();
 }
 // generate the story
