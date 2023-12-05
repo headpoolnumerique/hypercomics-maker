@@ -374,7 +374,7 @@ async function duplicatePlan(
 }
 
 // render a plan when loading up the app
-function renderPlan(plan, montageList, sequencePreview, select = false) {
+async function renderPlan(plan, montageList, sequencePreview, select = false) {
   let previewedPlan = document.createElement(`article`);
   previewedPlan.id = `plan-${plan.id}`;
   previewedPlan.insertAdjacentHTML(

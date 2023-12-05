@@ -51,7 +51,7 @@ document.querySelectorAll(".previewResizer").forEach((resizeButton) => {
     resizePreview(
       previewScreen,
       resizeButton.dataset.previewWidth,
-      resizeButton.dataset.previewHeight
+      resizeButton.dataset.previewHeight,
     );
   });
 });
@@ -93,12 +93,12 @@ document.querySelector("#deleteAllPlans")?.addEventListener("click", () => {
 document.querySelector("#duplicatePlan").addEventListener("click", () => {
   console.log("click");
   const sequenceId = Number(
-    document.querySelector("#sequenceNumber").textContent
+    document.querySelector("#sequenceNumber").textContent,
   );
   duplicatePlan(
     montageList,
     document.querySelector(".shown")?.dataset.strapId,
-    sequenceId
+    sequenceId,
   );
 });
 imageUpload.addEventListener("click", function(e) {
@@ -132,7 +132,7 @@ assetsList.addEventListener("click", async (e) => {
     let strapisResponse = await connectObjectToPlan(
       config.strapi.url,
       planNumber,
-      assetId
+      assetId,
     );
 
     if (strapisResponse) {
@@ -140,7 +140,7 @@ assetsList.addEventListener("click", async (e) => {
       addImg(
         e.target,
         document.querySelector(".selected").hash,
-        strapisResponse.data.data.id
+        strapisResponse.data.data.id,
       );
 
       appendLayer(strapisResponse.data.data.id, layerList, false);
@@ -187,7 +187,7 @@ document
     shownLink.classList.remove("selected");
     shownPlan.previousElementSibling.classList.add("shown");
     shownPlan.previousElementSibling?.previousElementSibling?.classList.add(
-      "oldshown"
+      "oldshown",
     );
     shownLink
       .closest("li")
@@ -217,6 +217,8 @@ document.querySelector("#previewNext").addEventListener("click", function() {
   updateLayers();
   updateDelayUI();
 });
+
+//start the app
 
 updateFromUi();
 startup();

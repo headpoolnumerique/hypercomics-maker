@@ -1,4 +1,4 @@
-function readingTools() {
+async function readingTools() {
   console.log("setting up reading tools");
 
   let canMoveForward = true; // Flag variable to track if moveForward is allowed

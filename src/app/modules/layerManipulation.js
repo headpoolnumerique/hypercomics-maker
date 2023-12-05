@@ -115,7 +115,7 @@ function emptyLayers(layerWrapper = layerList) {
   layerWrapper.innerHTML = "";
 }
 
-function updateLayers(layerWrapper = layerList) {
+async function updateLayers(layerWrapper = layerList) {
   emptyLayers(layerWrapper);
   document
     .querySelector(".shown")

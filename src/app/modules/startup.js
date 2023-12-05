@@ -51,7 +51,9 @@ async function startup(url = document.location.href) {
       response.data?.data?.attributes?.title,
     );
 
-    fillSequence(response.data.data.id);
+    await fillSequence(response.data.data.id);
+    console.log("fill sequence finished");
+
   } else {
     // if there is a sequenceID in the url, load the sequence from strapi
     let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
@@ -73,7 +75,7 @@ async function startup(url = document.location.href) {
       // history.pushState({}, null, sequenceUrl)
       // window.location.href = sequenceUrl
     }
-    updateSequenceMeta(
+    await updateSequenceMeta(
       response.data?.data?.id,
       response.data?.data?.attributes?.title,
     );
@@ -122,22 +124,22 @@ async function fillSequence(sequence) {
     addPlan(montageList, sequence);
   }
   //create the plan
-  plans.data.forEach((plan, index) => {
+  plans.data.forEach(async (plan, index) => {
     console.log("renderPlan", plan);
-    renderPlan(
+    await renderPlan(
       plan,
       montageList,
       sequencePreview,
       index + 1 == plans.data.length ? true : false,
     );
-    fillPlan(plan);
+    await fillPlan(plan);
   });
 
-  updateLayers();
+  await updateLayers();
   // check for each plan. add them to the view
 }
 
-function updateSequenceMeta(id, title) {
+async function updateSequenceMeta(id, title) {
   const meta = {
     projectName: document.querySelector("#projectName"),
     sequenceNumber: document.querySelector("#sequenceNumber"),
@@ -146,7 +148,7 @@ function updateSequenceMeta(id, title) {
   meta.sequenceNumber.innerHTML = id;
 }
 
-function fillPlan(plan) {
+async function fillPlan(plan) {
   console.log(`fill the plan ${plan.id} on load from the objects`);
 
   // fill the plan with all the existing images
