@@ -39,15 +39,20 @@ async function manageStyleSheets() {
     if (event.target.classList == "remove") {
       // removeStylesheet(event.target);
       event.target.closest("li").classList.toggle("disabled");
-
-    } else if (event.target.closest("li"))  {
-      activateStylesheet(event.target.closest("li"))
-      resizePreview(previewScreen, event.target.closest("li").dataset.maxwidth, event.target.closest("li").dataset.defaultHeight) 
-    }
-
-    else if (event.target.tagName == "LI" ) {
+    } else if (event.target.closest("li")) {
+      activateStylesheet(event.target.closest("li"));
+      resizePreview(
+        previewScreen,
+        event.target.closest("li").dataset.maxwidth,
+        event.target.closest("li").dataset.defaultHeight,
+      );
+    } else if (event.target.tagName == "LI") {
       activateStylesheet(event.target);
-      resizePreview(previewScreen, event.target.closest("li").dataset.maxwidth, event.target.closest("li").dataset.defaultHeight) 
+      resizePreview(
+        previewScreen,
+        event.target.closest("li").dataset.maxwidth,
+        event.target.closest("li").dataset.defaultHeight,
+      );
     }
   });
 
