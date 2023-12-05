@@ -45,7 +45,7 @@ async function startup(url = document.location.href) {
     window.location = sequenceUrl;
     updateSequenceMeta(
       response.data?.data?.id,
-      response.data?.data?.attributes?.title
+      response.data?.data?.attributes?.title,
     );
 
     fillSequence(response.data.data.id);
@@ -53,9 +53,6 @@ async function startup(url = document.location.href) {
     // if there is a sequenceID in the url, load the sequence from strapi
     let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
-    if (response.data.data) {
-      document.querySelector("#loading")?.remove();
-    }
     // if the sequence number doesnt exist in strapi, create it
     if (response.data == null) {
       let response = await createData(config.strapi.url, `sequences`, {
@@ -71,10 +68,11 @@ async function startup(url = document.location.href) {
     }
     updateSequenceMeta(
       response.data?.data?.id,
-      response.data?.data?.attributes?.title
+      response.data?.data?.attributes?.title,
     );
     fillSequence(response.data.data.id);
   }
+
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
@@ -82,6 +80,8 @@ async function startup(url = document.location.href) {
   layerInteract();
   resizeMontagePaneVertically();
   handleDelays();
+
+  document.querySelector("#loading")?.remove();
 }
 
 async function fillSequence(sequence) {
@@ -98,7 +98,7 @@ async function fillSequence(sequence) {
       plan,
       montageList,
       sequencePreview,
-      index + 1 == plans.data.length ? true : false
+      index + 1 == plans.data.length ? true : false,
     );
     fillPlan(plan);
   });
@@ -134,18 +134,21 @@ function fillPlan(plan) {
         asset.attributes.location,
         asset.id,
         asset.attributes.filename,
-        document.querySelector("#assetsList")
+        document.querySelector("#assetsList"),
       );
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+          object.id
         }" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="${asset.attributes.location
-        }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ""
+        data-assetid="${asset.id}" src="${
+          asset.attributes.location
+        }" class="asset" style="${
+          object.attributes.width ? `width:${object.attributes.width}` : ""
         }
         ${object.attributes.height ? `height:${object.attributes.height}` : ""}
         ${object.attributes.top ? `top:${object.attributes.top}` : ""}
-        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`
+        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`,
       );
     });
   });
