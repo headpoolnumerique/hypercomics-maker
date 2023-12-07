@@ -53,7 +53,6 @@ async function startup(url = document.location.href) {
 
     await fillSequence(response.data.data.id);
     console.log("fill sequence finished");
-
   } else {
     // if there is a sequenceID in the url, load the sequence from strapi
     let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
@@ -87,11 +86,11 @@ async function startup(url = document.location.href) {
     // addStyleSheetToList
     console.log(stylesheets);
 
-    // sort: show all  
-      const orderedstylesheets = stylesheets.sort((a, b) => {
-        console.log(a.attributes.maxwidth)
-        return a.attributes.maxwidth - b.attributes.maxwidth;
-      });
+    // sort: show all
+    const orderedstylesheets = stylesheets.sort((a, b) => {
+      console.log(a.attributes.maxwidth);
+      return a.attributes.maxwidth - b.attributes.maxwidth;
+    });
     orderedstylesheets.forEach((stylesheet) => {
       stylesheet.attributes.strapid = stylesheet.id;
       // add the stylesheets to the list
@@ -112,8 +111,8 @@ async function startup(url = document.location.href) {
   handleDelays();
   getSize();
   setAnchor();
-
   manageStyleSheets();
+  // recreate the layer list from the selected plan
 }
 
 async function fillSequence(sequence) {
@@ -133,9 +132,9 @@ async function fillSequence(sequence) {
       index + 1 == plans.data.length ? true : false,
     );
     await fillPlan(plan);
+    updateLayers();
   });
 
-  await updateLayers();
   // check for each plan. add them to the view
 }
 

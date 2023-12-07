@@ -26,11 +26,13 @@ function appendLayer(id, layerWrapper = layerList, top = false) {
         <span class="identifier">#${id}</span>
         <span class="hidebutton"><span class="popup">hide</span>S</span>
         <span class="delete"><span class="popup">delete</span>D</delete>
-    </li>`
+    </li>`,
   );
 }
 function selectLayer(layerWrapper = "layerList", id) {
   deselect(".selectedlayer");
+
+  //select the layer with the data object id
   layerWrapper
     .querySelector(`li[data-objectid="${id}"]`)
     .classList.add("selectedLayer");
@@ -75,14 +77,13 @@ function layerInteract(layerWrapper = layerList) {
       deselect(".confirm");
       deselect(".asset-selected");
       const selectedObject = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
+        `.shown [data-objectid="${objectid}"]`,
       );
       selectedObject.classList.add("asset-selected");
       updateTheUI(selectedObject);
     } else if (target.classList.contains("previewTop")) {
-
       const previewObj = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
+        `.shown [data-objectid="${objectid}"]`,
       );
       target.closest("li").classList.add("previewedTop");
       previewObj.classList.toggle("previewTop");
@@ -90,7 +91,7 @@ function layerInteract(layerWrapper = layerList) {
       target.closest("li").classList.add("selectedLayer");
       deselect(".asset-selected");
       const hidingObject = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
+        `.shown [data-objectid="${objectid}"]`,
       );
       hidingObject.classList.toggle(["asset-hidden"]);
       target.closest("li").classList.toggle("hidden");
@@ -98,7 +99,7 @@ function layerInteract(layerWrapper = layerList) {
       target.closest("li").classList.add("selectedLayer");
       deselect(".asset-selected");
       const removableObject = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
+        `.shown [data-objectid="${objectid}"]`,
       );
       removableObject.classList.add(["asset-selected"]);
       if (target.classList.contains("confirm")) {
@@ -116,16 +117,16 @@ function emptyLayers(layerWrapper = layerList) {
 }
 
 async function updateLayers(layerWrapper = layerList) {
+  // recreate the layer list from the selected plan
   emptyLayers(layerWrapper);
+  //on load, 
   document
     .querySelector(".shown")
     .querySelectorAll(".asset")
     .forEach((asset) => {
-      console.log(asset.dataset.objectid);
+      // console.log(asset.dataset.objectid);
       appendLayer(asset.dataset.objectid);
     });
-
-  // recreate the layer list from the selected plan
 }
 
 function reorderLayer(wrappingElement) {
@@ -142,7 +143,7 @@ function reorderLayer(wrappingElement) {
       saveLayerOrder(
         config.strapi.url,
         document.querySelector(".shown").dataset.strapId,
-        layerList
+        layerList,
       );
       // reorder the plan
       // send the new order to the axios
@@ -176,13 +177,13 @@ function saveLayerOrder(strapiUrl, planId, layerWrapper) {
     config.strapi.url,
     "plans",
     data,
-    Number(plan.dataset.strapId)
+    Number(plan.dataset.strapId),
   ).then((response) => {
     if (response.status == 200) {
       // reorder on screen when the response is ok
       orderedObjs.forEach((assetInOrder) => {
         const element = plan.querySelector(
-          `.asset[data-objectid="${assetInOrder}"]`
+          `.asset[data-objectid="${assetInOrder}"]`,
         );
         plan.appendChild(element);
       });

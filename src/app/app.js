@@ -222,3 +222,5 @@ document.querySelector("#previewNext").addEventListener("click", function() {
 
 updateFromUi();
 startup();
+
+// updateLayers();
