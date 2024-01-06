@@ -129,6 +129,10 @@ async function updateLayers(layerWrapper = layerList) {
     });
 }
 
+
+
+
+
 function reorderLayer(wrappingElement) {
   var sortableLayers = Sortable.create(wrappingElement, {
     animation: 300,
@@ -154,7 +158,7 @@ function reorderLayer(wrappingElement) {
 function saveLayerOrder(strapiUrl, planId, layerWrapper) {
   let orderedObjs = [];
   // get the order of the layers in the plan. reverse the order as html is set the opposite way,
-  layerWrapper.querySelectorAll("li").forEach((obj) => {
+  [...layerWrapper.querySelectorAll("li")].reverse().forEach((obj) => {
     // create the orderedList of all the assets
     orderedObjs.push(obj.dataset.objectid);
   });
