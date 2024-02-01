@@ -4,6 +4,7 @@ import { deselect } from "./helpers";
 import { deleteObject, moveToLayer, updateTheUI } from "./objectManipulations";
 import config from "../config/config";
 import { updateData } from "./dataManagement";
+import { interactObject } from "./assetManipulation";
 
 // how is the layer list created?
 // is it the layer list that maintains everything or is the layer list based on the preview block
@@ -79,6 +80,7 @@ function layerInteract(layerWrapper = layerList) {
       const selectedObject = document.querySelector(
         `.shown [data-objectid="${objectid}"]`,
       );
+      interactObject(selectedObject);
       selectedObject.classList.add("asset-selected");
       updateTheUI(selectedObject);
     } else if (target.classList.contains("previewTop")) {
@@ -119,7 +121,7 @@ function emptyLayers(layerWrapper = layerList) {
 async function updateLayers(layerWrapper = layerList) {
   // recreate the layer list from the selected plan
   emptyLayers(layerWrapper);
-  //on load, 
+  //on load,
   document
     .querySelector(".shown")
     .querySelectorAll(".asset")
@@ -128,10 +130,6 @@ async function updateLayers(layerWrapper = layerList) {
       appendLayer(asset.dataset.objectid);
     });
 }
-
-
-
-
 
 function reorderLayer(wrappingElement) {
   var sortableLayers = Sortable.create(wrappingElement, {
@@ -142,6 +140,7 @@ function reorderLayer(wrappingElement) {
     avoidImplicitDeselect: false, // true - if you don't want to deselect items on outside click
     handle: ".moveIcon", //handle for the sorting block
 
+    // reorder layer and push the new list to the db
     onEnd: function(event) {
       console.log(event);
       saveLayerOrder(
@@ -149,15 +148,13 @@ function reorderLayer(wrappingElement) {
         document.querySelector(".shown").dataset.strapId,
         layerList,
       );
-      // reorder the plan
-      // send the new order to the axios
     },
   });
 }
 
 function saveLayerOrder(strapiUrl, planId, layerWrapper) {
   let orderedObjs = [];
-  // get the order of the layers in the plan. reverse the order as html is set the opposite way,
+  // get the order of the layers in the plan. r,
   [...layerWrapper.querySelectorAll("li")].reverse().forEach((obj) => {
     // create the orderedList of all the assets
     orderedObjs.push(obj.dataset.objectid);
