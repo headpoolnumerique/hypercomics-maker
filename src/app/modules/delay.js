@@ -48,7 +48,7 @@ function debounce(callback, delay) {
 
 function updateDelayUI() {
   const plan = document.querySelector(".shown");
-  document.querySelector("#planDelay").value = plan.dataset.delay;
+  document.querySelector("#minimalDelay").value = plan.dataset.delay;
 }
 
 export { handleDelays, updateDelayUI };

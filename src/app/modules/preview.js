@@ -39,12 +39,14 @@ async function manageStyleSheets() {
     if (event.target.classList == "remove") {
       // removeStylesheet(event.target);
       event.target.closest("li").classList.toggle("disabled");
+
     } else if (event.target.closest("li")) {
       activateStylesheet(event.target.closest("li"));
       resizePreview(
         previewScreen,
         event.target.closest("li").dataset.maxwidth,
         event.target.closest("li").dataset.defaultHeight,
+        event.target.closest("li").dataset.strapid,
       );
     } else if (event.target.tagName == "LI") {
       activateStylesheet(event.target);
@@ -74,6 +76,7 @@ async function manageStyleSheets() {
       maxwidth: Number(maxwidthInput.value),
       sequenceId: sequenceNumber.textContent,
       defaultHeight: previewScreen.dataset.height,
+
     };
 
     // create the stylesheet
@@ -83,6 +86,8 @@ async function manageStyleSheets() {
     // add stylesheet to the sequence,
     const responsedata = response.data.data.attributes;
     const strapid = response.data.data.id;
+    // set the screensize id on the preview to know where to save the data
+    previewScreen.dataset.screensize = strapid;
     responsedata.strapid = response.data.data.id;
 
     insertStylesheetToList(responsedata);
@@ -155,13 +160,15 @@ function fullPageWatcher(preview) {
   preview.classList.toggle("fullscreen");
 }
 
-function resizePreview(previewEl, width, height) {
+function resizePreview(previewEl, width, height, strapid) {
   if (!previewEl) return console.log("no preview El!");
   // previewEl.querySelector().style.width
   previewEl.style.width = "var(--preview-width)";
   previewEl.style.height = "var(--preview-height)";
   previewEl.style.setProperty("--preview-width", width + `px`);
   previewEl.style.setProperty("--preview-height", height + `px`);
+  // screensize let you know where to save the data
+  previewEl.dataset.screensize = strapid;
 }
 
 function activateStylesheet(stylesheet) {

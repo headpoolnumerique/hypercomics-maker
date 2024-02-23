@@ -5,9 +5,7 @@ import axios from "axios";
 
 
 function moveToLayer(object, plan, position) {
-  // v2: get the order from the index of the element in the domObject
-  // further ------ closest
-  // first  ------- last
+  // move any object to a specific layer
 
   switch (position) {
     case "farest":

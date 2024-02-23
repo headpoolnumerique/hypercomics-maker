@@ -15,13 +15,15 @@ function interactObject(object) {
 
   // TODO: wait for the image to appear to attach a interact
 
-  const position = { x: object.offsetLeft, y: object.offsetTop };
+  // that position is tricky because if you change the ai while active it moves.
   // get the object anchor point
 
+  let position = { x: object.offsetLeft, y: object.offsetTop };
   interact(object)
     .draggable({
       listeners: {
         start(event) {
+          position = { x: object.offsetLeft, y: object.offsetTop };
           document.querySelector("#inputx").value = percentage(
             event.target.offsetLeft,
             previewScreenSize.width,
@@ -102,6 +104,13 @@ function interactObject(object) {
                 previewScreenSize.height,
               )
             }% `,
+            css: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
+          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
+          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
+          left: ${percentage(
+            event.target.offsetLeft,
+            previewScreenSize.width,
+          )}%;`,
             cssrule: `#sequence-${sequenceId} #${event.target.id}{
           width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
@@ -115,6 +124,17 @@ function interactObject(object) {
 
           // addRuleToSequence(sequenceId, planId, data)
           addRuleToObject(event.target.dataset.objectid, data);
+          console.log(event.target.closest("#previewScreen"));
+          addRuleToStylesheet(
+            event.target.closest("#previewScreen").dataset.screensize,
+            event.target.dataset.objectId,
+            data.css,
+          );
+
+          // add to the object:
+
+          // save to stylesheet
+          // addRuleToStylesheet(previewScreen.dataset.screensize, event.target.dataset.objectid, rules);
         },
       },
     })
@@ -125,7 +145,7 @@ function interactObject(object) {
 
       modifiers: [
         interact.modifiers.aspectRatio({
-          // make sure the ratio is preserved 
+          // make sure the ratio is preserved
           ratio: "preserve",
         }),
       ],
@@ -333,6 +353,27 @@ async function deleteObject() {
     plan.id.split("-")[1],
     object.dataset.objectid,
   ).then(object.remove());
+}
+
+async function addRuleToStylesheet(screensizeId, objectId, rules) {
+  return axios
+    .put(`${config.strapi.url}/api/stylesheets/${screensizeId}`, {
+      data: {
+        rules: [
+          {
+            object: objectId,
+            cssrules: rules,
+          },
+        ],
+      },
+    })
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
 }
 
 function addRuleToObject(objectid, data) {

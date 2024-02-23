@@ -80,6 +80,7 @@ function layerInteract(layerWrapper = layerList) {
       const selectedObject = document.querySelector(
         `.shown [data-objectid="${objectid}"]`,
       );
+      // make the object draggable and resizable
       interactObject(selectedObject);
       selectedObject.classList.add("asset-selected");
       updateTheUI(selectedObject);
@@ -148,6 +149,13 @@ function reorderLayer(wrappingElement) {
         document.querySelector(".shown").dataset.strapId,
         layerList,
       );
+      // unselect everything after layering things
+      document
+        .querySelector(".asset-selected")
+        ?.classList.remove("asset-selected");
+      document
+        .querySelector(".selectedLayer")
+        ?.classList.remove("selectedLayer");
     },
   });
 }

@@ -1,5 +1,6 @@
 img {
-  /* object-fit: contain; */
+  /*keep object fit contain and allow resize of the block*/
+  object-fit: contain;
 }
 
 #layer-space {
@@ -60,7 +61,7 @@ img.asset-hidden.asset-selected {
   color: var(--color-main);
 }
 .asset.previewTop {
-  z-index: 100;
+  z-index: 10000;
   border: 2px dashed grey;
 }
 

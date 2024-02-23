@@ -7,11 +7,11 @@ const inputScreenHeight = document.querySelector("#screenHeight");
 const inputRatio = document.querySelector("#screenRatio");
 
 // responsive screen
-function createSize() {
-  // send data to strapi
-  // create a marmer to show the size (100px portrait, on top of the page)
-  //
-}
+// function createSize() {
+//   // send data to strapi
+//   // create a marmer to show the size (100px portrait, on top of the page)
+//   //
+// }
 
 function setAnchor() {
   anchors.forEach((input) =>
@@ -67,6 +67,7 @@ function getSize() {
         // update preview dataset
         previewScreen.dataset.width = newWidth;
         previewScreen.dataset.height = newHeight;
+
 
         // let use the input ratio to generate the css.
         inputRatio.value = newHeight > newWidth ? "portrait" : "landscape";

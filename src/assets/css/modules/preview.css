@@ -26,8 +26,8 @@
 }
 #previewScreen .asset-selected {
   box-shadow: 0 0 0 3px var(--color-main);
-  /* z-index: 100; */
-  /* opacity: .6 */
+  z-index: 100;
+  /* opacity: .9; */
 }
 
 .activeStylesheet {
