@@ -9,6 +9,10 @@ function toggleToolbars() {
           console.log(event.target.id);
           toggleToolbar(document.querySelector("#layer-space"));
           break;
+        case "showScreens":
+          console.log(event.target.id);
+          toggleToolbar(document.querySelector("#screen-ui"));
+          break;
         case "showSequence":
           console.log(event.target.id);
           toggleToolbar(document.querySelector("#sequence"));
@@ -44,6 +48,8 @@ function toggleToolbars() {
 
 function toggleToolbar(toolbarElement) {
   toolbarElement.classList.toggle("hide");
+  toolbarElement.style.top = "20%";
+  toolbarElement.style.left = "20%";
 }
 
 function moveToolbars() {
