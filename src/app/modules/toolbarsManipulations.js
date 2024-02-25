@@ -41,7 +41,7 @@ function toggleToolbars() {
           break;
         default:
           console.log(event.target.id);
-          console.log("not there yet");
+          console.log("this menu does nothing yet");
       }
     });
 }
