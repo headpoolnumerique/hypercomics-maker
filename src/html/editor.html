@@ -36,10 +36,26 @@
         style="top: 30%; left: 30%"
         class="moveable block-ui resizable"
       >
-        <h2>screen</h2>
-        <div>
+        <h2>Screen sizes & strylesheet</h2>
+
+        <button id="orientationChanger">change orientation</button>
+        <button id="fullPageWatcher">fullpage</button>
+        <button
+          class="previewResizer"
+          data-preview-height="960"
+          data-preview-width="640"
+        >
+          Mobile V
+        </button>
+        <button
+          class="previewResizer"
+          data-preview-height="640"
+          data-preview-width="960"
+        >
+          Mobile H
+        </button>
         <form id="screensform">
-          <label required min="200" for="screenwidth">
+          <label for="screenwidth">
             <span>max-width</span>
             <input
               min="200"
@@ -48,8 +64,6 @@
               id="screenwidth"
             />
           </label>
-</div>
-<div>
           <label for="screenDefaultHeight"
             ><span>default height</span>
             <input
@@ -59,7 +73,6 @@
               id="screenDefaultHeight"
             />
           </label>
-          </div>
           <button type="submit" id="newscreen">add screen</button>
         </form>
         <ul id="screens">
@@ -81,137 +94,66 @@
       </section>
 
       <section id="contextualUI" class="hide moveable block-ui">
-        <h2>The contextual menu!</h2>
-
+        <h2>contextual</h2>
+        <!-- // contextual should be hidden and moved next to the element the user is moving -->
         <section id="main">
-          <div class="manip">
-            <details open class="screen resolution">
-              <summary>Screen resolution</summary>
+          <label for="inputwidth">width</label>
+          <input id="inputwidth" name="width" type="number" step="0.01" />
 
-              <div>
-                <label for="screenWidth">screen width</label>
-                <input
-                  id="screenWidth"
-                  name="screenWidth"
-                  type="number"
-                  step="1"
-                />
-              </div>
-              <div>
-                <label for="screenHeight">screen height</label>
-                <input
-                  id="screenHeight"
-                  name="screenHeight"
-                  type="number"
-                  step="1"
-                />
-              </div>
-              <div>
-                <label for="screenRatio">screen ratio</label>
-                <input
-                  disabled
-                  id="screenRatio"
-                  name="screenRatio"
-                  type="text"
-                />
-              </div>
+          <label for="inputheight">height</label>
+          <input id="inputheight" name="height" type="number" step="0.01" />
 
-              <div class="sizes">
-                <button id="createSize">create size</button>
-              </div>
-            </details>
-            <details open class="location">
-              <summary>size</summary>
+          <!-- Locations and anchors -->
 
-              <label for="inputwidth">width</label>
-              <input id="inputwidth" name="width" type="number" step="0.01" />
+          <h2>location</h2>
+          <label for="inputx">x</label>
+          <input id="inputx" name="x" type="number" step="0.01" />
 
-              <label for="inputheight">height</label>
-              <input id="inputheight" name="height" type="number" step="0.01" />
-            </details>
+          <label for="inputy">y</label>
+          <input id="inputy" name="y" type="number" step="0.01" />
+          <h2>vertical anchor</h2>
+          <label>
+            <!-- / save to anchor veritcal -->
+            <span>top</span>
+            <input
+              class="anchorInput"
+              type="radio"
+              name="verticalAnchor"
+              value="top"
+            />
+          </label>
+          <label>
+            <span>bottom</span>
+            <input
+              class="anchorInput"
+              type="radio"
+              name="verticalAnchor"
+              value="bottom"
+            />
+          </label>
 
-            <!-- Locations and anchors -->
-            <details id="anchors">
-              <div>
-                <h2>location</h2>
-                <label for="inputx">x</label>
-                <input id="inputx" name="x" type="number" step="0.01" />
+          <h2>horizohtal anchor</h2>
+          <label>
+            <span>left</span>
+            <input
+              class="anchorInput"
+              type="radio"
+              name="horizontalAnchor"
+              value="left"
+            />
+          </label>
+          <label>
+            <span>right</span>
+            <input
+              class="anchorInput"
+              type="radio"
+              name="horizontalAnchor"
+              value="right"
+            />
+          </label>
 
-                <label for="inputy">y</label>
-                <input id="inputy" name="y" type="number" step="0.01" />
-              </div>
-              <summary>locations</summary>
-              <h2>vertical anchor</h2>
-              <label>
-                <!-- / save to anchor veritcal -->
-                <span>top</span>
-                <input
-                  class="anchorInput"
-                  type="radio"
-                  name="verticalAnchor"
-                  value="top"
-                />
-              </label>
-              <label>
-                <span>bottom</span>
-                <input
-                  class="anchorInput"
-                  type="radio"
-                  name="verticalAnchor"
-                  value="bottom"
-                />
-              </label>
-
-              <h2>horizohtal anchor</h2>
-              <label>
-                <span>left</span>
-                <input
-                  class="anchorInput"
-                  type="radio"
-                  name="horizontalAnchor"
-                  value="left"
-                />
-              </label>
-              <label>
-                <span>right</span>
-                <input
-                  class="anchorInput"
-                  type="radio"
-                  name="horizontalAnchor"
-                  value="right"
-                />
-              </label>
-            </details>
-
-            <details class="objManagemenet">
-              <summary>Object</summary>
-              <button id="deleteAsset">Delete</button>
-              <!-- <button id="duplicateAsset">Duplicate (soon)</button> -->
-            </details>
-          </div>
+          <button id="deleteAsset">Delete</button>
         </section>
-      </section>
-      <section
-        id="previewButtons"
-        class="buttons moveable block-ui resizable hide"
-      >
-        <h2>Screen size</h2>
-        <button id="orientationChanger">change orientation</button>
-        <button id="fullPageWatcher">fullpage</button>
-        <button
-          class="previewResizer"
-          data-preview-height="960"
-          data-preview-width="640"
-        >
-          Mobile V
-        </button>
-        <button
-          class="previewResizer"
-          data-preview-height="640"
-          data-preview-width="960"
-        >
-          Mobile H
-        </button>
       </section>
       <section id="preview">
         <button class="moveButton" id="previewPrevious">&lt;</button>
