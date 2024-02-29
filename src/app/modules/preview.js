@@ -4,7 +4,8 @@ import axios from "axios";
 import config from "../config/config";
 import { createData, loadCollection, updateData } from "./dataManagement";
 import {
-  maxwidthInput,
+  screenWidthInput,
+  screenHeightInput,
   newScreenButton,
   newScreenForm,
   previewScreen,
@@ -21,13 +22,27 @@ data-maxwidth=${data.maxwidth}
 data-default-height=${data.defaultHeight} 
 class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${data.strapid
   }>
-<span class="name">${data.strapid}</span>
-<span class="width">w: ${data.maxwidth}</span>
-<span class="height">h: ${data.defaultHeight}</span>
-<span class="remove">R</span>
+<span class="name">#${data.strapid}</span>
+<span class="width">Width: ${data.maxwidth}</span>
+<span class="height">Height: ${data.defaultHeight}</span>
+ <span class="remove">R</span>
 </li>`;
 
+// ${data.default ? "" : `<span class="remove">R</span>`}
 async function manageStyleSheets() {
+  document.querySelector("#fullPageWatcher").addEventListener("click", () => {
+    previewScreen.classList.toggle("fullscreen");
+  });
+
+  // check for existing stylesheet with the following width/height
+
+  // if there is no stylesheet, createone
+  // by default, else activate one
+
+  // set default stylesheet if it doesnt exist
+
+  // first screens:
+
   // load all stylesheet. TODO: only load filtered stylesheets!
   // loadStyleSheet(sequenceNumber.innerText);
 
@@ -37,9 +52,8 @@ async function manageStyleSheets() {
   /*remove a stylesheet*/
   screensList.addEventListener("click", function(event) {
     if (event.target.classList == "remove") {
-      // removeStylesheet(event.target);
+      removeStylesheet(event.target);
       event.target.closest("li").classList.toggle("disabled");
-
     } else if (event.target.closest("li")) {
       activateStylesheet(event.target.closest("li"));
       resizePreview(
@@ -73,10 +87,9 @@ async function manageStyleSheets() {
     // if (!validateInputs()) return;
     // get the data from the form and from the inputs
     const data = {
-      maxwidth: Number(maxwidthInput.value),
+      maxwidth: Number(screenWidthInput.value),
       sequenceId: sequenceNumber.textContent,
-      defaultHeight: previewScreen.dataset.height,
-
+      defaultHeight: Number(screenHeightInput.value),
     };
 
     // create the stylesheet
@@ -93,6 +106,55 @@ async function manageStyleSheets() {
     insertStylesheetToList(responsedata);
     // use that attribute to manipulate the css you need
   });
+  kickstartStylesheet();
+}
+
+async function kickstartStylesheet() {
+  // onloading, check if there is the following screen:
+  // https://gs.statcounter.com/screen-resolution-stats/
+  // screenwidth: resolution de base
+  // ratio de base
+  // screen: 360 * 800
+
+  // 1 stylesheet per size per sequence
+  // 1 set of css rule per object per stylesheet
+
+  // tablet: 1024 * 768
+  // tablev: 768 * 1024
+  // desktop: 1920 * 1080 (found less for smaller screen?)
+  // desktop: 1368 * 768 (found less for smaller screen?)
+  // default = not removable, add class
+
+  const resolutions = [
+    { maxwidth: "1024", defaultHeight: "768", default: true },
+    { maxwidth: "768", defaultHeight: "1024", default: true },
+    { maxwidth: "1920", defaultHeight: "1080", default: true },
+    { maxwidth: "1368", defaultHeight: "768", default: true },
+  ];
+
+  // check stylesheet
+
+  console.log("show now", screensList);
+  if ((screensList.length = 1)) {
+    resolutions.map(async (rez) => {
+      const response = await createData(serverUrl, "stylesheets", rez);
+      if (!response.data) return console.log(`nothing got saved`);
+
+      // add stylesheet to the sequence,
+      const responsedata = response.data.data.attributes;
+      const strapid = response.data.data.id;
+
+      previewScreen.dataset.screensize = strapid;
+      responsedata.strapid = response.data.data.id;
+
+      insertStylesheetToList(responsedata);
+    });
+
+    console.log("add some stylesheet now!");
+  }
+
+  // on load check if the table with the content is empty
+  // if empty, add stylesheet
 }
 
 function insertStylesheetToList(data) {
@@ -137,6 +199,9 @@ function addStyleSheetToList(data) {
   // find where to place the stylesheet base on size
   // get the max-height() and place the element just before the bigger screen
 
+  console.log("disable", data.disabled);
+  // don’t show the removed stylesheet.
+  if (data.disabled) return;
   screensList.insertAdjacentHTML(
     "beforeend",
     stylesheetNewEl(data, itemclasses),
@@ -154,10 +219,6 @@ function changeOrientation(previewEl) {
   const height = previewEl.style.getPropertyValue("height");
   previewEl.style.setProperty("width", height);
   previewEl.style.setProperty("height", width);
-}
-
-function fullPageWatcher(preview) {
-  preview.classList.toggle("fullscreen");
 }
 
 function resizePreview(previewEl, width, height, strapid) {
@@ -181,25 +242,26 @@ function activateStylesheet(stylesheet) {
 }
 
 //resize event observer!
-function previewResize() {
-  const screens = document.querySelector("#previewScreen");
-  const screenshotObserver = new ResizeObserver((screenshots) => {
-    for (const screenshot of screenshots) {
-      if (screenshot.contentBoxSize) {
-        screens.forEach((screen) => {
-          screen.dataset.width = Math.round(
-            screenshot.contentBoxSize[0].inlineSize,
-          );
-          screen.dataset.height = Math.round(
-            screenshot.contentBoxSize[0].blockSize * 0.9,
-          );
-        });
-      }
-      // screenshot.dataset.width = screenshot.contentBoxSize
-    }
-  });
-  screenshotObserver.observe(screen);
-}
+//// this doesnt seem to be used :think:
+// function previewResize() {
+//   const screens = document.querySelector("#previewScreen");
+//   const screenshotObserver = new ResizeObserver((screenshots) => {
+//     for (const screenshot of screenshots) {
+//       if (screenshot.contentBoxSize) {
+//         screens.forEach((screen) => {
+//           screen.dataset.width = Math.round(
+//             screenshot.contentBoxSize[0].inlineSize,
+//           );
+//           screen.dataset.height = Math.round(
+//             screenshot.contentBoxSize[0].blockSize * 0.9,
+//           );
+//         });
+//       }
+//       // screenshot.dataset.width = screenshot.contentBoxSize
+//     }
+//   });
+//   screenshotObserver.observe(screen);
+// }
 
 // add image → save dataset
 // move image → save dataset
@@ -221,21 +283,37 @@ function previewResize() {
 
 // function changePreviewSize(width, height) {}
 
-// async function removeStylesheet(target) {
-//   const id = target.closest("li").dataset.strapid;
-//
-//   const data = {
-//     disabled: true,
-//   };
-//
-//   const response = await updateData(serverUrl, "stylesheets", data, id);
-//   c
-// }
+async function removeStylesheet(target) {
+  const id = target.closest("li").dataset.strapid;
+
+  const data = {
+    disabled: true,
+  };
+
+  const response = await updateData(serverUrl, "stylesheets", data, id);
+  console.log(response);
+}
 
 export {
   changeOrientation,
-  fullPageWatcher,
   resizePreview,
   manageStyleSheets,
   addStyleSheetToList,
 };
+
+// bring back from app.js
+// resize the preview (should )
+
+// document.querySelectorAll(".previewResizer").forEach((resizeButton) => {
+//   resizeButton.addEventListener("click", () => {
+//     resizePreview(
+//       previewScreen,
+//       resizeButton.dataset.previewWidth,
+//       resizeButton.dataset.previewHeight,
+//     );
+//   });
+// });
+
+// document.querySelector("#orientationChanger").addEventListener("click", () => {
+//   changeOrientation(previewScreen);
+// });

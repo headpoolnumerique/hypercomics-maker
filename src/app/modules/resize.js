@@ -1,10 +1,12 @@
-import { previewScreen, anchors, maxwidthInput, defaultHeight } from "./selectors.js";
+import {
+  previewScreen,
+  anchors,
+  screenRatioInput,
+  screenWidthInput,
+  screenHeightInput,
+} from "./selectors.js";
 
 // the code that describe what happens when a new size is found
-
-const inputScreenWidth = document.querySelector("#screenWidth");
-const inputScreenHeight = document.querySelector("#screenHeight");
-const inputRatio = document.querySelector("#screenRatio");
 
 // responsive screen
 // function createSize() {
@@ -54,13 +56,16 @@ function getSize() {
         let newHeight = Math.round(screenshot.contentBoxSize[0].blockSize);
 
         // update ui
-        inputScreenWidth.value = newWidth;
-        inputScreenHeight.value = newHeight;
+        // screenWidthInput.value = newWidth;
+        // screenHeightInput.value = newHeight;
 
+        //update the ui
         //set the new add screen wax width
-        maxwidthInput.value = newWidth;
-        defaultHeight.value = newHeight;
-
+        screenWidthInput.value = newWidth;
+        screenHeightInput.value = newHeight;
+        console.log(screenRatioInput);
+        screenRatioInput.value = (newWidth / newHeight).toFixed(2);
+        console.log(`${newWidth / newHeight}`);
 
         // instead of the ratio tell if it’s portrait or landscape
         // and save that information
@@ -68,9 +73,8 @@ function getSize() {
         previewScreen.dataset.width = newWidth;
         previewScreen.dataset.height = newHeight;
 
-
         // let use the input ratio to generate the css.
-        inputRatio.value = newHeight > newWidth ? "portrait" : "landscape";
+        // .value = newHeight > newWidth ? "portrait" : "landscape";
       }
     }
   });

@@ -36,44 +36,31 @@
         style="top: 30%; left: 30%"
         class="moveable block-ui resizable"
       >
-        <h2>Screen sizes & strylesheet</h2>
+        <h2>Screen sizes & stylesheet</h2>
 
         <button id="orientationChanger">change orientation</button>
         <button id="fullPageWatcher">fullpage</button>
-        <button
-          class="previewResizer"
-          data-preview-height="960"
-          data-preview-width="640"
-        >
-          Mobile V
-        </button>
-        <button
-          class="previewResizer"
-          data-preview-height="640"
-          data-preview-width="960"
-        >
-          Mobile H
-        </button>
+
         <form id="screensform">
           <label for="screenwidth">
-            <span>max-width</span>
+            <span>Max-width</span>
             <input
               min="200"
               type="number"
               name="screenwidth"
-              id="screenwidth"
+              id="screenWidth"
             />
           </label>
-          <label for="screenDefaultHeight"
-            ><span>default height</span>
-            <input
-              disabled
-              type="number"
-              name="screenDefaultHeight"
-              id="screenDefaultHeight"
-            />
+          <label for="screenHeight"
+            ><span>Max height</span>
+            <input type="number" name="screenHeight" id="screenHeight" />
+            <label for="screenRatio"
+              ><span>Ratio</span>
+              <input name="screenRatio" id="screenRatio" />
+              <!-- type="text" -->
+            </label>
+            <button type="submit" id="newscreen">add screen</button>
           </label>
-          <button type="submit" id="newscreen">add screen</button>
         </form>
         <ul id="screens">
           <li class="header">
@@ -94,7 +81,9 @@
       </section>
 
       <section id="contextualUI" class="hide moveable block-ui">
-        <h2>contextual</h2>
+
+        <h2>Contextual</h2>
+
         <!-- // contextual should be hidden and moved next to the element the user is moving -->
         <section id="main">
           <label for="inputwidth">width</label>
@@ -104,14 +93,13 @@
           <input id="inputheight" name="height" type="number" step="0.01" />
 
           <!-- Locations and anchors -->
-
-          <h2>location</h2>
+          <h2>Location</h2>
           <label for="inputx">x</label>
           <input id="inputx" name="x" type="number" step="0.01" />
 
           <label for="inputy">y</label>
           <input id="inputy" name="y" type="number" step="0.01" />
-          <h2>vertical anchor</h2>
+          <h2>Vertical Anchor</h2>
           <label>
             <!-- / save to anchor veritcal -->
             <span>top</span>

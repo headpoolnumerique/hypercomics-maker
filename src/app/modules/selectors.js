@@ -14,8 +14,9 @@ const zindexInteraction = document.querySelector(".zindex");
 const plandelay = document.querySelector("#minimaldelay");
 
 /*screen size*/
-const maxwidthInput = document.querySelector("#screenwidth");
-const defaultHeight = document.querySelector("#screenDefaultHeight");
+const screenWidthInput = document.querySelector("#screenWidth");
+const screenHeightInput = document.querySelector("#screenHeight");
+const screenRatioInput = document.querySelector("#screenRatio");
 const screensList = document.querySelector("#screens");
 const newScreenUi = document.querySelector("#screen-ui");
 const newScreenForm = document.querySelector("#screensform");
@@ -49,8 +50,9 @@ export {
   rightAnchorRadio,
   bottomAnchorRadio,
   leftAnchorRadio,
-  maxwidthInput,
-  defaultHeight,
+  screenWidthInput,
+  screenHeightInput,
+  screenRatioInput,
   screensList,
   newScreenButton,
   newScreenForm,

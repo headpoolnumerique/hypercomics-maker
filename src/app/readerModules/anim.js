@@ -6,7 +6,7 @@ async function readingTools() {
   window.addEventListener("keyup", function (e) {
     const hashElement = document.querySelector(window.location.hash);
     const delay = hashElement.dataset.storyDelay || 0;
-    console.log(delay);
+    // console.log(delay);
     if (delay && !canMoveForward) {
       return; // If moveForward is not allowed, exit early
     }

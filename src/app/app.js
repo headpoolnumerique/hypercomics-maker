@@ -1,9 +1,4 @@
 import {
-  changeOrientation,
-  resizePreview,
-  fullPageWatcher,
-} from "./modules/preview.js";
-import {
   deletePlan,
   deleteAllPlans,
   addPlan,
@@ -45,24 +40,8 @@ import { updateDelayUI } from "./modules/delay.js";
 
 // list all the things
 //Event and binds
-
-document.querySelectorAll(".previewResizer").forEach((resizeButton) => {
-  resizeButton.addEventListener("click", () => {
-    resizePreview(
-      previewScreen,
-      resizeButton.dataset.previewWidth,
-      resizeButton.dataset.previewHeight,
-    );
-  });
-});
-
-document.querySelector("#orientationChanger").addEventListener("click", () => {
-  changeOrientation(previewScreen);
-});
-
-document.querySelector("#fullPageWatcher").addEventListener("click", () => {
-  fullPageWatcher(previewSpace);
-});
+//
+//
 
 //show hide montage
 document.querySelector("#showMontage").addEventListener("click", () => {

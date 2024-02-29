@@ -88,7 +88,7 @@ async function startup(url = document.location.href) {
 
     // sort: show all
     const orderedstylesheets = stylesheets.sort((a, b) => {
-      console.log(a.attributes.maxwidth);
+      // console.log(a.attributes.maxwidth);
       return a.attributes.maxwidth - b.attributes.maxwidth;
     });
     orderedstylesheets.forEach((stylesheet) => {
@@ -97,7 +97,7 @@ async function startup(url = document.location.href) {
       addStyleSheetToList(stylesheet.attributes);
     });
 
-    console.log(response.data.data);
+    // console.log(response.data.data);
 
     fillSequence(response.data.data.id);
   }
@@ -124,7 +124,7 @@ async function fillSequence(sequence) {
   }
   //create the plan
   plans.data.forEach(async (plan, index) => {
-    console.log("renderPlan", plan);
+    // console.log("renderPlan", plan);
     await renderPlan(
       plan,
       montageList,
@@ -148,7 +148,7 @@ async function updateSequenceMeta(id, title) {
 }
 
 async function fillPlan(plan) {
-  console.log(`fill the plan ${plan.id} on load from the objects`);
+  // console.log(`fill the plan ${plan.id} on load from the objects`);
 
   // fill the plan with all the existing images
   // find the plan
