@@ -1,6 +1,9 @@
 img {
   /*keep object fit contain and allow resize of the block*/
   object-fit: contain;
+
+  /*avoid using the height to keep the right size! */
+  height: auto !important;
 }
 
 #layer-space {

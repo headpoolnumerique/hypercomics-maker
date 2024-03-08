@@ -1,9 +1,10 @@
-/* when clicking on a button, create a screen, and set the right size#height*/
+/* when crcking on a button, create a screen, and set the right size#height*/
 
 import axios from "axios";
 import config from "../config/config";
 import { createData, loadCollection, updateData } from "./dataManagement";
 import {
+  populateStylesheetButton,
   screenWidthInput,
   screenHeightInput,
   newScreenButton,
@@ -30,6 +31,14 @@ class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${data.str
 
 // ${data.default ? "" : `<span class="remove">R</span>`}
 async function manageStyleSheets() {
+  
+
+
+
+
+
+  populateStylesheetButton.addEventListener("click", kickstartStylesheet)
+ 
   document.querySelector("#fullPageWatcher").addEventListener("click", () => {
     previewScreen.classList.toggle("fullscreen");
   });
@@ -82,6 +91,7 @@ async function manageStyleSheets() {
     }
   }
 
+  // add stylesheet
   newScreenForm.addEventListener("submit", async function(event) {
     event.preventDefault();
     // if (!validateInputs()) return;
@@ -103,10 +113,10 @@ async function manageStyleSheets() {
     previewScreen.dataset.screensize = strapid;
     responsedata.strapid = response.data.data.id;
 
-    insertStylesheetToList(responsedata);
+    await insertStylesheetToList(responsedata);
+
     // use that attribute to manipulate the css you need
   });
-  kickstartStylesheet();
 }
 
 async function kickstartStylesheet() {
@@ -125,16 +135,17 @@ async function kickstartStylesheet() {
   // desktop: 1368 * 768 (found less for smaller screen?)
   // default = not removable, add class
 
+  // add resolution you want here and it will create them by default
   const resolutions = [
-    { maxwidth: "1024", defaultHeight: "768", default: true },
-    { maxwidth: "768", defaultHeight: "1024", default: true },
-    { maxwidth: "1920", defaultHeight: "1080", default: true },
-    { maxwidth: "1368", defaultHeight: "768", default: true },
+    { maxwidth: "360", defaultHeight: "880", default: true , sequenceId: sequenceNumber.textContent },
+    { maxwidth: "1024", defaultHeight: "768", default: true , sequenceId: sequenceNumber.textContent },
+    { maxwidth: "768", defaultHeight: "1024", default: true , sequenceId: sequenceNumber.textContent },
+    { maxwidth: "1920", defaultHeight: "1080", default: true , sequenceId: sequenceNumber.textContent },
+    { maxwidth: "1368", defaultHeight: "768", default: true , sequenceId: sequenceNumber.textContent },
   ];
 
   // check stylesheet
 
-  console.log("show now", screensList);
   if ((screensList.length = 1)) {
     resolutions.map(async (rez) => {
       const response = await createData(serverUrl, "stylesheets", rez);
@@ -157,7 +168,7 @@ async function kickstartStylesheet() {
   // if empty, add stylesheet
 }
 
-function insertStylesheetToList(data) {
+async function insertStylesheetToList(data) {
   console.log(data);
   const itemclasses = data.disabled ? "disabled" : "";
   // find where to place the stylesheet base on size
@@ -195,6 +206,7 @@ function insertStylesheetToList(data) {
 }
 
 function addStyleSheetToList(data) {
+  console.log(data)
   const itemclasses = data.disabled ? "disabled" : "";
   // find where to place the stylesheet base on size
   // get the max-height() and place the element just before the bigger screen
@@ -317,3 +329,22 @@ export {
 // document.querySelector("#orientationChanger").addEventListener("click", () => {
 //   changeOrientation(previewScreen);
 // });
+//
+
+async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
+  return axios
+    .get(
+      `${serverUrl}/api/${collection}/${id}${
+        populatedeep ? `?populate=deep,5` : ``
+      }`
+    )
+    .then((response) => {
+      // console.log(response)
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
+}
+
+

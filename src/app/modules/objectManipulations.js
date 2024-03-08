@@ -105,13 +105,6 @@ function moveToLayer(object, plan, position) {
   // move the element on the right layer (moveAfter, moveBefore)
 }
 
-function writeCSS(plan, object, rules) {
-  // where to save the css?
-  // check the asset
-  // asset has
-  // create the stylesheet
-  // assetId = planID + assetId
-}
 
 /*
 deteleAsset

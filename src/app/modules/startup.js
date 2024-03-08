@@ -94,6 +94,7 @@ async function startup(url = document.location.href) {
     orderedstylesheets.forEach((stylesheet) => {
       stylesheet.attributes.strapid = stylesheet.id;
       // add the stylesheets to the list
+      console.log("noe", stylesheet)
       addStyleSheetToList(stylesheet.attributes);
     });
 

@@ -21,6 +21,7 @@ const screensList = document.querySelector("#screens");
 const newScreenUi = document.querySelector("#screen-ui");
 const newScreenForm = document.querySelector("#screensform");
 const newScreenButton = document.querySelector("#newscreen");
+const populateStylesheetButton = document.querySelector("#populateStylesheet")
 
 /*in the future*/
 const topAnchorRadio = document.querySelector("#topAnchor");
@@ -57,4 +58,5 @@ export {
   newScreenButton,
   newScreenForm,
   newScreenUi,
+populateStylesheetButton
 };
