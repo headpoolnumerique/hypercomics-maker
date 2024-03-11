@@ -29,165 +29,169 @@ main#appWrap {
 #preview #previewScreen {
   width: var(--preview-width);
   height: var(--preview-height);
-  border: 1px solid var(--color-body);
+  /* border: 1px solid var(--color-body); */
   margin: auto;
   background: var(--color-previewScreen, unset);
   overflow: hidden;
   position: relative;
   grid-column: 1/-1;
-  box-shadow: 0 0 0 10px rgb(200, 200, 200, 0.2);
-  resize: both;
-}
+  box-shadow: 0 0 0 1px var(--color-body, black), 0 0 0 10px rgb(200, 200, 200, 0.2);
+      resize: both;
+  }
 
-#preview #previewScreen::before {
-  position: absolute;
-  content: "" attr(data-width) "px × " attr(data-height) "px";
-  position: absolute;
-  text-align: right;
-  width: 100%;
-  margin: 0;
-  display: block;
-  bottom: 0;
-  font-size:.7em;
-  left: 0;
-  background: lightgrey;
-  padding: .3em .5ch;
-  width: max-content; 
-  z-index: 1em;
-}
+  #preview #previewScreen::before {
+    position: absolute;
+    content: "" attr(data-width) "px × " attr(data-height) "px";
+    position: absolute;
+    text-align: right;
+    width: 100%;
+    margin: 0;
+    display: block;
+    bottom: 0;
+    font-size:.7em;
+    left: 0;
+    background: lightgrey;
+    padding: .3em .5ch;
+    width: max-content;
+    z-index: 1em;
+  }
 
-#preview.fullscreen #previewScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  width: 100vw !important;
-  height: 100vh !important;
-}
+  #preview.fullscreen #previewScreen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
 
-#preview.portrait {
-  --min-width: 400px;
-  --min-height: 700px;
-}
-#preview.landscape {
-  --min-width: 800px;
-  --min-height: 450px;
-}
+  #preview.portrait {
+    --min-width: 400px;
+    --min-height: 700px;
+  }
 
-/* /plan */
-#previewScreen article {
-  display: none;
-}
+  #preview.landscape {
+    --min-width: 800px;
+    --min-height: 450px;
+  }
 
-#previewScreen article.shown {
-  display: block;
-}
+  /* /plan */
+  #previewScreen article {
+    display: none;
+  }
 
-/* pelure d’oignon */
+  #previewScreen article.shown {
+    display: block;
+  }
 
-.showPrevious #previewScreen article.oldshown {
-  display: block !important;
-}
-.showPrevious #previewScreen article.oldshown * {
-  opacity: 0.4;
-  /* background: cyan; */
-  mix-blend-mode: multiply;
-}
-.showPrevious .oldshown + .shown {
-  opacity: 0.6;
-}
+  /* pelure d’oignon */
 
-/*keep the button up.*/
+  .showPrevious #previewScreen article.oldshown {
+    display: block !important;
+  }
 
-.fullscreen #fullPageWatcher {
-  position: fixed;
-  z-index: 1;
-  display: block;
-  top: 0;
-  left: 0;
-  z-index: 10000;
-}
+  .showPrevious #previewScreen article.oldshown * {
+    opacity: 0.4;
+    /* background: cyan; */
+    mix-blend-mode: multiply;
+  }
 
-/*II. montage*/
+  .showPrevious .oldshown + .shown {
+    opacity: 0.6;
+  }
 
-#banc-montage {
-  background: var(--color-montage-order, white);
-  max-width: 800px;
-}
-#banc-montage.show {
-  display: unset;
-  min-height: 200px;
-}
+  /*keep the button up.*/
 
-#planOrder {
-  position: fixed;
-  bottom: 0;
-  list-style-type: none;
-  display: flex;
-  padding-left: 0;
-  margin: 0 auto;
-  gap: 1ch;
-  flex-wrap: wrap;
-  width: 100%;
-  align-items: space-around;
-  height: 3em;
-  /* overflow-y: auto; */
-  font-size: 0.8em;
-  padding-top: 12px;
-  border-top: 1px solid grey;
-  background: white;
-  overflow-y: scroll;
-}
+  .fullscreen #fullPageWatcher {
+    position: fixed;
+    z-index: 1;
+    display: block;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+  }
 
-#planOrder li a {
-  color: inherit;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-  text-decoration: none;
-}
+  /*II. montage*/
 
-#planOrder {
-  counter-reset: planNum;
-}
+  #banc-montage {
+    background: var(--color-montage-order, white);
+    max-width: 800px;
+  }
 
-#planOrder li a::after {
-  content: counter(planNum);
-  counter-increment: planNum;
-}
+  #banc-montage.show {
+    display: unset;
+    min-height: 200px;
+  }
 
-#planOrder li a.selected {
-  color: var(--color-main);
-  font-weight: 900;
-}
+  #planOrder {
+    position: fixed;
+    bottom: 0;
+    list-style-type: none;
+    display: flex;
+    padding-left: 0;
+    margin: 0 auto;
+    gap: 1ch;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: space-around;
+    height: 3em;
+    /* overflow-y: auto; */
+    font-size: 0.8em;
+    padding-top: 12px;
+    border-top: 1px solid grey;
+    background: white;
+    overflow-y: scroll;
+  }
 
-/* 3. the contextual menu */
+  #planOrder li a {
+    color: inherit;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    text-decoration: none;
+  }
 
-#contextualUI {
-  font-size: 0.8em;
-  top: 2em;
-  left: 2em;
-  min-height: auto;
-  z-index: 1000;
-  background: white;
-  position: fixed;
-  /* display: none; */
-}
+  #planOrder {
+    counter-reset: planNum;
+  }
 
-#contextualUI.show .manip {
-  display: flex;
-  flex-direction: column;
-}
+  #planOrder li a::after {
+    content: counter(planNum);
+    counter-increment: planNum;
+  }
 
-#contextualUI .manip button {
-  text-transform: uppercase;
-  width: 80%;
-  margin: 1em auto;
-}
+  #planOrder li a.selected {
+    color: var(--color-main);
+    font-weight: 900;
+  }
 
-.moveButton {
-  position: absolute;
-  top: 50%;
-}
+  /* 3. the contextual menu */
+
+  #contextualUI {
+    font-size: 0.8em;
+    top: 2em;
+    left: 2em;
+    min-height: auto;
+    z-index: 1000;
+    background: white;
+    position: fixed;
+    /* display: none; */
+  }
+
+  #contextualUI.show .manip {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #contextualUI .manip button {
+    text-transform: uppercase;
+    width: 80%;
+    margin: 1em auto;
+  }
+
+  .moveButton {
+    position: absolute;
+    top: 50%;
+  }
