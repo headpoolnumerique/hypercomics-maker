@@ -18,10 +18,11 @@ const serverUrl = config.strapi.url;
 
 // the output of the style element
 const stylesheetNewEl = (data, itemclasses, newest) => `
-<li data-strapid="${data.strapid}" 
+<li
+data-strapid="${data.strapid}" 
 data-maxwidth=${data.maxwidth} 
 data-default-height=${data.defaultHeight} 
-class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${
+class="stylesheet ${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${
   data.strapid
 }>
 <span class="name">#${data.strapid}</span>
@@ -32,6 +33,12 @@ class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${
 
 // ${data.default ? "" : `<span class="remove">R</span>`}
 async function manageStyleSheets() {
+  // console.log(screensList.querySelectorAll(".stylesheet"))
+  if (screensList.querySelectorAll(".stylesheet").length < 1) {
+    console.log("now");
+    await kickstartStylesheet();
+  }
+
   populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
   document.querySelector("#fullPageWatcher").addEventListener("click", () => {
@@ -178,23 +185,21 @@ async function kickstartStylesheet() {
 
   // check stylesheet
 
-  if ((screensList.length = 1)) {
-    resolutions.map(async (rez) => {
-      const response = await createData(serverUrl, "stylesheets", rez);
-      if (!response.data) return console.log(`nothing got saved`);
+  resolutions.map(async (rez) => {
+    const response = await createData(serverUrl, "stylesheets", rez);
+    if (!response.data) return console.log(`nothing got saved`);
 
-      // add stylesheet to the sequence,
-      const responsedata = response.data.data.attributes;
-      const strapid = response.data.data.id;
+    // add stylesheet to the sequence,
+    const responsedata = response.data.data.attributes;
+    const strapid = response.data.data.id;
 
-      previewScreen.dataset.screensize = strapid;
-      responsedata.strapid = response.data.data.id;
+    previewScreen.dataset.screensize = strapid;
+    responsedata.strapid = response.data.data.id;
 
-      insertStylesheetToList(responsedata);
-    });
+    insertStylesheetToList(responsedata);
+  });
 
-    console.log("add some stylesheet now!");
-  }
+  console.log("add some stylesheet now!");
 
   // on load check if the table with the content is empty
   // if empty, add stylesheet

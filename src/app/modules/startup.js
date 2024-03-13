@@ -20,7 +20,7 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
-import { getSize, setAnchor } from "./resize.js";
+import { getSize, setAnchor, updateStylesheet } from "./resize.js";
 import {
   addStyleSheetToList,
   manageStyleSheets,
@@ -103,15 +103,17 @@ async function startup(url = document.location.href) {
 
     // get the first stylesheet and activate it.
     let stylesheetToActivate = document.querySelector("#screens .header + li");
-    stylesheetToActivate.classList.add("activeStylesheet");
+    stylesheetToActivate?.classList.add("activeStylesheet");
 
-    // resize the preview once activated 
-    resizePreview(
-      previewScreen,
-      stylesheetToActivate.dataset.maxwidth,
-      stylesheetToActivate.dataset.defaultHeight,
-      stylesheetToActivate.dataset.strapid,
-    );
+    if (stylesheetToActivate) {
+      // resize the preview once activated
+      resizePreview(
+        previewScreen,
+        stylesheetToActivate.dataset.maxwidth,
+        stylesheetToActivate.dataset.defaultHeight,
+        stylesheetToActivate.dataset.strapid,
+      );
+    }
     // activateStylesheet(stylesheetToActivate);
     // activate the stylesheet!
     //
@@ -132,6 +134,7 @@ async function startup(url = document.location.href) {
   getSize();
   setAnchor();
   manageStyleSheets();
+  updateStylesheet();
   // recreate the layer list from the selected plan
 }
 
@@ -174,7 +177,7 @@ async function fillPlan(plan) {
   // find the plan
   let planToFill = preview.querySelector(`#plan-${plan.id}`);
   let objectsToFillWith = plan.attributes.objects?.data;
-  console.log(plan.attributes, objectsToFillWith);
+  // console.log(plan.attributes, objectsToFillWith);
 
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
