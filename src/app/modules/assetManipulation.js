@@ -32,15 +32,17 @@ async function interactObject(object) {
     object.dataset.objectid,
   );
 
+  console.log("de", declarationIdExist)
+
   if (declarationIdExist) {
     console.log("plouf", declarationIdExist);
     declarationId = declarationIdExist.data.data.id;
-    // object.dataset.newDecId = declarationIdExist.data.id;
+    object.dataset.newDecId = declarationIdExist.data.id;
   }
   // create the declartion if there was none
   else {
     await axios
-      .post(`${config.strapi.url}/api/declarations?populate=deep`, {
+      .post(`${config.strapi.url}/api/declarations?populate=deep,8`, {
         data: {
           stylesheet: stylesheetId,
           object: object.dataset.objectid,
@@ -481,7 +483,7 @@ export { deleteObject, interactObject, moveToLayer, updateFromUi, updateTheUI };
 async function isThereDeclaration(stylesheetId, objectId) {
   try {
     const response = await axios.get(
-      `${config.strapi.url}/api/declarations?filters[stylesheet][id][$eq]=${stylesheetId}&filters[object][id][$eq]=${objectId}`,
+      `${config.strapi.url}/api/declarations?filters[stylesheet][id][$eq]=${stylesheetId}&filters[object][id][$eq]=${objectId}&populate=deep,8`,
     );
 
     if (response.data.meta.pagination.total > 1) {

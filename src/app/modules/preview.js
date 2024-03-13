@@ -283,6 +283,8 @@ function activateStylesheet(stylesheet) {
   screensList
     .querySelector(".activeStylesheet")
     ?.classList.remove("activeStylesheet");
+  // deselect any object when changing stylesheet
+  document.querySelector(".asset-selected")?.classList.remove("asset-selected");
   stylesheet.classList.add("activeStylesheet");
 
   // pour une raison inconnue, les layers disparaissent à certaine moment après un double click

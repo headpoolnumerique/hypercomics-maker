@@ -87,19 +87,25 @@ function getSize() {
 export { getSize, setAnchor, updateStylesheet };
 
 async function updateStylesheet(stylesheetLi) {
+  // get the selected stylesheet if there is one
   const stylesheet = stylesheetLi
     ? stylesheetLi
     : document.querySelector(".activeStylesheet");
-  console.log("dang");
 
-  if(!stylesheet) return console.log("aint no stylesheet")
+  if (!stylesheet) return console.log("aint no stylesheet");
 
   const stylesheetId = stylesheet.dataset.strapid;
 
   axios
-    .get(`${config.strapi.url}/api/stylesheets/${stylesheetId}?populate=deep,5`)
+    .get(`${config.strapi.url}/api/stylesheets/${stylesheetId}?populate=deep,8`)
     .then((response) => {
-      console.log(response.data.data.attributes.declarations);
+      response.data.data.attributes.declarations.data.forEach((declaration) => {
+        console.log(declaration)
+        console.log(document.querySelector(`[data-objectid="${declaration.attributes.object.data.id}"]`))
+        document.querySelector(
+          `[data-objectid="${declaration.attributes.object.data.id}"]`,
+        ).style = declaration.attributes.cssrules;
+      });
     });
 
   // get stylesheet data
