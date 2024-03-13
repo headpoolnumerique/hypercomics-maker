@@ -21,8 +21,9 @@ const stylesheetNewEl = (data, itemclasses, newest) => `
 <li data-strapid="${data.strapid}" 
 data-maxwidth=${data.maxwidth} 
 data-default-height=${data.defaultHeight} 
-class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${data.strapid
-  }>
+class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${
+  data.strapid
+}>
 <span class="name">#${data.strapid}</span>
 <span class="width">Width: ${data.maxwidth}</span>
 <span class="height">Height: ${data.defaultHeight}</span>
@@ -31,14 +32,8 @@ class="${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${data.str
 
 // ${data.default ? "" : `<span class="remove">R</span>`}
 async function manageStyleSheets() {
-  
+  populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
-
-
-
-
-  populateStylesheetButton.addEventListener("click", kickstartStylesheet)
- 
   document.querySelector("#fullPageWatcher").addEventListener("click", () => {
     previewScreen.classList.toggle("fullscreen");
   });
@@ -59,7 +54,7 @@ async function manageStyleSheets() {
   /*create a screen = create a stylesheet*/
 
   /*remove a stylesheet*/
-  screensList.addEventListener("click", function(event) {
+  screensList.addEventListener("click", function (event) {
     if (event.target.classList == "remove") {
       removeStylesheet(event.target);
       event.target.closest("li").classList.toggle("disabled");
@@ -92,7 +87,7 @@ async function manageStyleSheets() {
   }
 
   // add stylesheet
-  newScreenForm.addEventListener("submit", async function(event) {
+  newScreenForm.addEventListener("submit", async function (event) {
     event.preventDefault();
     // if (!validateInputs()) return;
     // get the data from the form and from the inputs
@@ -137,11 +132,36 @@ async function kickstartStylesheet() {
 
   // add resolution you want here and it will create them by default
   const resolutions = [
-    { maxwidth: "360", defaultHeight: "880", default: true , sequenceId: sequenceNumber.textContent },
-    { maxwidth: "1024", defaultHeight: "768", default: true , sequenceId: sequenceNumber.textContent },
-    { maxwidth: "768", defaultHeight: "1024", default: true , sequenceId: sequenceNumber.textContent },
-    { maxwidth: "1920", defaultHeight: "1080", default: true , sequenceId: sequenceNumber.textContent },
-    { maxwidth: "1368", defaultHeight: "768", default: true , sequenceId: sequenceNumber.textContent },
+    {
+      maxwidth: "360",
+      defaultHeight: "880",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    {
+      maxwidth: "1024",
+      defaultHeight: "768",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    {
+      maxwidth: "768",
+      defaultHeight: "1024",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    {
+      maxwidth: "1920",
+      defaultHeight: "1080",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    {
+      maxwidth: "1368",
+      defaultHeight: "768",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
   ];
 
   // check stylesheet
@@ -206,12 +226,10 @@ async function insertStylesheetToList(data) {
 }
 
 function addStyleSheetToList(data) {
-  console.log(data)
   const itemclasses = data.disabled ? "disabled" : "";
   // find where to place the stylesheet base on size
   // get the max-height() and place the element just before the bigger screen
-
-  console.log("disable", data.disabled);
+  // console.log("disable", data.disabled);
   // don’t show the removed stylesheet.
   if (data.disabled) return;
   screensList.insertAdjacentHTML(
@@ -336,7 +354,7 @@ async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
     .get(
       `${serverUrl}/api/${collection}/${id}${
         populatedeep ? `?populate=deep,5` : ``
-      }`
+      }`,
     )
     .then((response) => {
       // console.log(response)
@@ -346,5 +364,3 @@ async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
       return err;
     });
 }
-
-

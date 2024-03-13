@@ -6,7 +6,12 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 
-function interactObject(object) {
+async function interactObject(object) {
+  // get the id of the stylesheet to update
+  let stylesheetId =
+    document.querySelector(".activeStylesheet").dataset.strapid;
+
+  // get the id of the sequence
   let sequenceId = Number(
     document.querySelector("#sequenceNumber").textContent,
   );
@@ -19,6 +24,39 @@ function interactObject(object) {
     width: previewScreen.offsetWidth,
   };
 
+  // get the object info here
+
+  let declarationId;
+  let declarationIdExist = await isThereDeclaration(
+    stylesheetId,
+    object.dataset.objectid,
+  );
+
+  if (declarationIdExist) {
+    console.log("plouf", declarationIdExist);
+    declarationId = declarationIdExist.data.data.id;
+    // object.dataset.newDecId = declarationIdExist.data.id;
+  }
+  // create the declartion if there was none
+  else {
+    await axios
+      .post(`${config.strapi.url}/api/declarations?populate=deep`, {
+        data: {
+          stylesheet: stylesheetId,
+          object: object.dataset.objectid,
+        },
+      })
+      .then((response) => {
+        console.log("n", response.data.data.id);
+        object.dataset.newDecId = response.data.data.id;
+      });
+  }
+
+  // if there is no declaration id, create one and get the result id
+  // update the element location and size
+
+  // if declarationId = false
+
   // TODO: wait for the image to appear to attach a interact
   // that position is tricky because if you change the ai while active it moves.
   // get the object anchor point
@@ -27,6 +65,7 @@ function interactObject(object) {
   // let objectAnchor?
 
   let position = { x: object.offsetLeft, y: object.offsetTop };
+
   interact(object)
     .draggable({
       listeners: {
@@ -108,51 +147,35 @@ function interactObject(object) {
               event.target.offsetLeft,
               previewScreenSize.width,
             )}%;`,
-            right: `${100 -
+            right: `${
+              100 -
               percentage(
                 event.target.offsetLeft + event.target.offsetWidth,
                 previewScreenSize.width,
               )
-              }% `,
-            bottom: `${100 -
+            }% `,
+            bottom: `${
+              100 -
               percentage(
                 event.target.offsetTop + event.target.offsetHeight,
                 previewScreenSize.height,
               )
-              }% `,
-            css: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
+            }% `,
+            cssRules: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
           left: ${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width,
-            )}%;`,
-            cssrule: `#sequence-${sequenceId} #${event.target.id}{
-          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
-          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
-          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width,
-            )}%;
-          }`,
+            event.target.offsetLeft,
+            previewScreenSize.width,
+          )}%;`,
           };
 
-          console.log(event.target.dataset.objectId);
-          // addRuleToSequence(sequenceId, planId, data)
+          //update declaration is now the norm. We’ll see if we keep the rest later
           addRuleToObject(event.target.dataset.objectid, data);
+
+          //updateDeclaration
+          updateDeclaration(event.target.dataset.newDecId, data.cssRules);
           // console.log(event.target.closest("#previewScreen"));
-
-          addRuleToStylesheet(
-            event.target.closest("#previewScreen").dataset.screensize,
-            event.target.dataset.objectid,
-            data.css,
-          );
-
-          // add to the object:
-
-          // save to stylesheet
-          // addRuleToStylesheet(previewScreen.dataset.screensize, event.target.dataset.objectid, rules);
         },
       },
     })
@@ -167,21 +190,12 @@ function interactObject(object) {
           // why not aspect ratio from the css height auto?
           // and use only the width of the element?
           // ratio: "preserve",
+          // WE DON’T NEED IT BECAUSE WE FIX THE HEIGHT WITH CSS
         }),
       ],
 
       listeners: {
         start(event) {
-          console.log(event.edges);
-          if (event.edges.top) {
-            // resize from bottom
-          }
-          if (event.edges.bottom) {
-            // resize from top stuck bottom to a specific position, and set the height
-            //
-          }
-          // TO DO: make a graphical view that show the rectangle width and position, margin and bottom / top location
-
           document.querySelector("#inputx").value = percentage(
             event.target.offsetLeft,
             previewScreenSize.width,
@@ -199,7 +213,7 @@ function interactObject(object) {
             previewScreenSize.height,
           );
         },
-        move: function(event) {
+        move: function (event) {
           let { x, y } = event.target.dataset;
 
           x = (parseFloat(x) || 0) + event.deltaRect.left;
@@ -218,9 +232,7 @@ function interactObject(object) {
 
           Object.assign(event.target.dataset, { x, y });
         },
-        end: function(event) {
-          let planId = document.querySelector(".shown").id;
-
+        end: function (event) {
           document.querySelector("#inputx").value = percentage(
             event.target.offsetLeft,
             previewScreenSize.width,
@@ -263,20 +275,20 @@ function interactObject(object) {
               previewScreenSize.width,
             )}%;`,
             // check if the element is anchored top or bottom
-            //
-            cssrule: `#sequence-${sequenceId} #${event.target.id}{
-          width: ${percentage(event.rect.width, previewScreenSize.width)}%;
+            cssRules: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
           left: ${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width,
-            )}%;
-          }`,
+            event.target.offsetLeft,
+            previewScreenSize.width,
+          )}%; `,
           };
 
-          // addRuleToStylesheet(stylesheetId, event.target.dataset.objectid, data);
+          // add ruel to object
           addRuleToObject(event.target.dataset.objectid, data);
+
+          // add rule to declaration (stylesheet)
+          updateDeclaration(event.target.dataset.newDecId, data.cssRules);
         },
       },
     });
@@ -400,49 +412,6 @@ async function deleteObject() {
   ).then(object.remove());
 }
 
-
-// to fix asap
-async function addRuleToStylesheet(
-  screensizeId,
-  objectId,
-  rules,
-  anchorVertical = "top",
-  anchorHorizontal = "left",
-) {
-  console.log("ObjsId", objectId);
-  return axios
-    .put(
-      `${config.strapi.url}/api/stylesheets/${screensizeId}?populate=deep,5`,
-      {
-        data: {
-          rules: [
-            {
-              object: {
-                connect: [
-                  {
-                    object: objectId,
-                    cssrules: rules,
-                    anchorVertical: anchorVertical ? anchorVertical : "top",
-                    anchorHorizontal: anchorHorizontal
-                      ? anchorHorizontal
-                      : "left",
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    )
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
-    .catch((err) => {
-      return err;
-    });
-}
-
 function addRuleToObject(objectid, data) {
   return axios
     .put(`${config.strapi.url}/api/objects/${objectid}?populate=deep,5`, {
@@ -507,63 +476,46 @@ export { deleteObject, interactObject, moveToLayer, updateFromUi, updateTheUI };
 
 // TO DO: resize from the bottom/right edge should stick to the right move
 // this may be impossible. THe example use the translate to define the location. maybe we should keep it.
-function resizeFromTop(event) {
-  // keep the bottom to the place (get the bottom, set the bottom, change the height)
-  let { x, y } = event.target.dataset;
 
-  x = (parseFloat(x) || 0) + event.deltaRect.left;
-  y = (parseFloat(y) || 0) + event.deltaRect.top;
+// if true, return the id of the entry, else return false
+async function isThereDeclaration(stylesheetId, objectId) {
+  try {
+    const response = await axios.get(
+      `${config.strapi.url}/api/declarations?filters[stylesheet][id][$eq]=${stylesheetId}&filters[object][id][$eq]=${objectId}`,
+    );
 
-  Object.assign(event.target.style, {
-    width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
-    height: `${percentage(event.rect.height, previewScreenSize.height)}%`,
-    transform: `translate(${x}px ${y}px)`,
-  });
-
-  Object.assign(event.target.dataset, { x, y });
+    if (response.data.meta.pagination.total > 1) {
+      return response.data;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error fetching declaration:", error);
+    return false;
+  }
 }
 
-function resizeFromBottom(event) {
-  let { x, y } = event.target.dataset;
+async function updateDeclaration(
+  declarationId,
+  cssrules,
+  anchorVertical = "top",
+  anchorHorizontal = "left",
+) {
+  // get the id for the declaration from the response and use this to update the data
 
-  console.log(event);
-  x = (parseFloat(x) || 0) + event.deltaRect.left;
-  y = (parseFloat(y) || 0) + event.deltaRect.top;
-
-  Object.assign(event.target.style, {
-    width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
-    height: `${percentage(event.rect.height, previewScreenSize.height)}%`,
-  });
-
-  Object.assign(event.target.dataset, { x, y });
-}
-
-function resizeFromRight(event) {
-  let { x, y } = event.target.dataset;
-
-  console.log(event);
-  x = (parseFloat(x) || 0) + event.deltaRect.left;
-  y = (parseFloat(y) || 0) + event.deltaRect.top;
-
-  Object.assign(event.target.style, {
-    width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
-    height: `${percentage(event.rect.height, previewScreenSize.height)}%`,
-  });
-
-  Object.assign(event.target.dataset, { x, y });
-}
-
-function resizeFromLeft(event) {
-  let { x, y } = event.target.dataset;
-
-  console.log(event);
-  x = (parseFloat(x) || 0) + event.deltaRect.left;
-  y = (parseFloat(y) || 0) + event.deltaRect.top;
-
-  Object.assign(event.target.style, {
-    width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
-    height: `${percentage(event.rect.height, previewScreenSize.height)}%`,
-  });
-
-  Object.assign(event.target.dataset, { x, y });
+  return axios
+    .put(`${config.strapi.url}/api/declarations/${declarationId}`, {
+      data: {
+        anchorVertical: anchorVertical,
+        anchorHorizontal: anchorHorizontal,
+        cssrules: cssrules,
+      },
+    })
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
 }

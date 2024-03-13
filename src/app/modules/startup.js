@@ -21,7 +21,11 @@ import {
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
 import { getSize, setAnchor } from "./resize.js";
-import { addStyleSheetToList, manageStyleSheets } from "./preview.js";
+import {
+  addStyleSheetToList,
+  manageStyleSheets,
+  resizePreview,
+} from "./preview.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -84,20 +88,35 @@ async function startup(url = document.location.href) {
     const stylesheets = response.data.data.attributes.stylesheets.data;
     // for stylesheet
     // addStyleSheetToList
-    console.log(stylesheets);
 
     // sort: show all
     const orderedstylesheets = stylesheets.sort((a, b) => {
       // console.log(a.attributes.maxwidth);
       return a.attributes.maxwidth - b.attributes.maxwidth;
     });
-    orderedstylesheets.forEach((stylesheet) => {
+    orderedstylesheets.forEach((stylesheet, index) => {
       stylesheet.attributes.strapid = stylesheet.id;
       // add the stylesheets to the list
-      console.log("noe", stylesheet)
+      // console.log("noe", stylesheet)
       addStyleSheetToList(stylesheet.attributes);
     });
 
+    // get the first stylesheet and activate it.
+    let stylesheetToActivate = document.querySelector("#screens .header + li");
+    stylesheetToActivate.classList.add("activeStylesheet");
+
+    // resize the preview once activated 
+    resizePreview(
+      previewScreen,
+      stylesheetToActivate.dataset.maxwidth,
+      stylesheetToActivate.dataset.defaultHeight,
+      stylesheetToActivate.dataset.strapid,
+    );
+    // activateStylesheet(stylesheetToActivate);
+    // activate the stylesheet!
+    //
+
+    // select one stylesheet (the first?)
     // console.log(response.data.data);
 
     fillSequence(response.data.data.id);
@@ -172,16 +191,19 @@ async function fillPlan(plan) {
 
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+          object.id
         }" data-planid="${plan.id}"
         data-assetid="${asset.id}" src="${asset.attributes.location}"
-        data-anchor-horizontal="${asset.attributes.anchorVertical
-          ? asset.attributes.anchorVertical
-          : "left"
+        data-anchor-horizontal="${
+          asset.attributes.anchorVertical
+            ? asset.attributes.anchorVertical
+            : "left"
         }" 
-        data-anchor-vertical="${asset.attributes.anchorHorizontal
-          ? asset.attributes.anchorHorizontal
-          : "top"
+        data-anchor-vertical="${
+          asset.attributes.anchorHorizontal
+            ? asset.attributes.anchorHorizontal
+            : "top"
         }"
 
 
@@ -189,13 +211,15 @@ class= "asset" style = "
         ${object.attributes.width ? `width:${object.attributes.width}` : ""}
         ${object.attributes.height ? `height:${object.attributes.height}` : ""}
 
-        ${object.attributes.anchor == "top"
-          ? `top:${object.attributes.top};`
-          : `bottom:${object.attributes.bottom};`
+        ${
+          object.attributes.anchor == "top"
+            ? `top:${object.attributes.top};`
+            : `bottom:${object.attributes.bottom};`
         }
-        ${object.attributes.anchor == "left"
-          ? `left:${object.attributes.left};`
-          : `right:${object.attributes.right};`
+        ${
+          object.attributes.anchor == "left"
+            ? `left:${object.attributes.left};`
+            : `right:${object.attributes.right};`
         }
         ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`,
       );
