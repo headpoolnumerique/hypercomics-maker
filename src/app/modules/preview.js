@@ -55,9 +55,21 @@ async function manageStyleSheets() {
 
   /*remove a stylesheet*/
   screensList.addEventListener("click", function (event) {
+    // if (document.querySelector(".disabled") && !event.target.classList.contains("remove")) {
+    //   document.querySelector(".disabled").classList.remove("disabled")
+    // }
+
+    if (!event.target.classList.contains("remove")) {
+      document.querySelector(".toremove")?.classList.remove("toremove");
+    }
+    // dont remove with R only
     if (event.target.classList == "remove") {
-      removeStylesheet(event.target);
-      event.target.closest("li").classList.toggle("disabled");
+      if (event.target.closest("li").classList.contains("toremove")) {
+        removeStylesheet(event.target);
+      } else {
+        document.querySelector(".toremove")?.classList.remove("toremove");
+        event.target.closest("li").classList.add("toremove");
+      }
     } else if (event.target.closest("li")) {
       activateStylesheet(event.target.closest("li"));
       resizePreview(

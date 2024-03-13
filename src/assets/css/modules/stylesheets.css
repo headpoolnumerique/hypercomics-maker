@@ -38,3 +38,7 @@
   gap: 1ch;
   grid-template-columns: repeat(4, max-content);
 }
+
+.toremove {
+  color: red;
+}
