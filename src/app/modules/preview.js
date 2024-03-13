@@ -20,11 +20,10 @@ const serverUrl = config.strapi.url;
 const stylesheetNewEl = (data, itemclasses, newest) => `
 <li
 data-strapid="${data.strapid}" 
-data-maxwidth=${data.maxwidth} 
-data-default-height=${data.defaultHeight} 
-class="stylesheet ${itemclasses} ${newest ? `activeStylesheet` : ``}" id="screen-${
-  data.strapid
-}>
+data-maxwidth="${data.maxwidth}"
+data-default-height="${data.defaultHeight}"
+class="stylesheet ${itemclasses} ${newest ? `activeStylesheet` : ``}"
+id="screen-${data.strapid}">
 <span class="name">#${data.strapid}</span>
 <span class="width">Width: ${data.maxwidth}</span>
 <span class="height">Height: ${data.defaultHeight}</span>
@@ -77,20 +76,20 @@ async function manageStyleSheets() {
         document.querySelector(".toremove")?.classList.remove("toremove");
         event.target.closest("li").classList.add("toremove");
       }
-    } else if (event.target.closest("li")) {
-      activateStylesheet(event.target.closest("li"));
+    } else if (event.target.closest(".stylesheet")) {
+      activateStylesheet(event.target.closest(".stylesheet"));
       resizePreview(
         previewScreen,
-        event.target.closest("li").dataset.maxwidth,
-        event.target.closest("li").dataset.defaultHeight,
-        event.target.closest("li").dataset.strapid,
+        event.target.closest(".stylesheet").dataset.maxwidth,
+        event.target.closest(".stylesheet").dataset.defaultHeight,
+        event.target.closest(".stylesheet").dataset.strapid,
       );
-    } else if (event.target.tagName == "LI") {
+    } else if (event.target.classList.contains(".stylesheet")) {
       activateStylesheet(event.target);
       resizePreview(
         previewScreen,
-        event.target.closest("li").dataset.maxwidth,
-        event.target.closest("li").dataset.defaultHeight,
+        event.target.closest(".stylesheet").dataset.maxwidth,
+        event.target.closest(".stylesheet").dataset.defaultHeight,
       );
     }
   });

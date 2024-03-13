@@ -32,12 +32,12 @@ async function interactObject(object) {
     object.dataset.objectid,
   );
 
-  console.log("de", declarationIdExist)
+  console.log("de", declarationIdExist);
 
   if (declarationIdExist) {
     console.log("plouf", declarationIdExist);
     declarationId = declarationIdExist.data.data.id;
-    object.dataset.newDecId = declarationIdExist.data.id;
+    object.dataset.newDecId = declarationId;
   }
   // create the declartion if there was none
   else {
@@ -487,6 +487,8 @@ async function isThereDeclaration(stylesheetId, objectId) {
     );
 
     if (response.data.meta.pagination.total > 1) {
+      return response.data[0];
+    } else if (response.data.meta.pagination.total == 1) {
       return response.data;
     } else {
       return false;
