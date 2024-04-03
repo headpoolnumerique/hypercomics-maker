@@ -55,7 +55,7 @@ function px2screenSize(valueInPixel, orientation, unit) {
   return 100 * (valueInPixel / screenValue);
 }
 
-var isNumeric = function(num) {
+var isNumeric = function (num) {
   return (
     (typeof num === "number" ||
       (typeof num === "string" && num.trim() !== "")) &&
@@ -73,12 +73,21 @@ function renderDate(date) {
   return new Date(date).toLocaleDateString(undefined, options);
 }
 
+/** Update the dataset attribute of an html element from an object
+ */
+function updateDataset(element, obj) {
+  Object.keys(obj).forEach((key) => {
+    element.dataset[key] = obj[key];
+  });
+}
+
 export {
+  updateDataset,
   isNumeric,
   activatePlan,
   updateInteractiveUI,
   deselect,
   selectLink,
   showHideBlock,
-  renderDate
+  renderDate,
 };

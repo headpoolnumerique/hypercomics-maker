@@ -1,5 +1,7 @@
 import axios from "axios";
+import { parse, stringify } from "../vendors/css/css";
 import config from "../config/config.js";
+import { deselect } from "./helpers.js";
 import {
   previewScreen,
   anchors,
@@ -75,8 +77,17 @@ function getSize() {
         previewScreen.dataset.width = newWidth;
         previewScreen.dataset.height = newHeight;
 
+        // const activatedStylesheet = selectScreen(newWidth / newHeight);
+
+        // console.log(activatedStylesheet);
+
+        // loadStylesheet(activatedStylesheet);
+
         // let use the input ratio to generate the css.
         // .value = newHeight > newWidth ? "portrait" : "landscape";
+        //
+        // when the size of the element is smaller than a existing style sheet, activate that stylesheet, but dont resize the screen;
+        //
       }
     }
   });
@@ -84,37 +95,4 @@ function getSize() {
   screenshotObserver.observe(previewScreen);
 }
 
-export { getSize, setAnchor, updateStylesheet };
-
-async function updateStylesheet(stylesheetLi) {
-  // get the selected stylesheet if there is one
-  const stylesheet = stylesheetLi
-    ? stylesheetLi
-    : document.querySelector(".activeStylesheet");
-
-  if (!stylesheet) return console.log("aint no stylesheet");
-
-  const stylesheetId = stylesheet.dataset.strapid;
-
-  axios
-    .get(`${config.strapi.url}/api/stylesheets/${stylesheetId}?populate=deep,8`)
-    .then((response) => {
-      response.data.data.attributes.declarations.data.forEach((declaration) => {
-        console.log(declaration)
-        console.log(document.querySelector(`[data-objectid="${declaration.attributes.object.data.id}"]`))
-        document.querySelector(
-          `[data-objectid="${declaration.attributes.object.data.id}"]`,
-        ).style = declaration.attributes.cssrules;
-      });
-    });
-
-  // get stylesheet data
-  // if(!stylesheetLi) {stylesheet = document.querySelector(".activeStylesheet")}
-
-  console.log(stylesheet);
-  // load stylesheet
-  // for each declaration
-  // find object
-  // set style property from the db
-  // use this instead of the object data
-}
+export { getSize, setAnchor };

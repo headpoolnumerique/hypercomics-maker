@@ -40,8 +40,6 @@ import { updateDelayUI } from "./modules/delay.js";
 
 // list all the things
 //Event and binds
-//
-//
 
 //show hide montage
 document.querySelector("#showMontage").addEventListener("click", () => {
@@ -80,7 +78,7 @@ document.querySelector("#duplicatePlan").addEventListener("click", () => {
     sequenceId,
   );
 });
-imageUpload.addEventListener("click", function(e) {
+imageUpload.addEventListener("click", function (e) {
   e.preventDefault();
   uploadToStrapi(imageUploadInputs);
 });
@@ -153,7 +151,7 @@ preview.addEventListener("click", (event) => {
 // show hide/plan
 document
   .querySelector("#previewPrevious")
-  .addEventListener("click", function() {
+  .addEventListener("click", function () {
     let shownPlan = document.querySelector(".shown");
     let shownLink = document.querySelector(".selected");
 
@@ -177,7 +175,7 @@ document
     updateDelayUI();
   });
 
-document.querySelector("#previewNext").addEventListener("click", function() {
+document.querySelector("#previewNext").addEventListener("click", function () {
   let shownPlan = document.querySelector(".shown");
   let shownLink = document.querySelector(".selected");
   if (!shownPlan.nextElementSibling) {

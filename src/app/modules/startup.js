@@ -20,12 +20,13 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
-import { getSize, setAnchor, updateStylesheet } from "./resize.js";
+import { getSize, setAnchor} from "./resize.js";
 import {
-  addStyleSheetToList,
-  manageStyleSheets,
+  // addStyleSheetToList,
   resizePreview,
 } from "./preview.js";
+import { parse } from "../vendors/css/css.js";
+import { stylesheetmanager } from "./stylesheet.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -37,31 +38,26 @@ async function startup(url = document.location.href) {
   document.body.id = `sequence-${sequenceId}`;
   // if there is no sequence id, create a new sequence
 
+  // with the new system there will always a url
   // if there is a sequenceID in the url, load the sequence from strapi
   let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
-  // if the sequence number doesnt exist in strapi, create it
-  if (response.data == null) {
-    let response = await createData(config.strapi.url, `sequences`, {
-      title: "this sequence has no name yet",
-      projectId: projectId ? projectId : "",
-      id: sequenceId,
-    });
+  //update the sequence url and write in the url bar
+  // sequenceUrl.sequenceId = response.data.data.id;
+  // history.pushState({}, null, sequenceUrl)
+  // window.location.href = sequenceUrl
 
-    //update the sequence url and write in the url bar
-    sequenceUrl.sequenceId = response.data.data.id;
-    // history.pushState({}, null, sequenceUrl)
-    // window.location.href = sequenceUrl
-  }
+  // console.log(response);
   await updateSequenceMeta(
     response.data?.data?.id,
     response.data?.data?.attributes?.title,
   );
 
-
-
-
   fillSequence(response.data.data.id);
+
+  // console.log("start");
+  // parseStylesheet(response.data.data.attributes.css);
+
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
@@ -71,9 +67,11 @@ async function startup(url = document.location.href) {
   handleDelays();
   getSize();
   setAnchor();
-  manageStyleSheets();
-  updateStylesheet();
-  // recreate the layer list from the selected plan
+
+  // manageStyleSheets(response.data)
+  // load stylesheet
+  await stylesheetmanager(response.data)
+
 }
 
 async function fillSequence(sequence) {
@@ -165,38 +163,59 @@ class= "asset" style = "
   document.querySelector("#loading")?.remove();
 }
 
+
 export { startup, fillPlan };
 
+// function parseStylesheet(stylesheet) {
+//   cssContent.textContent = stylesheet;
+//   let styles = parse(stylesheet);
+// }
 
-async function loadStylesheets() {
-  //fillStylesheet
-  const stylesheets = response.data.data.attributes.stylesheets.data;
-  // for stylesheet
-  // addStyleSheetToList
-
-  // sort: show all
-  const orderedstylesheets = stylesheets.sort((a, b) => {
-    // console.log(a.attributes.maxwidth);
-    return a.attributes.maxwidth - b.attributes.maxwidth;
+function updateStylesheet(stylesheet, object, rules) {
+  let styles = parse(stylesheet);
+  // get the value for the selector
+  let ruleToUpdate = parsedCSS.stylesheet.rules.filter((a) => {
+    // return the stylesheet without the inuse block;
+    return !a.selectors.includes(object.id);
   });
-  orderedstylesheets.forEach((stylesheet, index) => {
-    stylesheet.attributes.strapid = stylesheet.id;
-    // add the stylesheets to the list
-    // console.log("noe", stylesheet)
-    addStyleSheetToList(stylesheet.attributes);
+  ruleToUpdate.push({
+    type: "rule",
+    selectors: [`#${object.id}`],
+    declarations: [
+      {
+        type: "declaration",
+        property: "height",
+        value: `${object.style.height}`,
+      },
+      {
+        type: "declaration",
+        property: "width",
+        value: `${object.style.width}`,
+      },
+      {
+        type: "declaration",
+        property: "top",
+        value: `${object.style.top ? object.style.top : "unset"}`,
+      },
+      {
+        type: "declaration",
+        property: "bottom",
+        value: `${object.style.bottom ? object.style.bottom : "unset"}`,
+      },
+      {
+        type: "declaration",
+        property: "left",
+        value: `${object.style.left ? object.style.left : "unset"}`,
+      },
+      {
+        type: "declaration",
+        property: "right",
+        value: `${object.style.right ? object.style.right : "unset"}`,
+      },
+    ],
   });
+  return stringify(styles);
 
-  // get the first stylesheet and activate it.
-  let stylesheetToActivate = document.querySelector("#screens .header + li");
-  stylesheetToActivate?.classList.add("activeStylesheet");
-
-  if (stylesheetToActivate) {
-    // resize the preview once activated
-    resizePreview(
-      previewScreen,
-      stylesheetToActivate.dataset.maxwidth,
-      stylesheetToActivate.dataset.defaultHeight,
-      stylesheetToActivate.dataset.strapid,
-    );
-
-  }
+  // update the rules
+  // return the updated stylesheet
+}

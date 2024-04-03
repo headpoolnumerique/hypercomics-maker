@@ -356,7 +356,7 @@ async function duplicatePlan(
         object.attributes.assets.data.forEach((asset) => {
           planToFill.insertAdjacentHTML(
             "beforeend",
-            `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
+            `<img id="inuse-${plan.id.replace("#", "")}-${object.id}" data-objectId="${object.id
             }" data-planid="${plan.id}"
         data-assetid="${asset.id}" src="${asset.attributes.location
             }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ""

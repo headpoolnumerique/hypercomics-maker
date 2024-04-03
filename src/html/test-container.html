@@ -1,0 +1,164 @@
+<!-- This is what we’ll have inthe end, one css style sheet with multiple container preview. -->
+<!-- each change reupdate only one bit of the content  -->
+
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: rebeccapurple;
+      color: rebeccapurple;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .preview {
+      width: 500px;
+      background: white;
+      height: 300px;
+      margin: auto;
+      resize: both;
+      overflow: hidden;
+      padding: 0.4em 4ch;
+      container-type: size;
+      container-name: preview;
+      animation-duration: 0.9s;
+      animation-name: resize;
+      animation-iteration-count: 1;
+      animation-direction: alternate;
+    }
+
+    h2 {
+      position: absolute;
+      left: 10cqw;
+      top: 10cqh;
+    }
+
+    .background {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+
+    @keyframes resize {
+      0% {
+        width: 300px;
+        height: 200px;
+      }
+
+      50% {
+        width: 600px;
+        height: 800px;
+      }
+
+      75% {
+        width: 100px;
+        height: 100px;
+      }
+
+      100% {
+        width: 300px;
+        height: 200px;
+      }
+    }
+
+    #styles {
+      position: absolute;
+      top: 0;
+      gap: 5ch;
+      max-height: 300px;
+      padding: 0.4em 5ch;
+      display: grid;
+      grid-template-columns: repeat(3, 28%);
+      z-index:5000;
+    }
+
+    style[id*="style-"] {
+      /* position: absolute; */
+      top: 0;
+      left: 0;
+      color: white;
+      display: block;
+      /* width: 300px; */
+      background: #cccd;
+      white-space: pre-wrap;
+      /* white-space: nowrap; */
+      border: 2px solid white;
+      padding: 1em 2ch;
+    }
+
+    #style-18 {
+      background:blue;
+    }
+
+    #style-19 {
+      background:purple;
+    }
+
+    #style-20 {
+      background: orange;
+    }
+  </style>
+</head>
+
+<body>
+  <section id="styles">
+    <style id="style-18" data-width="200" data-height="100" data-strapid="2987">
+      @container preview (max-aspect-ratio: 1.78) {
+        .preview .background {
+          background: yellow;
+        }
+
+        .preview h2 {
+          color: orange;
+        }
+      }
+    </style>
+
+    <style id="style-19" data-width="400" data-height="200" data-strapid="2987">
+      @container preview (max-aspect-ratio: 1.3) {
+        .preview .background {
+          background: cyan;
+        }
+
+        .preview h2 {
+          color: green;
+        }
+      }
+    </style>
+
+    <style id="style-20" data-width="400" data-height="200" data-strapid="2987">
+      @container preview (max-aspect-ratio: 0.76) {
+        .preview .background {
+          background: magenta;
+        }
+
+        .preview h2 {
+          color: blue;
+        }
+      }
+    </style>
+  </section>
+  <div class="preview">
+    <div class="background"></div>
+    <h2>container</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia ut
+      reiciendis nemo sit illo, doloribus, dolor libero vel saepe consectetur
+      laudantium? Fuga incidunt, sed tempore magni recusandae dignissimos
+      harum. Eius!
+    </p>
+  </div>
+</body>
+
+</html>

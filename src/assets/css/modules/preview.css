@@ -1,4 +1,4 @@
-#previewScreen article > * {
+#previewScreen article>* {
   position: absolute;
 }
 
@@ -18,12 +18,14 @@
   top: 48%;
   z-index: 1000;
 }
+
 #previewPrevious {
   position: absolute;
   left: 0;
   top: 48%;
   z-index: 1000;
 }
+
 #previewScreen .asset-selected {
   box-shadow: 0 0 0 3px var(--color-main);
   z-index: 100;
@@ -31,10 +33,12 @@
 }
 
 .activeStylesheet {
-  font-weight:800;
+  font-weight: 800;
 }
 
 .disabled {
   color: grey;
   color: red;
 }
+
+

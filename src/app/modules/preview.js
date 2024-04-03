@@ -27,17 +27,17 @@ id="screen-${data.strapid}">
 <span class="name">#${data.strapid}</span>
 <span class="width">Width: ${data.maxwidth}</span>
 <span class="height">Height: ${data.defaultHeight}</span>
- <span class="remove">R</span>
+<span class="ratio">Ratio: ${(data.maxwidth / data.defaultHeight).toFixed(2)} (${data.maxwidth}/${data.defaultHeight})</span>
+<span class="remove">R</span>
 </li>`;
 
 // ${data.default ? "" : `<span class="remove">R</span>`}
-async function manageStyleSheets() {
+async function manageStyleSheets(response) {
+  console.log("response here", response);
   // console.log(screensList.querySelectorAll(".stylesheet"))
   if (screensList.querySelectorAll(".stylesheet").length < 1) {
-    console.log("now");
     await kickstartStylesheet();
   }
-
   populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
   document.querySelector("#fullPageWatcher").addEventListener("click", () => {
@@ -68,10 +68,12 @@ async function manageStyleSheets() {
     if (!event.target.classList.contains("remove")) {
       document.querySelector(".toremove")?.classList.remove("toremove");
     }
+
     // dont remove with R only
     if (event.target.classList == "remove") {
       if (event.target.closest("li").classList.contains("toremove")) {
         removeStylesheet(event.target);
+        event.target.remove();
       } else {
         document.querySelector(".toremove")?.classList.remove("toremove");
         event.target.closest("li").classList.add("toremove");
@@ -204,61 +206,7 @@ async function kickstartStylesheet() {
   // if empty, add stylesheet
 }
 
-async function insertStylesheetToList(data) {
-  console.log(data);
-  const itemclasses = data.disabled ? "disabled" : "";
-  // find where to place the stylesheet base on size
-  //
-  // get the max-width of the element
-  const newMaxWidth = data.maxwidth;
 
-  // () and place the element just before the stylesheet with a bigger screen
-  let nextMaxWidth = [...screensList.querySelectorAll("li")].filter((el) => {
-    return Number(el.dataset.maxwidth) > Number(newMaxWidth);
-  });
-
-  console.log(nextMaxWidth);
-
-  if (nextMaxWidth.length > 0) {
-    // create a item in the screens list
-    screensList
-      .querySelector(".activeStylesheet")
-      ?.classList.remove("activeStylesheet");
-    nextMaxWidth[0]?.insertAdjacentHTML(
-      "beforebegin",
-      stylesheetNewEl(data, itemclasses, true),
-    );
-  } else {
-    screensList
-      .querySelector(".activeStylesheet")
-      ?.classList.remove("activeStylesheet");
-    screensList.insertAdjacentHTML(
-      "beforeend",
-      stylesheetNewEl(data, itemclasses, true),
-    );
-  }
-
-  // selectAdded;
-}
-
-function addStyleSheetToList(data) {
-  const itemclasses = data.disabled ? "disabled" : "";
-  // find where to place the stylesheet base on size
-  // get the max-height() and place the element just before the bigger screen
-  // console.log("disable", data.disabled);
-  // don’t show the removed stylesheet.
-  if (data.disabled) return;
-  screensList.insertAdjacentHTML(
-    "beforeend",
-    stylesheetNewEl(data, itemclasses),
-    //     `<li data-strapid="${data.strapid}" data-maxwidth=${data.maxwidth} class="${itemclasses}" id="screen-${data.strapid}>
-    // <span class="name">${data.strapid}</span>
-    // <span class="width">w: ${data.maxwidth}</span>
-    // <span class="height">h: ${data.defaultHeight}</span>
-    // <span class="remove">R</span>
-    // </li>`,
-  );
-}
 
 function changeOrientation(previewEl) {
   const width = previewEl.style.getPropertyValue("width");
@@ -346,7 +294,7 @@ export {
   changeOrientation,
   resizePreview,
   manageStyleSheets,
-  addStyleSheetToList,
+  // addStyleSheetToList,
 };
 
 // bring back from app.js

@@ -9,7 +9,8 @@ html {
 
 main#appWrap {
   height: 100vh;
-  /* background: var(--color-app-wrapp); */
+
+  background: var(--color-app-wrapp);
   /* display: grid; */
   display: flex;
   scrollbar-gutter: stable;

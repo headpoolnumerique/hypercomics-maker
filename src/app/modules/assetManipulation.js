@@ -8,8 +8,6 @@ import axios from "axios";
 
 async function interactObject(object) {
   // get the id of the stylesheet to update
-  let stylesheetId =
-    document.querySelector(".activeStylesheet").dataset.strapid;
 
   // get the id of the sequence
   let sequenceId = Number(
@@ -24,47 +22,6 @@ async function interactObject(object) {
     width: previewScreen.offsetWidth,
   };
 
-  // get the object info here
-
-  let declarationId;
-  let declarationIdExist = await isThereDeclaration(
-    stylesheetId,
-    object.dataset.objectid,
-  );
-
-  console.log("de", declarationIdExist);
-
-  if (declarationIdExist) {
-    console.log("plouf", declarationIdExist);
-    declarationId = declarationIdExist.data.data.id;
-    object.dataset.newDecId = declarationId;
-  }
-  // create the declartion if there was none
-  else {
-    await axios
-      .post(`${config.strapi.url}/api/declarations?populate=deep,8`, {
-        data: {
-          stylesheet: stylesheetId,
-          object: object.dataset.objectid,
-        },
-      })
-      .then((response) => {
-        console.log("n", response.data.data.id);
-        object.dataset.newDecId = response.data.data.id;
-      });
-  }
-
-  // if there is no declaration id, create one and get the result id
-  // update the element location and size
-
-  // if declarationId = false
-
-  // TODO: wait for the image to appear to attach a interact
-  // that position is tricky because if you change the ai while active it moves.
-  // get the object anchor point
-  //
-  //
-  // let objectAnchor?
 
   let position = { x: object.offsetLeft, y: object.offsetTop };
 
@@ -149,34 +106,31 @@ async function interactObject(object) {
               event.target.offsetLeft,
               previewScreenSize.width,
             )}%;`,
-            right: `${
-              100 -
+            right: `${100 -
               percentage(
                 event.target.offsetLeft + event.target.offsetWidth,
                 previewScreenSize.width,
               )
-            }% `,
-            bottom: `${
-              100 -
+              }% `,
+            bottom: `${100 -
               percentage(
                 event.target.offsetTop + event.target.offsetHeight,
                 previewScreenSize.height,
               )
-            }% `,
+              }% `,
             cssRules: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
           left: ${percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          )}%;`,
+              event.target.offsetLeft,
+              previewScreenSize.width,
+            )}%;`,
           };
 
           //update declaration is now the norm. We’ll see if we keep the rest later
           addRuleToObject(event.target.dataset.objectid, data);
 
           //updateDeclaration
-          updateDeclaration(event.target.dataset.newDecId, data.cssRules);
           // console.log(event.target.closest("#previewScreen"));
         },
       },
@@ -215,7 +169,7 @@ async function interactObject(object) {
             previewScreenSize.height,
           );
         },
-        move: function (event) {
+        move: function(event) {
           let { x, y } = event.target.dataset;
 
           x = (parseFloat(x) || 0) + event.deltaRect.left;
@@ -234,7 +188,7 @@ async function interactObject(object) {
 
           Object.assign(event.target.dataset, { x, y });
         },
-        end: function (event) {
+        end: function(event) {
           document.querySelector("#inputx").value = percentage(
             event.target.offsetLeft,
             previewScreenSize.width,
@@ -281,16 +235,14 @@ async function interactObject(object) {
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
           left: ${percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          )}%; `,
+              event.target.offsetLeft,
+              previewScreenSize.width,
+            )}%; `,
           };
 
           // add ruel to object
           addRuleToObject(event.target.dataset.objectid, data);
 
-          // add rule to declaration (stylesheet)
-          updateDeclaration(event.target.dataset.newDecId, data.cssRules);
         },
       },
     });
