@@ -5,6 +5,7 @@ import { reorderObjectInPlan, removeObjectFromPlan } from "./dataManagement.js";
 import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
+import { anchors } from "./selectors.js";
 
 async function interactObject(object) {
   // get the id of the stylesheet to update
@@ -475,3 +476,41 @@ async function updateDeclaration(
       return err;
     });
 }
+
+export function setAnchor() {
+  // this is asset manipulation normally
+  anchors.forEach((input) =>
+    addEventListener("change", function () {
+      // make sure an object is selected
+      let selected = document.querySelector(".asset-selected");
+      if (!selected) {
+        return;
+      }
+
+      // Get references to the radio button elements
+      const verticalRadioButtons = document.getElementsByName("verticalAnchor");
+      const horizontalRadioButtons =
+        document.getElementsByName("horizontalAnchor");
+
+      // Add event listeners to the radio buttons to detect changes
+      verticalRadioButtons.forEach(function (radioButton) {
+        radioButton.addEventListener("change", function () {
+          // Update the selected vertical anchor value
+          selected.dataset.anchorVertical = this.value;
+        });
+      });
+
+      horizontalRadioButtons.forEach(function (radioButton) {
+        radioButton.addEventListener("change", function () {
+          // Update the selected horizontal anchor value
+          selected.dataset.anchorHorizontal = this.value;
+          this.value;
+        });
+      });
+    }),
+  );
+}
+
+
+
+// export { setAnchor };

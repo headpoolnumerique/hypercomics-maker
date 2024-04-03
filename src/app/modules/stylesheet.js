@@ -22,31 +22,26 @@
 //
 //
 import axios from "axios";
-import { updateDataset } from "./helpers";
-import { screensList } from "./selectors";
+import { deselect, updateDataset } from "./helpers";
+import { resizePreview } from "./preview";
+import {
+  screenHeightInput,
+  screensList,
+  screenWidthInput,
+  screenRatioInput,
+  newScreenForm,
+  newScreenButton,
+} from "./selectors";
+import { screenListItem } from "./stylesheets/screenListItem";
 
-const stylesheetNewEl = (data, itemclasses, newest) => `
-<li
-data-strapid="${data.strapid}" 
-data-maxwidth="${data.maxwidth}"
-data-default-height="${data.defaultHeight}"
-class="stylesheet ${itemclasses} ${newest ? `activeStylesheet` : ``}"
-id="screen-${data.strapid}">
-<span class="name">#${data.strapid}</span>
-<span class="width">Width: ${data.maxwidth}</span>
-<span class="height">Height: ${data.defaultHeight}</span>
-<span class="ratio">Ratio: ${(data.maxwidth / data.defaultHeight).toFixed(2)} (${data.maxwidth}/${data.defaultHeight})</span>
-<span class="remove">R</span>
-</li>`;
+/** function that will manage the stylesheet List:
+ * - create the list, activate the list, and include the events listener for each item
+ */
 
-async function stylesheetmanager(obj) {
+export async function stylesheetmanager(obj) {
   let stylesheets = obj.data.attributes.stylesheets.data;
   const orderedStylesheets = stylesheets.sort((a, b) => {
-    console.log(a)
-    console.log(
-      "ratio",
-      a.attributes.maxwidth / a.attributes.defaultHeight,
-    );
+    // sort by ratio
     if (
       a.attributes.maxwidth / a.attributes.defaultHeight <
       b.attributes.maxwidth / b.attributes.defaultHeight
@@ -56,17 +51,103 @@ async function stylesheetmanager(obj) {
       return 1;
     }
   });
-
-
   orderedStylesheets.forEach((stylesheet) => {
     stylesheet.attributes.strapid = stylesheet.id;
     addStyleSheetToList(stylesheet.attributes);
   });
-
-  // downloadStylesheet
-  /* load existing stylesheet*/
-  // downloadStylesheets(obj);
+  activateFirstStylesheet();
+  stylesheetListeners();
 }
+
+/** event listener for the stylesheet ui
+ */
+async function stylesheetListeners() {
+  screensList.addEventListener("click", function(event) {
+    /* remove stylesheet (disable in 2 times )*/
+    if (!event.target.classList.contains("remove")) {
+      document.querySelector(".toremove")?.classList.remove("toremove");
+    }
+    if (event.target.classList == "remove") {
+      if (event.target.closest("li").classList.contains("toremove")) {
+        removeStylesheet(event.target);
+        event.target.remove();
+      } else {
+        document.querySelector(".toremove")?.classList.remove("toremove");
+        event.target.closest("li").classList.add("toremove");
+      }
+    } else if (event.target.closest(".stylesheet")) {
+      // activate stylesheet if clicking on a stylesheet
+      activateStylesheet(
+        event.target.closest(".stylesheet") ||
+        event.target.classList.contains(".stylesheet"),
+      );
+      resizePreview(
+        previewScreen,
+        event.target.closest(".stylesheet").dataset.maxwidth,
+        event.target.closest(".stylesheet").dataset.defaultHeight,
+        event.target.closest(".stylesheet").dataset.strapid,
+      );
+    }
+  });
+}
+// console.log(screensList.querySelectorAll(".stylesheet"))
+// if (screensList.querySelectorAll(".stylesheet").length < 1) {
+//   await kickstartStylesheet();
+// }
+
+// populateStylesheetButton.addEventListener("click", kickstartStylesheet);
+
+// check for existing stylesheet with the following width/height
+
+// if there is no stylesheet, createone
+// by default, else activate one
+
+// set default stylesheet if it doesnt exist
+
+// first screens:
+
+// load all stylesheet. TODO: only load filtered stylesheets!
+// loadStyleSheet(sequenceNumber.innerText);
+
+/*check existing stylesheet and merge them? */
+/*create a screen = create a stylesheet*/
+
+/*remove a stylesheet*/
+
+// check if inputs are valid
+newScreenForm.addEventListener("input", validateInputs());
+function validateInputs() {
+  if (newScreenForm.checkValidity()) {
+    newScreenButton.disabled = false;
+  } else {
+    newScreenButton.disabled = true;
+  }
+}
+
+// add stylesheet
+newScreenForm.addEventListener("submit", async function(event) {
+  event.preventDefault();
+  // if (!validateInputs()) return;
+  // get the data from the form and from the inputs
+  const data = {
+    maxwidth: Number(screenWidthInput.value),
+    sequenceId: sequenceNumber.textContent,
+    defaultHeight: Number(screenHeightInput.value),
+  };
+
+  // create the stylesheet
+  const response = await createData(serverUrl, "stylesheets", data);
+  if (!response.data) return console.log(`nothing got saved`);
+
+  // add stylesheet to the sequence,
+  const responsedata = response.data.data.attributes;
+  const strapid = response.data.data.id;
+  // set the screensize id on the preview to know where to save the data
+  previewScreen.dataset.screensize = strapid;
+  responsedata.strapid = response.data.data.id;
+
+  await insertStylesheetToList(responsedata);
+});
 
 async function loadStylesheets(response) {
   // load the stylesheets
@@ -88,6 +169,9 @@ async function loadStylesheets(response) {
   });
 
   // get the first stylesheet and activate it.
+}
+
+function activateFirstStylesheet() {
   let stylesheetToActivate = document.querySelector("#screens .header + li");
   stylesheetToActivate?.classList.add("activeStylesheet");
 
@@ -102,10 +186,8 @@ async function loadStylesheets(response) {
   }
 }
 
-export { stylesheetmanager };
-
+// this is different from the add list? how? why?
 async function insertStylesheetToList(data) {
-  console.log(data);
   const itemclasses = data.disabled ? "disabled" : "";
   // find where to place the stylesheet base on size
   //
@@ -126,7 +208,7 @@ async function insertStylesheetToList(data) {
       ?.classList.remove("activeStylesheet");
     nextMaxWidth[0]?.insertAdjacentHTML(
       "beforebegin",
-      stylesheetNewEl(data, itemclasses, true),
+      screenListItem(data, itemclasses, true),
     );
   } else {
     screensList
@@ -134,7 +216,7 @@ async function insertStylesheetToList(data) {
       ?.classList.remove("activeStylesheet");
     screensList.insertAdjacentHTML(
       "beforeend",
-      stylesheetNewEl(data, itemclasses, true),
+      screenListItem(data, itemclasses, true),
     );
   }
 
@@ -148,6 +230,77 @@ function addStyleSheetToList(data) {
   if (data.disabled) return;
   screensList.insertAdjacentHTML(
     "beforeend",
-    stylesheetNewEl(data, itemclasses),
+    screenListItem(data, itemclasses),
   );
+}
+
+async function removeStylesheet(target) {
+  const id = target.closest("li").dataset.strapid;
+
+  const data = {
+    disabled: true,
+  };
+
+  const response = await updateData(serverUrl, "stylesheets", data, id);
+  console.log(response);
+}
+
+// this should also go into stylesheet.js
+export function getSize() {
+  const screenshotObserver = new ResizeObserver((screenshots) => {
+    for (const screenshot of screenshots) {
+      if (screenshot.contentBoxSize) {
+        let newWidth = Math.round(screenshot.contentBoxSize[0].inlineSize);
+        let newHeight = Math.round(screenshot.contentBoxSize[0].blockSize);
+
+        //update the ui
+        screenWidthInput.value = newWidth;
+        screenHeightInput.value = newHeight;
+        screenRatioInput.value = (newWidth / newHeight).toFixed(2);
+
+        // update preview dataset
+        previewScreen.dataset.width = newWidth;
+        previewScreen.dataset.height = newHeight;
+
+        // select the stylesheet on resize
+        let stylesheetToEdit = selectScreen(screenRatioInput.value);
+        console.log(stylesheetToEdit);
+        //
+      }
+    }
+  });
+  screenshotObserver.observe(previewScreen);
+}
+
+function activateStylesheet(stylesheet) {
+  screensList
+    .querySelector(".activeStylesheet")
+    ?.classList.remove("activeStylesheet");
+  // deselect any object when changing stylesheet
+  document.querySelector(".asset-selected")?.classList.remove("asset-selected");
+  stylesheet.classList.add("activeStylesheet");
+}
+
+function selectScreen(ratio) {
+  // deselect(".closeTo");
+  // console.log(ratio);
+  deselect(".activeStylesheet");
+
+  let toActivate = [...screensList.querySelectorAll(".stylesheet")].findLast(
+    (li) => li.dataset.maxwidth / li.dataset.defaultHeight <= ratio,
+  );
+
+  console.log(toActivate);
+
+  // active = stylesheet you’re writting on. 
+  // so if you have 0.41 active, you write smaller than 0.41, then smaller than 0.75, then smaller
+  // if first : up to 0.41, then between 0.41 and 0.76, .....  more than the last 
+  if (toActivate && toActivate == undefined) {
+    toActivate = screens.querySelector(".stylesheet");
+    toActivate.classList.add("activeStylesheet");
+    return toActivate.dataset.strapid;
+  } else {
+    toActivate.classList.add("activeStylesheet");
+    return toActivate.dataset.strapid;
+  }
 }

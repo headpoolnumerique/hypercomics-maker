@@ -20,13 +20,8 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
-import { getSize, setAnchor} from "./resize.js";
-import {
-  // addStyleSheetToList,
-  resizePreview,
-} from "./preview.js";
-import { parse } from "../vendors/css/css.js";
-import { stylesheetmanager } from "./stylesheet.js";
+import { setAnchor} from "./assetManipulation";
+import { getSize, stylesheetmanager } from "./stylesheet.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
