@@ -41,4 +41,7 @@
   color: red;
 }
 
-
+#previewScreen {
+  container-name: preview;
+  container-type: size;
+}

@@ -158,9 +158,11 @@ block-ui h3 {
   position: fixed;
   top: 2em;
   left: 2em;
-  height: 20vh;
-  width: 20ch;
+  max-height: 80vh;
+  width: 50ch;
   background: lightgrey;
+  font-size: .8em;
+  font-family: monospace;
 }
 
 #styleWrapper style {
@@ -168,10 +170,19 @@ block-ui h3 {
   white-space: pre-wrap;
   width: 100%;
   display: block;
-  background: #cccd;
-  border: 2px solid white;
+  /* background: #cccd; */
+  border-bottom: 2px solid white;
+  padding: .5em 0;
 }
 
 .closeTo {
   background: lightgrey;
+}
+
+
+#styleWrapper style:hover::after {
+  content: attr(id);
+  background:red;
+  
+  color:white;
 }

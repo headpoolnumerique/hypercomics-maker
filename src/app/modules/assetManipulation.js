@@ -131,6 +131,10 @@ async function interactObject(object) {
           //update declaration is now the norm. We’ll see if we keep the rest later
           addRuleToObject(event.target.dataset.objectid, data);
 
+
+          // update the stylesheet
+          // update the parsed stylesheet
+          
           //updateDeclaration
           // console.log(event.target.closest("#previewScreen"));
         },

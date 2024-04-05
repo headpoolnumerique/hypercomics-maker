@@ -33,7 +33,7 @@ const rightAnchorRadio = document.querySelector("#rightAnchor");
 
 const anchors = document.querySelectorAll(".anchorInput");
 
-const stylesWrapper = document.querySelector("#cssContent");
+const stylesWrapper = document.querySelector("#styleWrapper");
 
 export {
   anchors,

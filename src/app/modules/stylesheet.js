@@ -31,26 +31,17 @@ import {
   screenRatioInput,
   newScreenForm,
   newScreenButton,
+  stylesWrapper,
 } from "./selectors";
 import { screenListItem } from "./stylesheets/screenListItem";
-
 /** function that will manage the stylesheet List:
  * - create the list, activate the list, and include the events listener for each item
  */
 
 export async function stylesheetmanager(obj) {
   let stylesheets = obj.data.attributes.stylesheets.data;
-  const orderedStylesheets = stylesheets.sort((a, b) => {
-    // sort by ratio
-    if (
-      a.attributes.maxwidth / a.attributes.defaultHeight <
-      b.attributes.maxwidth / b.attributes.defaultHeight
-    ) {
-      return -1;
-    } else {
-      return 1;
-    }
-  });
+  const orderedStylesheets = sortByRatio(stylesheets);
+
   orderedStylesheets.forEach((stylesheet) => {
     stylesheet.attributes.strapid = stylesheet.id;
     addStyleSheetToList(stylesheet.attributes);
@@ -62,7 +53,7 @@ export async function stylesheetmanager(obj) {
 /** event listener for the stylesheet ui
  */
 async function stylesheetListeners() {
-  screensList.addEventListener("click", function(event) {
+  screensList.addEventListener("click", function (event) {
     /* remove stylesheet (disable in 2 times )*/
     if (!event.target.classList.contains("remove")) {
       document.querySelector(".toremove")?.classList.remove("toremove");
@@ -79,7 +70,7 @@ async function stylesheetListeners() {
       // activate stylesheet if clicking on a stylesheet
       activateStylesheet(
         event.target.closest(".stylesheet") ||
-        event.target.classList.contains(".stylesheet"),
+          event.target.classList.contains(".stylesheet"),
       );
       resizePreview(
         previewScreen,
@@ -125,7 +116,7 @@ function validateInputs() {
 }
 
 // add stylesheet
-newScreenForm.addEventListener("submit", async function(event) {
+newScreenForm.addEventListener("submit", async function (event) {
   event.preventDefault();
   // if (!validateInputs()) return;
   // get the data from the form and from the inputs
@@ -151,7 +142,7 @@ newScreenForm.addEventListener("submit", async function(event) {
 
 async function loadStylesheets(response) {
   // load the stylesheets
-  //fillStylesheet
+  //fillStylesheettext-align:justify
   const stylesheets = response.data.data.attributes.stylesheets.data;
   // for stylesheet
   // addStyleSheetToList
@@ -174,6 +165,9 @@ async function loadStylesheets(response) {
 function activateFirstStylesheet() {
   let stylesheetToActivate = document.querySelector("#screens .header + li");
   stylesheetToActivate?.classList.add("activeStylesheet");
+
+
+
 
   if (stylesheetToActivate) {
     // resize the preview once activated
@@ -289,13 +283,10 @@ function selectScreen(ratio) {
   let toActivate = [...screensList.querySelectorAll(".stylesheet")].findLast(
     (li) => li.dataset.maxwidth / li.dataset.defaultHeight <= ratio,
   );
-
-  console.log(toActivate);
-
-  // active = stylesheet you’re writting on. 
+  // active = stylesheet you’re writting on.
   // so if you have 0.41 active, you write smaller than 0.41, then smaller than 0.75, then smaller
-  // if first : up to 0.41, then between 0.41 and 0.76, .....  more than the last 
-  if (toActivate && toActivate == undefined) {
+  // if first : up to 0.41, then between 0.41 and 0.76, .....  more than the last
+  if (toActivate == undefined) {
     toActivate = screens.querySelector(".stylesheet");
     toActivate.classList.add("activeStylesheet");
     return toActivate.dataset.strapid;
@@ -303,4 +294,63 @@ function selectScreen(ratio) {
     toActivate.classList.add("activeStylesheet");
     return toActivate.dataset.strapid;
   }
+}
+
+/* load an array of stylesheets */
+export function loadStylesheets(stylesheets) {
+  const sortedStylesheets = sortByRatio(stylesheets,true);
+  sortedStylesheets.forEach((stylesheet, index) => {
+    stylesheet.prev = stylesheets[index - 1];
+    stylesheet.next = stylesheets[index + 1];
+
+    loadStylesheet(stylesheet);
+  });
+}
+
+
+export function loadStylesheet(stylesheet) {
+  console.log(stylesheet.prev);
+  console.log(stylesheet.next);
+  // prev,next
+  /* the style element */
+  
+  const styleEl = `<style id="style-${stylesheet.id}" 
+data-height="${stylesheet.attributes.defaultHeight}"
+data-width="${stylesheet.attributes.maxwidth}">@container preview (max-aspect-ratio: ${getRatioFromStylesheet(stylesheet)}) {${stylesheet.attributes.cssrules ? stylesheet.attributes.cssrules : ""}}</style>`;
+
+  // for each stylesheet, create a style element and feel it up
+  stylesWrapper.insertAdjacentHTML("beforeend", styleEl);
+
+  // on startup load all style sheet and create styles element
+}
+
+/* let’s make it work! */
+// export function updateStylesheet(stylesheetId, object, css) {
+//   // get the style element from the stylesheet id
+//   // parse the style element? (or should we keep a global object for it?)
+//   // update the css in the style
+//   // push the css to strapi (but wait a little bit to make sure there is no other changes.)
+// }
+//
+function getRatioFromStylesheet(stylesheet) {
+  return (
+    stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight
+  ).toFixed(2);
+}
+
+export function sortByRatio(stylesheets, reverse) {
+    const sortedStylesheets = stylesheets.sort((a, b) => {
+      // sort by ratio
+      if (
+        a.attributes.maxwidth / a.attributes.defaultHeight <
+        b.attributes.maxwidth / b.attributes.defaultHeight
+      ) {
+        return -1;
+      } else {
+        return 1;
+      }
+    })
+  if (reverse) return sortedStylesheets.reverse()
+
+  return sortedStylesheets
 }

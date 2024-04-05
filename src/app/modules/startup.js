@@ -21,7 +21,7 @@ import {
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
 import { setAnchor} from "./assetManipulation";
-import { getSize, stylesheetmanager } from "./stylesheet.js";
+import { getSize, loadStylesheets, stylesheetmanager } from "./stylesheet.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -65,6 +65,7 @@ async function startup(url = document.location.href) {
 
   // manageStyleSheets(response.data)
   // load stylesheet
+  loadStylesheets(response.data.data.attributes.stylesheets.data);
   await stylesheetmanager(response.data)
 
 }
