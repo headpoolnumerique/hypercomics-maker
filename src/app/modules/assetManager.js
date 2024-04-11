@@ -16,7 +16,6 @@ function addAssetToTheAssetManager(url, assetid, filename, assetList) {
 
 
 function replaceAsset(asset) {
-     
   // add this button to the asset list item
   // <button id="replaceAsset">Replace</button>
   // in the future

@@ -81,6 +81,11 @@ function updateDataset(element, obj) {
   });
 }
 
+
+/*percentage calculator*/
+function percentage(partialValue, totalValue) {
+  return ((100 * partialValue) / totalValue).toFixed(2);
+}
 export {
   updateDataset,
   isNumeric,
@@ -90,4 +95,5 @@ export {
   selectLink,
   showHideBlock,
   renderDate,
+  percentage,
 };

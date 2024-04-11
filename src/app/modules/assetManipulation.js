@@ -5,7 +5,8 @@ import { reorderObjectInPlan, removeObjectFromPlan } from "./dataManagement.js";
 import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
-import { anchors } from "./selectors.js";
+import { anchors, stylesWrapper } from "./selectors.js";
+import { setObjInStylesheet, updateStylesheet } from "./stylesheet.js";
 
 async function interactObject(object) {
   // get the id of the stylesheet to update
@@ -22,7 +23,6 @@ async function interactObject(object) {
     height: previewScreen.offsetHeight,
     width: previewScreen.offsetWidth,
   };
-
 
   let position = { x: object.offsetLeft, y: object.offsetTop };
 
@@ -107,34 +107,44 @@ async function interactObject(object) {
               event.target.offsetLeft,
               previewScreenSize.width,
             )}%;`,
-            right: `${100 -
+            right: `${
+              100 -
               percentage(
                 event.target.offsetLeft + event.target.offsetWidth,
                 previewScreenSize.width,
               )
-              }% `,
-            bottom: `${100 -
+            }% `,
+            bottom: `${
+              100 -
               percentage(
                 event.target.offsetTop + event.target.offsetHeight,
                 previewScreenSize.height,
               )
-              }% `,
+            }% `,
             cssRules: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
           left: ${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width,
-            )}%;`,
+            event.target.offsetLeft,
+            previewScreenSize.width,
+          )}%;`,
           };
 
           //update declaration is now the norm. We’ll see if we keep the rest later
+          //but we wont use it anymore hohoho
           addRuleToObject(event.target.dataset.objectid, data);
 
+          // update the style fro mthe active style
+          console.log(
+            stylesWrapper.querySelector(".activatedStyle")
+          );
+          setObjInStylesheet(
+            stylesWrapper.querySelector(".activatedStyle"),
+            event.target,
+          );
 
-          // update the stylesheet
-          // update the parsed stylesheet
-          
+          // console.log(newcss);
+
           //updateDeclaration
           // console.log(event.target.closest("#previewScreen"));
         },
@@ -174,7 +184,7 @@ async function interactObject(object) {
             previewScreenSize.height,
           );
         },
-        move: function(event) {
+        move: function (event) {
           let { x, y } = event.target.dataset;
 
           x = (parseFloat(x) || 0) + event.deltaRect.left;
@@ -193,7 +203,7 @@ async function interactObject(object) {
 
           Object.assign(event.target.dataset, { x, y });
         },
-        end: function(event) {
+        end: function (event) {
           document.querySelector("#inputx").value = percentage(
             event.target.offsetLeft,
             previewScreenSize.width,
@@ -240,14 +250,13 @@ async function interactObject(object) {
           height: ${percentage(event.rect.height, previewScreenSize.height)}%;
           top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
           left: ${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width,
-            )}%; `,
+            event.target.offsetLeft,
+            previewScreenSize.width,
+          )}%; `,
           };
 
           // add ruel to object
           addRuleToObject(event.target.dataset.objectid, data);
-
         },
       },
     });
@@ -514,7 +523,5 @@ export function setAnchor() {
     }),
   );
 }
-
-
 
 // export { setAnchor };

@@ -66,8 +66,7 @@ async function startup(url = document.location.href) {
   // manageStyleSheets(response.data)
   // load stylesheet
   loadStylesheets(response.data.data.attributes.stylesheets.data);
-  await stylesheetmanager(response.data)
-
+  await stylesheetmanager(response.data);
 }
 
 async function fillSequence(sequence) {
@@ -89,7 +88,6 @@ async function fillSequence(sequence) {
     await fillPlan(plan);
     updateLayers();
   });
-
   // check for each plan. add them to the view
 }
 
@@ -126,39 +124,45 @@ async function fillPlan(plan) {
 
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+          object.id
         }" data-planid="${plan.id}"
         data-assetid="${asset.id}" src="${asset.attributes.location}"
-        data-anchor-horizontal="${asset.attributes.anchorVertical
-          ? asset.attributes.anchorVertical
-          : "left"
+        data-anchor-horizontal="${
+          asset.attributes.anchorVertical
+            ? asset.attributes.anchorVertical
+            : "left"
         }" 
-        data-anchor-vertical="${asset.attributes.anchorHorizontal
-          ? asset.attributes.anchorHorizontal
-          : "top"
+        data-anchor-vertical="${
+          asset.attributes.anchorHorizontal
+            ? asset.attributes.anchorHorizontal
+            : "top"
         }"
 
 
-class= "asset" style = "
-        ${object.attributes.width ? `width:${object.attributes.width}` : ""}
-        ${object.attributes.height ? `height:${object.attributes.height}` : ""}
+class= "asset" style = " " >`,
 
-        ${object.attributes.anchor == "top"
-          ? `top:${object.attributes.top};`
-          : `bottom:${object.attributes.bottom};`
-        }
-        ${object.attributes.anchor == "left"
-          ? `left:${object.attributes.left};`
-          : `right:${object.attributes.right};`
-        }
-        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`,
+        // style to set in the stylesheet instead of the object
+        //          ${object.attributes.width ? `width:${object.attributes.width}` : ""}
+        // ${object.attributes.height ? `height:${object.attributes.height}` : ""}
+        //
+        // ${object.attributes.anchor == "top"
+        //   ? `top:${object.attributes.top};`
+        //   : `bottom:${object.attributes.bottom};`
+        // }
+        // ${object.attributes.anchor == "left"
+        //   ? `left:${object.attributes.left};`
+        //   : `right:${object.attributes.right};`
+        // }
+        // ${object.attributes.left ? `left:${object.attributes.left}` : ""}
+        //
+        //
       );
     });
   });
 
   document.querySelector("#loading")?.remove();
 }
-
 
 export { startup, fillPlan };
 

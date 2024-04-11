@@ -174,7 +174,9 @@ block-ui h3 {
   border-bottom: 2px solid white;
   padding: .5em 0;
 }
-
+#styleWrapper style.activatedStyle {
+  background: white;
+}
 .closeTo {
   background: lightgrey;
 }

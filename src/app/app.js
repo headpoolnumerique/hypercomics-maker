@@ -26,6 +26,7 @@ import {
   assetsList,
   contextUI,
   layerList,
+  stylesWrapper,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
@@ -37,6 +38,7 @@ import {
   updateLayers,
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
+import { setObjInStylesheet } from "./modules/stylesheet.js";
 
 // list all the things
 //Event and binds
@@ -138,6 +140,13 @@ preview.addEventListener("click", (event) => {
     if (event.target.classList.contains("asset-selected")) return;
     deselect(".asset-selected");
     event.target.classList.add("asset-selected");
+
+    // console.log("there is a n envent", event.target);
+    // setObjInStylesheet(
+    //   stylesWrapper.querySelector(".activatedStyle"),
+    //   event.target,
+    // );
+
     updateTheUI(event.target);
     selectLayer(layerList, event.target.dataset.objectid);
     interactObject(event.target);

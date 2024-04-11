@@ -22,7 +22,8 @@
 //
 //
 import axios from "axios";
-import { deselect, updateDataset } from "./helpers";
+import { parse, stringify } from "../vendors/css/css.js";
+import { deselect, percentage, updateDataset } from "./helpers";
 import { resizePreview } from "./preview";
 import {
   screenHeightInput,
@@ -32,6 +33,7 @@ import {
   newScreenForm,
   newScreenButton,
   stylesWrapper,
+  previewScreen,
 } from "./selectors";
 import { screenListItem } from "./stylesheets/screenListItem";
 /** function that will manage the stylesheet List:
@@ -166,9 +168,6 @@ function activateFirstStylesheet() {
   let stylesheetToActivate = document.querySelector("#screens .header + li");
   stylesheetToActivate?.classList.add("activeStylesheet");
 
-
-
-
   if (stylesheetToActivate) {
     // resize the preview once activated
     resizePreview(
@@ -258,8 +257,11 @@ export function getSize() {
 
         // select the stylesheet on resize
         let stylesheetToEdit = selectScreen(screenRatioInput.value);
-        console.log(stylesheetToEdit);
-        //
+
+        deselect(".activatedStyle");
+        stylesWrapper
+          .querySelector(`#style-${stylesheetToEdit}`)
+          .classList.add("activatedStyle");
       }
     }
   });
@@ -298,7 +300,7 @@ function selectScreen(ratio) {
 
 /* load an array of stylesheets */
 export function loadStylesheets(stylesheets) {
-  const sortedStylesheets = sortByRatio(stylesheets,true);
+  const sortedStylesheets = sortByRatio(stylesheets, true);
   sortedStylesheets.forEach((stylesheet, index) => {
     stylesheet.prev = stylesheets[index - 1];
     stylesheet.next = stylesheets[index + 1];
@@ -307,13 +309,12 @@ export function loadStylesheets(stylesheets) {
   });
 }
 
-
 export function loadStylesheet(stylesheet) {
   console.log(stylesheet.prev);
   console.log(stylesheet.next);
   // prev,next
   /* the style element */
-  
+
   const styleEl = `<style id="style-${stylesheet.id}" 
 data-height="${stylesheet.attributes.defaultHeight}"
 data-width="${stylesheet.attributes.maxwidth}">@container preview (max-aspect-ratio: ${getRatioFromStylesheet(stylesheet)}) {${stylesheet.attributes.cssrules ? stylesheet.attributes.cssrules : ""}}</style>`;
@@ -339,18 +340,205 @@ function getRatioFromStylesheet(stylesheet) {
 }
 
 export function sortByRatio(stylesheets, reverse) {
-    const sortedStylesheets = stylesheets.sort((a, b) => {
-      // sort by ratio
-      if (
-        a.attributes.maxwidth / a.attributes.defaultHeight <
-        b.attributes.maxwidth / b.attributes.defaultHeight
-      ) {
-        return -1;
-      } else {
-        return 1;
-      }
-    })
-  if (reverse) return sortedStylesheets.reverse()
+  const sortedStylesheets = stylesheets.sort((a, b) => {
+    // sort by ratio
+    if (
+      a.attributes.maxwidth / a.attributes.defaultHeight <
+      b.attributes.maxwidth / b.attributes.defaultHeight
+    ) {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
+  if (reverse) return sortedStylesheets.reverse();
 
-  return sortedStylesheets
+  return sortedStylesheets;
 }
+
+function isSelectorExistInContainers(parsedCSS, selector) {
+  // console.log(selector);
+  let selectorExists = false;
+  parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+    if (rule.selectors && rule.selectors.includes(`#${selector}`)) {
+      selectorExists = true;
+    }
+  });
+
+  return selectorExists;
+}
+
+/**
+ * function to find the object in a stylesheet, and if it doesnt exist, create it
+ * @param stylesheet: style Element to update
+ * @param obj: html object to update
+ */
+export function setObjInStylesheet(stylesheet, obj) {
+  console.log("i did something");
+  let parsedCSS = parse(stylesheet.textContent);
+
+  // if there is no rule for the object, create one
+  if (!isSelectorExistInContainers(parsedCSS, obj.id)) {
+    // console.log("obj font exit, creating now");
+    // create the obj in the stylesheet
+    // TODONOW: cqw and cqh from the element
+    // console.log(parsedCSS);
+    parsedCSS.stylesheet.rules[0].rules.push({
+      type: "rule",
+      selectors: [`#${obj.id}`],
+      declarations: [
+        // heigbht is always auto for now
+        // {
+        //   type: "declaration",
+        //   property: "height",
+        //   value: `${percentage(obj.offsetHeight, previewScreen.offsetHeight)}cqh`,
+        // },
+        {
+          type: "declaration",
+          property: "width",
+          value: `${percentage(obj.offsetWidth, previewScreen.offsetWidth)}cqw`,
+        },
+        {
+          type: "declaration",
+          property: "top",
+          value: `${obj.dataset.anchorVertical == "top" ? `${percentage(obj.offsetTop, previewScreen.offsetHeight)}cqh` : "unset"}`,
+        },
+        {
+          type: "declaration",
+          property: "bottom",
+          value: `${obj.dataset.anchorVertical == "bottom" ? `${percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh` : "unset"}`,
+        },
+        {
+          type: "declaration",
+          property: "left",
+          value: `${obj.dataset.anchorHorizontal == "left" ? `${percentage(obj.offsetLeft, previewScreen.offsetHeight)}cqw` : "unset"}`,
+        },
+        {
+          type: "declaration",
+          property: "right",
+          value: `${obj.dataset.anchorHorizontal == "right" ? `${percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetHeight)}cqw` : "unset"}`,
+        },
+      ],
+    });
+  } else {
+    // console.log("hte")
+    // why does it doesnt update the content
+    // updte the declarations
+    // let ruleToUpdate = parsedCSS.stylesheet.rules[0].rules.filter((rule) => {
+    //   // return the stylesheet without the inuse block;
+    //   return rule.selectors.includes(obj.id);
+    // });
+
+    let updatedDeclarations = [
+      {
+        property: "height",
+        value: `${percentage(obj.offsetHeight, previewScreen.offsetHeight)}cqh`,
+      },
+      {
+        property: "width",
+        value: `${percentage(obj.offsetWidth, previewScreen.offsetWidth)}cqw`,
+      },
+      {
+        property: "top",
+        value:
+          obj.dataset.anchorVertical == "top"
+            ? `${percentage(obj.offsetTop, previewScreen.offsetHeight)}cqh`
+            : "unset",
+      },
+      {
+        property: "bottom",
+        value:
+          obj.dataset.anchorVertical == "bottom"
+            ? `${percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh`
+            : "unset",
+      },
+      {
+        property: "left",
+        value:
+          obj.dataset.anchorHorizontal == "left"
+            ? `${percentage(obj.offsetLeft, previewScreen.offsetWidth)}cqw`
+            : "unset",
+      },
+      {
+        property: "right",
+        value:
+          obj.dataset.anchorHorizontal == "right"
+            ? `${percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetWidth)}cqw`
+            : "unset",
+      },
+    ];
+
+    // console.log(parsedCSS.stylesheet.rules[0].rules)
+    parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+      if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
+        // Update existing declarations for the selectorToUpdate
+        rule.declarations.forEach((declaration) => {
+          updatedDeclarations.forEach((updatedDeclaration) => {
+            if (declaration.property === updatedDeclaration.property) {
+              declaration.value = updatedDeclaration.value;
+            }
+          });
+        });
+      }
+    });
+
+    // modifiedCSS = stringify(parsedCSS);
+  }
+
+  stylesheet.textContent = stringify(parsedCSS);
+
+  // update rules
+
+  //  if (parsedCSS.stylesheet.rules.length > 1) {
+  //    console.log("there are rules yeah");
+  //
+  //     } else {
+  //    console.log(`${obj} has no rule yet, let’s make one!`);
+  //    // update  with the new data
+  //    // // if the rule doesnt exist create a new one,
+  //    // and return rule to update
+  //  }
+  //
+
+  // parsedCSS.stylesheet.style.background = "red";
+  // // console.log("parsedCSS", parsedCSS)
+  // // console.log(obj, ruleToUpdate)
+  // // console.log("1", parsedCSS.stylesheet.rules);
+  // // parsedCSS.splice(rule)
+  //
+  // // // if the rule  exist update it a new one,
+}
+
+export function updateStylesheet(stylesheetContent, obj) {
+  // parsestylesheet
+  // TODO : check if there is the object in the global stylesheet object so.
+  // const cssRules = parse(stylesheetContent);
+
+  // console.log(isSelectorExistInContainers(cssRules, obj));
+
+  //
+
+  // rule.declarations.forEach(declaration => {
+  // updatedDeclarations.forEach(updatedDeclaration => {
+  //   if (declaration.property === updatedDeclaration.property) {
+  //     declaration.value = updatedDeclaration.value;
+  //   }
+  // });
+
+  // get the cssrule for the item, and change the width/heigh/left/right/top/bottom based on the  anchor.
+  // anchor == stuff.anchor
+
+  return console.log(
+    `${obj} has been updated in stylesheet ${stylesheetContent}`,
+  );
+
+  // when selecting an object, look for its place in the stylesheet
+
+  // get the new rule for the object.
+  // find the object in the object
+  // update the styles your need
+  // reexport it
+}
+
+//chatgpt update declaration:
+//
