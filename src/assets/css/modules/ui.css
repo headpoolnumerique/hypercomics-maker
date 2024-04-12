@@ -161,7 +161,7 @@ block-ui h3 {
   max-height: 80vh;
   width: 50ch;
   background: lightgrey;
-  font-size: .8em;
+  font-size: 0.8em;
   font-family: monospace;
 }
 
@@ -172,21 +172,21 @@ block-ui h3 {
   display: block;
   /* background: #cccd; */
   border-bottom: 2px solid white;
-  padding: .5em 0;
+  padding: 0.5em 0;
 }
+
 #styleWrapper style.activatedStyle {
   background: white;
 }
+
 .closeTo {
   background: lightgrey;
 }
 
-
-#styleWrapper {
-}
+#styleWrapper {}
 
 #styleWrapper style:hover::after {
   content: attr(id);
-  color:white;
+  color: white;
   background: grey;
 }

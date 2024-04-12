@@ -17,78 +17,7 @@ import {
 
 const serverUrl = config.strapi.url;
 
-async function kickstartStylesheet() {
-  // onloading, check if there is the following screen:
-  // https://gs.statcounter.com/screen-resolution-stats/
-  // screenwidth: resolution de base
-  // ratio de base
-  // screen: 360 * 800
-
-  // 1 stylesheet per size per sequence
-  // 1 set of css rule per object per stylesheet
-
-  // tablet: 1024 * 768
-  // tablev: 768 * 1024
-  // desktop: 1920 * 1080 (found less for smaller screen?)
-  // desktop: 1368 * 768 (found less for smaller screen?)
-  // default = not removable, add class
-
-  // add resolution you want here and it will create them by default
-  const resolutions = [
-    {
-      maxwidth: "360",
-      defaultHeight: "880",
-      default: true,
-      sequenceId: sequenceNumber.textContent,
-    },
-    {
-      maxwidth: "1024",
-      defaultHeight: "768",
-      default: true,
-      sequenceId: sequenceNumber.textContent,
-    },
-    {
-      maxwidth: "768",
-      defaultHeight: "1024",
-      default: true,
-      sequenceId: sequenceNumber.textContent,
-    },
-    {
-      maxwidth: "1920",
-      defaultHeight: "1080",
-      default: true,
-      sequenceId: sequenceNumber.textContent,
-    },
-    {
-      maxwidth: "1368",
-      defaultHeight: "768",
-      default: true,
-      sequenceId: sequenceNumber.textContent,
-    },
-  ];
-
-  // check stylesheet
-
-  resolutions.map(async (rez) => {
-    const response = await createData(serverUrl, "stylesheets", rez);
-    if (!response.data) return console.log(`nothing got saved`);
-
-    // add stylesheet to the sequence,
-    const responsedata = response.data.data.attributes;
-    const strapid = response.data.data.id;
-
-    previewScreen.dataset.screensize = strapid;
-    responsedata.strapid = response.data.data.id;
-
-    responsedata;
-  });
-
-  console.log("add some stylesheet now!");
-
-  // on load check if the table with the content is empty
-  // if empty, add stylesheet
-}
-
+// kickstart
 function changeOrientation(previewEl) {
   const width = previewEl.style.getPropertyValue("width");
   const height = previewEl.style.getPropertyValue("height");

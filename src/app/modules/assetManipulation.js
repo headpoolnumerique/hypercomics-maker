@@ -9,7 +9,6 @@ import { anchors, stylesWrapper } from "./selectors.js";
 import {
   saveStylesheet,
   setObjInStylesheet,
-  updateStylesheet,
 } from "./stylesheet.js";
 import { parse } from "bytes";
 

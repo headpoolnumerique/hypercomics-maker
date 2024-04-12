@@ -1,3 +1,21 @@
+import axios from "axios";
+import config from "../config/config.js";
+import { parse, stringify } from "../vendors/css/css.js";
+import { createData, updateData } from "./dataManagement.js";
+import { deselect, percentage, updateDataset } from "./helpers";
+import {
+  screenHeightInput,
+  screensList,
+  screenWidthInput,
+  screenRatioInput,
+  newScreenForm,
+  newScreenButton,
+  stylesWrapper,
+  previewScreen,
+  populateStylesheetButton,
+} from "./selectors";
+import { screenListItem } from "./stylesheets/screenListItem";
+
 // stylesheet v5
 //
 // CREATE A STYLE ELEMENT FOR EACH STYLESHEET, AND GIVE IT AN ID.
@@ -21,33 +39,26 @@
 // update element inside stylesheet
 //
 //
-import axios from "axios";
-import config from "../config/config.js";
-import { parse, stringify } from "../vendors/css/css.js";
-import { createData, updateData } from "./dataManagement.js";
-import { deselect, percentage, updateDataset } from "./helpers";
-import { resizePreview } from "./preview";
-import {
-  screenHeightInput,
-  screensList,
-  screenWidthInput,
-  screenRatioInput,
-  newScreenForm,
-  newScreenButton,
-  stylesWrapper,
-  previewScreen,
-} from "./selectors";
-import { screenListItem } from "./stylesheets/screenListItem";
 
+/** stylesheet manager: create stylesheet listeners, load the existing stylesheet
+ * @obj = stylesheet object
+ */
 export async function stylesheetmanager(obj) {
   let stylesheets = obj.data.attributes.stylesheets.data;
   const orderedStylesheets = sortByRatio(stylesheets);
 
-  orderedStylesheets.forEach((stylesheet) => {
-    stylesheet.attributes.strapid = stylesheet.id;
-    addStyleSheetToList(stylesheet.attributes);
-    // create a style element with the content of the styleelement
-  });
+  loadAllStylesheets(orderedStylesheets);
+
+  // orderedStylesheets.forEach((stylesheet) => {
+  //   stylesheet.attributes.strapid = stylesheet.id;
+  //   addStyleSheetToList(stylesheet.attributes);
+  //   // create a style element with the content of the styleelement
+  // });
+
+  // console.log(orderedStylesheets);
+  // if (orderedStylesheets.length == 0) {
+  // await kickstartStylesheet();
+  // }
 
   activateFirstStylesheet();
 
@@ -56,9 +67,8 @@ export async function stylesheetmanager(obj) {
 
 /** event listener for the stylesheet ui
  */
-async function stylesheetListeners() {
-  screensList.addEventListener("click", function(event) {
-    console.log(event)
+export async function stylesheetListeners() {
+  screensList.addEventListener("click", function (event) {
     /* remove stylesheet (disable in 2 times )*/
     // cancel remove if you click on something else
     if (!event.target.classList.contains("remove")) {
@@ -70,7 +80,11 @@ async function stylesheetListeners() {
       if (event.target.closest("li").classList.contains("toremove")) {
         removeStylesheet(event.target);
         // removfe the style object frtom the style block
-        document.querySelector(`#style-${event.target.closest(".stylesheet").dataset.strapid}`).remove()
+        document
+          .querySelector(
+            `#style-${event.target.closest(".stylesheet").dataset.strapid}`,
+          )
+          .remove();
         // remove the stylesheet from the ui
         event.target.closest("li").remove();
       } else {
@@ -78,11 +92,9 @@ async function stylesheetListeners() {
         event.target.closest("li").classList.add("toremove");
       }
     } else if (event.target.closest(".stylesheet")) {
+      // activateStylesheet(event.target)
       // activate stylesheet if clicking on a stylesheet
-      // activateStylesheet(
-      //   event.target.closest(".stylesheet") ||
-      //   event.target.classList.contains(".stylesheet"),
-      // );
+      // style sheet activatiohn comes from the update of the preview
       resizePreview(
         previewScreen,
         event.target.closest(".stylesheet").dataset.maxwidth,
@@ -91,88 +103,67 @@ async function stylesheetListeners() {
       );
     }
   });
+
+  // set the button to add the default stylesheets
+  // populateStylesheetButton.addEventListener("click", kickstartStylesheet);
+
+  // create a stylesheet: add it to the stylesheet list, and push content
+  newScreenForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    // if (!validateInputs()) return console.log("screen size input are not valid");
+    // validation is done in the html, and we don’t use the ratio
+    // get the data from the form and from the inputs
+    const data = {
+      maxwidth: Number(screenWidthInput.value),
+      sequenceId: sequenceNumber.textContent,
+      defaultHeight: Number(screenHeightInput.value),
+    };
+
+    // create the stylesheet
+    const response = await createData(config.strapi.url, "stylesheets", data);
+    if (!response.data) return console.log(`nothing got saved`);
+
+    // add stylesheet to the sequence,
+    const responsedata = response.data.data.attributes;
+    const strapid = response.data.data.id;
+    // set the screensize id on the preview to know where to save the data
+    previewScreen.dataset.screensize = strapid;
+    responsedata.strapid = response.data.data.id;
+
+    await insertStylesheetToList(responsedata);
+    createStyleElement({ responsedata });
+
+    // reorder the <style, following the ratio after added an element?
+  });
 }
-// console.log(screensList.querySelectorAll(".stylesheet"))
-// if (screensList.querySelectorAll(".stylesheet").length < 1) {
-//   await kickstartStylesheet();
+// set all the stylesheets: add them to the list, create the style elements
+// export async function loadAllStylesheets(response) {
+//   const stylesheets = response.data.data.attributes.stylesheets.data;
+//
+//   // sort: show all
+//   const orderedstylesheets = stylesheets.sort((a, b) => {
+//     // console.log(a.attributes.maxwidth);
+//     return a.attributes.maxwidth - b.attributes.maxwidth;
+//   });
+//   orderedstylesheets.forEach((stylesheet, index) => {
+//     stylesheet.attributes.strapid = stylesheet.id;
+//     // add the stylesheets to the list
+//     // console.log("noe", stylesheet)
+//   });
+
+// get the first stylesheet and activate it.
 // }
 
-// populateStylesheetButton.addEventListener("click", kickstartStylesheet);
+/* load an array of stylesheets */
+export function loadAllStylesheets(stylesheets) {
+  const sortedStylesheets = sortByRatio(stylesheets, true);
+  sortedStylesheets.forEach((stylesheet, index) => {
+    stylesheet.prev = stylesheets[index - 1];
+    stylesheet.next = stylesheets[index + 1];
 
-// check for existing stylesheet with the following width/height
-
-// if there is no stylesheet, createone
-// by default, else activate one
-
-// set default stylesheet if it doesnt exist
-
-// first screens:
-
-// load all stylesheet. TODO: only load filtered stylesheets!
-// loadStyleSheet(sequenceNumber.innerText);
-
-/*check existing stylesheet and merge them? */
-/*create a screen = create a stylesheet*/
-
-/*remove a stylesheet*/
-
-// check if inputs are valid
-newScreenForm.addEventListener("input", validateInputs());
-function validateInputs() {
-  if (newScreenForm.checkValidity()) {
-    newScreenButton.disabled = false;
-  } else {
-    newScreenButton.disabled = true;
-  }
-}
-
-// create a stylesheet: add it to the stylesheet list, and push content
-newScreenForm.addEventListener("submit", async function(event) {
-  event.preventDefault();
-  // if (!validateInputs()) return;
-  // get the data from the form and from the inputs
-  const data = {
-    maxwidth: Number(screenWidthInput.value),
-    sequenceId: sequenceNumber.textContent,
-    defaultHeight: Number(screenHeightInput.value),
-  };
-
-  // create the stylesheet
-  const response = await createData(config.strapi.url, "stylesheets", data);
-  if (!response.data) return console.log(`nothing got saved`);
-
-  // add stylesheet to the sequence,
-  const responsedata = response.data.data.attributes;
-  const strapid = response.data.data.id;
-  // set the screensize id on the preview to know where to save the data
-  previewScreen.dataset.screensize = strapid;
-  responsedata.strapid = response.data.data.id;
-
-  await insertStylesheetToList(responsedata);
-
-  // reorder the <style, following the ratio after added an element?
-});
-
-async function loadStylesheets(response) {
-  // load the stylesheets
-  //fillStylesheettext-align:justify
-  const stylesheets = response.data.data.attributes.stylesheets.data;
-  // for stylesheet
-  // addStyleSheetToList
-
-  // sort: show all
-  const orderedstylesheets = stylesheets.sort((a, b) => {
-    // console.log(a.attributes.maxwidth);
-    return a.attributes.maxwidth - b.attributes.maxwidth;
+    addStyleSheetToList(stylesheet);
+    createStyleElement(stylesheet);
   });
-  orderedstylesheets.forEach((stylesheet, index) => {
-    stylesheet.attributes.strapid = stylesheet.id;
-    // add the stylesheets to the list
-    // console.log("noe", stylesheet)
-    addStyleSheetToList(stylesheet.attributes);
-  });
-
-  // get the first stylesheet and activate it.
 }
 
 function activateFirstStylesheet() {
@@ -194,48 +185,79 @@ function activateFirstStylesheet() {
 // because we send to strapi before adding it, so the content we have
 // is the final one
 async function insertStylesheetToList(data) {
+  // deactivate the stylesheet and active the new one
+  deselect(".activeStylesheet");
   const itemclasses = data.disabled ? "disabled" : "";
 
-  // get the max-width of the element
-  const newMaxWidth = data.maxwidth;
+  const ratio = data.maxwidth / data.defaultHeight;
 
-  // () and place the element just before the stylesheet with a bigger screen
-  let nextMaxWidth = [...screensList.querySelectorAll("li")].findLast((el) => {
-    return Number(el.dataset.maxwidth) > Number(newMaxWidth);
-  });
+  let ratioBefore = [...screensList.querySelectorAll(".stylesheet")].findLast(
+    (el) => {
+      return el.dataset.maxwidth / el.dataset.defaultHeight > ratio;
+    },
+  );
 
-  if (nextMaxWidth.length > 0) {
-    // create a item in the screens list
+  console.log(ratioBefore);
+
+  if (!ratioBefore) {
+    // include the element at the beginning of the block
     screensList
-      .querySelector(".activeStylesheet")
-      ?.classList.remove("activeStylesheet");
-    nextMaxWidth[0]?.insertAdjacentHTML(
-      "beforebegin",
-      screenListItem(data, itemclasses, true),
-    );
+      .querySelector("li")
+      .insertAdjacentHTML("afterend", screenListItem(data, itemclasses, true));
   } else {
-    screensList
-      .querySelector(".activeStylesheet")
-      ?.classList.remove("activeStylesheet");
-    screensList.insertAdjacentHTML(
-      "beforeend",
+    ratioBefore.insertAdjacentHTML(
+      "afterend",
       screenListItem(data, itemclasses, true),
     );
   }
+
+  // get the max-width of the element
+
+  // () and place the element just before the stylesheet with a bigger screen
+  // place the element to the ratio!
+
+  // let nextMaxWidth = [...screensList.querySelectorAll("li")].findLast((el) => {
+  //   return Number(el.dataset.maxwidth) < Number(newMaxWidth);
+  // });
+  // console.log("next", nextMaxWidth);
+
+  // if (nextMaxWidth.length > 0) {
+  //   // create a item in the screens list
+  //   screensList
+  //     .querySelector(".activeStylesheet")
+  //     ?.classList.remove("activeStylesheet");
+  //   nextMaxWidth[0]?.insertAdjacentHTML(
+  //     "beforebegin",
+  //     screenListItem(data, itemclasses, true),
+  //   );
+  // } else {
+  //   screensList
+  //     .querySelector(".activeStylesheet")
+  //     ?.classList.remove("activeStylesheet");
+  //   screensList.insertAdjacentHTML(
+  //     "beforeend",
+  //     screenListItem(data, itemclasses, true),
+  //   );
+  // }
 
   // selectAdded;
 }
 
 /** add the stylesheet to the list UI */
-function addStyleSheetToList(data) {
-  console.log(data.disabled);
-  const itemclasses = data.disabled ? "disabled" : "";
+export function addStyleSheetToList(data) {
+  console.log(data.attributes.disabled);
+  const itemclasses = data.attributes.disabled ? "disabled" : "";
   /*if the stylesheet has been disabled*/
   if (data.disabled) return;
+
+  data.attributes.strapid = data.id;
+
   screensList.insertAdjacentHTML(
     "beforeend",
-    screenListItem(data, itemclasses),
+    screenListItem(data.attributes, itemclasses),
   );
+
+  //set the whole thing
 }
 
 async function removeStylesheet(target) {
@@ -279,16 +301,17 @@ export function getSize() {
         // select the stylesheet on resize
         let stylesheetToEdit = selectScreen(screenRatioInput.value);
 
+        // highlight code
         deselect(".activatedStyle");
         stylesWrapper
           .querySelector(`#style-${stylesheetToEdit}`)
           .classList.add("activatedStyle");
 
         // reload the style by turning it off and on again after a change of container size.
-        let back = styleWrapper.innerHTML;
+        let back = stylesWrapper.innerHTML;
         // styleWrapper.innerHTML = ""
-        styleWrapper.innerHTML = "";
-        styleWrapper.innerHTML = back;
+        stylesWrapper.innerHTML = "";
+        stylesWrapper.innerHTML = back;
       }
     }
   });
@@ -309,13 +332,17 @@ function selectScreen(ratio) {
   // console.log(ratio);
   deselect(".activeStylesheet");
 
-  let toActivate = [...screensList.querySelectorAll(".stylesheet")].find(
-    (li) => li.dataset.maxwidth / li.dataset.defaultHeight >= ratio,
+  let toActivate = [...screensList.querySelectorAll(".stylesheet")].findLast(
+    (el) => {
+      return el.dataset.maxwidth / el.dataset.defaultHeight > ratio;
+    },
   );
+
+  console.log(toActivate)
   // active = stylesheet you’re writting on.
   // so if you have 0.41 active, you write smaller than 0.41, then smaller than 0.75, then smaller
   // if first : up to 0.41, then between 0.41 and 0.76, .....  more than the last
-  if (toActivate == undefined) {
+  if (!toActivate) {
     toActivate = screens.querySelector(".stylesheet");
     toActivate.classList.add("activeStylesheet");
     return toActivate.dataset.strapid;
@@ -325,18 +352,7 @@ function selectScreen(ratio) {
   }
 }
 
-/* load an array of stylesheets */
-export function loadStylesheets(stylesheets) {
-  const sortedStylesheets = sortByRatio(stylesheets, true);
-  sortedStylesheets.forEach((stylesheet, index) => {
-    stylesheet.prev = stylesheets[index - 1];
-    stylesheet.next = stylesheets[index + 1];
-
-    loadStylesheet(stylesheet);
-  });
-}
-
-export function loadStylesheet(stylesheet) {
+export function createStyleElement(stylesheet) {
   // if the stylesheet is deactivated
   if (stylesheet.attributes.disabled) return;
   // prev,next
@@ -369,17 +385,21 @@ function getRatioFromStylesheet(stylesheet) {
 }
 
 export function sortByRatio(stylesheets, reverse) {
-  const sortedStylesheets = stylesheets.sort((a, b) => {
-    // sort by ratio
-    if (
-      a.attributes.maxwidth / a.attributes.defaultHeight <
-      b.attributes.maxwidth / b.attributes.defaultHeight
-    ) {
-      return -1;
-    } else {
-      return 1;
-    }
-  });
+  const sortedStylesheets = stylesheets
+    .filter((sheet) => {
+      return !sheet.attributes.disabled;
+    })
+    .sort((a, b) => {
+      // sort by ratio
+      if (
+        a.attributes.maxwidth / a.attributes.defaultHeight <
+        b.attributes.maxwidth / b.attributes.defaultHeight
+      ) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
   if (reverse) return sortedStylesheets.reverse();
 
   return sortedStylesheets;
@@ -403,7 +423,7 @@ function isSelectorExistInContainers(parsedCSS, selector) {
  * @param obj: html object to update
  */
 export function setObjInStylesheet(stylesheet, obj) {
-  console.log("i did something");
+  // console.log("i did something");
   let parsedCSS = parse(stylesheet.textContent);
 
   // if there is no rule for the object, create one
@@ -450,7 +470,6 @@ export function setObjInStylesheet(stylesheet, obj) {
       ],
     });
   } else {
-    // console.log("hte")
     // why does it doesnt update the content
     // updte the declarations
     // let ruleToUpdate = parsedCSS.stylesheet.rules[0].rules.filter((rule) => {
@@ -515,65 +534,9 @@ export function setObjInStylesheet(stylesheet, obj) {
   }
 
   stylesheet.textContent = stringify(parsedCSS);
-
-  // update rules
-
-  //  if (parsedCSS.stylesheet.rules.length > 1) {
-  //    console.log("there are rules yeah");
-  //
-  //     } else {
-  //    console.log(`${obj} has no rule yet, let’s make one!`);
-  //    // update  with the new data
-  //    // // if the rule doesnt exist create a new one,
-  //    // and return rule to update
-  //  }
-  //
-
-  // parsedCSS.stylesheet.style.background = "red";
-  // // console.log("parsedCSS", parsedCSS)
-  // // console.log(obj, ruleToUpdate)
-  // // console.log("1", parsedCSS.stylesheet.rules);
-  // // parsedCSS.splice(rule)
-  //
-  // // // if the rule  exist update it a new one,
 }
 
-export function updateStylesheet(stylesheetContent, obj) {
-  // parsestylesheet
-  // TODO : check if there is the object in the global stylesheet object so.
-  // const cssRules = parse(stylesheetContent);
-
-  // console.log(isSelectorExistInContainers(cssRules, obj));
-
-  //
-
-  // rule.declarations.forEach(declaration => {
-  // updatedDeclarations.forEach(updatedDeclaration => {
-  //   if (declaration.property === updatedDeclaration.property) {
-  //     declaration.value = updatedDeclaration.value;
-  //   }
-  // });
-
-  // get the cssrule for the item, and change the width/heigh/left/right/top/bottom based on the  anchor.
-  // anchor == stuff.anchor
-
-  return console.log(
-    `${obj} has been updated in stylesheet ${stylesheetContent}`,
-  );
-
-  // when selecting an object, look for its place in the stylesheet
-
-  // get the new rule for the object.
-  // find the object in the object
-  // update the styles your need
-  // reexport it
-}
-
-//chatgpt update declaration:
-//
-//
-//
-export function saveStylesheet(stylesheetId, data) {
+export async function saveStylesheet(stylesheetId, data) {
   return axios
     .put(`${config.strapi.url}/api/stylesheets/${stylesheetId}`, {
       data: {
@@ -586,4 +549,96 @@ export function saveStylesheet(stylesheetId, data) {
     .catch((err) => {
       return err;
     });
+}
+
+/** change the orientation of the preview
+ */
+export function changeOrientation(previewEl) {
+  const width = previewEl.style.getPropertyValue("width");
+  const height = previewEl.style.getPropertyValue("height");
+  previewEl.style.setProperty("width", height);
+  previewEl.style.setProperty("height", width);
+}
+
+export function resizePreview(previewEl, width, height, strapid) {
+  if (!previewEl) return console.log("no preview El!");
+  // previewEl.querySelector().style.width
+  previewEl.style.width = "var(--preview-width)";
+  previewEl.style.height = "var(--preview-height)";
+  previewEl.style.setProperty("--preview-width", width + `px`);
+  previewEl.style.setProperty("--preview-height", height + `px`);
+  // screensize let you know where to save the data
+  previewEl.dataset.screensize = strapid;
+}
+
+export async function kickstartStylesheet() {
+  // onloading, check if there is the following screen:
+  // https://gs.statcounter.com/screen-resolution-stats/
+  // screenwidth: resolution de base
+  // ratio de base
+  // screen: 360 * 800
+
+  // 1 stylesheet per size per sequence
+  // 1 set of css rule per object per stylesheet
+
+  // tablet: 1024 * 768
+  // tablev: 768 * 1024
+  // desktop: 1920 * 1080 (found less for smaller screen?)
+  // desktop: 1368 * 768 (found less for smaller screen?)
+  // default = not removable, add class
+
+  // add resolution you want here and it will create them by default
+  const resolutions = [
+    {
+      maxwidth: "360",
+      defaultHeight: "880",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    {
+      maxwidth: "1024",
+      defaultHeight: "768",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    {
+      maxwidth: "768",
+      defaultHeight: "1024",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    {
+      maxwidth: "1920",
+      defaultHeight: "1080",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    // {
+    //   maxwidth: "1368",
+    //   defaultHeight: "768",
+    //   default: true,
+    //   sequenceId: sequenceNumber.textContent,
+    // },
+  ];
+
+  // check stylesheet
+
+  resolutions.map(async (rez) => {
+    const response = await createData(serverUrl, "stylesheets", rez);
+    if (!response.data) return console.log(`nothing got saved`);
+
+    // add stylesheet to the sequence,
+    const responsedata = response.data.data.attributes;
+    const strapid = response.data.data.id;
+
+    previewScreen.dataset.screensize = strapid;
+    responsedata.strapid = response.data.data.id;
+
+    responsedata;
+  });
+
+  console.log("add some stylesheet now!");
+
+  // on load check if the table with the content is empty
+  // if empty, add stylesheet
 }

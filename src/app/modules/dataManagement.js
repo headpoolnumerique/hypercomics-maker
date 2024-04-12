@@ -200,13 +200,3 @@ export function getAllImageFromPlan(plan) {
   return imgData;
 }
 
-// export {
-//   createData,
-//   updateData,
-//   loadCollection,
-//   loadSingle,
-//   getAllImageFromPlan,
-//   connectObjectToPlan,
-//   removeObjectFromPlan,
-//   reorderObjectInPlan,
-// };

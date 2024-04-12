@@ -21,7 +21,7 @@ import {
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
 import { setAnchor} from "./assetManipulation";
-import { getSize, loadStylesheets, stylesheetmanager } from "./stylesheet.js";
+import { getSize, loadAllStylesheets, stylesheetmanager } from "./stylesheet.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -37,11 +37,6 @@ async function startup(url = document.location.href) {
   // if there is a sequenceID in the url, load the sequence from strapi
   let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
-  //update the sequence url and write in the url bar
-  // sequenceUrl.sequenceId = response.data.data.id;
-  // history.pushState({}, null, sequenceUrl)
-  // window.location.href = sequenceUrl
-
   // console.log(response);
   await updateSequenceMeta(
     response.data?.data?.id,
@@ -49,10 +44,6 @@ async function startup(url = document.location.href) {
   );
 
   fillSequence(response.data.data.id);
-
-  // console.log("start");
-  // parseStylesheet(response.data.data.attributes.css);
-
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
@@ -62,10 +53,6 @@ async function startup(url = document.location.href) {
   handleDelays();
   getSize();
   setAnchor();
-
-  // manageStyleSheets(response.data)
-  // load stylesheet
-  loadStylesheets(response.data.data.attributes.stylesheets.data);
   await stylesheetmanager(response.data);
 }
 
