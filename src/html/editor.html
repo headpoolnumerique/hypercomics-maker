@@ -48,18 +48,18 @@
     <section id="screen-ui" style="top: 30%; left: 30%" class="moveable block-ui resizable">
       <h2>Stylesheets</h2>
 
-      <button id="orientationChanger">change orientation</button>
-      <button id="fullPageWatcher">fullpage</button>
+      <!-- <button id="orientationChanger">change orientation</button> -->
+      <!-- <button id="fullPageWatcher">fullpage</button> -->
 
       <form id="screensform">
         <label for="screenwidth">
           <span>Width</span>
           <input min="200" type="number" name="screenwidth" id="screenWidth" />
         </label>
-        <label for="screenHeight"><span>Max height</span>
+        <label for="screenHeight"><span>Default height</span>
           <input type="number" name="screenHeight" id="screenHeight" />
-          <label for="screenRatio"><span>Ratio</span>
-            <input name="screenRatio" id="screenRatio" />
+          <label for="screenRatio"><span> Max ratio</span>
+            <input name="screenRatio" id="screenRatio" disable />
             <!-- type="text" -->
           </label>
           <button type="submit" id="newscreen">add screen</button>

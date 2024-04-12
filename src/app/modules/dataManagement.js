@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-async function updateData(serverUrl, collection, data, id) {
+export async function updateData(serverUrl, collection, data, id) {
   return axios
     .put(`${serverUrl}/api/${collection}/${id}?populate=deep,5`, {
       data,
@@ -14,7 +14,7 @@ async function updateData(serverUrl, collection, data, id) {
     });
 }
 
-async function createData(serverUrl, collection, data) {
+export async function createData(serverUrl, collection, data) {
   return axios
     .post(`${serverUrl}/api/${collection}/?populate=deep,5`, {
       data,
@@ -28,7 +28,7 @@ async function createData(serverUrl, collection, data) {
 }
 
 // remove object from the plan in strapi
-async function removeObjectFromPlan(serverUrl, planId, objectId) {
+export async function removeObjectFromPlan(serverUrl, planId, objectId) {
   let data = {
     objects: {
       disconnect: [
@@ -52,7 +52,7 @@ async function removeObjectFromPlan(serverUrl, planId, objectId) {
 }
 
 // remove object from the plan in strapi
-async function reorderObjectInPlan(
+export async function reorderObjectInPlan(
   serverUrl,
   planId,
   objectId,
@@ -101,7 +101,7 @@ async function reorderObjectInPlan(
     });
 }
 
-async function connectObjectToPlan(serverUrl, planId, assetId) {
+export async function connectObjectToPlan(serverUrl, planId, assetId) {
   let data = {
     plan: planId,
     assets: assetId,
@@ -163,7 +163,7 @@ async function connectObjectToPlan(serverUrl, planId, assetId) {
 //     })
 // }
 
-async function loadCollection(serverUrl, collection, query, populatedeep = true) {
+export async function loadCollection(serverUrl, collection, query, populatedeep = true) {
   //load with a query
   return axios
     .get(`${serverUrl}/api/${collection}${query ? "?" + query : ""}`)
@@ -176,7 +176,7 @@ async function loadCollection(serverUrl, collection, query, populatedeep = true)
     });
 }
 
-async function loadSingle(serverUrl, collection, id, populatedeep = true) {
+export async function loadSingle(serverUrl, collection, id, populatedeep = true) {
   return axios
     .get(
       `${serverUrl}/api/${collection}/${id}${
@@ -192,7 +192,7 @@ async function loadSingle(serverUrl, collection, id, populatedeep = true) {
     });
 }
 
-function getAllImageFromPlan(plan) {
+export function getAllImageFromPlan(plan) {
   const imgData = [];
   plan.querySelectorAll("img").forEach((img) => {
     imgData.push(Number(img.id.split("-")[1]));
@@ -200,13 +200,13 @@ function getAllImageFromPlan(plan) {
   return imgData;
 }
 
-export {
-  createData,
-  updateData,
-  loadCollection,
-  loadSingle,
-  getAllImageFromPlan,
-  connectObjectToPlan,
-  removeObjectFromPlan,
-  reorderObjectInPlan,
-};
+// export {
+//   createData,
+//   updateData,
+//   loadCollection,
+//   loadSingle,
+//   getAllImageFromPlan,
+//   connectObjectToPlan,
+//   removeObjectFromPlan,
+//   reorderObjectInPlan,
+// };

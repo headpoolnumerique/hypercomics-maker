@@ -24,6 +24,7 @@
 import axios from "axios";
 import config from "../config/config.js";
 import { parse, stringify } from "../vendors/css/css.js";
+import { createData, updateData } from "./dataManagement.js";
 import { deselect, percentage, updateDataset } from "./helpers";
 import { resizePreview } from "./preview";
 import {
@@ -37,9 +38,6 @@ import {
   previewScreen,
 } from "./selectors";
 import { screenListItem } from "./stylesheets/screenListItem";
-/** function that will manage the stylesheet List:
- * - create the list, activate the list, and include the events listener for each item
- */
 
 export async function stylesheetmanager(obj) {
   let stylesheets = obj.data.attributes.stylesheets.data;
@@ -48,33 +46,43 @@ export async function stylesheetmanager(obj) {
   orderedStylesheets.forEach((stylesheet) => {
     stylesheet.attributes.strapid = stylesheet.id;
     addStyleSheetToList(stylesheet.attributes);
+    // create a style element with the content of the styleelement
   });
+
   activateFirstStylesheet();
+
   stylesheetListeners();
 }
 
 /** event listener for the stylesheet ui
  */
 async function stylesheetListeners() {
-  screensList.addEventListener("click", function (event) {
+  screensList.addEventListener("click", function(event) {
+    console.log(event)
     /* remove stylesheet (disable in 2 times )*/
+    // cancel remove if you click on something else
     if (!event.target.classList.contains("remove")) {
       document.querySelector(".toremove")?.classList.remove("toremove");
     }
+    // remove stylesheet url
     if (event.target.classList == "remove") {
+      // if remove is already selected, remove
       if (event.target.closest("li").classList.contains("toremove")) {
         removeStylesheet(event.target);
-        event.target.remove();
+        // removfe the style object frtom the style block
+        document.querySelector(`#style-${event.target.closest(".stylesheet").dataset.strapid}`).remove()
+        // remove the stylesheet from the ui
+        event.target.closest("li").remove();
       } else {
         document.querySelector(".toremove")?.classList.remove("toremove");
         event.target.closest("li").classList.add("toremove");
       }
     } else if (event.target.closest(".stylesheet")) {
       // activate stylesheet if clicking on a stylesheet
-      activateStylesheet(
-        event.target.closest(".stylesheet") ||
-          event.target.classList.contains(".stylesheet"),
-      );
+      // activateStylesheet(
+      //   event.target.closest(".stylesheet") ||
+      //   event.target.classList.contains(".stylesheet"),
+      // );
       resizePreview(
         previewScreen,
         event.target.closest(".stylesheet").dataset.maxwidth,
@@ -118,8 +126,8 @@ function validateInputs() {
   }
 }
 
-// add stylesheet
-newScreenForm.addEventListener("submit", async function (event) {
+// create a stylesheet: add it to the stylesheet list, and push content
+newScreenForm.addEventListener("submit", async function(event) {
   event.preventDefault();
   // if (!validateInputs()) return;
   // get the data from the form and from the inputs
@@ -130,7 +138,7 @@ newScreenForm.addEventListener("submit", async function (event) {
   };
 
   // create the stylesheet
-  const response = await createData(serverUrl, "stylesheets", data);
+  const response = await createData(config.strapi.url, "stylesheets", data);
   if (!response.data) return console.log(`nothing got saved`);
 
   // add stylesheet to the sequence,
@@ -141,6 +149,8 @@ newScreenForm.addEventListener("submit", async function (event) {
   responsedata.strapid = response.data.data.id;
 
   await insertStylesheetToList(responsedata);
+
+  // reorder the <style, following the ratio after added an element?
 });
 
 async function loadStylesheets(response) {
@@ -181,19 +191,18 @@ function activateFirstStylesheet() {
 }
 
 // this is different from the add list? how? why?
+// because we send to strapi before adding it, so the content we have
+// is the final one
 async function insertStylesheetToList(data) {
   const itemclasses = data.disabled ? "disabled" : "";
-  // find where to place the stylesheet base on size
-  //
+
   // get the max-width of the element
   const newMaxWidth = data.maxwidth;
 
   // () and place the element just before the stylesheet with a bigger screen
-  let nextMaxWidth = [...screensList.querySelectorAll("li")].filter((el) => {
+  let nextMaxWidth = [...screensList.querySelectorAll("li")].findLast((el) => {
     return Number(el.dataset.maxwidth) > Number(newMaxWidth);
   });
-
-  console.log(nextMaxWidth);
 
   if (nextMaxWidth.length > 0) {
     // create a item in the screens list
@@ -219,6 +228,7 @@ async function insertStylesheetToList(data) {
 
 /** add the stylesheet to the list UI */
 function addStyleSheetToList(data) {
+  console.log(data.disabled);
   const itemclasses = data.disabled ? "disabled" : "";
   /*if the stylesheet has been disabled*/
   if (data.disabled) return;
@@ -230,13 +240,23 @@ function addStyleSheetToList(data) {
 
 async function removeStylesheet(target) {
   const id = target.closest("li").dataset.strapid;
-
   const data = {
     disabled: true,
   };
 
-  const response = await updateData(serverUrl, "stylesheets", data, id);
+  const response = await updateData(config.strapi.url, "stylesheets", data, id);
+
+  // remove the style element from the screen
+  document.querySelector(`#style-${id}`).remove();
+
+  activateFirstStylesheet();
+  return response;
   console.log(response);
+}
+
+export function updateScreenSizeFromUi(screenWidthInput, screenHeightInput) {
+  // update ratio
+  // update previewsize
 }
 
 // this should also go into stylesheet.js
@@ -317,8 +337,8 @@ export function loadStylesheets(stylesheets) {
 }
 
 export function loadStylesheet(stylesheet) {
-  console.log(stylesheet.prev);
-  console.log(stylesheet.next);
+  // if the stylesheet is deactivated
+  if (stylesheet.attributes.disabled) return;
   // prev,next
   /* the style element */
 
