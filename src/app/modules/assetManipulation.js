@@ -6,9 +6,15 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 import { anchors, stylesWrapper } from "./selectors.js";
-import { setObjInStylesheet, updateStylesheet } from "./stylesheet.js";
+import {
+  saveStylesheet,
+  setObjInStylesheet,
+  updateStylesheet,
+} from "./stylesheet.js";
+import { parse } from "bytes";
 
 async function interactObject(object) {
+  if (!object.classList.contains("asset-selected")) return;
   // get the id of the stylesheet to update
 
   // get the id of the sequence
@@ -58,11 +64,11 @@ async function interactObject(object) {
           event.target.style.left = `${percentage(
             position.x,
             previewScreenSize.width,
-          )}%`;
+          )}cqw`;
           event.target.style.top = `${percentage(
             position.y,
             previewScreenSize.height,
-          )}%`;
+          )}cqh`;
         },
         end(event) {
           // send the data to strapi after getting the data
@@ -93,60 +99,29 @@ async function interactObject(object) {
           // save the data on the objectd /
           // next, save the data of the object on the screensize
 
-          let data = {
-            width: `${percentage(event.rect.width, previewScreenSize.width)}%;`,
-            height: `${percentage(
-              event.rect.height,
-              previewScreenSize.height,
-            )}%;`,
-            top: `${percentage(
-              event.target.offsetTop,
-              previewScreenSize.height,
-            )}%;`,
-            left: `${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width,
-            )}%;`,
-            right: `${
-              100 -
-              percentage(
-                event.target.offsetLeft + event.target.offsetWidth,
-                previewScreenSize.width,
-              )
-            }% `,
-            bottom: `${
-              100 -
-              percentage(
-                event.target.offsetTop + event.target.offsetHeight,
-                previewScreenSize.height,
-              )
-            }% `,
-            cssRules: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
-          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
-          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          )}%;`,
-          };
-
           //update declaration is now the norm. We’ll see if we keep the rest later
           //but we wont use it anymore hohoho
-          addRuleToObject(event.target.dataset.objectid, data);
+          // addRuleToObject(event.target.dataset.objectid, data);
 
           // update the style fro mthe active style
-          console.log(
-            stylesWrapper.querySelector(".activatedStyle")
-          );
-          setObjInStylesheet(
-            stylesWrapper.querySelector(".activatedStyle"),
-            event.target,
-          );
+          //
+          const styleblock = stylesWrapper.querySelector(".activatedStyle");
 
+          setObjInStylesheet(styleblock, event.target);
+
+          saveStylesheet(styleblock.dataset.strapid, styleblock.textContent);
+          event.target.style = null;
+          // reset  style
+          // setTimeout(function () {
+          //   event.target.removeAttribute("style");
+          //   console.log("Executed after 1 second");
+          // }, 1000);
+          // event.target.style = "";
           // console.log(newcss);
 
           //updateDeclaration
           // console.log(event.target.closest("#previewScreen"));
+          // event.target.style = "";
         },
       },
     })
@@ -185,17 +160,25 @@ async function interactObject(object) {
           );
         },
         move: function (event) {
+          // parse the css
+          // find the location for wisth and height
+          // listen to the resize
+          //
+
+          // get the parsecss to get the attribute from the css
+
+          // should we get a better setup to change the style sheet instead of the rest?
           let { x, y } = event.target.dataset;
 
           x = (parseFloat(x) || 0) + event.deltaRect.left;
           y = (parseFloat(y) || 0) + event.deltaRect.top;
 
           Object.assign(event.target.style, {
-            width: `${percentage(event.rect.width, previewScreenSize.width)}%`,
+            width: `${percentage(event.rect.width, previewScreenSize.width)}cqw`,
             height: `${percentage(
               event.rect.height,
               previewScreenSize.height,
-            )}%`,
+            )}cqh`,
             // width: `event.rect.width `,
             // height: `event.rect.height`,
             // transform: `translate(${parseFloat(x)}px, ${parseFloat(y)}px)`,
@@ -230,37 +213,30 @@ async function interactObject(object) {
             // only use right
             // left: unset
           }
-
-          let data = {
-            width: `${percentage(event.rect.width, previewScreenSize.width)}%;`,
-            height: `${percentage(
-              event.rect.height,
-              previewScreenSize.height,
-            )}%;`,
-            top: `${percentage(
-              event.target.offsetTop,
-              previewScreenSize.height,
-            )}%;`,
-            left: `${percentage(
-              event.target.offsetLeft,
-              previewScreenSize.width,
-            )}%;`,
-            // check if the element is anchored top or bottom
-            cssRules: `width: ${percentage(event.rect.width, previewScreenSize.width)}%;
-          height: ${percentage(event.rect.height, previewScreenSize.height)}%;
-          top: ${percentage(event.target.offsetTop, previewScreenSize.height)}%;
-          left: ${percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          )}%; `,
-          };
-
           // add ruel to object
-          addRuleToObject(event.target.dataset.objectid, data);
+          // addRuleToObject(event.target.dataset.objectid, data);
+
+          // set the style when resize!
+          setObjInStylesheet(
+            stylesWrapper.querySelector(".activatedStyle"),
+            event.target,
+          );
+
+          const styleblock = stylesWrapper.querySelector(".activatedStyle");
+
+          setObjInStylesheet(styleblock, event.target);
+
+          saveStylesheet(styleblock.dataset.strapid, styleblock.textContent);
+          event.target.style = null;
+          // saveStylesheet(id, cssContent);
         },
       },
     });
 }
+
+// export function saveStylesheet(stylesheetId, cssContent) {
+//   // axios.put(config.strapi.url)
+// }
 
 function moveToLayer(object, plan, position) {
   // v2: get the order from the index of the element in the domObject

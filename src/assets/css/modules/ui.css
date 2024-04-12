@@ -182,9 +182,11 @@ block-ui h3 {
 }
 
 
+#styleWrapper {
+}
+
 #styleWrapper style:hover::after {
   content: attr(id);
-  background:red;
-  
   color:white;
+  background: grey;
 }

@@ -22,6 +22,7 @@
 //
 //
 import axios from "axios";
+import config from "../config/config.js";
 import { parse, stringify } from "../vendors/css/css.js";
 import { deselect, percentage, updateDataset } from "./helpers";
 import { resizePreview } from "./preview";
@@ -262,6 +263,12 @@ export function getSize() {
         stylesWrapper
           .querySelector(`#style-${stylesheetToEdit}`)
           .classList.add("activatedStyle");
+
+        // reload the style by turning it off and on again after a change of container size.
+        let back = styleWrapper.innerHTML;
+        // styleWrapper.innerHTML = ""
+        styleWrapper.innerHTML = "";
+        styleWrapper.innerHTML = back;
       }
     }
   });
@@ -282,8 +289,8 @@ function selectScreen(ratio) {
   // console.log(ratio);
   deselect(".activeStylesheet");
 
-  let toActivate = [...screensList.querySelectorAll(".stylesheet")].findLast(
-    (li) => li.dataset.maxwidth / li.dataset.defaultHeight <= ratio,
+  let toActivate = [...screensList.querySelectorAll(".stylesheet")].find(
+    (li) => li.dataset.maxwidth / li.dataset.defaultHeight >= ratio,
   );
   // active = stylesheet you’re writting on.
   // so if you have 0.41 active, you write smaller than 0.41, then smaller than 0.75, then smaller
@@ -315,9 +322,11 @@ export function loadStylesheet(stylesheet) {
   // prev,next
   /* the style element */
 
-  const styleEl = `<style id="style-${stylesheet.id}" 
+  const styleEl = `<style data-strapid="${stylesheet.id}" type="text/css" contenteditable id="style-${stylesheet.id}" 
 data-height="${stylesheet.attributes.defaultHeight}"
-data-width="${stylesheet.attributes.maxwidth}">@container preview (max-aspect-ratio: ${getRatioFromStylesheet(stylesheet)}) {${stylesheet.attributes.cssrules ? stylesheet.attributes.cssrules : ""}}</style>`;
+data-width="${stylesheet.attributes.maxwidth}">
+
+${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : `@container preview (max-aspect-ratio: ${getRatioFromStylesheet(stylesheet)}) {  }`} </style>`;
 
   // for each stylesheet, create a style element and feel it up
   stylesWrapper.insertAdjacentHTML("beforeend", styleEl);
@@ -542,3 +551,19 @@ export function updateStylesheet(stylesheetContent, obj) {
 
 //chatgpt update declaration:
 //
+//
+//
+export function saveStylesheet(stylesheetId, data) {
+  return axios
+    .put(`${config.strapi.url}/api/stylesheets/${stylesheetId}`, {
+      data: {
+        cssrules: data,
+      },
+    })
+    .then((response) => {
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
+}
