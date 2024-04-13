@@ -124,14 +124,16 @@ export async function stylesheetListeners() {
     if (!response.data) return console.log(`nothing got saved`);
 
     // add stylesheet to the sequence,
-    const responsedata = response.data.data.attributes;
+    const responsedata = response.data.data;
     const strapid = response.data.data.id;
     // set the screensize id on the preview to know where to save the data
     previewScreen.dataset.screensize = strapid;
     responsedata.strapid = response.data.data.id;
 
-    await insertStylesheetToList(responsedata);
-    createStyleElement({ responsedata });
+    responsedata.attributes.strapid = responsedata.id
+
+    await insertStylesheetToList(responsedata.attributes);
+    createStyleElement( responsedata );
 
     // reorder the <style, following the ratio after added an element?
   });
@@ -338,7 +340,6 @@ function selectScreen(ratio) {
     },
   );
 
-  console.log(toActivate)
   // active = stylesheet you’re writting on.
   // so if you have 0.41 active, you write smaller than 0.41, then smaller than 0.75, then smaller
   // if first : up to 0.41, then between 0.41 and 0.76, .....  more than the last
@@ -353,6 +354,7 @@ function selectScreen(ratio) {
 }
 
 export function createStyleElement(stylesheet) {
+  console.log(stylesheet)
   // if the stylesheet is deactivated
   if (stylesheet.attributes.disabled) return;
   // prev,next
