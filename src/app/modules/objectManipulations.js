@@ -4,7 +4,7 @@ import config from "../config/config.js";
 import axios from "axios";
 
 
-function moveToLayer(object, plan, position) {
+export function moveToLayer(object, plan, position) {
   // move any object to a specific layer
 
   switch (position) {
@@ -110,7 +110,7 @@ function moveToLayer(object, plan, position) {
 deteleAsset
 @params domObject asset - the removedasset 
 */
-async function deleteObject() {
+export async function deleteObject() {
   const plan = document.querySelector("#previewScreen article.shown");
   const object = document.querySelector(".asset-selected");
   // send info to strapi
@@ -121,7 +121,8 @@ async function deleteObject() {
   ).then(object.remove());
 }
 
-function addRuleToObject(objectid, data) {
+// not use anymore because we’re not saving the object now
+export function addRuleToObject(objectid, data) {
   return axios
     .put(`${config.strapi.url}/api/objects/${objectid}`, {
       data,
@@ -135,17 +136,12 @@ function addRuleToObject(objectid, data) {
     });
 }
 
-function percentage(partialValue, totalValue) {
+// get percentage
+export function percentage(partialValue, totalValue) {
   return ((100 * partialValue) / totalValue).toFixed(2);
 }
 
-function updateFromUi() {
-  // update the element selected when there are some changes in the UI form
-  //if anchor top : keep top and bottom = unset
-  //if anchor bottom : keep bottom and top = unset
-  //if anchor right : keep right and left = unset
-  //if anchor left : keep left and right = unset
-
+export function updatefromui() {
   document.querySelector("#inputx").addEventListener("change", () => {
     document.querySelector(".asset-selected").style.left =
       document.querySelector("#inputx").value + "%";
@@ -168,7 +164,7 @@ function updateFromUi() {
   });
 }
 
-function updateTheUI(element) {
+export function updateTheUI(element) {
   // update the ui from the selected element
   let previewScreen = document.querySelector("#previewScreen");
   let previewScreenSize = {
@@ -193,4 +189,3 @@ function updateTheUI(element) {
   );
 }
 
-export { deleteObject, moveToLayer, updateFromUi, updateTheUI };

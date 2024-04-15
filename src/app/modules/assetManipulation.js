@@ -499,4 +499,3 @@ export function setAnchor() {
   );
 }
 
-// export { setAnchor };

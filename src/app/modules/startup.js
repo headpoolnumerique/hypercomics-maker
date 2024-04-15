@@ -4,7 +4,6 @@ import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
 import {
   layerList,
   montageList,
-  previewScreen,
   sequenceNumber,
   sequencePreview,
 } from "./selectors.js";
@@ -20,21 +19,28 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
-import { setAnchor} from "./assetManipulation";
-import { getSize, loadAllStylesheets, stylesheetmanager } from "./stylesheet.js";
+import {  updatefromui } from "./objectManipulations";
+import {
+  getSize,
+  loadAllStylesheets,
+  stylesheetmanager,
+} from "./stylesheet.js";
+import { setAnchor } from "./assetManipulation.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
   // url =  server.com/?sequence=SEQID&project=projectid
+  // find what to load here
   let sequenceUrl = new URL(url);
-  const projectId = sequenceUrl.searchParams.get("project");
+
+  // neverused
+  // const projectId = sequenceUrl.searchParams.get("project");
+
   const sequenceId = sequenceUrl.searchParams.get("sequence");
 
   document.body.id = `sequence-${sequenceId}`;
-  // if there is no sequence id, create a new sequence
 
-  // with the new system there will always a url
-  // if there is a sequenceID in the url, load the sequence from strapi
+  // then load the sequence
   let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
   // console.log(response);
@@ -51,8 +57,9 @@ async function startup(url = document.location.href) {
   layerInteract();
   resizeMontagePaneVertically();
   handleDelays();
-  getSize();
+  // getSize();
   setAnchor();
+  updatefromui();
   await stylesheetmanager(response.data);
 }
 

@@ -9,15 +9,10 @@ import { uploadToStrapi } from "./modules/assetNetwork.js";
 import { deselect, selectLink } from "../app/modules/helpers";
 import { showHideBlock } from "./modules/helpers.js";
 import {
-  // assetManipulationUi,
   interactObject,
-  deleteObject,
-  moveToLayer,
-  updateFromUi,
   updateTheUI,
 } from "./modules/assetManipulation.js";
 import {
-  previewSpace,
   previewScreen,
   montageScreen,
   montageList,
@@ -26,19 +21,16 @@ import {
   assetsList,
   contextUI,
   layerList,
-  stylesWrapper,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
 import config from "./config/config.js";
 import {
-  addLayer,
   appendLayer,
   selectLayer,
   updateLayers,
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
-import { setObjInStylesheet } from "./modules/stylesheet.js";
 
 // list all the things
 //Event and binds
@@ -141,14 +133,10 @@ preview.addEventListener("click", (event) => {
     deselect(".asset-selected");
     event.target.classList.add("asset-selected");
 
-    // console.log("there is a n envent", event.target);
-    // setObjInStylesheet(
-    //   stylesWrapper.querySelector(".activatedStyle"),
-    //   event.target,
-    // );
-
     updateTheUI(event.target);
+
     selectLayer(layerList, event.target.dataset.objectid);
+
     interactObject(event.target);
   } else {
     deselect(".asset-selected");
@@ -205,8 +193,10 @@ document.querySelector("#previewNext").addEventListener("click", function () {
 });
 
 //start the app
+async function startApp() {
+  await startup();
+}
 
-updateFromUi();
-startup();
-
+startApp();
 // updateLayers();
+//

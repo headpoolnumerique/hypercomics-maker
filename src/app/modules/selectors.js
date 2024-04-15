@@ -1,67 +1,37 @@
-const previewSpace = document.querySelector("#preview");
-const previewScreen = document.querySelector("#previewScreen");
-const montageScreen = document.querySelector("#banc-montage");
-const montageList = document.querySelector("#planOrder");
-const imageUploadInputs = document.querySelector("#assetsUpload");
-const imageUpload = document.querySelector("#submitAssets");
-const assetsList = document.querySelector("#assetsList");
-const projectName = document.querySelector("#projectName");
-const sequenceNumber = document.querySelector("#sequenceNumber");
-const sequencePreview = document.querySelector("#previewScreen");
-const contextUI = document.querySelector("#contextualUI");
-const layerList = document.querySelector("#layers");
-const zindexInteraction = document.querySelector(".zindex");
-const plandelay = document.querySelector("#minimaldelay");
+export const previewSpace = document.querySelector("#preview");
+export const previewScreen = document.querySelector("#previewScreen");
+export const montageScreen = document.querySelector("#banc-montage");
+export const montageList = document.querySelector("#planOrder");
+export const imageUploadInputs = document.querySelector("#assetsUpload");
+export const imageUpload = document.querySelector("#submitAssets");
+export const assetsList = document.querySelector("#assetsList");
+export const projectName = document.querySelector("#projectName");
+export const sequenceNumber = document.querySelector("#sequenceNumber");
+export const sequencePreview = document.querySelector("#previewScreen");
+export const contextUI = document.querySelector("#contextualUI");
+export const layerList = document.querySelector("#layers");
+export const zindexInteraction = document.querySelector(".zindex");
+export const plandelay = document.querySelector("#minimaldelay");
 
 /*screen size*/
-const screenWidthInput = document.querySelector("#screenWidth");
-const screenHeightInput = document.querySelector("#screenHeight");
-const screenRatioInput = document.querySelector("#screenRatio");
+export const screenWidthInput = document.querySelector("#screenWidth");
+export const screenHeightInput = document.querySelector("#screenHeight");
+export const screenRatioInput = document.querySelector("#screenRatio");
 
-const screensList = document.querySelector("#screens");
+export const screensList = document.querySelector("#screens");
 
-const newScreenUi = document.querySelector("#screen-ui");
-const newScreenForm = document.querySelector("#screensform");
-const newScreenButton = document.querySelector("#newscreen");
-const populateStylesheetButton = document.querySelector("#populateStylesheet");
+export const newScreenUi = document.querySelector("#screen-ui");
+export const newScreenForm = document.querySelector("#screensform");
+export const newScreenButton = document.querySelector("#newscreen");
+export const populateStylesheetButton = document.querySelector("#populateStylesheet");
 
 /*in the future*/
-const topAnchorRadio = document.querySelector("#topAnchor");
-const bottomAnchorRadio = document.querySelector("#bottomAnchor");
-const leftAnchorRadio = document.querySelector("#leftAnchor");
-const rightAnchorRadio = document.querySelector("#rightAnchor");
+export const topAnchorRadio = document.querySelector("#topAnchor");
+export const bottomAnchorRadio = document.querySelector("#bottomAnchor");
+export const leftAnchorRadio = document.querySelector("#leftAnchor");
+export const rightAnchorRadio = document.querySelector("#rightAnchor");
 
-const anchors = document.querySelectorAll(".anchorInput");
+export const anchors = document.querySelectorAll(".anchorInput");
 
-const stylesWrapper = document.querySelector("#styleWrapper");
+export const stylesWrapper = document.querySelector("#styleWrapper");
 
-export {
-  anchors,
-  plandelay,
-  zindexInteraction,
-  previewSpace,
-  previewScreen,
-  montageScreen,
-  montageList,
-  imageUploadInputs,
-  imageUpload,
-  assetsList,
-  projectName,
-  sequenceNumber,
-  sequencePreview,
-  contextUI,
-  layerList,
-  topAnchorRadio,
-  rightAnchorRadio,
-  bottomAnchorRadio,
-  leftAnchorRadio,
-  screenWidthInput,
-  screenHeightInput,
-  screenRatioInput,
-  screensList,
-  newScreenButton,
-  newScreenForm,
-  newScreenUi,
-  populateStylesheetButton,
-  stylesWrapper
-};
