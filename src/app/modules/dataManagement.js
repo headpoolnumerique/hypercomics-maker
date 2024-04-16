@@ -180,7 +180,7 @@ export async function loadSingle(serverUrl, collection, id, populatedeep = true)
   return axios
     .get(
       `${serverUrl}/api/${collection}/${id}${
-        populatedeep ? `?populate=deep,5` : ``
+        populatedeep ? `?populate=deep,4` : ``
       }`
     )
     .then((response) => {

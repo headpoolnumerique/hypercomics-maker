@@ -32,9 +32,12 @@ import {
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
 
+
+startApp();
+
 // list all the things
 //Event and binds
-
+function listeners () {
 //show hide montage
 document.querySelector("#showMontage").addEventListener("click", () => {
   showHideBlock(montageScreen);
@@ -191,12 +194,11 @@ document.querySelector("#previewNext").addEventListener("click", function () {
   updateLayers();
   updateDelayUI();
 });
-
+}
 //start the app
 async function startApp() {
   await startup();
+  listeners()
 }
-
-startApp();
 // updateLayers();
 //

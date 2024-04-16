@@ -21,8 +21,6 @@ import {
 import { handleDelays } from "./delay.js";
 import {  updatefromui } from "./objectManipulations";
 import {
-  getSize,
-  loadAllStylesheets,
   stylesheetmanager,
 } from "./stylesheet.js";
 import { setAnchor } from "./assetManipulation.js";
@@ -32,12 +30,7 @@ async function startup(url = document.location.href) {
   // url =  server.com/?sequence=SEQID&project=projectid
   // find what to load here
   let sequenceUrl = new URL(url);
-
-  // neverused
-  // const projectId = sequenceUrl.searchParams.get("project");
-
   const sequenceId = sequenceUrl.searchParams.get("sequence");
-
   document.body.id = `sequence-${sequenceId}`;
 
   // then load the sequence
@@ -49,7 +42,7 @@ async function startup(url = document.location.href) {
     response.data?.data?.attributes?.title,
   );
 
-  fillSequence(response.data.data.id);
+  fillSequence(response.data.data.attributes.plans);
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
@@ -57,15 +50,14 @@ async function startup(url = document.location.href) {
   layerInteract();
   resizeMontagePaneVertically();
   handleDelays();
-  // getSize();
   setAnchor();
   updatefromui();
   await stylesheetmanager(response.data);
 }
 
-async function fillSequence(sequence) {
-  let response = await loadSingle(config.strapi.url, "sequences", sequence);
-  let plans = response.data.data.attributes.plans;
+async function fillSequence(plans) {
+  // let response = await loadSingle(config.strapi.url, "sequences", sequence);
+  // let plans = response.data.data.attributes.plans;
   //if there is no plan, create a plan
   if (plans.data.length < 1) {
     addPlan(montageList, sequence);

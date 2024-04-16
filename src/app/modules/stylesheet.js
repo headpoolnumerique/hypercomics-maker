@@ -212,7 +212,6 @@ async function insertStylesheetToList(data) {
     },
   );
 
-  console.log(ratioBefore);
 
   if (!ratioBefore) {
     // include the element at the beginning of the block
@@ -275,7 +274,7 @@ export function addStyleSheetToList(data) {
   //set the whole thing
 }
 
-async function removeStylesheet(target) {
+export async function removeStylesheet(target) {
   const id = target.closest("li").dataset.strapid;
   const data = {
     disabled: true,
@@ -288,7 +287,6 @@ async function removeStylesheet(target) {
 
   activateFirstStylesheet();
   return response;
-  console.log(response);
 }
 
 export function updateScreenSizeFromUi(screenWidthInput, screenHeightInput) {
@@ -322,13 +320,6 @@ export function getSize() {
           .querySelector(`#style-${stylesheetToEdit}`)
           .classList.add("activatedStyle");
 
-        // not needed, it was a misconception of the setup.
-        // css stylesheet noit linked to their listing
-        // // reload the style by turning it off and on again after a change of container size.
-        // let back = stylesWrapper.innerHTML;
-        // // styleWrapper.innerHTML = ""
-        // stylesWrapper.innerHTML = "";
-        // stylesWrapper.innerHTML = back;
       }
     }
   });
@@ -670,7 +661,7 @@ export async function kickstartStylesheet() {
   // check stylesheet
 
   resolutions.map(async (rez) => {
-    const response = await createData(serverUrl, "stylesheets", rez);
+    const response = await createData(config.strapi.url, "stylesheets", rez);
     if (!response.data) return console.log(`nothing got saved`);
 
     // add stylesheet to the sequence,

@@ -39,10 +39,7 @@ function loadStylesheet(stylesheetId) {
     });
 }
 
-function downloadStylesheets(stylesheets) {
-  // get the stylesheet from the url
-  //
-}
+
 
 function genereateStyleElement(stylesheet) {
   // create style and include the content of the css of the stylesheet
@@ -155,17 +152,17 @@ function parseCss(cssString) {
   return stringify(cssObj);
 }
 
-async function stylesheetmanager(obj) {
-  console.log(obj);
-  // downloadStylesheet
-  /* load existing stylesheet*/
-  downloadStylesheets(sequenceId);
-}
+// async function stylesheetmanager(obj) {
+//   console.log(obj);
+//   // downloadStylesheet
+//   /* load existing stylesheet*/
+//   downloadStylesheets(sequenceId);
+// }
 
-async function downloadStylesheets(sequenceobj) {
-  axios.get(
-    `${config.strapi.url}/api/stylesheets?filters[sequence][id][$eq]=${sequenceId}`,
-  );
-}
+// async function downloadStylesheets(sequenceobj) {
+//   axios.get(
+//     `${config.strapi.url}/api/stylesheets?filters[sequence][id][$eq]=${sequenceId}`,
+//   );
+// }
 
-export { stylesheetmanager };
+// export { stylesheetmanager };
