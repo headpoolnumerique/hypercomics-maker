@@ -80,11 +80,11 @@ export async function stylesheetListeners() {
       if (event.target.closest("li").classList.contains("toremove")) {
         removeStylesheet(event.target);
         // removfe the style object frtom the style block
-        document
-          .querySelector(
-            `#style-${event.target.closest(".stylesheet").dataset.strapid}`,
-          )
-          .remove();
+        // document
+        //   .querySelector(
+        //     `#style-${event.target.closest(".stylesheet").dataset.strapid}`,
+        //   )
+        //   .remove();
 
         // remove the stylesheet from the ui
         event.target.closest("li").remove();
@@ -118,7 +118,7 @@ export async function stylesheetListeners() {
 }
 
 // set the button to add the default stylesheets
-// populateStylesheetButton.addEventListener("click", kickstartStylesheet);
+populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
 // create a stylesheet: add it to the stylesheet list, and push content
 newScreenForm.addEventListener("submit", async function(event) {
@@ -133,22 +133,30 @@ newScreenForm.addEventListener("submit", async function(event) {
   };
 
   // create the stylesheet
-  const response = await createData(config.strapi.url, "stylesheets", data);
-  if (!response.data) return console.log(`nothing got saved`);
+  // const response = await createData(config.strapi.url, "stylesheets", data);
 
-  // add stylesheet to the sequence,
-  const responsedata = response.data.data;
-  const strapid = response.data.data.id;
-  // set the screensize id on the preview to know where to save the data
-  previewScreen.dataset.screensize = strapid;
-  responsedata.strapid = response.data.data.id;
+  await axios
+    .post(`${config.strapi.url}/api/stylesheets/`, {
+      data,
+    })
+    .then(async (response) => {
+      const responsedata = response.data.data;
+      const strapid = response.data.data.id;
+      // set the screensize id on the preview to know where to save the data
+      previewScreen.dataset.screensize = strapid;
+      responsedata.strapid = response.data.data.id;
 
-  responsedata.attributes.strapid = responsedata.id;
+      responsedata.attributes.strapid = responsedata.id;
 
-  await insertStylesheetToList(responsedata.attributes);
-  createStyleElement(responsedata);
-
-  // reorder the <style, following the ratio after added an element?
+      // reorder the <style, following the ratio after added an element?
+      await insertStylesheetToList(responsedata.attributes);
+      // add stylesheet to the sequence,
+      createStyleElement(responsedata);
+    })
+    .catch((err) => {
+      if (err) return console.log(`nothing got saved`);
+      return err;
+    });
 });
 
 // set all the stylesheets: add them to the list, create the style elements
@@ -183,7 +191,6 @@ export function loadAllStylesheets(stylesheets) {
 
 function activateFirstStylesheet() {
   let stylesheetToActivate = document.querySelector("#screens .stylesheet");
-  stylesheetToActivate.classList.add("activeStylesheet");
 
   if (stylesheetToActivate) {
     // resize the preview once activated
@@ -193,6 +200,9 @@ function activateFirstStylesheet() {
       stylesheetToActivate.dataset.defaultHeight,
       stylesheetToActivate.dataset.strapid,
     );
+    stylesheetToActivate.classList.add("activeStylesheet");
+  } else {
+    // TODO: create a default stylesheet?
   }
 }
 
@@ -211,7 +221,6 @@ async function insertStylesheetToList(data) {
       return el.dataset.maxwidth / el.dataset.defaultHeight > ratio;
     },
   );
-
 
   if (!ratioBefore) {
     // include the element at the beginning of the block
@@ -276,11 +285,22 @@ export function addStyleSheetToList(data) {
 
 export async function removeStylesheet(target) {
   const id = target.closest("li").dataset.strapid;
+
   const data = {
     disabled: true,
   };
 
-  const response = await updateData(config.strapi.url, "stylesheets", data, id);
+  const response = axios
+    .put(`${config.strapi.url}/api/stylesheets/${id}`, {
+      data,
+    })
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .catch((err) => {
+      return err;
+    });
 
   // remove the style element from the screen
   document.querySelector(`#style-${id}`).remove();
@@ -298,6 +318,8 @@ export function updateScreenSizeFromUi(screenWidthInput, screenHeightInput) {
 export function getSize() {
   const screenSizeObserver = new ResizeObserver((screensizes) => {
     for (const screensize of screensizes) {
+      if (!screensList.querySelector(".stylesheet"))
+        return console.log("there is no stylesheet, dont try");
       if (screensize.contentBoxSize) {
         let newWidth = Math.round(screensize.contentBoxSize[0].inlineSize);
         let newHeight = Math.round(screensize.contentBoxSize[0].blockSize);
@@ -312,14 +334,15 @@ export function getSize() {
         previewScreen.dataset.height = newHeight;
 
         // select the stylesheet on resize
-        let stylesheetToEdit = selectScreen(newWidth/newHeight);
+        let stylesheetToEdit = selectScreen(newWidth / newHeight);
 
         // hightlight the stylesheet in the wrapper.
         deselect(".activatedStyle");
+
+        // this is not working there
         stylesWrapper
           .querySelector(`#style-${stylesheetToEdit}`)
           .classList.add("activatedStyle");
-
       }
     }
   });
@@ -356,6 +379,8 @@ function selectScreen(ratio) {
   // if first : up to 0.41, then between 0.41 and 0.76, .....  more than the last
   if (!toActivate) {
     toActivate = screens.querySelector(".stylesheet");
+    // oif there is no stylesheet to activate do nothing.
+    if (!toActivate) return;
     toActivate.classList.add("activeStylesheet");
     return toActivate.dataset.strapid;
   } else {
