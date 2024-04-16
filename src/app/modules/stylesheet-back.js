@@ -39,8 +39,6 @@ function loadStylesheet(stylesheetId) {
     });
 }
 
-
-
 function genereateStyleElement(stylesheet) {
   // create style and include the content of the css of the stylesheet
   const style = document.createElement("style");
@@ -63,7 +61,7 @@ function updateTheStylesheet(styleId, stylesheetContent) {
   //
 }
 
-function updateTheLayoutFromTheStylesheet() {}
+function updateTheLayoutFromTheStylesheet() { }
 
 // load the stylesheets
 //fillStylesheet

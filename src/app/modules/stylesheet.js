@@ -134,7 +134,6 @@ newScreenForm.addEventListener("submit", async function(event) {
 
   // create the stylesheet
   // const response = await createData(config.strapi.url, "stylesheets", data);
-
   await axios
     .post(`${config.strapi.url}/api/stylesheets/`, {
       data,
