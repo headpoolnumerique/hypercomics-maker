@@ -740,6 +740,22 @@ export function cleanStyleSheet() {
         return true; // Keep other rules
       });
 
+    // clean the content 
     style.textContent = stringify(styles);
+
+    // update to strapi now
+    saveStylesheet(style.dataset.strapid, style.textContent);
+
+    });
+
+}
+
+
+export function saveAllStylesheet() {
+  stylesWrapper.querySelectorAll("style").forEach((style) => {
+
+
+    saveStylesheet(style.dataset.strapid, style.textContent);
+
     });
 }

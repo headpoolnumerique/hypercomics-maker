@@ -33,6 +33,8 @@ export const rightAnchorRadio = document.querySelector("#rightAnchor");
 
 export const anchors = document.querySelectorAll(".anchorInput");
 
+
+// save the stylesheets!
 export const stylesWrapper = document.querySelector("#styleWrapper");
 export const cleanStylesheetButton = document.querySelector(`#cleanStylesheet`) 
-
+export const saveStylesheetButton = document.querySelector("#saveStylesheet")
