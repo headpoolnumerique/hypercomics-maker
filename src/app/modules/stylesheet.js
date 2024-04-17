@@ -685,17 +685,32 @@ export async function kickstartStylesheet() {
   // check stylesheet
 
   resolutions.map(async (rez) => {
-    const response = await createData(config.strapi.url, "stylesheets", rez);
+    // const response = await createData(config.strapi.url, "stylesheets", );
+
+    const response = axios
+      .post(`${config.strapi.url}/api/stylesheets/`, {
+        data: rez,
+      })
+      .then((response) => {
+        const responsedata = response.data.data.attributes;
+        const strapid = response.data.data.id;
+
+        previewScreen.dataset.screensize = strapid;
+        responsedata.strapid = response.data.data.id;
+        // create styleElement and stylesheet
+        console.log(response.data.data);
+        createStyleElement(response.data.data);
+        insertStylesheetToList(response.data.data);
+
+        // return response;
+      })
+      .catch((err) => {
+        return err;
+      });
+
     if (!response.data) return console.log(`nothing got saved`);
 
     // add stylesheet to the sequence,
-    const responsedata = response.data.data.attributes;
-    const strapid = response.data.data.id;
-
-    previewScreen.dataset.screensize = strapid;
-    responsedata.strapid = response.data.data.id;
-
-    responsedata;
   });
 
   console.log("add some stylesheet now!");
