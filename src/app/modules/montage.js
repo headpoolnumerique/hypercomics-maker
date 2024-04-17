@@ -219,6 +219,10 @@ async function addPlan(montageList, select = true) {
   }
 }
 
+// TODO
+// duplicate plan may be more useful:
+//
+// get the data from the plan, create a new one with the exact same data, push it to the UI
 async function duplicatePlan(
   montageList,
   planToDuplicateId,

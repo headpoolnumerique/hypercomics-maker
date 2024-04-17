@@ -10,3 +10,8 @@
 @import url("./modules/loading.css");
 @import url("./modules/resize.css");
 /* @import url("./modules/layers.css"); */
+
+/*hide with css?*/
+#screen-ui {
+}
+/* /hide button from the screens? */

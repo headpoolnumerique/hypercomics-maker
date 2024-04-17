@@ -48,3 +48,10 @@
 .stylesheet:hover {
   background:var(--color-main);
 }
+
+
+/*hide the styles when there are images in here on it*/
+#screen-ui:has(.stylesheet) #populateStylesheet {
+  display: none;
+  /* background:blue; */
+}

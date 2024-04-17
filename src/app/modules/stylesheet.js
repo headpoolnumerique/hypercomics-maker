@@ -68,7 +68,7 @@ export async function stylesheetmanager(obj) {
 /** event listener for the stylesheet ui
  */
 export async function stylesheetListeners() {
-  screensList.addEventListener("click", function(event) {
+  screensList.addEventListener("click", function (event) {
     /* remove stylesheet (disable in 2 times )*/
     // cancel remove if you click on something else
     if (!event.target.classList.contains("remove")) {
@@ -121,15 +121,15 @@ export async function stylesheetListeners() {
 populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
 // create a stylesheet: add it to the stylesheet list, and push content
-newScreenForm.addEventListener("submit", async function(event) {
+newScreenForm.addEventListener("submit", async function (event) {
   event.preventDefault();
   // if (!validateInputs()) return console.log("screen size input are not valid");
   // validation is done in the html, and we don’t use the ratio
   // get the data from the form and from the inputs
   const data = {
-    maxwidth: Number(screenWidthInput.value),
+    maxwidth: screenWidthInput.value,
     sequenceId: sequenceNumber.textContent,
-    defaultHeight: Number(screenHeightInput.value),
+    defaultHeight: screenHeightInput.value,
   };
 
   // create the stylesheet
@@ -138,7 +138,8 @@ newScreenForm.addEventListener("submit", async function(event) {
     .post(`${config.strapi.url}/api/stylesheets/`, {
       data,
     })
-    .then(async (response) => {
+    .then((response) => {
+    console.log(response)
       const responsedata = response.data.data;
       const strapid = response.data.data.id;
       // set the screensize id on the preview to know where to save the data
@@ -147,14 +148,14 @@ newScreenForm.addEventListener("submit", async function(event) {
 
       responsedata.attributes.strapid = responsedata.id;
 
+      console.log("now", responsedata)
       // reorder the <style, following the ratio after added an element?
-      await insertStylesheetToList(responsedata.attributes);
-      // add stylesheet to the sequence,
-      createStyleElement(responsedata);
+      // reorder the <style, following the ratio after added an element?
+        createStyleElement(response.data.data);
+        insertStylesheetToList(response.data.data);
     })
     .catch((err) => {
-      if (err) return console.log(`nothing got saved`);
-      return err;
+      if (err) return console.log(`nothing got saved because:`, err);
     });
 });
 
@@ -208,12 +209,12 @@ function activateFirstStylesheet() {
 // this is different from the add list? how? why?
 // because we send to strapi before adding it, so the content we have
 // is the final one
-async function insertStylesheetToList(data) {
+function insertStylesheetToList(data) {
   // deactivate the stylesheet and active the new one
   deselect(".activeStylesheet");
-  const itemclasses = data.disabled ? "disabled" : "";
+  const itemclasses = data.attributes.disabled ? "disabled" : "";
 
-  const ratio = data.maxwidth / data.defaultHeight;
+  const ratio = data.attributes.maxwidth / data.attributes.defaultHeight;
 
   let ratioBefore = [...screensList.querySelectorAll(".stylesheet")].findLast(
     (el) => {
@@ -225,11 +226,14 @@ async function insertStylesheetToList(data) {
     // include the element at the beginning of the block
     screensList
       .querySelector("li")
-      .insertAdjacentHTML("afterend", screenListItem(data, itemclasses, true));
+      .insertAdjacentHTML(
+        "afterend",
+        screenListItem(data.attributes, itemclasses, true),
+      );
   } else {
     ratioBefore.insertAdjacentHTML(
       "afterend",
-      screenListItem(data, itemclasses, true),
+      screenListItem(data.attributes, itemclasses, true),
     );
   }
 
@@ -389,6 +393,8 @@ function selectScreen(ratio) {
 }
 
 export function createStyleElement(stylesheet) {
+  // check if the stylesheet is the first. if true= then max-aspect needs to become min-from before
+
   console.log(stylesheet);
   // if the stylesheet is deactivated
   if (stylesheet.attributes.disabled) return;
@@ -687,11 +693,14 @@ export async function kickstartStylesheet() {
   resolutions.map(async (rez) => {
     // const response = await createData(config.strapi.url, "stylesheets", );
 
-    const response = axios
+    const response = await axios
       .post(`${config.strapi.url}/api/stylesheets/`, {
         data: rez,
       })
       .then((response) => {
+        console.log("things got saved");
+        console.log("add some stylesheet now!");
+
         const responsedata = response.data.data.attributes;
         const strapid = response.data.data.id;
 
@@ -705,15 +714,12 @@ export async function kickstartStylesheet() {
         // return response;
       })
       .catch((err) => {
+        return console.log(`nothing got saved`);
         return err;
       });
 
-    if (!response.data) return console.log(`nothing got saved`);
-
     // add stylesheet to the sequence,
   });
-
-  console.log("add some stylesheet now!");
 
   // on load check if the table with the content is empty
   // if empty, add stylesheet

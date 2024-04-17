@@ -37,7 +37,7 @@ async function startup(url = document.location.href) {
   let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
   // console.log(response);
-  await updateSequenceMeta(
+  updateSequenceMeta(
     response.data?.data?.id,
     response.data?.data?.attributes?.title,
   );
