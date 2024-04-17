@@ -715,7 +715,6 @@ export async function kickstartStylesheet() {
       })
       .catch((err) => {
         return console.log(`nothing got saved`);
-        return err;
       });
 
     // add stylesheet to the sequence,

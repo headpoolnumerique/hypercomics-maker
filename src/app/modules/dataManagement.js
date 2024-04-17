@@ -188,6 +188,7 @@ export async function loadSingle(serverUrl, collection, id, populatedeep = true)
       return response;
     })
     .catch((err) => {
+      console.log(err)
       return err;
     });
 }
