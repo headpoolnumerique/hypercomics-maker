@@ -1,41 +1,23 @@
 // import {assetsList} from "./selectors.js"
 
 // add image to the plan
+// we’ll use this instead of the object. this way we can have image and text as 2 functions
 // image will have a dataset objectId to manipulate the object and not the asset
-function addImg(img, planId, objectId) {
-  const newImg = document.createElement('img')
-  newImg.id = `inuse-${planId}-${objectId}`
-  newImg.dataset.assetid = img.id.replace('assetlink-', '')
-  newImg.dataset.objectid = objectId
-  newImg.dataset.planid = planId
-  newImg.src = img.src
-  newImg.classList.add('asset')
-  document.querySelector(planId).insertAdjacentElement('beforeend', newImg)
+
+export function addImg(img, planId, objectId, metadata) {
+  const newImg = document.createElement("img");
+  console.log(objectId)
+  console.log(planId)
+  // TODO replace the planID hash, dont know where that comes from
+  newImg.id = `inuse-${planId.replace("#", "")}-${objectId}`;
+  newImg.dataset.assetid = img.id.replace("assetlink-", "");
+  newImg.dataset.objectid = objectId;
+  newImg.dataset.planid = planId;
+  newImg.src = img.src;
+  newImg.dataset.anchorVertical = `${metadata.attributes.verticalAnchor ? metadata.attributes.verticalAnchor : "top"}`;
+  newImg.dataset.anchorHorizontal = `${metadata.attributes.horizontalAnchor ? metadata.attributes.anchorHorizontal: "left"}`;
+  newImg.classList.add("asset");
+  document.querySelector(planId).insertAdjacentElement("beforeend", newImg);
 }
 
-// import Image to the plan
-// image will have a dataset objectId to manipulate the object and not the asset
-// function importImg(imgId, planId, objectId) {
-//   const newImg = document.createElement('img')
-//   newImg.objectId = objectId
-//   newImg.id = `inuse-${imgId.id}`
-//   newImg.dataset.assetid = newImg.id.split('-')[1]
-//   newImg.dataset.objectid = objectId
-//   newImg.classList.add('asset')
-//   newImg.src = imgId.attributes.location
-//   planId.insertAdjacentElement('beforeend', newImg)
-// }
 
-function renderAssetImage(object, asset, plan) {
-  let element = document.createElement('img')
-  element.id = `inuse-${planId}-${objectId}`
-  element.dataset = {
-    assetid: asset.id,
-    objectid: object.id,
-  }
-  element.src = asset.location
-
-  console.log(element)
-}
-
-export { addImg,  renderAssetImage }

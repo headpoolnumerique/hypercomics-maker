@@ -34,4 +34,5 @@ export const rightAnchorRadio = document.querySelector("#rightAnchor");
 export const anchors = document.querySelectorAll(".anchorInput");
 
 export const stylesWrapper = document.querySelector("#styleWrapper");
+export const cleanStylesheetButton = document.querySelector(`#cleanStylesheet`) 
 

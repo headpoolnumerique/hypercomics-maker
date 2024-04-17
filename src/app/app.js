@@ -115,6 +115,7 @@ assetsList.addEventListener("click", async (e) => {
         e.target,
         document.querySelector(".selected").hash,
         strapisResponse.data.data.id,
+        strapisResponse.data.data
       );
 
       appendLayer(strapisResponse.data.data.id, layerList, false);

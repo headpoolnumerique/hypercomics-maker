@@ -13,6 +13,7 @@ import {
   stylesWrapper,
   previewScreen,
   populateStylesheetButton,
+  cleanStylesheetButton,
 } from "./selectors";
 import { screenListItem } from "./stylesheets/screenListItem";
 
@@ -63,6 +64,8 @@ export async function stylesheetmanager(obj) {
 
   //follow the resizing of the screen
   getSize();
+
+  cleanStylesheetButton.addEventListener("click", cleanStyleSheet);
 }
 
 /** event listener for the stylesheet ui
@@ -139,7 +142,7 @@ newScreenForm.addEventListener("submit", async function (event) {
       data,
     })
     .then((response) => {
-    console.log(response)
+      console.log(response);
       const responsedata = response.data.data;
       const strapid = response.data.data.id;
       // set the screensize id on the preview to know where to save the data
@@ -148,11 +151,11 @@ newScreenForm.addEventListener("submit", async function (event) {
 
       responsedata.attributes.strapid = responsedata.id;
 
-      console.log("now", responsedata)
+      console.log("now", responsedata);
       // reorder the <style, following the ratio after added an element?
       // reorder the <style, following the ratio after added an element?
-        createStyleElement(response.data.data);
-        insertStylesheetToList(response.data.data);
+      createStyleElement(response.data.data);
+      insertStylesheetToList(response.data.data);
     })
     .catch((err) => {
       if (err) return console.log(`nothing got saved because:`, err);
@@ -488,7 +491,7 @@ function isSelectorExistInContainers(parsedCSS, selector) {
  * @param obj: html object to update
  */
 export function setObjInStylesheet(stylesheet, obj) {
-  console.log(stylesheet);
+  // console.log(stylesheet);
 
   // console.log("i did something");
   let parsedCSS = parse(stylesheet.textContent);
@@ -722,4 +725,21 @@ export async function kickstartStylesheet() {
 
   // on load check if the table with the content is empty
   // if empty, add stylesheet
+}
+
+// clean the stylesheet: remove all the rules that have no elements.
+export function cleanStyleSheet() {
+  stylesWrapper.querySelectorAll("style").forEach((style) => {
+    const styles = parse(style.textContent);
+
+    styles.stylesheet.rules[0].rules =
+      styles.stylesheet.rules[0].rules.filter((rule) => {
+        if (!document.querySelector(rule.selectors[0])) {
+          return false; // Remove this rule
+        }
+        return true; // Keep other rules
+      });
+
+    style.textContent = stringify(styles);
+    });
 }

@@ -123,6 +123,7 @@ async function deletePlan() {
     },
   };
 
+  console.log(previousPlan)
   return axios
     .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
       data,

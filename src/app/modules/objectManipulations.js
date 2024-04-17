@@ -118,8 +118,16 @@ export async function deleteObject() {
     config.strapi.url,
     plan.id.split("-")[1],
     object.dataset.objectid,
-  ).then(object.remove());
+  ).then(
+
+      // TODO remove the object from all the stylesheet? or add a clean button? 
+      // or clean on load?
+      
+      
+      object.remove());
+
 }
+
 
 // not use anymore because we’re not saving the object now
 export function addRuleToObject(objectid, data) {
