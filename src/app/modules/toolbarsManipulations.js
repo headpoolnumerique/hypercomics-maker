@@ -6,31 +6,31 @@ function toggleToolbars() {
     .addEventListener("click", function (event) {
       switch (event.target.id) {
         case "showLayers":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#layer-space"));
           break;
         case "showScreens":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#screen-ui"));
           break;
         case "showSequence":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#sequence"));
           break;
         case "showContextual":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#contextualUI"));
           break;
         case "showAssets":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#assets"));
           break;
         case "showMontage":
-          console.log(event.target.id);
           toggleToolbar(document.querySelector("#banc-montage"));
           break;
+        case "showstylewrapper":
+          toggleToolbar(document.querySelector("#styleWrapper"));
         case "showPelure":
-          console.log(event.target.id);
           if (document.querySelector(".oldShow")) {
             document.querySelector(".oldshown")?.classList.remove(".oldshown");
           }
@@ -57,9 +57,6 @@ function moveToolbars() {
     .draggable({
       inertia: false,
       onmove: function (event) {
-
-        
-
         var target = event.target,
           // keep the dragged position in the data-x/data-y attributes
           x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx,

@@ -3,7 +3,6 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 
-
 export function moveToLayer(object, plan, position) {
   // move any object to a specific layer
 
@@ -105,7 +104,6 @@ export function moveToLayer(object, plan, position) {
   // move the element on the right layer (moveAfter, moveBefore)
 }
 
-
 /*
 deteleAsset
 @params domObject asset - the removedasset 
@@ -119,15 +117,12 @@ export async function deleteObject() {
     plan.id.split("-")[1],
     object.dataset.objectid,
   ).then(
+    // TODO remove the object from all the stylesheet? or add a clean button?
+    // or clean on load?
 
-      // TODO remove the object from all the stylesheet? or add a clean button? 
-      // or clean on load?
-      
-      
-      object.remove());
-
+    object.remove(),
+  );
 }
-
 
 // not use anymore because we’re not saving the object now
 export function addRuleToObject(objectid, data) {
@@ -170,6 +165,32 @@ export function updatefromui() {
     document.querySelector(".asset-selected").style.height =
       document.querySelector("#inputheight").value + "%";
   });
+
+  // this anchor should be filled by the stylesheet at first
+  // so testing the computedStyle OR getting the parsing done on load?
+  // vertical and horizontal anchors need to be saved to strapi.
+  document.querySelectorAll(`input[name="verticalAnchor"]`).forEach((radio) => {
+    radio.addEventListener("change", function () {
+      document.querySelector(".asset-selected").dataset.anchorVertical =
+        radio.value;
+    });
+  });
+
+  document
+    .querySelectorAll(`input[name="horizontalAnchor"]`)
+    .forEach((radio) => {
+      radio.addEventListener("change", function () {
+        document.querySelector(".asset-selected").dataset.anchorHorizontal =
+          radio.value;
+        //update strapi before anythihng?
+      });
+    });
+
+  /* when do we keep the strapi data? should we keep it?*/
+
+  /* strapi top? / bottom?*/
+
+
 }
 
 export function updateTheUI(element) {
@@ -196,4 +217,3 @@ export function updateTheUI(element) {
     previewScreenSize.height,
   );
 }
-

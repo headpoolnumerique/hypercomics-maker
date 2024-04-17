@@ -205,6 +205,7 @@ function activateFirstStylesheet() {
     );
     stylesheetToActivate.classList.add("activeStylesheet");
   } else {
+
     // TODO: create a default stylesheet?
   }
 }
@@ -396,8 +397,7 @@ function selectScreen(ratio) {
 }
 
 export function createStyleElement(stylesheet) {
-
-  deselect(".activatedStyle")
+  deselect(".activatedStyle");
   // check if the stylesheet is the first. if true= then max-aspect needs to become min-from before
 
   // console.log(stylesheet);
@@ -420,13 +420,15 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
   if (stylelist.length > 0) {
     const beforeStyle = [...stylesWrapper.querySelectorAll("style")].findLast(
       (style) => {
-        console.log(
-          style.dataset.width / style.dataset.height >= 
-            stylesheet.attributes.maxwidth /
-              stylesheet.attributes.defaultHeight,
+        // console.log(
+        //   style.dataset.width / style.dataset.height >=
+        //     stylesheet.attributes.maxwidth /
+        //       stylesheet.attributes.defaultHeight,
+        // );
+        return (
+          style.dataset.width / style.dataset.height >=
+          stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight
         );
-        return style.dataset.width / style.dataset.height >=
-          stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight;
       },
     );
 
@@ -530,7 +532,7 @@ export function setObjInStylesheet(stylesheet, obj) {
         {
           type: "declaration",
           property: "bottom",
-          value: `${obj.dataset.anchorVertical == "bottom" ? `${percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh` : "unset"}`,
+          value: `${obj.dataset.anchorVertical == "bottom" ? `${100 - percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh` : "unset"}`,
         },
         {
           type: "declaration",
@@ -540,7 +542,7 @@ export function setObjInStylesheet(stylesheet, obj) {
         {
           type: "declaration",
           property: "right",
-          value: `${obj.dataset.anchorHorizontal == "right" ? `${percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetHeight)}cqw` : "unset"}`,
+          value: `${obj.dataset.anchorHorizontal == "right" ? `${100 - percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetHeight)}cqw` : "unset"}`,
         },
       ],
     });
@@ -572,7 +574,7 @@ export function setObjInStylesheet(stylesheet, obj) {
         property: "bottom",
         value:
           obj.dataset.anchorVertical == "bottom"
-            ? `${percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh`
+            ? `${100 - percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh`
             : "unset",
       },
       {
@@ -586,7 +588,7 @@ export function setObjInStylesheet(stylesheet, obj) {
         property: "right",
         value:
           obj.dataset.anchorHorizontal == "right"
-            ? `${percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetWidth)}cqw`
+            ? `${100 - percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetWidth)}cqw`
             : "unset",
       },
     ];
@@ -688,6 +690,12 @@ export async function kickstartStylesheet() {
       default: true,
       sequenceId: sequenceNumber.textContent,
     },
+    {
+      maxwidth: "2000",
+      defaultHeight: "1000",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    }
     // {
     //   maxwidth: "1368",
     //   defaultHeight: "768",

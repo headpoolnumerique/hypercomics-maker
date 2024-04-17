@@ -133,56 +133,5 @@ async function fillPlan(plan) {
 
 export { startup, fillPlan };
 
-// function parseStylesheet(stylesheet) {
-//   cssContent.textContent = stylesheet;
-//   let styles = parse(stylesheet);
-// }
 
-function updateStylesheet(stylesheet, object, rules) {
-  let styles = parse(stylesheet);
-  // get the value for the selector
-  let ruleToUpdate = parsedCSS.stylesheet.rules.filter((a) => {
-    // return the stylesheet without the inuse block;
-    return !a.selectors.includes(object.id);
-  });
-  ruleToUpdate.push({
-    type: "rule",
-    selectors: [`#${object.id}`],
-    declarations: [
-      {
-        type: "declaration",
-        property: "height",
-        value: `${object.style.height}`,
-      },
-      {
-        type: "declaration",
-        property: "width",
-        value: `${object.style.width}`,
-      },
-      {
-        type: "declaration",
-        property: "top",
-        value: `${object.style.top ? object.style.top : "unset"}`,
-      },
-      {
-        type: "declaration",
-        property: "bottom",
-        value: `${object.style.bottom ? object.style.bottom : "unset"}`,
-      },
-      {
-        type: "declaration",
-        property: "left",
-        value: `${object.style.left ? object.style.left : "unset"}`,
-      },
-      {
-        type: "declaration",
-        property: "right",
-        value: `${object.style.right ? object.style.right : "unset"}`,
-      },
-    ],
-  });
-  return stringify(styles);
 
-  // update the rules
-  // return the updated stylesheet
-}

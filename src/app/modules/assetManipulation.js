@@ -6,10 +6,7 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 import { anchors, stylesWrapper } from "./selectors.js";
-import {
-  saveStylesheet,
-  setObjInStylesheet,
-} from "./stylesheet.js";
+import { saveStylesheet, setObjInStylesheet } from "./stylesheet.js";
 import { parse } from "bytes";
 
 async function interactObject(object) {
@@ -389,6 +386,24 @@ function updateFromUi() {
     document.querySelector(".asset-selected").style.height =
       document.querySelector("#inputheight").value + "%";
   });
+
+  // vertical and horizontal anchors need to be saved to strapi.
+  document.querySelectorAll(`input[name="verticalAnchor"]`).forEach((radio) => {
+    radio.addEventListener("change", function () {
+      document.querySelector(".asset-selected").dataset.anchorVertical =
+        radio.value;
+    });
+  });
+
+  document
+    .querySelectorAll(`input[name="horizontalAnchor"]`)
+    .forEach((radio) => {
+      radio.addEventListener("change", function () {
+        document.querySelector(".asset-selected").dataset.anchorHorizontal =
+          radio.value;
+        //update strapi before anythihng?
+      });
+    });
 }
 
 function updateTheUI(element) {
@@ -413,9 +428,27 @@ function updateTheUI(element) {
     element.height,
     previewScreenSize.height,
   );
+
+  // element //
+  if (element.dataset.anchorVertical == "bottom") {
+    document.querySelector(`[name="verticalAnchor"][value="bottom"]`).checked =
+      true;
+  }
+  if (element.dataset.anchorVertical == "top") {
+    document.querySelector(`[name="verticalAnchor"][value="top"]`).checked =
+      true;
+  }
+  if (element.dataset.anchorHorizontal == "left") {
+    document.querySelector(`[name="horizontalAnchor"][value="left"]`).checked =
+      true;
+  }
+  if (element.dataset.anchorHorizontal == "right") {
+    document.querySelector(`[name="horizontalAnchor"][value="right"]`).checked =
+      true;
+  }
 }
 
-export { deleteObject, interactObject, moveToLayer, updateFromUi, updateTheUI };
+export { deleteObject, interactObject, moveToLayer, updateTheUI };
 
 // TO DO: resize from the bottom/right edge should stick to the right move
 // this may be impossible. THe example use the translate to define the location. maybe we should keep it.
@@ -498,4 +531,3 @@ export function setAnchor() {
     }),
   );
 }
-

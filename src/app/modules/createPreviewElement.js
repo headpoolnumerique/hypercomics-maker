@@ -8,7 +8,7 @@ export function addImg(img, planId, objectId, metadata) {
   const newImg = document.createElement("img");
   console.log(objectId)
   console.log(planId)
-  // TODO replace the planID hash, dont know where that comes from
+  // TODO replace the planID hash,ju dont know where that comes from
   newImg.id = `inuse-${planId.replace("#", "")}-${objectId}`;
   newImg.dataset.assetid = img.id.replace("assetlink-", "");
   newImg.dataset.objectid = objectId;

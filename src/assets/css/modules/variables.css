@@ -1,18 +1,17 @@
 /* fonts */
 
 @font-face {
-  font-family: 'inter';
-  src: url('../fonts/inter.var.woff2') format('woff2');
+  font-family: "inter";
+  src: url("../fonts/inter.var.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal italic;
 }
 
 /* variables */
-
 :root {
   --color-main: rgb(215, 105, 140, 1);
   --color-body: #121212;
-  --font-interface: 'inter';
+  --font-interface: "inter";
   /*screen minimal size*/
   --min-height: 800px;
   --min-width: 400px;
@@ -25,7 +24,6 @@
   --color-previewScreen: hsl(0, 0%, 100%);
   --color-montage-order: white;
   --color-app-wrapp: hsl(0, 0%, 90%);
---color-assets-background: hsl(0, 0%, 70%);
-
---hidden: 0;
+  --color-assets-background: hsl(0, 0%, 70%);
+  --hidden: 0;
 }
