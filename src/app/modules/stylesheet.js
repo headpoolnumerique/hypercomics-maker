@@ -333,7 +333,7 @@ export function getSize() {
         //update the ui
         screenWidthInput.value = newWidth;
         screenHeightInput.value = newHeight;
-        screenRatioInput.value = (newWidth / newHeight).toFixed(2);
+        screenRatioInput.value = (newWidth / newHeight).toFixed(3);
 
         // update preview dataset
         previewScreen.dataset.width = newWidth;
@@ -396,15 +396,17 @@ function selectScreen(ratio) {
 }
 
 export function createStyleElement(stylesheet) {
+
+  deselect(".activatedStyle")
   // check if the stylesheet is the first. if true= then max-aspect needs to become min-from before
 
-  console.log(stylesheet);
+  // console.log(stylesheet);
   // if the stylesheet is deactivated
   if (stylesheet.attributes.disabled) return;
   // prev,next
   /* the style element */
 
-  const styleEl = `<style data-strapid="${stylesheet.id}" type="text/css" contenteditable id="style-${stylesheet.id}" 
+  const styleEl = `<style class="activatedStyle"  data-strapid="${stylesheet.id}" type="text/css" contenteditable id="style-${stylesheet.id}" 
 data-height="${stylesheet.attributes.defaultHeight}"
 data-width="${stylesheet.attributes.maxwidth}">
 
@@ -413,29 +415,32 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
   const stylelist = stylesWrapper.querySelectorAll("style");
 
   console.log("list", stylelist);
+  console.log("list", stylesheet.attributes);
 
-  if (stylelist > 0) {
+  if (stylelist.length > 0) {
     const beforeStyle = [...stylesWrapper.querySelectorAll("style")].findLast(
       (style) => {
-        style.dataset.width / style.dateset.height >=
+        console.log(
+          style.dataset.width / style.dataset.height >= 
+            stylesheet.attributes.maxwidth /
+              stylesheet.attributes.defaultHeight,
+        );
+        return style.dataset.width / style.dataset.height >=
           stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight;
       },
     );
-    beforeStyle.insertAdjacentHTML("afterend", styleEl);
 
-    // if (stylelist < 1) {
+    console.log(beforeStyle);
+
+    if (beforeStyle) {
+      beforeStyle.insertAdjacentHTML("afterend", styleEl);
+    } else {
+      console.log(beforeStyle);
+      stylesWrapper.insertAdjacentHTML("beforeend", styleEl);
+    }
   } else {
-    //
-    //   console.log(beforeStyle);
-
     stylesWrapper.insertAdjacentHTML("beforeend", styleEl);
   }
-  // for each stylesheet, create a style element and feel it up
-  //
-
-  // find the previous element to add the style sheet at  teh right place
-
-  // on startup load all style sheet and create styles element
 }
 
 /* let’s make it work! */
@@ -732,30 +737,26 @@ export function cleanStyleSheet() {
   stylesWrapper.querySelectorAll("style").forEach((style) => {
     const styles = parse(style.textContent);
 
-    styles.stylesheet.rules[0].rules =
-      styles.stylesheet.rules[0].rules.filter((rule) => {
+    styles.stylesheet.rules[0].rules = styles.stylesheet.rules[0].rules.filter(
+      (rule) => {
         if (!document.querySelector(rule.selectors[0])) {
           return false; // Remove this rule
         }
         return true; // Keep other rules
-      });
+      },
+    );
 
-    // clean the content 
+    // clean the content
     style.textContent = stringify(styles);
 
     // update to strapi now
     saveStylesheet(style.dataset.strapid, style.textContent);
-
-    });
-
+  });
 }
 
-
+// save all the stylesheet: send all the code to strapi!
 export function saveAllStylesheet() {
   stylesWrapper.querySelectorAll("style").forEach((style) => {
-
-
     saveStylesheet(style.dataset.strapid, style.textContent);
-
-    });
+  });
 }

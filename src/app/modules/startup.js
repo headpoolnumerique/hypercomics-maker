@@ -19,10 +19,8 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
-import {  updatefromui } from "./objectManipulations";
-import {
-  stylesheetmanager,
-} from "./stylesheet.js";
+import { updatefromui } from "./objectManipulations";
+import { stylesheetmanager } from "./stylesheet.js";
 import { setAnchor } from "./assetManipulation.js";
 
 async function startup(url = document.location.href) {
@@ -124,25 +122,8 @@ async function fillPlan(plan) {
             ? asset.attributes.anchorHorizontal
             : "top"
         }"
+        class= "asset" style = " " >`,
 
-
-class= "asset" style = " " >`,
-
-        // style to set in the stylesheet instead of the object
-        //          ${object.attributes.width ? `width:${object.attributes.width}` : ""}
-        // ${object.attributes.height ? `height:${object.attributes.height}` : ""}
-        //
-        // ${object.attributes.anchor == "top"
-        //   ? `top:${object.attributes.top};`
-        //   : `bottom:${object.attributes.bottom};`
-        // }
-        // ${object.attributes.anchor == "left"
-        //   ? `left:${object.attributes.left};`
-        //   : `right:${object.attributes.right};`
-        // }
-        // ${object.attributes.left ? `left:${object.attributes.left}` : ""}
-        //
-        //
       );
     });
   });
