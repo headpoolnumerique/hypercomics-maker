@@ -146,25 +146,26 @@ export function percentage(partialValue, totalValue) {
 
 export function updatefromui() {
   document.querySelector("#inputx").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.left =
-      document.querySelector("#inputx").value + "%";
+    // document.querySelector(".asset-selected").style.left =
+    //   document.querySelector("#inputx").value + "%";
   });
   document.querySelector("#inputx").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.left =
-      document.querySelector("#inputx").value + "%";
+    // document.querySelector(".asset-selected").style.left =
+    //   document.querySelector("#inputx").value + "%";
   });
   document.querySelector("#inputy").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.top =
-      document.querySelector("#inputy").value + "%";
+    // document.querySelector(".asset-selected").style.top =
+    //   document.querySelector("#inputy").value + "%";
   });
   document.querySelector("#inputwidth").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.width =
-      document.querySelector("#inputwidth").value + "%";
+    // document.querySelector(".asset-selected").style.width =
+    //   document.querySelector("#inputwidth").value + "%";
   });
   document.querySelector("#inputheight").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.height =
-      document.querySelector("#inputheight").value + "%";
+    // document.querySelector(".asset-selected").style.height =
+    //   document.querySelector("#inputheight").value + "%";
   });
+
 
   // this anchor should be filled by the stylesheet at first
   // so testing the computedStyle OR getting the parsing done on load?

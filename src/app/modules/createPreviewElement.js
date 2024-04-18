@@ -9,7 +9,7 @@ export function addImg(img, planId, objectId, metadata) {
   console.log(objectId)
   console.log(planId)
   // TODO replace the planID hash,ju dont know where that comes from
-  newImg.id = `inuse-${planId.replace("#", "")}-${objectId}`;
+  newImg.id = `inuse-${planId.replace("#plan-", "")}-${objectId}`;
   newImg.dataset.assetid = img.id.replace("assetlink-", "");
   newImg.dataset.objectid = objectId;
   newImg.dataset.planid = planId;

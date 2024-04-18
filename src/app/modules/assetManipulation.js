@@ -6,7 +6,7 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 import { anchors, stylesWrapper } from "./selectors.js";
-import { saveStylesheet, setObjInStylesheet } from "./stylesheet.js";
+import { isSelectorExistInContainers, saveStylesheet, setObjInStylesheet } from "./stylesheet.js";
 import { parse } from "bytes";
 
 async function interactObject(object) {
@@ -155,7 +155,7 @@ async function interactObject(object) {
             previewScreenSize.height,
           );
         },
-        move: function (event) {
+        move: function(event) {
           // parse the css
           // find the location for wisth and height
           // listen to the resize
@@ -182,7 +182,7 @@ async function interactObject(object) {
 
           Object.assign(event.target.dataset, { x, y });
         },
-        end: function (event) {
+        end: function(event) {
           document.querySelector("#inputx").value = percentage(
             event.target.offsetLeft,
             previewScreenSize.width,
@@ -389,7 +389,7 @@ function updateFromUi() {
 
   // vertical and horizontal anchors need to be saved to strapi.
   document.querySelectorAll(`input[name="verticalAnchor"]`).forEach((radio) => {
-    radio.addEventListener("change", function () {
+    radio.addEventListener("change", function() {
       document.querySelector(".asset-selected").dataset.anchorVertical =
         radio.value;
     });
@@ -398,7 +398,7 @@ function updateFromUi() {
   document
     .querySelectorAll(`input[name="horizontalAnchor"]`)
     .forEach((radio) => {
-      radio.addEventListener("change", function () {
+      radio.addEventListener("change", function() {
         document.querySelector(".asset-selected").dataset.anchorHorizontal =
           radio.value;
         //update strapi before anythihng?
@@ -429,23 +429,23 @@ function updateTheUI(element) {
     previewScreenSize.height,
   );
 
-  // element //
-  if (element.dataset.anchorVertical == "bottom") {
-    document.querySelector(`[name="verticalAnchor"][value="bottom"]`).checked =
-      true;
-  }
-  if (element.dataset.anchorVertical == "top") {
-    document.querySelector(`[name="verticalAnchor"][value="top"]`).checked =
-      true;
-  }
-  if (element.dataset.anchorHorizontal == "left") {
-    document.querySelector(`[name="horizontalAnchor"][value="left"]`).checked =
-      true;
-  }
-  if (element.dataset.anchorHorizontal == "right") {
-    document.querySelector(`[name="horizontalAnchor"][value="right"]`).checked =
-      true;
-  }
+  // element anchors is now button based//
+  // if (element.dataset.anchorVertical == "bottom") {
+  //   document.querySelector(`[name="verticalAnchor"][value="bottom"]`).checked =
+  //     true;
+  // }
+  // if (element.dataset.anchorVertical == "top") {
+  //   document.querySelector(`[name="verticalAnchor"][value="top"]`).checked =
+  //     true;
+  // }
+  // if (element.dataset.anchorHorizontal == "left") {
+  //   document.querySelector(`[name="horizontalAnchor"][value="left"]`).checked =
+  //     true;
+  // }
+  // if (element.dataset.anchorHorizontal == "right") {
+  //   document.querySelector(`[name="horizontalAnchor"][value="right"]`).checked =
+  //     true;
+  // }
 }
 
 export { deleteObject, interactObject, moveToLayer, updateTheUI };
@@ -498,36 +498,93 @@ async function updateDeclaration(
     });
 }
 
+// c’est en court le set anchor
 export function setAnchor() {
+  // result off this setanchor should be the addition of a --verticalAnchor: "top" or "bottom"
+  // and --horizontal-anchor: z"left" or "right". This will allow for simpler set up and a button instead of the value
+  //
   // this is asset manipulation normally
-  anchors.forEach((input) =>
-    addEventListener("change", function () {
+  anchors.forEach((button) => {
+    console.log(button)
+    button.addEventListener("click", function() {
       // make sure an object is selected
       let selected = document.querySelector(".asset-selected");
+
       if (!selected) {
-        return;
+        return console.log("there is no element selected");
       }
 
-      // Get references to the radio button elements
-      const verticalRadioButtons = document.getElementsByName("verticalAnchor");
-      const horizontalRadioButtons =
-        document.getElementsByName("horizontalAnchor");
+      // parse le css, make it an object
+      let parsedCSS = parse(
+        document.querySelector(".activatedStyle").textContent
 
-      // Add event listeners to the radio buttons to detect changes
-      verticalRadioButtons.forEach(function (radioButton) {
-        radioButton.addEventListener("change", function () {
-          // Update the selected vertical anchor value
-          selected.dataset.anchorVertical = this.value;
-        });
-      });
+      );
+      console.log(document.querySelector(".activatedStyle"))
+      console.log(parsedCSS)
 
-      horizontalRadioButtons.forEach(function (radioButton) {
-        radioButton.addEventListener("change", function () {
-          // Update the selected horizontal anchor value
-          selected.dataset.anchorHorizontal = this.value;
-          this.value;
+      // if the selector doesn’t exist, creates it and set the rule for the anchor?
+
+      if (!isSelectorExistInContainers(parsedCSS, selected.id)) {
+        parsedCSS.stylesheet.rules[0].rules.push({
+          type: "rule",
+          selectors: [`#${selected.id}`],
+          declarations: [
+            {
+              type: "declaration",
+              property: "--anchor-horizontal",
+              value: `left`,
+            },
+            {
+              type: "declaration",
+              property: "--anchor-vertical",
+              value: `top`,
+            },
+          ],
         });
-      });
-    }),
-  );
+        parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+          if (rule.propery == "--anchor-horizontal") {
+            if (rule.value == "left") {
+              rule.value = "right";
+            } else {
+              rule.value = "left";
+            }
+          }
+          if (rule.propery == "--anchor-verticl") {
+            if (rule.value == "top") {
+              rule.value = "bottom";
+            } else {
+              rule.value = "top";
+            }
+          }
+        });
+      }
+    });
+  });
 }
+// parse the css selected to check the anchor  or set the anchor
+//
+
+//       // Get references to the radio button elements
+//       const verticalRadioButtons = document.getElementsByName("verticalAnchor");
+//   const horizontalRadioButtons =
+//     document.getElementsByName("horizontalAnchor");
+//
+//   // Add event listeners to the radio buttons to detect changes
+//   verticalRadioButtons.forEach(function(radioButton) {
+//     radioButton.addEventListener("change", function() {
+//       // Update the selected vertical anchor value
+//       selected.dataset.anchorVertical = this.value;
+//     });
+//   });
+//
+//   horizontalRadioButtons.forEach(function(radioButton) {
+//     radioButton.addEventListener("change", function() {
+//       // Update the selected horizontal anchor value
+//       selected.dataset.anchorHorizontal = this.value;
+//       this.value;
+//     });
+//   });
+// }),
+//   );
+// }
+//

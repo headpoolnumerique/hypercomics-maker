@@ -31,7 +31,7 @@ export const bottomAnchorRadio = document.querySelector("#bottomAnchor");
 export const leftAnchorRadio = document.querySelector("#leftAnchor");
 export const rightAnchorRadio = document.querySelector("#rightAnchor");
 
-export const anchors = document.querySelectorAll(".anchorInput");
+export const anchors = document.querySelectorAll(".anchorButton");
 
 
 // save the stylesheets!

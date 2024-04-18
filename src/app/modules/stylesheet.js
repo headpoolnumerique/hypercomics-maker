@@ -480,7 +480,7 @@ export function sortByRatio(stylesheets, reverse) {
   return sortedStylesheets;
 }
 
-function isSelectorExistInContainers(parsedCSS, selector) {
+export function isSelectorExistInContainers(parsedCSS, selector) {
   // console.log(selector);
   let selectorExists = false;
   parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
@@ -499,6 +499,7 @@ function isSelectorExistInContainers(parsedCSS, selector) {
  */
 export function setObjInStylesheet(stylesheet, obj) {
   // console.log(stylesheet);
+
 
   // console.log("i did something");
   let parsedCSS = parse(stylesheet.textContent);
@@ -715,7 +716,6 @@ export async function kickstartStylesheet() {
       })
       .then((response) => {
         console.log("things got saved");
-        console.log("add some stylesheet now!");
 
         const responsedata = response.data.data.attributes;
         const strapid = response.data.data.id;
@@ -723,7 +723,7 @@ export async function kickstartStylesheet() {
         previewScreen.dataset.screensize = strapid;
         responsedata.strapid = response.data.data.id;
         // create styleElement and stylesheet
-        console.log(response.data.data);
+        // console.log(response.data.data);
         createStyleElement(response.data.data);
         insertStylesheetToList(response.data.data);
 

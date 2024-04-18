@@ -1,10 +1,16 @@
-import { layerList, previewScreen, zindexInteraction } from "./selectors";
+import {
+  layerList,
+  previewScreen,
+  stylesWrapper,
+  zindexInteraction,
+} from "./selectors";
 import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 import { deselect } from "./helpers";
 import { deleteObject, moveToLayer, updateTheUI } from "./objectManipulations";
 import config from "../config/config";
 import { updateData } from "./dataManagement";
 import { interactObject } from "./assetManipulation";
+import { isSelectorExistInContainers, setObjInStylesheet } from "./stylesheet";
 
 // how is the layer list created?
 // is it the layer list that maintains everything or is the layer list based on the preview block
@@ -96,6 +102,7 @@ function layerInteract(layerWrapper = layerList) {
       const hidingObject = document.querySelector(
         `.shown [data-objectid="${objectid}"]`,
       );
+
       hidingObject.classList.toggle(["asset-hidden"]);
       target.closest("li").classList.toggle("hidden");
     } else if (target.classList.contains("delete")) {
@@ -212,3 +219,56 @@ export {
   appendLayer,
   layerInteract,
 };
+
+// TODO: the same thing with custom properties in  css
+// --anchor-vertical and --anchor-horizontal
+// this way you keep only one thing. 
+// hide element in style sheet and save it
+export function hideElement(obj) {
+  let parsedCSS = parse(
+    stylesWrapper.querySelector(".activatedStyle").textContent,
+  );
+  let updatedDeclarations = [
+    {
+      property: "visibility",
+    },
+  ];
+  if (!isSelectorExistInContainers(parsedCSS, obj.id)) {
+
+  } else {
+    parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+      if (!rule.selectors) {
+        // visibility is first hidden because it’s visible by default
+        parsedCSS.stylesheet.rules[0].rules.push({
+          type: "rule",
+          selectors: [`#${obj.id}`],
+          declarations: [{
+            type: "declaration",
+            property: "visibility",
+            value: "hidden",
+          }
+          ]
+        })
+        // append the rules to the selector and return
+      }
+      if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
+        // Update existing declarations for the selectorToUpdate
+        rule.declarations.forEach((declaration) => {
+          updatedDeclarations.forEach((updatedDeclaration) => {
+            if (declaration.property == "visible") {
+              declaration.value = "hidden";
+            } else {
+              declaration.value = "visible";
+            }
+          });
+        });
+      }
+    });
+  }
+}
+
+// parseSelectedCSS
+// findObject in CSS
+// toggle visibility 100% or 0
+// update the stylesheet on the server
+// update the stylesheet locally

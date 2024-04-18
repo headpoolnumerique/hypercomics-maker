@@ -122,7 +122,7 @@ async function fillPlan(plan) {
             ? asset.attributes.anchorHorizontal
             : "top"
         }"
-        class= "asset" style = " " >`,
+        class= "asset" >`,
 
       );
     });
