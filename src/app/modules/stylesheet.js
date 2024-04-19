@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../config/config.js";
 import { parse, stringify } from "../vendors/css/css.js";
+import { deepSearchByKey } from "./assetManipulation.js";
 import { createData, updateData } from "./dataManagement.js";
 import { deselect, percentage, updateDataset } from "./helpers";
 import {
@@ -71,7 +72,7 @@ export async function stylesheetmanager(obj) {
 /** event listener for the stylesheet ui
  */
 export async function stylesheetListeners() {
-  screensList.addEventListener("click", function (event) {
+  screensList.addEventListener("click", function(event) {
     /* remove stylesheet (disable in 2 times )*/
     // cancel remove if you click on something else
     if (!event.target.classList.contains("remove")) {
@@ -124,7 +125,7 @@ export async function stylesheetListeners() {
 populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
 // create a stylesheet: add it to the stylesheet list, and push content
-newScreenForm.addEventListener("submit", async function (event) {
+newScreenForm.addEventListener("submit", async function(event) {
   event.preventDefault();
   // if (!validateInputs()) return console.log("screen size input are not valid");
   // validation is done in the html, and we don’t use the ratio
@@ -205,7 +206,6 @@ function activateFirstStylesheet() {
     );
     stylesheetToActivate.classList.add("activeStylesheet");
   } else {
-
     // TODO: create a default stylesheet?
   }
 }
@@ -481,7 +481,9 @@ export function sortByRatio(stylesheets, reverse) {
 }
 
 export function isSelectorExistInContainers(parsedCSS, selector) {
-  // console.log(selector);
+  // check if the selector exists in the parsesCSS
+  // maybe add a check to find the type of the parsedCSS object?
+  // if it’s a string parse it?
   let selectorExists = false;
   parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
     if (rule.selectors && rule.selectors.includes(`#${selector}`)) {
@@ -499,7 +501,6 @@ export function isSelectorExistInContainers(parsedCSS, selector) {
  */
 export function setObjInStylesheet(stylesheet, obj) {
   // console.log(stylesheet);
-
 
   // console.log("i did something");
   let parsedCSS = parse(stylesheet.textContent);
@@ -696,7 +697,7 @@ export async function kickstartStylesheet() {
       defaultHeight: "1000",
       default: true,
       sequenceId: sequenceNumber.textContent,
-    }
+    },
     // {
     //   maxwidth: "1368",
     //   defaultHeight: "768",
@@ -768,3 +769,87 @@ export function saveAllStylesheet() {
     saveStylesheet(style.dataset.strapid, style.textContent);
   });
 }
+
+// set the property in the selected stylesheet
+export function setPropertyInStylesheet(
+  selectedObject,
+  styleElement,
+  property,
+  value,
+) {
+  // make sure an object is selected
+  let selected = selectedObject
+    ? selectedObject
+    : document.querySelector(".asset-selected");
+  // if nothihng is selected, bye
+  if (!selected) {
+    return console.log("there is no element selected");
+  }
+
+  // parse le css, make it an object
+  let parsedcss = parse(
+    styleElement
+      ? styleElement.innerHTML
+      : document.querySelector(".activatedStyle").textContent,
+  );
+
+  // if the selector doesn’t exist, creates it and set the rule for the anchor?
+  // so this is what should be checked:
+  // first: found the declartion in the rule within
+  // if there is a selector change this
+  // if there is no selector, create it and add the declaration css
+
+  if (!isSelectorExistInContainers(parsedcss, selected.id)) {
+    // get the rule with the
+    parsedcss.stylesheet.rules[0].rules.push({
+      type: "rule",
+      selectors: [`#${selected.id}`],
+      declarations: [
+        {
+          type: "declaration",
+          property: property,
+          value: value,
+        },
+      ],
+    });
+  } else {
+    // if the selector exist but there is no vertical / horizontal anchor, set both
+    // check if the anchor vertical and horizontal exist
+    parsedcss.stylesheet.rules[0].rules.forEach((rule) => {
+      if (rule.selectors && rule.selectors.includes(`#${selected.id}`)) {
+        //if there is a propery, return
+        if (!deepSearchByKey(rule, "property", property)) {
+          console.log(`there is no ${property}, we’re creating now`);
+          rule.declarations.push({
+            type: "declaration",
+            property: property,
+            value: value,
+          });
+        }
+      }
+    });
+    // if selector exit
+    // check if there is a rule with this selector
+  }
+
+  // else the stylesheet exist / now the stylesheet exist
+  parsedcss.stylesheet.rules[0].rules.forEach((line) => {
+    if (!line.selectors.includes(`#${selected.id}`)) return;
+    line.declarations.forEach((declaration) => {
+      if (declaration.property == property) {
+        declaration.value = value;
+      }
+    });
+  });
+  document.querySelector(".activatedStyle").textContent = stringify(parsedcss);
+  // save the stylesheet
+  // saves
+  saveStylesheet(
+    document.querySelector(".activatedStyle").dataset.strapid,
+    document.querySelector(".activatedStyle").textcontent,
+  );
+}
+
+// find a way to get a property from the stylesheet
+//    getPropertyFromStylesheet()
+

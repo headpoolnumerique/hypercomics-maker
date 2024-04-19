@@ -20,7 +20,7 @@ import {
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
 import { updatefromui } from "./objectManipulations";
-import { stylesheetmanager } from "./stylesheet.js";
+import { setPropertyInStylesheet, stylesheetmanager } from "./stylesheet.js";
 import { setAnchor } from "./assetManipulation.js";
 
 async function startup(url = document.location.href) {
@@ -51,6 +51,11 @@ async function startup(url = document.location.href) {
   setAnchor();
   updatefromui();
   await stylesheetmanager(response.data);
+  
+  //lol
+  // document.querySelector("#anchorTop").addEventListener("click", function() {
+  //   setPropertyInStylesheet(document.querySelector(".asset-selected"), document.querySelector(".activatedStylesheet"), "--funz", "test")
+  // })
 }
 
 async function fillSequence(plans) {

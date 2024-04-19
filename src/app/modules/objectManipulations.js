@@ -2,6 +2,12 @@ import { reorderObjectInPlan, removeObjectFromPlan } from "./dataManagement.js";
 import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
+import {
+  isSelectorExistInContainers,
+  setPropertyInStylesheet,
+} from "./stylesheet.js";
+import { previewScreen } from "./selectors.js";
+import { parse } from "../vendors/css/css.js";
 
 export function moveToLayer(object, plan, position) {
   // move any object to a specific layer
@@ -144,54 +150,97 @@ export function percentage(partialValue, totalValue) {
   return ((100 * partialValue) / totalValue).toFixed(2);
 }
 
+/**
+ * update the locations of the element from the UI. warnin, it’s not set up to check the anchor */
 export function updatefromui() {
-  document.querySelector("#inputx").addEventListener("change", () => {
-    // document.querySelector(".asset-selected").style.left =
-    //   document.querySelector("#inputx").value + "%";
+  // set X
+  document.querySelector("#inputx").addEventListener("change", (event) => {
+    // check if the --anchor vertical is top or bottom first
+    const anchorHorizontal = checkPropertyValueFromStylesheet(
+      document.querySelector(".asset-selected"),
+      document.querySelector(".activatedStylesheet"),
+      "--anchor-horizontal",
+    );
+    if (anchorHorizontal == "right") {
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "right",
+        `${event.target.value}cqw`,
+      );
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "left",
+        "unset",
+      );
+    } else {
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "left",
+        `${event.target.value}cqw`,
+      );
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "right",
+        "unset",
+      );
+    }
   });
-  document.querySelector("#inputx").addEventListener("change", () => {
-    // document.querySelector(".asset-selected").style.left =
-    //   document.querySelector("#inputx").value + "%";
+
+  document.querySelector("#inputy").addEventListener("change", (event) => {
+    const anchorVertical = checkPropertyValueFromStylesheet(
+      document.querySelector(".asset-selected"),
+      document.querySelector(".activatedStylesheet"),
+      "--anchor-vertical",
+    );
+    if (anchorVertical == "bottom") {
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "bottom",
+        `${event.target.value}cqh`,
+      );
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "top",
+        "unset",
+      );
+    } else {
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "top",
+        `${event.target.value}cqh`,
+      );
+      setPropertyInStylesheet(
+        document.querySelector(".asset-selected"),
+        document.querySelector(".activatedStylesheet"),
+        "bottom",
+        "unset",
+      );
+    }
   });
-  document.querySelector("#inputy").addEventListener("change", () => {
-    // document.querySelector(".asset-selected").style.top =
-    //   document.querySelector("#inputy").value + "%";
+
+  document.querySelector("#inputwidth").addEventListener("change", (event) => {
+    setPropertyInStylesheet(
+      document.querySelector(".asset-selected"),
+      document.querySelector(".activatedStylesheet"),
+      "width",
+      `${event.target.value}cqw`,
+    );
   });
-  document.querySelector("#inputwidth").addEventListener("change", () => {
-    // document.querySelector(".asset-selected").style.width =
-    //   document.querySelector("#inputwidth").value + "%";
+  document.querySelector("#inputheight").addEventListener("change", (event) => {
+    setPropertyInStylesheet(
+      document.querySelector(".asset-selected"),
+      document.querySelector(".activatedStylesheet"),
+      "height",
+      `${event.target.value}cqh`,
+    );
   });
-  document.querySelector("#inputheight").addEventListener("change", () => {
-    // document.querySelector(".asset-selected").style.height =
-    //   document.querySelector("#inputheight").value + "%";
-  });
-
-
-  // this anchor should be filled by the stylesheet at first
-  // so testing the computedStyle OR getting the parsing done on load?
-  // vertical and horizontal anchors need to be saved to strapi.
-  document.querySelectorAll(`input[name="verticalAnchor"]`).forEach((radio) => {
-    radio.addEventListener("change", function () {
-      document.querySelector(".asset-selected").dataset.anchorVertical =
-        radio.value;
-    });
-  });
-
-  document
-    .querySelectorAll(`input[name="horizontalAnchor"]`)
-    .forEach((radio) => {
-      radio.addEventListener("change", function () {
-        document.querySelector(".asset-selected").dataset.anchorHorizontal =
-          radio.value;
-        //update strapi before anythihng?
-      });
-    });
-
-  /* when do we keep the strapi data? should we keep it?*/
-
-  /* strapi top? / bottom?*/
-
-
 }
 
 export function updateTheUI(element) {
@@ -217,4 +266,74 @@ export function updateTheUI(element) {
     element.height,
     previewScreenSize.height,
   );
+}
+
+export function checkPropertyValueFromStylesheet(
+  selectedObject,
+  styleElement,
+  property,
+) {
+  // if there is no selection, select the object
+  let selected = selectedObject
+    ? selectedObject
+    : document.querySelector(".asset-selected");
+
+  // set parse style
+  let parsedcss = parse(
+    styleElement
+      ? styleElement.innerHTML
+      : document.querySelector(".activatedStyle").textContent,
+  );
+
+  if (!isSelectorExistInContainers(parsedcss, selected.id)) {
+    // get the rule with the
+    console.log("the selector n’existe pas");
+    return undefined;
+  }
+
+  let out;
+  // parsedcss.stylesheet.rules[0].rules.forEach((rule) => {
+  parsedcss.stylesheet.rules[0].rules.forEach((line) => {
+    if (!line.selectors.includes(`#${selected.id}`)) return undefined;
+    line.declarations.forEach((declaration) => {
+      if (declaration.property == property) out = declaration.value;
+    });
+  });
+  return out;
+  //if there is a propery, return
+  //check for the declarations!
+
+  // find the rule that has the selector
+  // check if the rule has the propertydeclaration
+  // return value or undefined
+}
+
+// keep
+// parse le css, make it an object
+
+// if the selector doesn’t exist, creates it and set the rule for the anchor?
+// so this is what should be checked:
+// first: found the declartion in the rule within
+// if there is a selector change this
+// if there is no selector, create it and add the declaration css
+
+export function getValueOfNestedProperty(obj, key) {
+  // Check if the key exists in the current object
+  if (obj.hasOwnProperty(key)) {
+    return obj[key];
+  }
+
+  // Iterate through nested objects to search for the key
+  for (let prop in obj) {
+    // If the property is an object, recursively search it
+    if (typeof obj[prop] === "object") {
+      const result = deepSearchForKey(obj[prop], key);
+      if (result !== undefined) {
+        return result;
+      }
+    }
+  }
+
+  // If the key is not found anywhere, return undefined
+  return undefined;
 }

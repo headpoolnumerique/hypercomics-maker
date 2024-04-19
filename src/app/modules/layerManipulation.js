@@ -11,6 +11,7 @@ import config from "../config/config";
 import { updateData } from "./dataManagement";
 import { interactObject } from "./assetManipulation";
 import { isSelectorExistInContainers, setObjInStylesheet } from "./stylesheet";
+import { stringify } from "../vendors/css/css";
 
 // how is the layer list created?
 // is it the layer list that maintains everything or is the layer list based on the preview block
@@ -265,6 +266,7 @@ export function hideElement(obj) {
       }
     });
   }
+  document.querySelector(".activatedStyle").textContent = stringify(parsedCSS)
 }
 
 // parseSelectedCSS

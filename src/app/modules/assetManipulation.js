@@ -6,8 +6,12 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 import { anchors, stylesWrapper } from "./selectors.js";
-import { isSelectorExistInContainers, saveStylesheet, setObjInStylesheet } from "./stylesheet.js";
-import { parse } from "bytes";
+import {
+  isSelectorExistInContainers,
+  saveStylesheet,
+  setObjInStylesheet,
+} from "./stylesheet.js";
+import { parse, stringify } from "../vendors/css/css.js";
 
 async function interactObject(object) {
   if (!object.classList.contains("asset-selected")) return;
@@ -505,7 +509,6 @@ export function setAnchor() {
   //
   // this is asset manipulation normally
   anchors.forEach((button) => {
-    console.log(button)
     button.addEventListener("click", function() {
       // make sure an object is selected
       let selected = document.querySelector(".asset-selected");
@@ -516,15 +519,17 @@ export function setAnchor() {
 
       // parse le css, make it an object
       let parsedCSS = parse(
-        document.querySelector(".activatedStyle").textContent
-
+        document.querySelector(".activatedStyle").textContent,
       );
-      console.log(document.querySelector(".activatedStyle"))
-      console.log(parsedCSS)
 
       // if the selector doesn’t exist, creates it and set the rule for the anchor?
-
+      // so this is what should be checked:
+      // first: found the declartion in the rule within
+      // if there is a selector change this
+      // if there is no selector, create it and add the declaration css
+      //
       if (!isSelectorExistInContainers(parsedCSS, selected.id)) {
+        // get the rule with the
         parsedCSS.stylesheet.rules[0].rules.push({
           type: "rule",
           selectors: [`#${selected.id}`],
@@ -541,23 +546,64 @@ export function setAnchor() {
             },
           ],
         });
+      } else {
+        // if the selector exist but there is no vertical / horizontal anchor, set both
+        // check if the anchor vertical and horizontal exist
         parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
-          if (rule.propery == "--anchor-horizontal") {
-            if (rule.value == "left") {
-              rule.value = "right";
-            } else {
-              rule.value = "left";
+          if (rule.selectors && rule.selectors.includes(`#${selected.id}`)) {
+            //if there is a propery, return
+            if (!deepSearchByKey(rule, "property", "--anchor-horizontal")) {
+              console.log("there is no anchor horiztonal, we’re creating now");
+              rule.declarations.push({
+                type: "declaration",
+                property: "--anchor-horizontal",
+                value: `left`,
+              });
             }
-          }
-          if (rule.propery == "--anchor-verticl") {
-            if (rule.value == "top") {
-              rule.value = "bottom";
-            } else {
-              rule.value = "top";
+
+            if (!deepSearchByKey(rule, "property", "--anchor-vertical")) {
+              console.log("there is no anchor vertical, we’re creating now");
+              rule.declarations.push({
+                type: "declaration",
+                property: "--anchor-vertical",
+                value: `top`,
+              });
             }
           }
         });
+        // if selector exit
+        // check if there is a rule with this selector
       }
+
+      // else the stylesheet exist / now the stylesheet exist
+      parsedCSS.stylesheet.rules[0].rules.forEach((line) => {
+        if (!line.selectors.includes(`#${selected.id}`)) return;
+        line.declarations.forEach((declaration) => {
+          if (declaration.property == "--anchor-horizontal") {
+            console.log("anchorhor");
+            console.log(declaration.value);
+            if (declaration.value == "left") {
+              declaration.value = "right";
+            } else {
+              declaration.value = "left";
+            }
+          }
+          if (declaration.property == "--anchor-vertical") {
+            if (declaration.value == "top") {
+              declaration.value = "bottom";
+            } else {
+              declaration.value = "top";
+            }
+          }
+        });
+      });
+      document.querySelector(".activatedStyle").textContent =
+        stringify(parsedCSS);
+      // save the stylesheet
+      saveStylesheet(
+        document.querySelector(".activatedStyle").dataset.strapid,
+        document.querySelector(".activatedStyle").textContent,
+      );
     });
   });
 }
@@ -588,3 +634,23 @@ export function setAnchor() {
 //   );
 // }
 //
+//
+export function deepSearchByKey(obj, key, target) {
+  // Check if the key exists in the object
+  if (obj.hasOwnProperty(key) && obj[key] === target) {
+    return true;
+  }
+
+  // If the key is not found at this level, check nested objects
+  for (let prop in obj) {
+    if (
+      typeof obj[prop] === "object" &&
+      deepSearchByKey(obj[prop], key, target)
+    ) {
+      return true;
+    }
+  }
+
+  // If the key is not found anywhere, return false
+  return false;
+}
