@@ -10,3 +10,7 @@
 @import url("./modules/loading.css");
 @import url("./modules/resize.css");
 
+.asset-selected {
+  visibility: visible !important;
+  /* opacity: .2; */
+}

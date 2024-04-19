@@ -6,11 +6,20 @@ import {
 } from "./selectors";
 import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 import { deselect } from "./helpers";
-import { deleteObject, moveToLayer, updateTheUI } from "./objectManipulations";
+import {
+  checkPropertyValueFromStylesheet,
+  deleteObject,
+  moveToLayer,
+  updateTheUI,
+} from "./objectManipulations";
 import config from "../config/config";
 import { updateData } from "./dataManagement";
 import { interactObject } from "./assetManipulation";
-import { isSelectorExistInContainers, setObjInStylesheet } from "./stylesheet";
+import {
+  isSelectorExistInContainers,
+  setObjInStylesheet,
+  setPropertyInStylesheet,
+} from "./stylesheet";
 import { stringify } from "../vendors/css/css";
 
 // how is the layer list created?
@@ -104,8 +113,10 @@ function layerInteract(layerWrapper = layerList) {
         `.shown [data-objectid="${objectid}"]`,
       );
 
-      hidingObject.classList.toggle(["asset-hidden"]);
-      target.closest("li").classList.toggle("hidden");
+      hideElement(hidingObject)
+      hidingObject.classList.add("asset-selected");
+      // hidingObject.classList.toggle(["asset-hidden"]);
+      // target.closest("li").classList.toggle("hidden");
     } else if (target.classList.contains("delete")) {
       target.closest("li").classList.add("selectedLayer");
       deselect(".asset-selected");
@@ -223,50 +234,43 @@ export {
 
 // TODO: the same thing with custom properties in  css
 // --anchor-vertical and --anchor-horizontal
-// this way you keep only one thing. 
+// this way you keep only one thing.
 // hide element in style sheet and save it
 export function hideElement(obj) {
-  let parsedCSS = parse(
-    stylesWrapper.querySelector(".activatedStyle").textContent,
+  const visibility = checkPropertyValueFromStylesheet(
+    obj,
+    document.querySelector(".activatedStylesheet"),
+    "visibility",
   );
-  let updatedDeclarations = [
-    {
-      property: "visibility",
-    },
-  ];
-  if (!isSelectorExistInContainers(parsedCSS, obj.id)) {
-
+  if (visibility == "hidden") {
+    setPropertyInStylesheet(
+      obj,
+      document.querySelector(".activatedStylesheet"),
+      "visibility",
+      `visible`,
+    );
+    setPropertyInStylesheet(
+      obj,
+      document.querySelector(".activatedStylesheet"),
+      "--visible",
+      `yes`,
+    );
   } else {
-    parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
-      if (!rule.selectors) {
-        // visibility is first hidden because it’s visible by default
-        parsedCSS.stylesheet.rules[0].rules.push({
-          type: "rule",
-          selectors: [`#${obj.id}`],
-          declarations: [{
-            type: "declaration",
-            property: "visibility",
-            value: "hidden",
-          }
-          ]
-        })
-        // append the rules to the selector and return
-      }
-      if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
-        // Update existing declarations for the selectorToUpdate
-        rule.declarations.forEach((declaration) => {
-          updatedDeclarations.forEach((updatedDeclaration) => {
-            if (declaration.property == "visible") {
-              declaration.value = "hidden";
-            } else {
-              declaration.value = "visible";
-            }
-          });
-        });
-      }
-    });
+    setPropertyInStylesheet(
+      obj,
+      document.querySelector(".activatedStylesheet"),
+      "visibility",
+      `hidden`,
+    );
+    setPropertyInStylesheet(
+      obj,
+      document.querySelector(".activatedStylesheet"),
+      "--visible",
+      `no`,
+    );
   }
-  document.querySelector(".activatedStyle").textContent = stringify(parsedCSS)
+
+  // document.querySelector(".activatedStyle").textContent = stringify()
 }
 
 // parseSelectedCSS
@@ -274,3 +278,9 @@ export function hideElement(obj) {
 // toggle visibility 100% or 0
 // update the stylesheet on the server
 // update the stylesheet locally
+//
+//
+
+// hide element
+// setPropertyInStylesheet()
+//
