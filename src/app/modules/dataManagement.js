@@ -6,7 +6,7 @@ export async function updateData(serverUrl, collection, data, id) {
       data,
     })
     .then((response) => {
-      console.log(response)
+      // console.log(response)
       return response;
     })
     .catch((err) => {
@@ -112,7 +112,7 @@ export async function connectObjectToPlan(serverUrl, planId, assetId) {
       data,
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       return response;
     })
     .catch((err) => {

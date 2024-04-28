@@ -5,7 +5,7 @@ import { reorderObjectInPlan, removeObjectFromPlan } from "./dataManagement.js";
 import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
-import { anchors, stylesWrapper } from "./selectors.js";
+import { anchors, previewScreen, stylesWrapper } from "./selectors.js";
 import {
   isSelectorExistInContainers,
   saveStylesheet,
@@ -502,7 +502,11 @@ async function updateDeclaration(
     });
 }
 
-// c’est en court le set anchor
+// set anchor:
+// if top : set --anchor-vertical: top and top: y.
+// if bottom : set --anchor-vertical: bottom and botom: y.
+// if left : set --anchor-horizontal: left and left: x.
+// if bottom : set --anchor-horizontal: right and right: x.
 export function setAnchor() {
   // result off this setanchor should be the addition of a --verticalAnchor: "top" or "bottom"
   // and --horizontal-anchor: z"left" or "right". This will allow for simpler set up and a button instead of the value
@@ -522,18 +526,52 @@ export function setAnchor() {
         document.querySelector(".activatedStyle").textContent,
       );
 
-      // if the selector doesn’t exist, creates it and set the rule for the anchor?
-      // so this is what should be checked:
-      // first: found the declartion in the rule within
-      // if there is a selector change this
-      // if there is no selector, create it and add the declaration css
-      //
-      if (!isSelectorExistInContainers(parsedCSS, selected.id)) {
-        // get the rule with the
-        parsedCSS.stylesheet.rules[0].rules.push({
-          type: "rule",
-          selectors: [`#${selected.id}`],
-          declarations: [
+      let declarations = [];
+
+      console.log(button.id);
+      switch (button.id) {
+        case "anchorTop":
+          declarations.push(
+            {
+              type: "declaration",
+              property: "--anchor-vertical",
+              value: `top`,
+            },
+            {
+              type: "declaration",
+              property: "bottom",
+              value: `unset`,
+            },
+            {
+              type: "declaration",
+              property: "top",
+              value: `${parseFloat(percentage(selected.offsetTop, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+            },
+          );
+          break;
+
+        case "anchorBottom":
+          declarations.push(
+            {
+              type: "declaration",
+              property: "--anchor-vertical",
+              value: `bottom`,
+            },
+            {
+              type: "declaration",
+              property: "top",
+              value: `unset`,
+            },
+            {
+              type: "declaration",
+              property: "bottom",
+              value: `${parseFloat(100 - percentage(selected.offsetTop + selected.offsetHeight, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+            },
+          );
+          break;
+
+        case "anchorLeft":
+          declarations.push(
             {
               type: "declaration",
               property: "--anchor-horizontal",
@@ -541,60 +579,89 @@ export function setAnchor() {
             },
             {
               type: "declaration",
-              property: "--anchor-vertical",
-              value: `top`,
+              property: "right",
+              value: `unset`,
             },
-          ],
+            {
+              type: "declaration",
+              property: "left",
+              value: `${parseFloat(percentage(selected.offsetLeft, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+            },
+          );
+          break;
+
+        case "anchorRight":
+          declarations.push(
+            {
+              type: "declaration",
+              property: "--anchor-horizontal",
+              value: `right`,
+            },
+            {
+              type: "declaration",
+              property: "left",
+              value: `unset`,
+            },
+            {
+              type: "declaration",
+              property: "right",
+              value: `${parseFloat(100 - percentage(selected.offsetLeft + selected.offsetWidth, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+            },
+          );
+          break;
+      }
+      console.log(declarations);
+
+      // if the selector doesn’t exist, creates it and set the rule for the anchor?
+      // so this is what should be checked:
+      // first: found the declartion in the rule within
+      // if there is a selector change this
+      // if there is no selector, create it and add the declaration css
+      if (!isSelectorExistInContainers(parsedCSS, selected.id)) {
+        // get the rule with the
+        parsedCSS.stylesheet.rules[0].rules.push({
+          type: "rule",
+          selectors: [`#${selected.id}`],
+          declarations: declarations,
         });
       } else {
         // if the selector exist but there is no vertical / horizontal anchor, set both
         // check if the anchor vertical and horizontal exist
         parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
           if (rule.selectors && rule.selectors.includes(`#${selected.id}`)) {
-            //if there is a propery, return
-            if (!deepSearchByKey(rule, "property", "--anchor-horizontal")) {
-              console.log("there is no anchor horiztonal, we’re creating now");
-              rule.declarations.push({
-                type: "declaration",
-                property: "--anchor-horizontal",
-                value: `left`,
-              });
-            }
+            declarations.forEach((line) => {
+              //if there is a propery, return
+              if (!deepSearchByKey(rule, "property", line.property)) {
+                console.log(
+                  "there is no anchor horiztonal, we’re creating now",
+                );
+                rule.declarations.push(line);
+              }
 
-            if (!deepSearchByKey(rule, "property", "--anchor-vertical")) {
-              console.log("there is no anchor vertical, we’re creating now");
-              rule.declarations.push({
-                type: "declaration",
-                property: "--anchor-vertical",
-                value: `top`,
-              });
-            }
+              if (!deepSearchByKey(rule, "property", line.property)) {
+                console.log("there is no anchor vertical, we’re creating now");
+                rule.declarations.push({
+                  type: "declaration",
+                  property: line.property,
+                  value: line.value,
+                });
+              }
+            });
           }
         });
         // if selector exit
         // check if there is a rule with this selector
       }
 
-      // else the stylesheet exist / now the stylesheet exist
-      parsedCSS.stylesheet.rules[0].rules.forEach((line) => {
-        if (!line.selectors.includes(`#${selected.id}`)) return;
-        line.declarations.forEach((declaration) => {
-          if (declaration.property == "--anchor-horizontal") {
-            console.log("anchorhor");
-            console.log(declaration.value);
-            if (declaration.value == "left") {
-              declaration.value = "right";
-            } else {
-              declaration.value = "left";
+      declarations.forEach((newRule) => {
+        // else the stylesheet exist / now the stylesheet exist
+        parsedCSS.stylesheet.rules[0].rules.forEach((line) => {
+          if (!line.selectors.includes(`#${selected.id}`)) return;
+          line.declarations.forEach((declaration) => {
+            if (declaration.property == newRule.property) {
+              declaration.value = newRule.value;
             }
-          }
-          if (declaration.property == "--anchor-vertical") {
-            if (declaration.value == "top") {
-              declaration.value = "bottom";
-            } else {
-              declaration.value = "top";
-            }
-          }
+          });
         });
       });
       document.querySelector(".activatedStyle").textContent =

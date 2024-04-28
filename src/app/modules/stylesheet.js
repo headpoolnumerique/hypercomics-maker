@@ -188,13 +188,22 @@ export function loadAllStylesheets(stylesheets) {
     stylesheet.prev = stylesheets[index - 1];
     stylesheet.next = stylesheets[index + 1];
 
+    // if the stylesheet is the first, change the ratio size to be more than the previous inste
+    // set min instead of max
+    //
     addStyleSheetToList(stylesheet);
     createStyleElement(stylesheet);
+
+    // create the stylesheet that will be use when no stylesheet is available?
+    createDefaultStylesheet();
+    //function to add a default stylesheet = the content will always be the same as the first Style element
   });
 }
 
 function activateFirstStylesheet() {
   let stylesheetToActivate = document.querySelector("#screens .stylesheet");
+
+
 
   if (stylesheetToActivate) {
     // resize the preview once activated
@@ -207,6 +216,11 @@ function activateFirstStylesheet() {
     stylesheetToActivate.classList.add("activeStylesheet");
   } else {
     // TODO: create a default stylesheet?
+    // there is no stylesheet here. would you mind creating a new one?
+    // let question = document.createElement("div");
+    // question.innerHTML = `<p>create a stylesheet?</p><button id="yescreate">yes</button><button id="createNo">no</button></p>`
+    // create a modal: do you want to create a stylesheet? yes? create?
+    // no go back to the previous ratio.
   }
 }
 
@@ -275,13 +289,14 @@ function insertStylesheetToList(data) {
 
 /** add the stylesheet to the list UI */
 export function addStyleSheetToList(data) {
-  console.log(data.attributes.disabled);
+  // console.log(data.attributes.disabled);
   const itemclasses = data.attributes.disabled ? "disabled" : "";
   /*if the stylesheet has been disabled*/
   if (data.disabled) return;
 
   data.attributes.strapid = data.id;
 
+  //add the stylesheet to the stylesheet block
   screensList.insertAdjacentHTML(
     "beforeend",
     screenListItem(data.attributes, itemclasses),
@@ -302,7 +317,7 @@ export async function removeStylesheet(target) {
       data,
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       return response;
     })
     .catch((err) => {
@@ -414,9 +429,6 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
 
   const stylelist = stylesWrapper.querySelectorAll("style");
 
-  console.log("list", stylelist);
-  console.log("list", stylesheet.attributes);
-
   if (stylelist.length > 0) {
     const beforeStyle = [...stylesWrapper.querySelectorAll("style")].findLast(
       (style) => {
@@ -432,12 +444,9 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
       },
     );
 
-    console.log(beforeStyle);
-
     if (beforeStyle) {
       beforeStyle.insertAdjacentHTML("afterend", styleEl);
     } else {
-      console.log(beforeStyle);
       stylesWrapper.insertAdjacentHTML("beforeend", styleEl);
     }
   } else {
@@ -500,22 +509,17 @@ export function isSelectorExistInContainers(parsedCSS, selector) {
  * @param obj: html object to update
  */
 export function setObjInStylesheet(stylesheet, obj) {
-  // console.log(stylesheet);
-
-  // console.log("i did something");
   let parsedCSS = parse(stylesheet.textContent);
 
   // if there is no rule for the object, create one
   if (!isSelectorExistInContainers(parsedCSS, obj.id)) {
-    // console.log("obj font exit, creating now");
     // create the obj in the stylesheet
-    // TODONOW: cqw and cqh from the element
-    // console.log(parsedCSS);
+    // we get the data from the stylesheet
     parsedCSS.stylesheet.rules[0].rules.push({
       type: "rule",
       selectors: [`#${obj.id}`],
       declarations: [
-        // heigbht is always auto for now
+        // height is always auto for now
         // {
         //   type: "declaration",
         //   property: "height",
@@ -850,6 +854,23 @@ export function setPropertyInStylesheet(
   );
 }
 
-// find a way to get a property from the stylesheet
-//    getPropertyFromStylesheet()
 
+// create the default stylesheet that contains all the previous one
+function createDefaultStylesheet() {
+  if (!document.querySelector("#style-default")) {
+    let style = document.createElement("style");
+    style.id = "style-default";
+    document.head.insertAdjacentElement("beforeend", style);
+  }
+
+  let defaultStylesheet = parse(
+    stylesWrapper.querySelector("style").textContent,
+  );
+  defaultStylesheet.stylesheet.rules =
+    defaultStylesheet.stylesheet.rules[0].rules;
+
+  document.querySelector("#style-default").textContent =
+    stringify(defaultStylesheet);
+
+  // = stylesWrapper.querySelector("style").textContent).stylesheet.rules[0]))
+}

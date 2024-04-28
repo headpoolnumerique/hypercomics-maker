@@ -54,7 +54,7 @@ function resetOrder(wrappingElement) {
       previewScreen.querySelector(`#plan-${id}`)
     );
   });
-  console.log(updatedOrder);
+  // console.log(updatedOrder);
   let data = {
     plans: {
       set: updatedOrder,
