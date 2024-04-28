@@ -36,12 +36,11 @@ async function start() {
 
 // load project
 function loadProjects(data) {
-  console.log(data)
   let projects = data.data.data;
   projectsList.innerHTML = "";
   projects.forEach((es) => {
     renderProject(es);
-    console.log(es);
+    // console.log(es);
   });
 }
 
