@@ -203,8 +203,6 @@ export function loadAllStylesheets(stylesheets) {
 function activateFirstStylesheet() {
   let stylesheetToActivate = document.querySelector("#screens .stylesheet");
 
-
-
   if (stylesheetToActivate) {
     // resize the preview once activated
     resizePreview(
@@ -503,6 +501,32 @@ export function isSelectorExistInContainers(parsedCSS, selector) {
   return selectorExists;
 }
 
+/*find anchor for an object*/
+
+export function findAnchors(objID, parsedCSS) {
+  let anchors = {};
+
+  parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+    if (rule.selectors && rule.selectors.includes(`#${objID}`)) {
+      rule.declarations.forEach((declaration) => {
+        console.log(declaration);
+        if (declaration.property == "--anchor-horizontal") {
+          anchors.horizontal = declaration.value;
+        }
+        if (declaration.property == "--anchor-vertical") {
+          anchors.vertical = declaration.value;
+        }
+      });
+    }
+  });
+  anchors = {
+    vertical: anchors.vertical ? anchors.vertical : "top",
+    horizontal: anchors.horizontal ? anchors.horizontal : "left",
+  };
+  console.log(anchors);
+  return anchors;
+}
+
 /**
  * function to find the object in a stylesheet, and if it doesnt exist, create it
  * @param stylesheet: style Element to update
@@ -510,6 +534,98 @@ export function isSelectorExistInContainers(parsedCSS, selector) {
  */
 export function setObjInStylesheet(stylesheet, obj) {
   let parsedCSS = parse(stylesheet.textContent);
+
+  console.log(obj);
+  console.log(obj.id);
+  // find vertical anchor
+
+  let anchors = findAnchors(obj.id, parsedCSS);
+
+  console.log("anchres", anchors);
+  //check anchor: if there is a left, if there is a right
+
+  const anchorVertical = anchors.vertical;
+  const anchorHorizontal = anchors.horizontal;
+
+  const declarations = [
+    {
+      type: "declaration",
+      property: "width",
+      value: `${parseFloat(percentage(obj.offsetWidth, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+    },
+    {
+      type: "declaration",
+      property: "height",
+      value: `${parseFloat(percentage(obj.offsetHeight, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+    },
+  ];
+
+  // find the verticalanchor and horizontalanchor
+  //
+
+  //check anchor vertical
+
+  switch (anchorVertical) {
+    case "top":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "bottom",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "top",
+          value: `${parseFloat(percentage(obj.offsetTop, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+        },
+      );
+      break;
+    case "bottom":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "top",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "bottom",
+          value: `${parseFloat(100 - percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+        },
+      );
+  }
+
+  switch (anchorHorizontal) {
+    case "left":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "right",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "left",
+          value: `${parseFloat(percentage(obj.offsetLeft, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+        },
+      );
+      break;
+
+    case "right":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "left",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "right",
+          value: `${parseFloat(100 - percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+        },
+      );
+      break;
+  }
 
   // if there is no rule for the object, create one
   if (!isSelectorExistInContainers(parsedCSS, obj.id)) {
@@ -520,39 +636,7 @@ export function setObjInStylesheet(stylesheet, obj) {
     parsedCSS.stylesheet.rules[0].rules.push({
       type: "rule",
       selectors: [`#${obj.id}`],
-      declarations: [
-        // height is always auto for now
-        // {
-        //   type: "declaration",
-        //   property: "height",
-        //   value: `${percentage(obj.offsetHeight, previewScreen.offsetHeight)}cqh`,
-        // },
-        {
-          type: "declaration",
-          property: "width",
-          value: `${percentage(obj.offsetWidth, previewScreen.offsetWidth)}cqw`,
-        },
-        {
-          type: "declaration",
-          property: "top",
-          value: `${obj.dataset.anchorVertical == "top" ? `${percentage(obj.offsetTop, previewScreen.offsetHeight)}cqh` : "unset"}`,
-        },
-        {
-          type: "declaration",
-          property: "bottom",
-          value: `${obj.dataset.anchorVertical == "bottom" ? `${100 - percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh` : "unset"}`,
-        },
-        {
-          type: "declaration",
-          property: "left",
-          value: `${obj.dataset.anchorHorizontal == "left" ? `${percentage(obj.offsetLeft, previewScreen.offsetHeight)}cqw` : "unset"}`,
-        },
-        {
-          type: "declaration",
-          property: "right",
-          value: `${obj.dataset.anchorHorizontal == "right" ? `${100 - percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetHeight)}cqw` : "unset"}`,
-        },
-      ],
+      declarations: declarations,
     });
   } else {
     // why does it doesnt update the content
@@ -561,52 +645,13 @@ export function setObjInStylesheet(stylesheet, obj) {
     //   // return the stylesheet without the inuse block;
     //   return rule.selectors.includes(obj.id);
     // });
-
-    let updatedDeclarations = [
-      {
-        property: "height",
-        value: `${percentage(obj.offsetHeight, previewScreen.offsetHeight)}cqh`,
-      },
-      {
-        property: "width",
-        value: `${percentage(obj.offsetWidth, previewScreen.offsetWidth)}cqw`,
-      },
-      {
-        property: "top",
-        value:
-          obj.dataset.anchorVertical == "top"
-            ? `${percentage(obj.offsetTop, previewScreen.offsetHeight)}cqh`
-            : "unset",
-      },
-      {
-        property: "bottom",
-        value:
-          obj.dataset.anchorVertical == "bottom"
-            ? `${100 - percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)}cqh`
-            : "unset",
-      },
-      {
-        property: "left",
-        value:
-          obj.dataset.anchorHorizontal == "left"
-            ? `${percentage(obj.offsetLeft, previewScreen.offsetWidth)}cqw`
-            : "unset",
-      },
-      {
-        property: "right",
-        value:
-          obj.dataset.anchorHorizontal == "right"
-            ? `${100 - percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetWidth)}cqw`
-            : "unset",
-      },
-    ];
-
     // console.log(parsedCSS.stylesheet.rules[0].rules)
+    //
     parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
       if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
         // Update existing declarations for the selectorToUpdate
         rule.declarations.forEach((declaration) => {
-          updatedDeclarations.forEach((updatedDeclaration) => {
+          declarations.forEach((updatedDeclaration) => {
             if (declaration.property === updatedDeclaration.property) {
               declaration.value = updatedDeclaration.value;
             }
@@ -856,7 +901,6 @@ export function setPropertyInStylesheet(
   );
 }
 
-
 // create the default stylesheet that contains all the previous one
 function createDefaultStylesheet() {
   if (!document.querySelector("#style-default")) {
@@ -877,37 +921,16 @@ function createDefaultStylesheet() {
   // = stylesWrapper.querySelector("style").textContent).stylesheet.rules[0]))
 }
 
-
-
-
-
 /*
 selectedObj: selected html obj (not an array)
 declarations: array of declarations
 now set the declarations to the object/stylesheet on end on both resizable and moveable
 */
 
-
-
-// NOW 
+// NOW
 // NOW DO THE LINE 4
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 export function updateDeclaration(selectedId, declarations) {
-
-
   /* if there is no declarations for this id*/
   if (!isSelectorExistInContainers(parsedCSS, selectedId)) {
     // get the rule with the
@@ -942,17 +965,16 @@ export function updateDeclaration(selectedId, declarations) {
 
   declarations.forEach((newRule) => {
     // else the stylesheet exist / now the stylesheet exist
-    parsedCSS.stylesheet.rules[0].rules.forEach((newRule) => {
-      if (!newRule.selectors.includes(`#${selectedId}`)) return;
-      newRule.declarations.forEach((declaration) => {
+    parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+      if (!rule.selectors.includes(`#${selectedId}`)) return;
+      rule.declarations.forEach((declaration) => {
         if (declaration.property == newRule.property) {
           declaration.value = newRule.value;
         }
       });
     });
   });
-  document.querySelector(".activatedStyle").textContent =
-    stringify(parsedCSS);
+  document.querySelector(".activatedStyle").textContent = stringify(parsedCSS);
   // save the stylesheet
   saveStylesheet(
     document.querySelector(".activatedStyle").dataset.strapid,

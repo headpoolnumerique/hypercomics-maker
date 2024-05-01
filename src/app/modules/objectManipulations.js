@@ -6,7 +6,17 @@ import {
   isSelectorExistInContainers,
   setPropertyInStylesheet,
 } from "./stylesheet.js";
-import { previewScreen } from "./selectors.js";
+
+import {
+  inputBottom,
+  inputHeight,
+  inputLeft,
+  inputRight,
+  inputTop,
+  inputWidth,
+  previewScreen,
+} from "./selectors.js";
+
 import { parse } from "../vendors/css/css.js";
 
 export function moveToLayer(object, plan, position) {
@@ -152,6 +162,7 @@ export function percentage(partialValue, totalValue) {
 
 /**
  * update the locations of the element from the UI. warnin, it’s not set up to check the anchor */
+
 export function updatefromui() {
   // set X
   document.querySelector("#inputx").addEventListener("change", (event) => {

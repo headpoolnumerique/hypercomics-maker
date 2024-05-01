@@ -5,7 +5,17 @@ import { reorderObjectInPlan, removeObjectFromPlan } from "./dataManagement.js";
 import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
-import { anchors, previewScreen, stylesWrapper } from "./selectors.js";
+import {
+  anchors,
+  inputLeft,
+  inputTop,
+  inputBottom,
+  inputRight,
+  inputWidth,
+  inputHeight,
+  previewScreen,
+  stylesWrapper,
+} from "./selectors.js";
 import {
   isSelectorExistInContainers,
   saveStylesheet,
@@ -37,22 +47,6 @@ async function interactObject(object) {
       listeners: {
         start(event) {
           position = { x: object.offsetLeft, y: object.offsetTop };
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height,
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height,
-          );
         },
         move(event) {
           // ((if anchor is set to bottom, use the bottom else use top))
@@ -71,57 +65,14 @@ async function interactObject(object) {
           )}cqh`;
         },
         end(event) {
-          // send the data to strapi after getting the data
+          updateTheUI(event.target);
 
-          // TODO: set the image size realistic: get the original height and  width of the images to set the right
-          // resize the block based on the original image size
-          // then reset the block size
-
-          // check the anchor here
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height,
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height,
-          );
-
-          /* check anchor to send the right css rule ? or write the css rule somewhere else maybe*/
-          // save the data on the objectd /
-          // next, save the data of the object on the screensize
-
-          //update declaration is now the norm. We’ll see if we keep the rest later
-          //but we wont use it anymore hohoho
-          // addRuleToObject(event.target.dataset.objectid, data);
-
-          // update the style fro mthe active style
-          //
           const styleblock = stylesWrapper.querySelector(".activatedStyle");
 
           setObjInStylesheet(styleblock, event.target);
 
           saveStylesheet(styleblock.dataset.strapid, styleblock.textContent);
           event.target.style = null;
-          // reset  style
-          // setTimeout(function () {
-          //   event.target.removeAttribute("style");
-          //   console.log("Executed after 1 second");
-          // }, 1000);
-          // event.target.style = "";
-          // console.log(newcss);
-
-          //updateDeclaration
-          // console.log(event.target.closest("#previewScreen"));
-          // event.target.style = "";
         },
       },
     })
@@ -141,24 +92,7 @@ async function interactObject(object) {
       ],
 
       listeners: {
-        start(event) {
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height,
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height,
-          );
-        },
+        start(event) { },
         move: function(event) {
           // parse the css
           // find the location for wisth and height
@@ -187,32 +121,7 @@ async function interactObject(object) {
           Object.assign(event.target.dataset, { x, y });
         },
         end: function(event) {
-          document.querySelector("#inputx").value = percentage(
-            event.target.offsetLeft,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputy").value = percentage(
-            event.target.offsetTop,
-            previewScreenSize.height,
-          );
-          document.querySelector("#inputwidth").value = percentage(
-            event.rect.width,
-            previewScreenSize.width,
-          );
-          document.querySelector("#inputheight").value = percentage(
-            event.rect.height,
-            previewScreenSize.height,
-          );
-          if (event.target.dataset.anchor == "bottom") {
-            // only use bottom
-            // top: unset
-            // console.log(anchored bottom)
-          }
-          if (event.target.dataset.anchor == "right") {
-            // console.log(anchored bottom)
-            // only use right
-            // left: unset
-          }
+          updateTheUI(event.target);
           // add ruel to object
           // addRuleToObject(event.target.dataset.objectid, data);
 
@@ -373,65 +282,28 @@ function percentage(partialValue, totalValue) {
   return ((100 * partialValue) / totalValue).toFixed(2);
 }
 
-function updateFromUi() {
-  document.querySelector("#inputx").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.left =
-      document.querySelector("#inputx").value + "%";
-  });
-  document.querySelector("#inputy").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.top =
-      document.querySelector("#inputy").value + "%";
-  });
-  document.querySelector("#inputwidth").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.width =
-      document.querySelector("#inputwidth").value + "%";
-  });
-  document.querySelector("#inputheight").addEventListener("change", () => {
-    document.querySelector(".asset-selected").style.height =
-      document.querySelector("#inputheight").value + "%";
-  });
-
-  // vertical and horizontal anchors need to be saved to strapi.
-  document.querySelectorAll(`input[name="verticalAnchor"]`).forEach((radio) => {
-    radio.addEventListener("change", function() {
-      document.querySelector(".asset-selected").dataset.anchorVertical =
-        radio.value;
-    });
-  });
-
-  document
-    .querySelectorAll(`input[name="horizontalAnchor"]`)
-    .forEach((radio) => {
-      radio.addEventListener("change", function() {
-        document.querySelector(".asset-selected").dataset.anchorHorizontal =
-          radio.value;
-        //update strapi before anythihng?
-      });
-    });
-}
-
 function updateTheUI(element) {
   let previewScreen = document.querySelector("#previewScreen");
   let previewScreenSize = {
     height: previewScreen.offsetHeight,
     width: previewScreen.offsetWidth,
   };
-  document.querySelector("#inputx").value = percentage(
-    element.offsetLeft,
-    previewScreenSize.width,
-  );
-  document.querySelector("#inputy").value = percentage(
-    element.offsetTop,
-    previewScreenSize.height,
-  );
-  document.querySelector("#inputwidth").value = percentage(
-    element.width,
-    previewScreenSize.width,
-  );
-  document.querySelector("#inputheight").value = percentage(
-    element.height,
-    previewScreenSize.height,
-  );
+  inputLeft.value = percentage(element.offsetLeft, previewScreenSize.width);
+  inputRight.value =
+    100 -
+    percentage(
+      element.offsetLeft + element.offsetWidth,
+      previewScreenSize.width,
+    );
+  inputTop.value = percentage(element.offsetTop, previewScreenSize.height);
+  inputBottom.value =
+    100 -
+    percentage(
+      element.offsetTop + element.offsetHeight,
+      previewScreenSize.height,
+    );
+  inputWidth.value = percentage(element.width, previewScreenSize.width);
+  inputHeight.value = percentage(element.height, previewScreenSize.height);
 
   // element anchors is now button based//
   // if (element.dataset.anchorVertical == "bottom") {

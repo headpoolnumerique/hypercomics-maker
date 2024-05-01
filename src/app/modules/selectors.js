@@ -25,11 +25,19 @@ export const newScreenForm = document.querySelector("#screensform");
 export const newScreenButton = document.querySelector("#newscreen");
 export const populateStylesheetButton = document.querySelector("#populateStylesheet");
 
+
+export const inputLeft = document.querySelector("#input-left");
+export const inputRight = document.querySelector("#input-right");
+export const inputTop = document.querySelector("#input-top");
+export const inputBottom = document.querySelector("#input-bottom");
+export const inputWidth = document.querySelector("#input-width");
+export const inputHeight = document.querySelector("#input-height");
+
 /*in the future*/
-export const topAnchorRadio = document.querySelector("#topAnchor");
-export const bottomAnchorRadio = document.querySelector("#bottomAnchor");
-export const leftAnchorRadio = document.querySelector("#leftAnchor");
-export const rightAnchorRadio = document.querySelector("#rightAnchor");
+// export const topAnchorRadio = document.querySelector("#topAnchor");
+// export const bottomAnchorRadio = document.querySelector("#bottomAnchor");
+// export const leftAnchorRadio = document.querySelector("#leftAnchor");
+// export const rightAnchorRadio = document.querySelector("#rightAnchor");
 
 export const anchors = document.querySelectorAll(".anchorButton");
 
