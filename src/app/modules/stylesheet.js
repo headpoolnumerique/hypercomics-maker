@@ -515,6 +515,8 @@ export function setObjInStylesheet(stylesheet, obj) {
   if (!isSelectorExistInContainers(parsedCSS, obj.id)) {
     // create the obj in the stylesheet
     // we get the data from the stylesheet
+    //
+    // UPDATE ICI: CHECK the stylehseet here
     parsedCSS.stylesheet.rules[0].rules.push({
       type: "rule",
       selectors: [`#${obj.id}`],
@@ -873,4 +875,87 @@ function createDefaultStylesheet() {
     stringify(defaultStylesheet);
 
   // = stylesWrapper.querySelector("style").textContent).stylesheet.rules[0]))
+}
+
+
+
+
+
+/*
+selectedObj: selected html obj (not an array)
+declarations: array of declarations
+now set the declarations to the object/stylesheet on end on both resizable and moveable
+*/
+
+
+
+// NOW 
+// NOW DO THE LINE 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export function updateDeclaration(selectedId, declarations) {
+
+
+  /* if there is no declarations for this id*/
+  if (!isSelectorExistInContainers(parsedCSS, selectedId)) {
+    // get the rule with the
+    parsedCSS.stylesheet.rules[0].rules.push({
+      type: "rule",
+      selectors: [`#${selectedId}`],
+      declarations: declarations,
+    });
+  } else {
+    // if the selector exist but there is no declarations for those declaration
+    parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+      if (rule.selectors && rule.selectors.includes(`#${selectedId}`)) {
+        declarations.forEach((newRule) => {
+          //if there is a propery, return
+          if (!deepSearchByKey(rule, "property", newRule.property)) {
+            rule.declarations.push(newRule);
+          }
+
+          if (!deepSearchByKey(rule, "property", newRule.property)) {
+            rule.declarations.push({
+              type: "declaration",
+              property: newRule.property,
+              value: newRule.value,
+            });
+          }
+        });
+      }
+    });
+    // if selector exit
+    // check if there is a rule with this selector
+  }
+
+  declarations.forEach((newRule) => {
+    // else the stylesheet exist / now the stylesheet exist
+    parsedCSS.stylesheet.rules[0].rules.forEach((newRule) => {
+      if (!newRule.selectors.includes(`#${selectedId}`)) return;
+      newRule.declarations.forEach((declaration) => {
+        if (declaration.property == newRule.property) {
+          declaration.value = newRule.value;
+        }
+      });
+    });
+  });
+  document.querySelector(".activatedStyle").textContent =
+    stringify(parsedCSS);
+  // save the stylesheet
+  saveStylesheet(
+    document.querySelector(".activatedStyle").dataset.strapid,
+    document.querySelector(".activatedStyle").textContent,
+  );
 }
