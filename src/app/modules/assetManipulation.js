@@ -17,6 +17,7 @@ import {
   stylesWrapper,
 } from "./selectors.js";
 import {
+  findAnchors,
   isSelectorExistInContainers,
   saveStylesheet,
   setObjInStylesheet,
@@ -278,11 +279,14 @@ function addRuleToObject(objectid, data) {
     });
 }
 
-function percentage(partialValue, totalValue) {
+export function percentage(partialValue, totalValue) {
   return ((100 * partialValue) / totalValue).toFixed(2);
 }
 
-function updateTheUI(element) {
+export function updateTheUI(element) {
+  let parsedCSS = parse(document.querySelector(".activatedStyle").textContent);
+  let anchors = findAnchors(element.id, parsedCSS);
+
   let previewScreen = document.querySelector("#previewScreen");
   let previewScreenSize = {
     height: previewScreen.offsetHeight,
@@ -305,26 +309,35 @@ function updateTheUI(element) {
   inputWidth.value = percentage(element.width, previewScreenSize.width);
   inputHeight.value = percentage(element.height, previewScreenSize.height);
 
-  // element anchors is now button based//
-  // if (element.dataset.anchorVertical == "bottom") {
-  //   document.querySelector(`[name="verticalAnchor"][value="bottom"]`).checked =
-  //     true;
-  // }
-  // if (element.dataset.anchorVertical == "top") {
-  //   document.querySelector(`[name="verticalAnchor"][value="top"]`).checked =
-  //     true;
-  // }
-  // if (element.dataset.anchorHorizontal == "left") {
-  //   document.querySelector(`[name="horizontalAnchor"][value="left"]`).checked =
-  //     true;
-  // }
-  // if (element.dataset.anchorHorizontal == "right") {
-  //   document.querySelector(`[name="horizontalAnchor"][value="right"]`).checked =
-  //     true;
-  // }
+  if (anchors.vertical == "top") {
+    inputTop.previousElementSibling.classList.remove("hide");
+    inputTop.classList.remove("hide");
+    inputBottom.previousElementSibling.classList.add("hide");
+    inputBottom.classList.add("hide");
+  } else {
+    inputTop.previousElementSibling.classList.add("hide");
+    inputTop.classList.add("hide");
+    inputBottom.previousElementSibling.classList.remove("hide");
+    inputBottom.classList.remove("hide");
+  }
+  if (anchors.horizontal == "left") {
+    inputLeft.previousElementSibling.classList.remove("hide");
+    inputLeft.classList.remove("hide");
+    inputRight.previousElementSibling.classList.add("hide");
+    inputRight.classList.add("hide");
+  } else {
+    inputRight.previousElementSibling.classList.remove("hide");
+    inputRight.classList.remove("hide");
+    inputLeft.previousElementSibling.classList.add("hide");
+    inputLeft.classList.add("hide");
+  }
+
+  console.log(anchors.vertical);
+  anchors.vertical;
+  //hide element if the object is set bottom / right?
 }
 
-export { deleteObject, interactObject, moveToLayer, updateTheUI };
+export { deleteObject, interactObject, moveToLayer };
 
 // TO DO: resize from the bottom/right edge should stick to the right move
 // this may be impossible. THe example use the translate to define the location. maybe we should keep it.
@@ -543,6 +556,7 @@ export function setAnchor() {
         document.querySelector(".activatedStyle").dataset.strapid,
         document.querySelector(".activatedStyle").textContent,
       );
+      updateTheUI(selected);
     });
   });
 }

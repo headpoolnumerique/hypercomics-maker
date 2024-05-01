@@ -10,11 +10,10 @@ import {
   checkPropertyValueFromStylesheet,
   deleteObject,
   moveToLayer,
-  updateTheUI,
 } from "./objectManipulations";
 import config from "../config/config";
 import { updateData } from "./dataManagement";
-import { interactObject } from "./assetManipulation";
+import { interactObject, updateTheUI } from "./assetManipulation";
 import {
   isSelectorExistInContainers,
   setObjInStylesheet,

@@ -49,7 +49,7 @@ async function startup(url = document.location.href) {
   resizeMontagePaneVertically();
   handleDelays();
   setAnchor();
-  // updatefromui();
+  updatefromui();
   await stylesheetmanager(response.data);
   
   //lol

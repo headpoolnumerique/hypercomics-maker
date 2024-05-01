@@ -3,7 +3,10 @@ import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 import {
+  findAnchors,
   isSelectorExistInContainers,
+  saveStylesheet,
+  setObjInStylesheet,
   setPropertyInStylesheet,
 } from "./stylesheet.js";
 
@@ -17,7 +20,7 @@ import {
   previewScreen,
 } from "./selectors.js";
 
-import { parse } from "../vendors/css/css.js";
+import { parse, stringify } from "../vendors/css/css.js";
 
 export function moveToLayer(object, plan, position) {
   // move any object to a specific layer
@@ -164,119 +167,31 @@ export function percentage(partialValue, totalValue) {
  * update the locations of the element from the UI. warnin, it’s not set up to check the anchor */
 
 export function updatefromui() {
-  // set X
-  document.querySelector("#inputx").addEventListener("change", (event) => {
-    // check if the --anchor vertical is top or bottom first
-    const anchorHorizontal = checkPropertyValueFromStylesheet(
-      document.querySelector(".asset-selected"),
-      document.querySelector(".activatedStylesheet"),
-      "--anchor-horizontal",
-    );
-    if (anchorHorizontal == "right") {
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "right",
-        `${event.target.value}cqw`,
-      );
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "left",
-        "unset",
-      );
-    } else {
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "left",
-        `${event.target.value}cqw`,
-      );
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "right",
-        "unset",
-      );
-    }
-  });
+  [
+    inputTop,
+    inputRight,
+    inputLeft,
+    inputBottom,
+    inputHeight,
+    inputWidth,
+  ].forEach((el) => {
+    el.addEventListener("change", (event) => {
+      let selected = document.querySelector(".asset-selected");
+      if (!selected) {
+        return console.log("nothing to update");
+      }
 
-  document.querySelector("#inputy").addEventListener("change", (event) => {
-    const anchorVertical = checkPropertyValueFromStylesheet(
-      document.querySelector(".asset-selected"),
-      document.querySelector(".activatedStylesheet"),
-      "--anchor-vertical",
-    );
-    if (anchorVertical == "bottom") {
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "bottom",
-        `${event.target.value}cqh`,
-      );
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "top",
-        "unset",
-      );
-    } else {
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "top",
-        `${event.target.value}cqh`,
-      );
-      setPropertyInStylesheet(
-        document.querySelector(".asset-selected"),
-        document.querySelector(".activatedStylesheet"),
-        "bottom",
-        "unset",
-      );
-    }
-  });
+      setObjFromUi(document.querySelector(".activatedStyle"), selected);
+      // const parsedCSS = parse(
+      //   document.querySelector(".activatedStyle").textContent,
+      // );
 
-  document.querySelector("#inputwidth").addEventListener("change", (event) => {
-    setPropertyInStylesheet(
-      document.querySelector(".asset-selected"),
-      document.querySelector(".activatedStylesheet"),
-      "width",
-      `${event.target.value}cqw`,
-    );
+      // setObjInStylesheet(selected, stylesheet);
+      //
+      //
+      //
+    });
   });
-  document.querySelector("#inputheight").addEventListener("change", (event) => {
-    setPropertyInStylesheet(
-      document.querySelector(".asset-selected"),
-      document.querySelector(".activatedStylesheet"),
-      "height",
-      `${event.target.value}cqh`,
-    );
-  });
-}
-
-export function updateTheUI(element) {
-  // update the ui from the selected element
-  let previewScreen = document.querySelector("#previewScreen");
-  let previewScreenSize = {
-    height: previewScreen.offsetHeight,
-    width: previewScreen.offsetWidth,
-  };
-  document.querySelector("#inputx").value = percentage(
-    element.offsetLeft,
-    previewScreenSize.width,
-  );
-  document.querySelector("#inputy").value = percentage(
-    element.offsetTop,
-    previewScreenSize.height,
-  );
-  document.querySelector("#inputwidth").value = percentage(
-    element.width,
-    previewScreenSize.width,
-  );
-  document.querySelector("#inputheight").value = percentage(
-    element.height,
-    previewScreenSize.height,
-  );
 }
 
 export function checkPropertyValueFromStylesheet(
@@ -347,4 +262,140 @@ export function getValueOfNestedProperty(obj, key) {
 
   // If the key is not found anywhere, return undefined
   return undefined;
+}
+
+export function setObjFromUi(stylesheet, obj) {
+  let parsedCSS = parse(stylesheet.textContent);
+
+  console.log(obj);
+  console.log(obj.id);
+  // find vertical anchor
+
+  let anchors = findAnchors(obj.id, parsedCSS);
+
+  console.log("anchres", anchors);
+  //check anchor: if there is a left, if there is a right
+
+  const anchorVertical = anchors.vertical;
+  const anchorHorizontal = anchors.horizontal;
+
+  const declarations = [
+    {
+      type: "declaration",
+      property: "width",
+      value: `${inputWidth.value}cqw`,
+    },
+    {
+      type: "declaration",
+      property: "height",
+      value: `${inputHeight.value}cqh`,
+    },
+  ];
+
+  // find the verticalanchor and horizontalanchor
+  //
+
+  //check anchor vertical
+
+  switch (anchorVertical) {
+    case "top":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "bottom",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "top",
+          value: `${inputTop.value}cqh`,
+        },
+      );
+      break;
+    case "bottom":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "top",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "bottom",
+          value: `${inputBottom.value}cqh`,
+        },
+      );
+  }
+
+  switch (anchorHorizontal) {
+    case "left":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "right",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "left",
+          value: `${inputLeft.value}cqw`,
+        },
+      );
+      break;
+
+    case "right":
+      declarations.push(
+        {
+          type: "declaration",
+          property: "left",
+          value: `unset`,
+        },
+        {
+          type: "declaration",
+          property: "right",
+          value: `${inputRight.value}cqw`,
+        },
+      );
+      break;
+  }
+
+  // if there is no rule for the object, create one
+  if (!isSelectorExistInContainers(parsedCSS, obj.id)) {
+    // create the obj in the stylesheet
+    // we get the data from the stylesheet
+    //
+    // UPDATE ICI: CHECK the stylehseet here
+    parsedCSS.stylesheet.rules[0].rules.push({
+      type: "rule",
+      selectors: [`#${obj.id}`],
+      declarations: declarations,
+    });
+  } else {
+    // why does it doesnt update the content
+    // updte the declarations
+    // let ruleToUpdate = parsedCSS.stylesheet.rules[0].rules.filter((rule) => {
+    //   // return the stylesheet without the inuse block;
+    //   return rule.selectors.includes(obj.id);
+    // });
+    // console.log(parsedCSS.stylesheet.rules[0].rules)
+    //
+    parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+      if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
+        // Update existing declarations for the selectorToUpdate
+        rule.declarations.forEach((declaration) => {
+          declarations.forEach((updatedDeclaration) => {
+            if (declaration.property === updatedDeclaration.property) {
+              declaration.value = updatedDeclaration.value;
+            }
+          });
+        });
+      }
+    });
+
+    // modifiedCSS = stringify(parsedCSS);
+  }
+
+  stylesheet.textContent = stringify(parsedCSS);
+
+  saveStylesheet(stylesheet.dataset.strapid, stylesheet.textContent);
 }
