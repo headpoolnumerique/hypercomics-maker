@@ -243,6 +243,12 @@ export async function duplicatePlan(
   sequenceId,
   select = true,
 ) {
+
+  document.querySelector("#loading").classList.remove("hide")
+
+  // show the loading
+  //
+
   // backup the styles for all the existing element of the plan to use at the end
   //
   const previousAssets = [];
@@ -408,6 +414,8 @@ export async function duplicatePlan(
     });
   });
   saveAllStylesheet();
+
+  document.querySelector("#loading").classList.add("hide")
   // previousAssets.forEach((entry, index) =>{
   //
   //

@@ -134,7 +134,7 @@ async function fillPlan(plan) {
     });
   });
 
-  document.querySelector("#loading")?.remove();
+  document.querySelector("#loading")?.classList.add("hide");
 }
 
 export { startup, fillPlan };
