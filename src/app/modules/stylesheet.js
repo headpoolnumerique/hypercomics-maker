@@ -72,7 +72,7 @@ export async function stylesheetmanager(obj) {
 /** event listener for the stylesheet ui
  */
 export async function stylesheetListeners() {
-  screensList.addEventListener("click", function(event) {
+  screensList.addEventListener("click", function (event) {
     /* remove stylesheet (disable in 2 times )*/
     // cancel remove if you click on something else
     if (!event.target.classList.contains("remove")) {
@@ -125,7 +125,7 @@ export async function stylesheetListeners() {
 populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
 // create a stylesheet: add it to the stylesheet list, and push content
-newScreenForm.addEventListener("submit", async function(event) {
+newScreenForm.addEventListener("submit", async function (event) {
   event.preventDefault();
   // if (!validateInputs()) return console.log("screen size input are not valid");
   // validation is done in the html, and we don’t use the ratio
@@ -535,8 +535,8 @@ export function findAnchors(objID, parsedCSS) {
 export function setObjInStylesheet(stylesheet, obj) {
   let parsedCSS = parse(stylesheet.textContent);
 
-  console.log(obj);
-  console.log(obj.id);
+  // console.log(obj);
+  // console.log(obj.id);
   // find vertical anchor
 
   let anchors = findAnchors(obj.id, parsedCSS);
@@ -567,63 +567,56 @@ export function setObjInStylesheet(stylesheet, obj) {
 
   switch (anchorVertical) {
     case "top":
-      declarations.push(
-        {
-          type: "declaration",
-          property: "bottom",
-          value: `unset`,
-        },
-        {
-          type: "declaration",
-          property: "top",
-          value: `${parseFloat(percentage(obj.offsetTop, previewScreen.offsetHeight)).toFixed(2)}cqh`,
-        },
-      );
+      declarations.push({
+        type: "declaration",
+        property: "bottom",
+        value: `unset`,
+      });
+      declarations.push({
+        type: "declaration",
+        property: "top",
+        value: `${parseFloat(percentage(obj.offsetTop, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+      });
       break;
     case "bottom":
-      declarations.push(
-        {
-          type: "declaration",
-          property: "top",
-          value: `unset`,
-        },
-        {
-          type: "declaration",
-          property: "bottom",
-          value: `${parseFloat(100 - percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)).toFixed(2)}cqh`,
-        },
-      );
+      declarations.push({
+        type: "declaration",
+        property: "top",
+        value: `unset`,
+      });
+      declarations.push({
+        type: "declaration",
+        property: "bottom",
+        value: `${parseFloat(100 - percentage(obj.offsetTop + obj.offsetHeight, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+      });
   }
 
   switch (anchorHorizontal) {
     case "left":
-      declarations.push(
-        {
-          type: "declaration",
-          property: "right",
-          value: `unset`,
-        },
-        {
-          type: "declaration",
-          property: "left",
-          value: `${parseFloat(percentage(obj.offsetLeft, previewScreen.offsetWidth)).toFixed(2)}cqw`,
-        },
-      );
+      declarations.push({
+        type: "declaration",
+        property: "right",
+        value: `unset`,
+      });
+      declarations.push({
+        type: "declaration",
+        property: "left",
+        value: `${parseFloat(percentage(obj.offsetLeft, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+      });
       break;
 
     case "right":
-      declarations.push(
-        {
-          type: "declaration",
-          property: "left",
-          value: `unset`,
-        },
-        {
-          type: "declaration",
-          property: "right",
-          value: `${parseFloat(100 - percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetWidth)).toFixed(2)}cqw`,
-        },
-      );
+      declarations.push({
+        type: "declaration",
+        property: "left",
+        value: `unset`,
+      });
+
+      declarations.push({
+        type: "declaration",
+        property: "right",
+        value: `${parseFloat(100 - percentage(obj.offsetLeft + obj.offsetWidth, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+      });
       break;
   }
 
@@ -649,11 +642,24 @@ export function setObjInStylesheet(stylesheet, obj) {
     //
     parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
       if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
+        // check if the declaration exist
+        // deepSearchByKey(rule.declaration.prorperydf)
         // Update existing declarations for the selectorToUpdate
         rule.declarations.forEach((declaration) => {
           declarations.forEach((updatedDeclaration) => {
-            if (declaration.property === updatedDeclaration.property) {
-              declaration.value = updatedDeclaration.value;
+            if (
+              deepSearchByKey(rule, "property", updatedDeclaration.property)
+            ) {
+              if (declaration.property === updatedDeclaration.property) {
+                declaration.value = updatedDeclaration.value;
+              }
+            } else {
+              //create the declaration if it doesnt exist
+              rule.declarations.push({
+                type: "declaration",
+                property: updatedDeclaration.property,
+                value: updatedDeclaration.value,
+              });
             }
           });
         });
@@ -667,7 +673,7 @@ export function setObjInStylesheet(stylesheet, obj) {
 }
 
 export async function saveStylesheet(stylesheetId, data) {
-  return axios
+  return await axios
     .put(`${config.strapi.url}/api/stylesheets/${stylesheetId}`, {
       data: {
         cssrules: data,

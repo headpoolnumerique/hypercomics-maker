@@ -222,9 +222,16 @@ async function addPlan(montageList, select = true) {
 
 // TODO
 // duplicate plan may be more useful:
+// get the same object
+// create a new plan
+// get all the object from the plan and add them again
+//
+//
+//duplicate each rules for each stylesheet
+//
 //
 // get the data from the plan, create a new one with the exact same data, push it to the UI
-async function duplicatePlan(
+export async function duplicatePlan(
   montageList,
   planToDuplicateId,
   sequenceId,
@@ -411,7 +418,6 @@ export {
   addPlan,
   deletePlan,
   deleteAllPlans,
-  duplicatePlan,
   selectLink,
   renderPlan,
   dragAndPlanReorder,

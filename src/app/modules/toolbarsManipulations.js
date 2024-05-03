@@ -30,6 +30,7 @@ function toggleToolbars() {
           break;
         case "showstylewrapper":
           toggleToolbar(document.querySelector("#styleWrapper"));
+          break;
         case "showPelure":
           if (document.querySelector(".oldShow")) {
             document.querySelector(".oldshown")?.classList.remove(".oldshown");

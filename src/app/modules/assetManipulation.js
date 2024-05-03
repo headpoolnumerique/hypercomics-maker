@@ -15,6 +15,9 @@ import {
   inputHeight,
   previewScreen,
   stylesWrapper,
+  anchorLeft,
+  anchorTop,
+  anchorRight,
 } from "./selectors.js";
 import {
   findAnchors,
@@ -23,6 +26,7 @@ import {
   setObjInStylesheet,
 } from "./stylesheet.js";
 import { parse, stringify } from "../vendors/css/css.js";
+import { setObjFromUi } from "./objectManipulations.js";
 
 async function interactObject(object) {
   if (!object.classList.contains("asset-selected")) return;
@@ -93,8 +97,8 @@ async function interactObject(object) {
       ],
 
       listeners: {
-        start(event) { },
-        move: function(event) {
+        start(event) {},
+        move: function (event) {
           // parse the css
           // find the location for wisth and height
           // listen to the resize
@@ -121,7 +125,7 @@ async function interactObject(object) {
 
           Object.assign(event.target.dataset, { x, y });
         },
-        end: function(event) {
+        end: function (event) {
           updateTheUI(event.target);
           // add ruel to object
           // addRuleToObject(event.target.dataset.objectid, data);
@@ -314,22 +318,30 @@ export function updateTheUI(element) {
     inputTop.classList.remove("hide");
     inputBottom.previousElementSibling.classList.add("hide");
     inputBottom.classList.add("hide");
+    anchorTop.classList.add("hide");
+    anchorBottom.classList.remove("hide");
   } else {
     inputTop.previousElementSibling.classList.add("hide");
     inputTop.classList.add("hide");
     inputBottom.previousElementSibling.classList.remove("hide");
     inputBottom.classList.remove("hide");
+    anchorTop.classList.remove("hide");
+    anchorBottom.classList.add("hide");
   }
   if (anchors.horizontal == "left") {
     inputLeft.previousElementSibling.classList.remove("hide");
     inputLeft.classList.remove("hide");
     inputRight.previousElementSibling.classList.add("hide");
     inputRight.classList.add("hide");
+    anchorRight.classList.remove("hide");
+    anchorLeft.classList.add("hide");
   } else {
     inputRight.previousElementSibling.classList.remove("hide");
     inputRight.classList.remove("hide");
     inputLeft.previousElementSibling.classList.add("hide");
     inputLeft.classList.add("hide");
+    anchorRight.classList.add("hide");
+    anchorLeft.classList.remove("hide");
   }
 
   console.log(anchors.vertical);
@@ -392,13 +404,13 @@ async function updateDeclaration(
 // if bottom : set --anchor-vertical: bottom and botom: y.
 // if left : set --anchor-horizontal: left and left: x.
 // if bottom : set --anchor-horizontal: right and right: x.
-export function setAnchor() {
+export async function setAnchor() {
   // result off this setanchor should be the addition of a --verticalAnchor: "top" or "bottom"
   // and --horizontal-anchor: z"left" or "right". This will allow for simpler set up and a button instead of the value
   //
   // this is asset manipulation normally
   anchors.forEach((button) => {
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function () {
       // make sure an object is selected
       let selected = document.querySelector(".asset-selected");
 
@@ -416,83 +428,83 @@ export function setAnchor() {
       console.log(button.id);
       switch (button.id) {
         case "anchorTop":
-          declarations.push(
-            {
-              type: "declaration",
-              property: "--anchor-vertical",
-              value: `top`,
-            },
-            {
-              type: "declaration",
-              property: "bottom",
-              value: `unset`,
-            },
-            {
-              type: "declaration",
-              property: "top",
-              value: `${parseFloat(percentage(selected.offsetTop, previewScreen.offsetHeight)).toFixed(2)}cqh`,
-            },
-          );
+          declarations.push({
+            type: "declaration",
+            property: "--anchor-vertical",
+            value: `top`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "bottom",
+            value: `unset`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "top",
+            value: `${parseFloat(percentage(selected.offsetTop, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+          });
           break;
 
         case "anchorBottom":
-          declarations.push(
-            {
-              type: "declaration",
-              property: "--anchor-vertical",
-              value: `bottom`,
-            },
-            {
-              type: "declaration",
-              property: "top",
-              value: `unset`,
-            },
-            {
-              type: "declaration",
-              property: "bottom",
-              value: `${parseFloat(100 - percentage(selected.offsetTop + selected.offsetHeight, previewScreen.offsetHeight)).toFixed(2)}cqh`,
-            },
-          );
+          declarations.push({
+            type: "declaration",
+            property: "--anchor-vertical",
+            value: `bottom`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "top",
+            value: `unset`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "bottom",
+            value: `${parseFloat(100 - percentage(selected.offsetTop + selected.offsetHeight, previewScreen.offsetHeight)).toFixed(2)}cqh`,
+          });
           break;
 
         case "anchorLeft":
-          declarations.push(
-            {
-              type: "declaration",
-              property: "--anchor-horizontal",
-              value: `left`,
-            },
-            {
-              type: "declaration",
-              property: "right",
-              value: `unset`,
-            },
-            {
-              type: "declaration",
-              property: "left",
-              value: `${parseFloat(percentage(selected.offsetLeft, previewScreen.offsetWidth)).toFixed(2)}cqw`,
-            },
-          );
+          declarations.push({
+            type: "declaration",
+            property: "--anchor-horizontal",
+            value: `left`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "right",
+            value: `unset`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "left",
+            value: `${parseFloat(percentage(selected.offsetLeft, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+          });
           break;
 
         case "anchorRight":
-          declarations.push(
-            {
-              type: "declaration",
-              property: "--anchor-horizontal",
-              value: `right`,
-            },
-            {
-              type: "declaration",
-              property: "left",
-              value: `unset`,
-            },
-            {
-              type: "declaration",
-              property: "right",
-              value: `${parseFloat(100 - percentage(selected.offsetLeft + selected.offsetWidth, previewScreen.offsetWidth)).toFixed(2)}cqw`,
-            },
-          );
+          declarations.push({
+            type: "declaration",
+            property: "--anchor-horizontal",
+            value: `right`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "left",
+            value: `unset`,
+          });
+
+          declarations.push({
+            type: "declaration",
+            property: "right",
+            value: `${parseFloat(100 - percentage(selected.offsetLeft + selected.offsetWidth, previewScreen.offsetWidth)).toFixed(2)}cqw`,
+          });
           break;
       }
       console.log(declarations);
@@ -523,14 +535,14 @@ export function setAnchor() {
                 rule.declarations.push(line);
               }
 
-              if (!deepSearchByKey(rule, "property", line.property)) {
-                console.log("there is no anchor vertical, we’re creating now");
-                rule.declarations.push({
-                  type: "declaration",
-                  property: line.property,
-                  value: line.value,
-                });
-              }
+              // if (!deepSearchByKey(rule, "property", line.property)) {
+              //   console.log("there is no anchor vertical, we’re creating now");
+              //   rule.declarations.push({
+              //     type: "declaration",
+              //     property: line.property,
+              //     value: line.value,
+              //   });
+              // }
             });
           }
         });
@@ -549,14 +561,17 @@ export function setAnchor() {
           });
         });
       });
+
+      // setObjFromUi(document.querySelector(".activatedStyle"), document.querySelector(".asset-selected"))
+
       document.querySelector(".activatedStyle").textContent =
         stringify(parsedCSS);
       // save the stylesheet
       saveStylesheet(
         document.querySelector(".activatedStyle").dataset.strapid,
-        document.querySelector(".activatedStyle").textContent,
+        stringify(parsedCSS),
       );
-      updateTheUI(selected);
+      updateTheUI(document.querySelector(".asset-selected"));
     });
   });
 }
