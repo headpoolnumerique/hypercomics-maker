@@ -755,7 +755,15 @@ export async function kickstartStylesheet() {
       default: true,
       sequenceId: sequenceNumber.textContent,
     },
+    {
+      maxwidth: "2500",
+      defaultHeight: "1000",
+      default: true,
+      sequenceId: sequenceNumber.textContent,
+    },
+    
     // {
+    //
     //   maxwidth: "1368",
     //   defaultHeight: "768",
     //   default: true,
@@ -937,6 +945,7 @@ now set the declarations to the object/stylesheet on end on both resizable and m
 // NOW DO THE LINE 4
 
 export function updateDeclaration(selectedId, declarations) {
+  const parsedCSS = parse(document.querySelector(".activatedStyle").textContent);
   /* if there is no declarations for this id*/
   if (!isSelectorExistInContainers(parsedCSS, selectedId)) {
     // get the rule with the
@@ -992,8 +1001,6 @@ export function updateDeclaration(selectedId, declarations) {
 //to duplicate a function, duplicate the css of the stylesheet with the new id.
 // use
 export function cloneStylesheetRules(stylesheetObj, previousId, newId) {
-
-
   let parsedCSS = parse(stylesheetObj.textContent);
 
   let declarations = [];
@@ -1001,7 +1008,7 @@ export function cloneStylesheetRules(stylesheetObj, previousId, newId) {
   parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
     if (!rule.selectors.includes(`#${previousId}`)) return;
     rule.declarations.forEach((declaration) => {
-      console.log(declaration)
+      console.log(declaration);
       declarations.push(declaration);
     });
   });

@@ -91,6 +91,16 @@
 
       <!-- // contextual should be hidden and moved next to the element the user is moving -->
       <section id="main">
+        <h3>visibility</h3>
+        <button id="input-show" data-property="opacity" data-value="1">make visible</button>
+        <button id="input-hide" data-property="opacity" data-value="var(--hidden-opacity)">hide</button>
+
+        <div>
+          <label for="visibilityOffset">opacity of hidden element (only for preview)</label>
+          <input type="range" min="0" max="1" step="0.05" id="visibilityOffset">
+        </div>
+        <!-- button#input-show -->
+
         <h3>Size</h3>
         <label for="input-width">Width</label>
         <input id="input-width" name="input-width" type="number" step="0.01" />

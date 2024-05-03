@@ -18,6 +18,8 @@ import {
   anchorLeft,
   anchorTop,
   anchorRight,
+  inputMakeHidden,
+  inputMakeVisible,
 } from "./selectors.js";
 import {
   findAnchors,
@@ -287,10 +289,46 @@ export function percentage(partialValue, totalValue) {
   return ((100 * partialValue) / totalValue).toFixed(2);
 }
 
+export function getValueOf(elementObj, property, parsedCSS) {
+  let value;
+  parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+    if (rule.selectors && rule.selectors.includes(`#${elementObj.id}`)) {
+      rule.declarations.forEach((declaration) => {
+        if (declaration.property == property) {
+          value = declaration.value;
+        } else {
+          value = false;
+        }
+      });
+    }
+
+  });
+  return value
+}
+
+export function setVisibilityUI(element, parsedCSS) {
+  let visible = getValueOf(element, "opacity", parsedCSS);
+
+  console.log(visible);
+
+  if (!visible || visible == 1) {
+    inputMakeHidden.classList.remove("hide");
+    inputMakeVisible.classList.add("hide");
+  } else {
+    inputMakeHidden.classList.add("hide");
+    inputMakeVisible.classList.remove("hide");
+  }
+}
+
 export function updateTheUI(element) {
   let parsedCSS = parse(document.querySelector(".activatedStyle").textContent);
   let anchors = findAnchors(element.id, parsedCSS);
 
+  // get the visible / hide value of the object
+  //
+  setVisibilityUI(element, parsedCSS);
+
+  // screensize
   let previewScreen = document.querySelector("#previewScreen");
   let previewScreenSize = {
     height: previewScreen.offsetHeight,

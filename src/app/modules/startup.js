@@ -19,7 +19,7 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
-import { updatefromui } from "./objectManipulations";
+import { handleVisilibity, updatefromui } from "./objectManipulations";
 import { setPropertyInStylesheet, stylesheetmanager } from "./stylesheet.js";
 import { setAnchor } from "./assetManipulation.js";
 
@@ -50,6 +50,7 @@ async function startup(url = document.location.href) {
   handleDelays();
   setAnchor();
   updatefromui();
+  handleVisilibity();
   await stylesheetmanager(response.data);
   
   //lol

@@ -50,3 +50,11 @@ export const anchors = document.querySelectorAll(".anchorButton");
 export const stylesWrapper = document.querySelector("#styleWrapper");
 export const cleanStylesheetButton = document.querySelector(`#cleanStylesheet`) 
 export const saveStylesheetButton = document.querySelector("#saveStylesheet")
+
+
+
+
+/*show hide*/
+
+export const inputMakeVisible = document.querySelector("#input-show")
+export const inputMakeHidden = document.querySelector("#input-hide")

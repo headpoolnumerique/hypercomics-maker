@@ -1,5 +1,3 @@
-import { reorderObjectInPlan, removeObjectFromPlan } from "./dataManagement.js";
-import interact from "interactjs";
 import config from "../config/config.js";
 import axios from "axios";
 import {
@@ -8,12 +6,15 @@ import {
   saveStylesheet,
   setObjInStylesheet,
   setPropertyInStylesheet,
+  updateDeclaration,
 } from "./stylesheet.js";
 
 import {
   inputBottom,
   inputHeight,
   inputLeft,
+  inputMakeHidden,
+  inputMakeVisible,
   inputRight,
   inputTop,
   inputWidth,
@@ -21,6 +22,7 @@ import {
 } from "./selectors.js";
 
 import { parse, stringify } from "../vendors/css/css.js";
+import { setVisibilityUI } from "./assetManipulation.js";
 
 export function moveToLayer(object, plan, position) {
   // move any object to a specific layer
@@ -398,4 +400,44 @@ export function setObjFromUi(stylesheet, obj) {
   stylesheet.textContent = stringify(parsedCSS);
 
   saveStylesheet(stylesheet.dataset.strapid, stylesheet.textContent);
+}
+
+// => select object. click on show / hide, set css visibility,
+//
+//
+export function handleVisilibity() {
+  // set the visibiliy of the hidden block;
+  document
+    .querySelector("#visibilityOffset")
+    .addEventListener("change", function (event) {
+      previewScreen.style.setProperty("--hidden-opacity", event.target.value);
+    });
+
+  [inputMakeVisible, inputMakeHidden].forEach((button) => {
+    button.addEventListener("click", function (event) {
+      if (!document.querySelector(".asset-selected"))
+        console.log("nothing to select");
+
+      const declarations = [
+        {
+          type: "declaration",
+          property: button.dataset.property,
+          value: button.dataset.value,
+        },
+      ];
+
+      updateDeclaration(
+        document.querySelector(".asset-selected").id,
+        declarations,
+      );
+
+      if (event.target.id == "input-show") {
+        inputMakeVisible.classList.add("hide");
+        inputMakeHidden.classList.remove("hide");
+      } else if (event.target.id == "input-hide") {
+        inputMakeVisible.classList.remove("hide");
+        inputMakeHidden.classList.add("hide");
+      }
+    });
+  });
 }
