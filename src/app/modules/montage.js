@@ -5,12 +5,13 @@ import {
   sequencePreview,
   montageList,
   previewScreen,
+  stylesWrapper,
 } from "./selectors.js";
 import { createData, updateData } from "./dataManagement.js";
 import axios from "axios";
 import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 import { updateLayers } from "./layerManipulation.js";
-import { cloneStylesheetRules } from "./stylesheet.js";
+import { cloneStylesheetRules, saveAllStylesheet } from "./stylesheet.js";
 
 // reorder the plan, visually, then send an update to the order using set in the sequence, and reorder the whole blocks
 //
@@ -401,15 +402,12 @@ export async function duplicatePlan(
 
   let newAssets = document.querySelectorAll(".shown .asset");
 
-  newAssets.forEach((el, index) => {
-    console.log(previousAssets[index]);
-    console.log(el.id);
-    cloneStylesheetRules(
-      document.querySelector(".activatedStyle"),
-      previousAssets[index].id,
-      el.id,
-    );
+  stylesWrapper.querySelectorAll("style").forEach((styleObj) => {
+    newAssets.forEach((el, index) => {
+      cloneStylesheetRules(styleObj, previousAssets[index].id, el.id);
+    });
   });
+  saveAllStylesheet();
   // previousAssets.forEach((entry, index) =>{
   //
   //

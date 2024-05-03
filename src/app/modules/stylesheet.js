@@ -992,6 +992,8 @@ export function updateDeclaration(selectedId, declarations) {
 //to duplicate a function, duplicate the css of the stylesheet with the new id.
 // use
 export function cloneStylesheetRules(stylesheetObj, previousId, newId) {
+
+
   let parsedCSS = parse(stylesheetObj.textContent);
 
   let declarations = [];
@@ -999,6 +1001,7 @@ export function cloneStylesheetRules(stylesheetObj, previousId, newId) {
   parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
     if (!rule.selectors.includes(`#${previousId}`)) return;
     rule.declarations.forEach((declaration) => {
+      console.log(declaration)
       declarations.push(declaration);
     });
   });
