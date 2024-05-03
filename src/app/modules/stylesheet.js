@@ -987,3 +987,27 @@ export function updateDeclaration(selectedId, declarations) {
     document.querySelector(".activatedStyle").textContent,
   );
 }
+
+// function to add the css for the duplicated elements
+//to duplicate a function, duplicate the css of the stylesheet with the new id.
+// use
+export function cloneStylesheetRules(stylesheetObj, previousId, newId) {
+  let parsedCSS = parse(stylesheetObj.textContent);
+
+  let declarations = [];
+
+  parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
+    if (!rule.selectors.includes(`#${previousId}`)) return;
+    rule.declarations.forEach((declaration) => {
+      declarations.push(declaration);
+    });
+  });
+
+  parsedCSS.stylesheet.rules[0].rules.push({
+    type: "rule",
+    selectors: [`#${newId}`],
+    declarations: declarations,
+  });
+
+  stylesheetObj.textContent = stringify(parsedCSS);
+}
