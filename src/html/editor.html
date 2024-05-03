@@ -99,26 +99,33 @@
         <input id="input-height" name="input-height" type="number" step="0.01" />
 
         <!-- Locations and anchors -->
-        <h3>Location</h3>
-        <label for="input-left">Left</label>
-        <input id="input-left" name="input-left" type="number" step="0.01" />
+        <div class="block">
+          <div class="input-top">
+            <button class="anchorButton" id="anchorTop">set anchor top</button>
+            <label for="input-top">top</label>
+            <input id="input-top" name="input-top" type="number" step="0.01" />
+          </div>
 
-        <label for="input-right">Right</label>
-        <input id="input-right" name="input-right" type="number" step="0.01" />
+          <div class="input-left">
+            <button class="anchorButton" id="anchorLeft">set anchor left</button>
+            <label for="input-left">Left</label>
+            <input id="input-left" name="input-left" type="number" step="0.01" />
+          </div>
 
-        <label for="input-top">top</label>
-        <input id="input-top" name="input-top" type="number" step="0.01" />
+          <div id="input-element"></div>
 
-        <label for="input-bottom">bottom</label>
-        <input id="input-bottom" name="input-bottom" type="number" step="0.01" />
+          <div class="input-right">
+            <button class="anchorButton" id="anchorRight">set anchor right</button>
+            <label for="input-right">Right</label>
+            <input id="input-right" name="input-right" type="number" step="0.01" />
+          </div>
+          <div class="input-bottom">
+            <button class="anchorButton" id="anchorBottom">set anchor bottom</button>
+            <label for="input-bottom">bottom</label>
+            <input id="input-bottom" name="input-bottom" type="number" step="0.01" />
+          </div>
+        </div>
 
-        <h3>Vertical Anchor</h3>
-        <button class="anchorButton" id="anchorTop">set anchor top</button>
-        <button class="anchorButton" id="anchorBottom">set anchor bottom</button>
-
-        <h3>horizontal anchor</h3>
-        <button class="anchorButton" id="anchorLeft">set anchor left</button>
-        <button class="anchorButton" id="anchorRight">set anchor right</button>
 
         </p>
       </section>

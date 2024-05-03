@@ -19,7 +19,7 @@ async function start() {
   let projects = await loadAllProjects(config.strapi.url);
 
   if (projects.data) {
-    document.querySelector("#loading")?.remove();
+    document.querySelector("#loading").classList.add("hide");
   } else {
     console.log("loading error");
   }
