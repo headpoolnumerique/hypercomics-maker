@@ -105,18 +105,20 @@ function layerInteract(layerWrapper = layerList) {
       );
       target.closest("li").classList.add("previewedTop");
       previewObj.classList.toggle("previewTop");
-    } else if (target.classList.contains("hidebutton")) {
-      target.closest("li").classList.add("selectedLayer");
-      deselect(".asset-selected");
-      const hidingObject = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`,
-      );
+    }
+    // hide is now done elsewhere
+    // else if (target.classList.contains("hidebutton")) {
+    //   target.closest("li").classList.add("selectedLayer");
+    //   deselect(".asset-selected");
+    // const hidingObject = document.querySelector(
+    // `.shown [data-objectid="${objectid}"]`,
+    // );
 
-      hideElement(hidingObject)
-      hidingObject.classList.add("asset-selected");
-      // hidingObject.classList.toggle(["asset-hidden"]);
-      // target.closest("li").classList.toggle("hidden");
-    } else if (target.classList.contains("delete")) {
+    // hideElement(hidingObject)
+    // hidingObject.classList.add("asset-selected");
+    // hidingObject.classList.toggle(["asset-hidden"]);
+    // target.closest("li").classList.toggle("hidden");
+    else if (target.classList.contains("delete")) {
       target.closest("li").classList.add("selectedLayer");
       deselect(".asset-selected");
       const removableObject = document.querySelector(
@@ -235,42 +237,30 @@ export {
 // --anchor-vertical and --anchor-horizontal
 // this way you keep only one thing.
 // hide element in style sheet and save it
-export function hideElement(obj) {
-  const visibility = checkPropertyValueFromStylesheet(
-    obj,
-    document.querySelector(".activatedStylesheet"),
-    "visibility",
-  );
-  if (visibility == "hidden") {
-    setPropertyInStylesheet(
-      obj,
-      document.querySelector(".activatedStylesheet"),
-      "visibility",
-      `visible`,
-    );
-    setPropertyInStylesheet(
-      obj,
-      document.querySelector(".activatedStylesheet"),
-      "--visible",
-      `yes`,
-    );
-  } else {
-    setPropertyInStylesheet(
-      obj,
-      document.querySelector(".activatedStylesheet"),
-      "visibility",
-      `hidden`,
-    );
-    setPropertyInStylesheet(
-      obj,
-      document.querySelector(".activatedStylesheet"),
-      "--visible",
-      `no`,
-    );
-  }
+// export function hideElement(obj) {
+//   const visibility = checkPropertyValueFromStylesheet(
+//     obj,
+//     document.querySelector(".activatedStylesheet"),
+//     "visibility",
+//   );
+//   if (visibility == "hidden") {
+//     setPropertyInStylesheet(
+//       obj,
+//       document.querySelector(".activatedStylesheet"),
+//       "visibility",
+//       `visible`,
+//     );
+//   } else {
+//     setPropertyInStylesheet(
+//       obj,
+//       document.querySelector(".activatedStylesheet"),
+//       "visibility",
+//       `hidden`,
+//     );
+//   }
 
-  // document.querySelector(".activatedStyle").textContent = stringify()
-}
+// document.querySelector(".activatedStyle").textContent = stringify()
+// }
 
 // parseSelectedCSS
 // findObject in CSS
