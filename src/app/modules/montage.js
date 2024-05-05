@@ -106,7 +106,7 @@ async function deleteAllPlans() {
 
 // todo delete multiple plan from the to drag
 
-async function deletePlan() {
+export async function deletePlan() {
   let sequenceId = Number(
     document.querySelector("#sequenceNumber").textContent,
   );
@@ -136,6 +136,7 @@ async function deletePlan() {
       //show previousPlan if it exists
       if (previousPlan) {
         activatePlan(previousPlan);
+        updateLayers()
       }
     })
     .catch((err) => {
@@ -464,7 +465,6 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
 
 export {
   addPlan,
-  deletePlan,
   deleteAllPlans,
   selectLink,
   renderPlan,
