@@ -249,6 +249,12 @@ block-ui h3 {
   visibility: visible
 }
 
+#selectedId {
+  display: none;
+}
+:has(.asset-selected) #selectedId {
+  display: block;
+}
 
 :root{
   --hidden-opacity: .01;

@@ -100,6 +100,7 @@ function listeners() {
 
       const assetId = e.target.dataset.assetid;
 
+
       let strapisResponse = await connectObjectToPlan(
         config.strapi.url,
         planNumber,
@@ -130,6 +131,8 @@ function listeners() {
       ) {
         deselect(".selectedLayer");
       }
+
+      document.querySelector("#selectedId").textContent = `#${event.target.id}`;
       if (event.target.classList.contains("asset-selected")) return;
       deselect(".asset-selected");
       event.target.classList.add("asset-selected");
@@ -140,6 +143,7 @@ function listeners() {
 
       interactObject(event.target);
     } else {
+      document.querySelector("#selectedId").textContent = ``;
       deselect(".asset-selected");
       deselect(".confirm");
       deselect(".selectedLayer");
@@ -173,12 +177,10 @@ function listeners() {
       updateDelayUI();
     });
 
-
   //save all styleshett
-saveStylesheetButton.addEventListener("click", function(event){
-    saveAllStylesheet()
-  })
-
+  saveStylesheetButton.addEventListener("click", function(event) {
+    saveAllStylesheet();
+  });
 
   document.querySelector("#previewNext").addEventListener("click", function() {
     let shownPlan = document.querySelector(".shown");
