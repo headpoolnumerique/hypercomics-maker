@@ -99,8 +99,8 @@ async function interactObject(object) {
       ],
 
       listeners: {
-        start(event) {},
-        move: function (event) {
+        start(event) { },
+        move: function(event) {
           // parse the css
           // find the location for wisth and height
           // listen to the resize
@@ -127,7 +127,7 @@ async function interactObject(object) {
 
           Object.assign(event.target.dataset, { x, y });
         },
-        end: function (event) {
+        end: function(event) {
           updateTheUI(event.target);
           // add ruel to object
           // addRuleToObject(event.target.dataset.objectid, data);
@@ -301,9 +301,8 @@ export function getValueOf(elementObj, property, parsedCSS) {
         }
       });
     }
-
   });
-  return value
+  return value;
 }
 
 export function setVisibilityUI(element, parsedCSS) {
@@ -321,7 +320,9 @@ export function setVisibilityUI(element, parsedCSS) {
 }
 
 export function updateTheUI(element) {
-  let parsedCSS = parse(document.querySelector(".activatedStyle").textContent);
+  let parsedCSS = parse(
+    stylesWrapper.querySelector(".activatedStyle").textContent,
+  );
   let anchors = findAnchors(element.id, parsedCSS);
 
   // get the visible / hide value of the object
@@ -448,7 +449,7 @@ export async function setAnchor() {
   //
   // this is asset manipulation normally
   anchors.forEach((button) => {
-    button.addEventListener("click", function () {
+    button.addEventListener("click", async function() {
       // make sure an object is selected
       let selected = document.querySelector(".asset-selected");
 
@@ -458,12 +459,11 @@ export async function setAnchor() {
 
       // parse le css, make it an object
       let parsedCSS = parse(
-        document.querySelector(".activatedStyle").textContent,
+        stylesWrapper.querySelector(".activatedStyle").textContent,
       );
 
       let declarations = [];
 
-      console.log(button.id);
       switch (button.id) {
         case "anchorTop":
           declarations.push({
@@ -573,14 +573,14 @@ export async function setAnchor() {
                 rule.declarations.push(line);
               }
 
-              // if (!deepSearchByKey(rule, "property", line.property)) {
-              //   console.log("there is no anchor vertical, we’re creating now");
-              //   rule.declarations.push({
-              //     type: "declaration",
-              //     property: line.property,
-              //     value: line.value,
-              //   });
-              // }
+              if (!deepSearchByKey(rule, "property", line.property)) {
+                console.log("there is no anchor vertical, we’re creating now");
+                rule.declarations.push({
+                  type: "declaration",
+                  property: line.property,
+                  value: line.value,
+                });
+              }
             });
           }
         });
@@ -602,12 +602,12 @@ export async function setAnchor() {
 
       // setObjFromUi(document.querySelector(".activatedStyle"), document.querySelector(".asset-selected"))
 
-      document.querySelector(".activatedStyle").textContent =
+      stylesWrapper.querySelector(".activatedStyle").textContent =
         stringify(parsedCSS);
       // save the stylesheet
-      saveStylesheet(
-        document.querySelector(".activatedStyle").dataset.strapid,
-        stringify(parsedCSS),
+      await saveStylesheet(
+        stylesWrapper.querySelector(".activatedStyle").dataset.strapid,
+        stringify(parsedCSS)
       );
       updateTheUI(document.querySelector(".asset-selected"));
     });
