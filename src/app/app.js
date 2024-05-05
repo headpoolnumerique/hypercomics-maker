@@ -18,6 +18,7 @@ import {
   assetsList,
   contextUI,
   layerList,
+  saveStylesheetButton,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
@@ -28,6 +29,7 @@ import {
   updateLayers,
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
+import { saveAllStylesheet } from "./modules/stylesheet.js";
 
 startApp();
 
@@ -170,6 +172,13 @@ function listeners() {
       updateLayers();
       updateDelayUI();
     });
+
+
+  //save all styleshett
+saveStylesheetButton.addEventListener("click", function(event){
+    saveAllStylesheet()
+  })
+
 
   document.querySelector("#previewNext").addEventListener("click", function() {
     let shownPlan = document.querySelector(".shown");
