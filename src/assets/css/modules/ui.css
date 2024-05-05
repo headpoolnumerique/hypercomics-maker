@@ -254,6 +254,8 @@ block-ui h3 {
   --hidden-opacity: .01;
 }
 
+.asset-selected
+
 .asset-selected:hover {
   --hidden-opacity: .9;
 
