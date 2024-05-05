@@ -553,8 +553,11 @@ export async function setAnchor() {
       // if there is a selector change this
       // if there is no selector, create it and add the declaration css
       if (!isSelectorExistInContainers(parsedCSS, selected.id)) {
+        let newCSS = parsedCSS;
+        console.log(parsedCSS);
+        console.log("noselector exist yet");
         // get the rule with the
-        parsedCSS.stylesheet.rules[0].rules.push({
+        newCSS.stylesheet.rules[0].rules.push({
           type: "rule",
           selectors: [`#${selected.id}`],
           declarations: declarations,
@@ -600,15 +603,15 @@ export async function setAnchor() {
         });
       });
 
-      // setObjFromUi(document.querySelector(".activatedStyle"), document.querySelector(".asset-selected"))
-
       stylesWrapper.querySelector(".activatedStyle").textContent =
         stringify(parsedCSS);
+      // setObjFromUi(document.querySelector(".activatedStyle"), document.querySelector(".asset-selected"))
       // save the stylesheet
       await saveStylesheet(
         stylesWrapper.querySelector(".activatedStyle").dataset.strapid,
-        stringify(parsedCSS)
+        stylesWrapper.querySelector(".activatedStyle").textContent,
       );
+
       updateTheUI(document.querySelector(".asset-selected"));
     });
   });
