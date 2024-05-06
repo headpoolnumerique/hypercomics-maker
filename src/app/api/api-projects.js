@@ -29,6 +29,12 @@ async function createProject() {
         renderEmptyProject(response.data.data);
         return response;
       })
+      .then(function(response) {
+        window.location.hash = `#project${response.data.data.id}`
+      })
+
+      // open the new project
+
       .catch((error) => {
         console.log(error);
       });
@@ -39,7 +45,7 @@ async function loadAllProjects(serverUrl) {
   //load with a query
   return axios
     .get(
-      `${serverUrl}/api/projects?populate=deep,5&filters[archived][$eq]=false`
+      `${serverUrl}/api/projects?populate=deep,5&filters[archived][$eq]=false`,
     )
     .then((response) => {
       // console.log(response)
@@ -69,17 +75,17 @@ async function removeSequenceFromProject(projectId, sequenceId) {
 }
 
 async function renderEmptyProject(project) {
-  console.log(project);
+  // console.log(project);
   projectsList.insertAdjacentHTML(
     "beforeend",
     ` <li> <datetime>${renderDate(
-      project.attributes.updatedAt
+      project.attributes.updatedAt,
     )}</datetime> <a href="#project${project.id}">${project.attributes.title
     }</a> 
 
     <button onclick="deleteProject(${project.id})">remove project</button>
 
-</li> `
+</li> `,
   );
 
   // project for each sequence: create a list imenm

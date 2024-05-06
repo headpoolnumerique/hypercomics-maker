@@ -23,8 +23,9 @@ function updateInteractiveUI(interactiveUI, data) {
 }
 
 function activatePlan(planId) {
+  console.log("activatePlan" + planId)
   document.querySelector(`#plan-${planId}`).classList.add("shown");
-  document.querySelector(`#link-${planId}`).classList.add("selected");
+  document.querySelector(`#link-${planId} a`).classList.add("selected");
 }
 
 /*
@@ -55,7 +56,7 @@ function px2screenSize(valueInPixel, orientation, unit) {
   return 100 * (valueInPixel / screenValue);
 }
 
-var isNumeric = function(num) {
+var isNumeric = function (num) {
   return (
     (typeof num === "number" ||
       (typeof num === "string" && num.trim() !== "")) &&
@@ -73,12 +74,27 @@ function renderDate(date) {
   return new Date(date).toLocaleDateString(undefined, options);
 }
 
+/** Update the dataset attribute of an html element from an object
+ */
+function updateDataset(element, obj) {
+  Object.keys(obj).forEach((key) => {
+    element.dataset[key] = obj[key];
+  });
+}
+
+
+/*percentage calculator*/
+function percentage(partialValue, totalValue) {
+  return ((100 * partialValue) / totalValue).toFixed(2);
+}
 export {
+  updateDataset,
   isNumeric,
   activatePlan,
   updateInteractiveUI,
   deselect,
   selectLink,
   showHideBlock,
-  renderDate
+  renderDate,
+  percentage,
 };

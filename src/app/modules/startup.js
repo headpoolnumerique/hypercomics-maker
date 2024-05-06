@@ -19,62 +19,28 @@ import {
   updateLayers,
 } from "./layerManipulation.js";
 import { handleDelays } from "./delay.js";
+import { handleVisilibity, updatefromui } from "./objectManipulations";
+import { setPropertyInStylesheet, stylesheetmanager } from "./stylesheet.js";
+import { setAnchor } from "./assetManipulation.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
   // url =  server.com/?sequence=SEQID&project=projectid
+  // find what to load here
   let sequenceUrl = new URL(url);
-  const projectId = sequenceUrl.searchParams.get("project");
   const sequenceId = sequenceUrl.searchParams.get("sequence");
-
   document.body.id = `sequence-${sequenceId}`;
 
-  // if there is no sequence id, create a new sequence
-  if (!sequenceId) {
-    let response = await createData(config.strapi.url, `sequences`, {
-      title: "Title X",
-      projectId: projectId ? projectId : "",
-    });
+  // then load the sequence
+  let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
-    // add the sequence to the URL and show it in the url bar (damn you safari)
-    sequenceUrl.searchParams.set("sequence", response.data.data.id);
+  // console.log(response);
+  updateSequenceMeta(
+    response.data?.data?.id,
+    response.data?.data?.attributes?.title,
+  );
 
-    // TODO → generate projectId before otherwise, it will create a new page.
-
-    history.pushState({}, null, sequenceUrl);
-    window.location = sequenceUrl;
-    updateSequenceMeta(
-      response.data?.data?.id,
-      response.data?.data?.attributes?.title,
-    );
-
-    await fillSequence(response.data.data.id);
-    console.log("fill sequence finished");
-
-  } else {
-    // if there is a sequenceID in the url, load the sequence from strapi
-    let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
-
-    // if the sequence number doesnt exist in strapi, create it
-    if (response.data == null) {
-      let response = await createData(config.strapi.url, `sequences`, {
-        title: "this sequence has no name yet",
-        projectId: projectId ? projectId : "",
-        id: sequenceId,
-      });
-
-      //update the sequence url and write in the url bar
-      sequenceUrl.sequenceId = response.data.data.id;
-      // history.pushState({}, null, sequenceUrl)
-      // window.location.href = sequenceUrl
-    }
-    await updateSequenceMeta(
-      response.data?.data?.id,
-      response.data?.data?.attributes?.title,
-    );
-    await fillSequence(response.data.data.id);
-  }
-
+  fillSequence(response.data.data.attributes.plans);
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
@@ -82,22 +48,27 @@ async function startup(url = document.location.href) {
   layerInteract();
   resizeMontagePaneVertically();
   handleDelays();
-
-  // hide the loading
-  // this is not where it should be
-  document.querySelector("#loading")?.remove();
+  setAnchor();
+  updatefromui();
+  handleVisilibity();
+  await stylesheetmanager(response.data);
+  
+  //lol
+  // document.querySelector("#anchorTop").addEventListener("click", function() {
+  //   setPropertyInStylesheet(document.querySelector(".asset-selected"), document.querySelector(".activatedStylesheet"), "--funz", "test")
+  // })
 }
 
-async function fillSequence(sequence) {
-  let response = await loadSingle(config.strapi.url, "sequences", sequence);
-  let plans = response.data.data.attributes.plans;
+async function fillSequence(plans) {
+  // let response = await loadSingle(config.strapi.url, "sequences", sequence);
+  // let plans = response.data.data.attributes.plans;
   //if there is no plan, create a plan
   if (plans.data.length < 1) {
     addPlan(montageList, sequence);
   }
   //create the plan
   plans.data.forEach(async (plan, index) => {
-    console.log("renderPlan", plan);
+    // console.log("renderPlan", plan);
     await renderPlan(
       plan,
       montageList,
@@ -105,9 +76,8 @@ async function fillSequence(sequence) {
       index + 1 == plans.data.length ? true : false,
     );
     await fillPlan(plan);
+    updateLayers();
   });
-
-  await updateLayers();
   // check for each plan. add them to the view
 }
 
@@ -121,13 +91,13 @@ async function updateSequenceMeta(id, title) {
 }
 
 async function fillPlan(plan) {
-  console.log(`fill the plan ${plan.id} on load from the objects`);
+  // console.log(`fill the plan ${plan.id} on load from the objects`);
 
   // fill the plan with all the existing images
   // find the plan
   let planToFill = preview.querySelector(`#plan-${plan.id}`);
   let objectsToFillWith = plan.attributes.objects?.data;
-  console.log(plan.attributes, objectsToFillWith);
+  // console.log(plan.attributes, objectsToFillWith);
 
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
@@ -140,19 +110,34 @@ async function fillPlan(plan) {
         asset.attributes.filename,
         document.querySelector("#assetsList"),
       );
+      //check if asset is top or bottom
+
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+          object.id
         }" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="${asset.attributes.location
-        }" class="asset" style="${object.attributes.width ? `width:${object.attributes.width}` : ""
-        }
-        ${object.attributes.height ? `height:${object.attributes.height}` : ""}
-        ${object.attributes.top ? `top:${object.attributes.top}` : ""}
-        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`,
+        data-assetid="${asset.id}" src="${asset.attributes.location}"
+        data-anchor-horizontal="${
+          asset.attributes.anchorVertical
+            ? asset.attributes.anchorVertical
+            : "left"
+        }" 
+        data-anchor-vertical="${
+          asset.attributes.anchorHorizontal
+            ? asset.attributes.anchorHorizontal
+            : "top"
+        }"
+        class= "asset" >`,
+
       );
     });
   });
+
+  document.querySelector("#loading")?.classList.add("hide");
 }
 
 export { startup, fillPlan };
+
+
+

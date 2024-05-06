@@ -8,7 +8,9 @@
   background: white;
   display: block;
   min-height: 400px;
-  max-height: 90vh;
+  max-height: 70vh;
+  overflow: auto;
+
 }
 
 #assets #assetsList {
@@ -37,4 +39,5 @@
   padding: 0.2em 0.4ch;
   border: 1px solid grey;
   cursor: pointer;
+  max-height: 100px;
 }

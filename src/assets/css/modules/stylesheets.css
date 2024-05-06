@@ -1,0 +1,57 @@
+#screens li {
+  position: relative;
+}
+
+#screens li > span {
+  cursor: pointer;
+}
+
+#screens li > span:hover .popup {
+  animation: fadeIn 400ms;
+  color: red;
+  position: absolute;
+  display: block;
+  bottom: -2.5em;
+  background: black;
+  color: white;
+  z-index: 2;
+  padding: 0.2em 0.5ch;
+}
+
+#screens {
+  font-size: 0.8em;
+  min-width: 40ch;
+  max-height: 89vh;
+}
+
+#screens ul {
+  /* font-size: 0.8em; */
+  margin: 0;
+  margin: 1em;
+  padding: 10px;
+  list-style-type: none;
+}
+
+#screens li {
+  border-bottom: 1px solid gray;
+  display: grid;
+  gap: 1ch;
+  padding: .8em 0 .2em;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.toremove {
+  color: red;
+}
+
+
+.stylesheet:hover {
+  background:var(--color-main);
+}
+
+
+/*hide the styles when there are images in here on it*/
+#screen-ui:has(.stylesheet) #populateStylesheet {
+  display: none;
+  /* background:blue; */
+}

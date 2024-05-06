@@ -13,7 +13,7 @@ async function generateStory() {
   let sequencedata = await loadProject(
     config.strapi.url,
     seqnum.projectId,
-    seqnum.sequenceId
+    seqnum.sequenceId,
   );
 
   // get the data for the plans (with the weirdest ui from strapi. maybe filtering would make more sense.)
@@ -43,7 +43,7 @@ function fillPlan(plan) {
   // find the plan
   let planToFill = story.querySelector(`#plan-${plan.id}`);
   let objectsToFillWith = plan.attributes.objects?.data;
-  console.log(plan.attributes, objectsToFillWith);
+  // console.log(plan.attributes, objectsToFillWith);
 
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
@@ -52,17 +52,21 @@ function fillPlan(plan) {
     object.attributes.assets.data.forEach((asset) => {
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-          object.id
-        }" data-planid="${plan.id}"
+        `<img 
+        id="inuse-${plan.id.replace("#", "")}-${object.id}" 
+        data-objectId="${object.id}" data-planid="${plan.id}"
+        data.verticalAnchor ="${object.attributes.verticalAnchor ?object.attributes.verticalAnchor : "top" }"
+        data.horizontalAnchor ="${object.attributes.horizontalAnchor ?object.attributes.horizontalAnchor : "left" }"
+
         data-assetid="${asset.id}" src="${
           asset.attributes.location
-        }" class="asset" style="${
+        }" class="asset"
+        style="${
           object.attributes.width ? `width:${object.attributes.width}` : ""
         }
         ${object.attributes.height ? `height:${object.attributes.height}` : ""}
         ${object.attributes.top ? `top:${object.attributes.top}` : ""}
-        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`
+        ${object.attributes.left ? `left:${object.attributes.left}` : ""}" >`,
       );
     });
   });
@@ -90,7 +94,7 @@ function renderPlans(plans, toc, story) {
       "beforeend",
       `<li ${index == 0 ? `class="selected"` : ""} id="link-${
         plan.id
-      }"><a class="" href="#plan-${plan.id}">${index + 1}</a></li>`
+      }"><a class="" href="#plan-${plan.id}">${index + 1}</a></li>`,
     );
 
     // insert the plan in the preview plan
@@ -108,7 +112,7 @@ function renderPlans(plans, toc, story) {
         }
         ${nextPlan ? `<a class="nextPlan" href="${nextPlan}">→</a>` : ""}
 
-    </article>`
+    </article>`,
     );
     fillPlan(plan);
   });

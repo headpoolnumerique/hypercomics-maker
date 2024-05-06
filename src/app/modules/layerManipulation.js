@@ -1,9 +1,25 @@
-import { layerList, previewScreen, zindexInteraction } from "./selectors";
+import {
+  layerList,
+  previewScreen,
+  stylesWrapper,
+  zindexInteraction,
+} from "./selectors";
 import Sortable from "sortablejs/modular/sortable.complete.esm.js";
 import { deselect } from "./helpers";
-import { deleteObject, moveToLayer, updateTheUI } from "./objectManipulations";
+import {
+  checkPropertyValueFromStylesheet,
+  deleteObject,
+  moveToLayer,
+} from "./objectManipulations";
 import config from "../config/config";
 import { updateData } from "./dataManagement";
+import { interactObject, updateTheUI } from "./assetManipulation";
+import {
+  isSelectorExistInContainers,
+  setObjInStylesheet,
+  setPropertyInStylesheet,
+} from "./stylesheet";
+import { stringify } from "../vendors/css/css";
 
 // how is the layer list created?
 // is it the layer list that maintains everything or is the layer list based on the preview block
@@ -26,11 +42,13 @@ function appendLayer(id, layerWrapper = layerList, top = false) {
         <span class="identifier">#${id}</span>
         <span class="hidebutton"><span class="popup">hide</span>S</span>
         <span class="delete"><span class="popup">delete</span>D</delete>
-    </li>`
+    </li>`,
   );
 }
 function selectLayer(layerWrapper = "layerList", id) {
   deselect(".selectedlayer");
+
+  //select the layer with the data object id
   layerWrapper
     .querySelector(`li[data-objectid="${id}"]`)
     .classList.add("selectedLayer");
@@ -75,30 +93,36 @@ function layerInteract(layerWrapper = layerList) {
       deselect(".confirm");
       deselect(".asset-selected");
       const selectedObject = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
+        `.shown [data-objectid="${objectid}"]`,
       );
+      // make the object draggable and resizable
+      interactObject(selectedObject);
       selectedObject.classList.add("asset-selected");
       updateTheUI(selectedObject);
     } else if (target.classList.contains("previewTop")) {
-
       const previewObj = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
+        `.shown [data-objectid="${objectid}"]`,
       );
       target.closest("li").classList.add("previewedTop");
       previewObj.classList.toggle("previewTop");
-    } else if (target.classList.contains("hidebutton")) {
-      target.closest("li").classList.add("selectedLayer");
-      deselect(".asset-selected");
-      const hidingObject = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
-      );
-      hidingObject.classList.toggle(["asset-hidden"]);
-      target.closest("li").classList.toggle("hidden");
-    } else if (target.classList.contains("delete")) {
+    }
+    // hide is now done elsewhere
+    // else if (target.classList.contains("hidebutton")) {
+    //   target.closest("li").classList.add("selectedLayer");
+    //   deselect(".asset-selected");
+    // const hidingObject = document.querySelector(
+    // `.shown [data-objectid="${objectid}"]`,
+    // );
+
+    // hideElement(hidingObject)
+    // hidingObject.classList.add("asset-selected");
+    // hidingObject.classList.toggle(["asset-hidden"]);
+    // target.closest("li").classList.toggle("hidden");
+    else if (target.classList.contains("delete")) {
       target.closest("li").classList.add("selectedLayer");
       deselect(".asset-selected");
       const removableObject = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`
+        `.shown [data-objectid="${objectid}"]`,
       );
       removableObject.classList.add(["asset-selected"]);
       if (target.classList.contains("confirm")) {
@@ -116,16 +140,16 @@ function emptyLayers(layerWrapper = layerList) {
 }
 
 async function updateLayers(layerWrapper = layerList) {
+  // recreate the layer list from the selected plan
   emptyLayers(layerWrapper);
+  //on load,
   document
     .querySelector(".shown")
     .querySelectorAll(".asset")
     .forEach((asset) => {
-      console.log(asset.dataset.objectid);
+      // console.log(asset.dataset.objectid);
       appendLayer(asset.dataset.objectid);
     });
-
-  // recreate the layer list from the selected plan
 }
 
 function reorderLayer(wrappingElement) {
@@ -137,23 +161,29 @@ function reorderLayer(wrappingElement) {
     avoidImplicitDeselect: false, // true - if you don't want to deselect items on outside click
     handle: ".moveIcon", //handle for the sorting block
 
+    // reorder layer and push the new list to the db
     onEnd: function(event) {
       console.log(event);
       saveLayerOrder(
         config.strapi.url,
         document.querySelector(".shown").dataset.strapId,
-        layerList
+        layerList,
       );
-      // reorder the plan
-      // send the new order to the axios
+      // unselect everything after layering things
+      document
+        .querySelector(".asset-selected")
+        ?.classList.remove("asset-selected");
+      document
+        .querySelector(".selectedLayer")
+        ?.classList.remove("selectedLayer");
     },
   });
 }
 
 function saveLayerOrder(strapiUrl, planId, layerWrapper) {
   let orderedObjs = [];
-  // get the order of the layers in the plan. reverse the order as html is set the opposite way,
-  layerWrapper.querySelectorAll("li").forEach((obj) => {
+  // get the order of the layers in the plan. r,
+  [...layerWrapper.querySelectorAll("li")].reverse().forEach((obj) => {
     // create the orderedList of all the assets
     orderedObjs.push(obj.dataset.objectid);
   });
@@ -176,13 +206,13 @@ function saveLayerOrder(strapiUrl, planId, layerWrapper) {
     config.strapi.url,
     "plans",
     data,
-    Number(plan.dataset.strapId)
+    Number(plan.dataset.strapId),
   ).then((response) => {
     if (response.status == 200) {
       // reorder on screen when the response is ok
       orderedObjs.forEach((assetInOrder) => {
         const element = plan.querySelector(
-          `.asset[data-objectid="${assetInOrder}"]`
+          `.asset[data-objectid="${assetInOrder}"]`,
         );
         plan.appendChild(element);
       });
@@ -202,3 +232,44 @@ export {
   appendLayer,
   layerInteract,
 };
+
+// TODO: the same thing with custom properties in  css
+// --anchor-vertical and --anchor-horizontal
+// this way you keep only one thing.
+// hide element in style sheet and save it
+// export function hideElement(obj) {
+//   const visibility = checkPropertyValueFromStylesheet(
+//     obj,
+//     document.querySelector(".activatedStylesheet"),
+//     "visibility",
+//   );
+//   if (visibility == "hidden") {
+//     setPropertyInStylesheet(
+//       obj,
+//       document.querySelector(".activatedStylesheet"),
+//       "visibility",
+//       `visible`,
+//     );
+//   } else {
+//     setPropertyInStylesheet(
+//       obj,
+//       document.querySelector(".activatedStylesheet"),
+//       "visibility",
+//       `hidden`,
+//     );
+//   }
+
+// document.querySelector(".activatedStyle").textContent = stringify()
+// }
+
+// parseSelectedCSS
+// findObject in CSS
+// toggle visibility 100% or 0
+// update the stylesheet on the server
+// update the stylesheet locally
+//
+//
+
+// hide element
+// setPropertyInStylesheet()
+//

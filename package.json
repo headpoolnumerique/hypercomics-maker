@@ -30,16 +30,25 @@
   "dependencies": {
     "@bundled-es-modules/axios": "^0.27.2",
     "axios": "^1.1.3",
+    "bytes": "^3.1.0",
+    "css": "^3.0.0",
     "esbuild": "^0.15.13",
+    "inherits": "^2.0.4",
     "install": "^0.13.0",
     "interactjs": "^1.10.17",
+    "live-server": "^1.2.2",
+    "matcha": "^0.7.0",
+    "mocha": "^8.0.1",
     "nanoid": "^4.0.0",
     "npm": "^9.1.2",
     "nunjucks-cli": "^1.0.0",
     "postcss-cli": "^10.0.0",
     "postcss-import": "^15.0.0",
     "qs": "^6.11.0",
-    "sortablejs": "^1.15.0"
+    "should": "^13.2.3",
+    "sortablejs": "^1.15.0",
+    "source-map": "^0.6.1",
+    "source-map-resolve": "^0.6.0"
   },
   "devDependencies": {
     "browser-sync": "^2.27.5",

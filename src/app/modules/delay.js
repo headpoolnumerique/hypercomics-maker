@@ -4,7 +4,7 @@ import { updateData } from "./dataManagement";
 async function handleDelays() {
   // debounce to make sure we’re not pushing too much to the server
 
-  const plandelay = document.querySelector("#planDelay");
+  const plandelay = document.querySelector("#minimaldelay");
   plandelay.addEventListener("input", async (event) => {
     const value = event.target.value;
     if (!value || isNaN(value)) return console.log("the delay is not a number");
@@ -48,7 +48,7 @@ function debounce(callback, delay) {
 
 function updateDelayUI() {
   const plan = document.querySelector(".shown");
-  document.querySelector("#planDelay").value = plan.dataset.delay;
+  document.querySelector("#minimaldelay").value = plan.dataset.delay;
 }
 
 export { handleDelays, updateDelayUI };

@@ -1,3 +1,107 @@
+TODO NOW
+
+1. update the backend api for the stylesheet
+2. automatically create a stylesheet if empty
+3. set it!
+
+
+1. set the stylesheet as object using css.js
+
+1b. when loading the sequence, load up the style element with the active stylesheet.
+
+2. create a stylesheet on load, link it to the sequence
+
+3. fill the sequence everytime an element is clicked / moved
+
+4. create a global json object that contains the stylesheet, 
+
+5 when moving an object, update the stylesheet, push the new stylesheet (the css rule.)
+
+6. change stylesheet, replace the content of the style element with the new stylesheet.
+
+! the style on the object is not used anymore.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+when creating a project, create a sequence so you dont post when opening the sequence.
+
+TO DO now.
+
+
+when select another stylesheet deselect everything
+
+on load: load the data from the stylesheet.
+on move: load data from the stylesheet.
+when changing stylesheet. load data from the stylesheet.
+
+function (updateAllObject  should run every time we change the style sheet as faking responsiveness)
+
+
+
+
+PROBLEM
+
+when you change the location of an object with the ui, and you try to move it, it will reset to the previous location. 
+FIX: when running the input, update the data on the screen.
+
+
+screen size = 
+
+1 screeen size creates a stylesheet
+with an id.
+
+everytime you move an element, its styles get saved to the stylesheet
+if you open the style sheet, it will add the css rules to every element.
+
+so you don’t save the width / height for each element
+but you actually save the styles
+
+and reapply to all elements when you change the screens.
+
+so you don’t need to back up the size / location of element on the fly.
+
+
+
+
+
+Screen sizes.
+
+when you want to add a screen size, 
+add a screen size.
+set its width and height
+auto fill with the width and height available on screen, and set max or minus
+update that screen size system
+
+
+
+anchor: top and bottom need to be set separately.
+
+
+# the screensize includes a css thing that 
+
+
+
+
+
 
 ## impossible question with the prototype
 
@@ -5,8 +109,9 @@ Use the same image multiple times on the layout? what should we do about it? the
 How can we do that?
 
 how to manage the css?
-
 the css we wanna save is a bunch of data that belong to the sequence. 
+and the lines are created by updating the element.
+
 
 
 we want to set the CSS not to the sequence, but to the plan.

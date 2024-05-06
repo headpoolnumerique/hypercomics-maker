@@ -10,23 +10,14 @@
   resize: both;
 }
 
-.moveable h2 {
-  padding: 0.3em 2ch;
-  background: black;
-  font-size: 0.8em;
-  letter-spacing: 0.2ch;
-  text-transform: uppercase;
-  color: white;
-  margin-bottom: 1em;
-}
-
-button,  #returnhome {
+button,
+#returnhome {
   border: 1px solid var(--color-body);
   background: white;
   padding: 0.2em 1ch;
 }
 
-:is(button, #returnhome):hover  {
+:is(button, #returnhome):hover {
   background: var(--color-main);
   color: white;
 }
@@ -39,33 +30,33 @@ button,  #returnhome {
   right: 1em;
   z-index: 999999998;
 }
-#homeButtonsList :is(button, #returnhome)  {
+
+#homeButtonsList :is(button, #returnhome) {
   text-decoration: none;
   text-transform: uppercase;
+  font-weight: 800;
   margin-left: 4ch;
-  border: 2px solid black;
-  border-bottom: 6px solid black;
+  /* border: 2px solid black; */
+  /* border-bottom: 6px solid black; */
 }
 
 .hide {
   display: none !important;
 }
 
-.manip button {
+.manip input[type="number"] {
+  /* border: 0px solid transparent; */
+  /* border-bottom: 2px solid black; */
+  /* max-width: 10ch; */
+  /* display: inline; */
 }
 
-.manip input[type='number'] {
-  border: 0px solid transparent;
-  border-bottom: 2px solid black;
-  max-width: 10ch;
-  display: inline;
-}
-.manip label {
-}
+.manip label {}
 
 .manip details {
   margin-bottom: 2em;
 }
+
 .manip details summary {
   border-bottom: 1px solid black;
   margin-bottom: 0.5em;
@@ -90,6 +81,7 @@ button,  #returnhome {
 .manip .location input {
   grid-column: input;
 }
+
 .manip .zindex {
   display: flex;
 }
@@ -110,5 +102,173 @@ button,  #returnhome {
 }
 
 .toDrag {
-  box-shadow: 0 0 0 5px #eee; 
+  box-shadow: 0 0 0 5px #eee;
 }
+
+/* ui in blocks */
+
+.block-ui {
+  padding: 0 2ch 2em;
+  overflow-y: auto;
+  max-height: 80vh;
+}
+
+.block-ui ul {
+  /* margin: 4em 0; */
+  padding: 0;
+}
+
+.block-ui button {
+  background: #ccc;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin: auto;
+}
+
+.block-ui h2 {
+  padding: 0.3em 2ch;
+  background: black;
+  font-size: 0.8em;
+  letter-spacing: 0.2ch;
+  text-transform: uppercase;
+  color: white;
+  margin-bottom: 1em;
+  margin-top: 2em;
+  position: sticky;
+  top: 0;
+}
+
+block-ui h3 {
+  text-transform: uppercase;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 400;
+}
+
+.block-ui li.header {
+  font-weight: 800;
+  margin-bottom: 0.3em;
+}
+
+/* /css changes */
+
+#styleWrapper {
+  display: block;
+  position: fixed;
+  top: 2em;
+  left: 2em;
+  max-height: 80vh;
+  width: 50ch;
+  background: lightgrey;
+  font-size: 0.8em;
+  font-family: monospace;
+}
+
+#styleWrapper style {
+  /* position: absolute; */
+  white-space: pre-wrap;
+  width: 100%;
+  display: block;
+  /* background: #cccd; */
+  border-bottom: 2px solid white;
+  padding: 0.5em 0;
+}
+
+#styleWrapper style.activatedStyle {
+  background: white;
+}
+
+.closeTo {
+  background: lightgrey;
+}
+
+#styleWrapper {}
+
+#styleWrapper style:hover::after {
+  content: attr(id);
+  color: white;
+  background: grey;
+}
+
+#contextualUI .block {
+  display: grid;
+  grid-template-rows: repeat(3, 10ch);
+  grid-template-columns: repeat(3, 10ch);
+  gap: 0.5em 2ch;
+
+  /* grid-template-areas: ". top . ", "left block right", ". bottom ."; */
+}
+
+#contextualUI input {
+  max-width: 10ch;
+  display: block;
+}
+
+.input-left {
+  grid-area: left;
+  grid-row: 2;
+  grid-column: 1;
+  justify-self: end;
+}
+
+.input-right {
+  grid-area: right;
+  grid-row: 2;
+  grid-column: 3;
+}
+
+.input-top {
+  grid-row: 1;
+  grid-column: 2;
+  align-items: end;
+}
+
+.input-bottom {
+  grid-row: 3;
+  grid-column: 2;
+}
+
+#input-element {
+  grid-row: 2;
+  grid-column: 2;
+  background: lightgrey;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+/*show the contextual id only if an element is selected.*/
+
+#contextualUI {
+  visibility: hidden;
+}
+
+:has(.asset-selected) #contextualUI {
+  visibility: visible
+}
+
+#selectedId {
+  display: none;
+}
+:has(.asset-selected) #selectedId {
+  display: block;
+}
+
+:root{
+  --hidden-opacity: .01;
+}
+
+.asset-selected
+
+.asset-selected:hover {
+  --hidden-opacity: .9;
+
+}
+
+
+
+/*visibility when active*/ 
+
+

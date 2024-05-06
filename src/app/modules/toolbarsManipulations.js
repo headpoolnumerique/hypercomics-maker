@@ -6,27 +6,32 @@ function toggleToolbars() {
     .addEventListener("click", function (event) {
       switch (event.target.id) {
         case "showLayers":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#layer-space"));
           break;
+        case "showScreens":
+          // console.log(event.target.id);
+          toggleToolbar(document.querySelector("#screen-ui"));
+          break;
         case "showSequence":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#sequence"));
           break;
         case "showContextual":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#contextualUI"));
           break;
         case "showAssets":
-          console.log(event.target.id);
+          // console.log(event.target.id);
           toggleToolbar(document.querySelector("#assets"));
           break;
         case "showMontage":
-          console.log(event.target.id);
           toggleToolbar(document.querySelector("#banc-montage"));
           break;
+        case "showstylewrapper":
+          toggleToolbar(document.querySelector("#styleWrapper"));
+          break;
         case "showPelure":
-          console.log(event.target.id);
           if (document.querySelector(".oldShow")) {
             document.querySelector(".oldshown")?.classList.remove(".oldshown");
           }
@@ -37,13 +42,15 @@ function toggleToolbars() {
           break;
         default:
           console.log(event.target.id);
-          console.log("not there yet");
+          console.log("this menu does nothing yet");
       }
     });
 }
 
 function toggleToolbar(toolbarElement) {
   toolbarElement.classList.toggle("hide");
+  toolbarElement.style.top = "20%";
+  toolbarElement.style.left = "20%";
 }
 
 function moveToolbars() {
