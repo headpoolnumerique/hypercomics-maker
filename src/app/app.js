@@ -19,6 +19,7 @@ import {
   contextUI,
   layerList,
   saveStylesheetButton,
+  buttonDeselectAsset,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
@@ -61,6 +62,11 @@ function listeners() {
   document.querySelector("#deleteAllPlans")?.addEventListener("click", () => {
     deleteAllPlans();
   });
+
+  // deselect when click the deselect button
+  buttonDeselectAsset.addEventListener("click", function(event) {
+    deselect(".asset-selected")
+  })
 
   document.querySelector("#duplicatePlan").addEventListener("click", () => {
     const sequenceId = Number(
@@ -120,6 +126,7 @@ function listeners() {
       }
     }
   });
+
 
   // select object if it’s an image
   preview.addEventListener("click", (event) => {

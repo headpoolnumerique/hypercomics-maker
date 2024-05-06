@@ -272,3 +272,17 @@ block-ui h3 {
 /*visibility when active*/ 
 
 
+
+#deselectAsset {
+  display: none;
+  position:absolute;
+  bottom: 3em;
+  left: 50%;
+  margin-left: -4%;
+  height: 2em;
+  z-index:999999999 ;
+}
+
+&:has(.asset-selected) #deselectAsset {
+  display: block;
+}

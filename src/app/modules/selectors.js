@@ -58,3 +58,6 @@ export const saveStylesheetButton = document.querySelector("#saveStylesheet")
 
 export const inputMakeVisible = document.querySelector("#input-show")
 export const inputMakeHidden = document.querySelector("#input-hide")
+
+
+export const buttonDeselectAsset = document.querySelector("#deselectAsset")
