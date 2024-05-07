@@ -118,4 +118,39 @@ async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
     });
 }
 
+export function zooming() {
+  document.querySelector("#zoomin").addEventListener("click", function() {
+    document
+      .querySelector("main")
+      .style.setProperty(
+        "--zoom-factor",
+        parseFloat(
+          document
+            .querySelector("main")
+            .style.getPropertyValue("--zoom-factor"),
+        ) + 0.1,
+      );
+  });
 
+  document.querySelector("#zoomout").addEventListener("click", function() {
+    document
+      .querySelector("main")
+      .style.setProperty(
+        "--zoom-factor",
+        parseFloat(
+          document
+            .querySelector("main")
+            .style.getPropertyValue("--zoom-factor"),
+        ) - 0.1,
+      );
+  });
+
+  document.querySelector("#zoomreset").addEventListener("click", function() {
+    document
+      .querySelector("main")
+      .style.setProperty(
+        "--zoom-factor",
+        1
+      );
+  });
+}
