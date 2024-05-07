@@ -438,8 +438,6 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
       },
     );
 
-    console.log(beforeStyle)
-
     if (beforeStyle) {
       beforeStyle.insertAdjacentHTML("beforebegin", styleEl);
     } else {
@@ -461,7 +459,7 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
 function getRatioFromStylesheet(stylesheet) {
   return (
     stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight
-  ).toFixed(2);
+   + .01).toFixed(2);
 }
 
 export function sortByRatio(stylesheets, reverse) {
