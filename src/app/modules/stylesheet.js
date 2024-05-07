@@ -72,7 +72,7 @@ export async function stylesheetmanager(obj) {
 /** event listener for the stylesheet ui
  */
 export async function stylesheetListeners() {
-  screensList.addEventListener("click", function (event) {
+  screensList.addEventListener("click", function(event) {
     /* remove stylesheet (disable in 2 times )*/
     // cancel remove if you click on something else
     if (!event.target.classList.contains("remove")) {
@@ -125,7 +125,7 @@ export async function stylesheetListeners() {
 populateStylesheetButton.addEventListener("click", kickstartStylesheet);
 
 // create a stylesheet: add it to the stylesheet list, and push content
-newScreenForm.addEventListener("submit", async function (event) {
+newScreenForm.addEventListener("submit", async function(event) {
   event.preventDefault();
   // if (!validateInputs()) return console.log("screen size input are not valid");
   // validation is done in the html, and we don’t use the ratio
@@ -428,22 +428,20 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
   const stylelist = stylesWrapper.querySelectorAll("style");
 
   if (stylelist.length > 0) {
-    const beforeStyle = [...stylesWrapper.querySelectorAll("style")].findLast(
+    const beforeStyle = [...stylesWrapper.querySelectorAll("style")].find(
       (style) => {
-        // console.log(
-        //   style.dataset.width / style.dataset.height >=
-        //     stylesheet.attributes.maxwidth /
-        //       stylesheet.attributes.defaultHeight,
-        // );
+        // return el.dataset.maxwidth / el.dataset.defaultHeight > ratio;
         return (
-          style.dataset.width / style.dataset.height >=
+          style.dataset.width / style.dataset.height < 
           stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight
         );
       },
     );
 
+    console.log(beforeStyle)
+
     if (beforeStyle) {
-      beforeStyle.insertAdjacentHTML("afterend", styleEl);
+      beforeStyle.insertAdjacentHTML("beforebegin", styleEl);
     } else {
       stylesWrapper.insertAdjacentHTML("beforeend", styleEl);
     }
@@ -761,7 +759,7 @@ export async function kickstartStylesheet() {
       default: true,
       sequenceId: sequenceNumber.textContent,
     },
-    
+
     // {
     //
     //   maxwidth: "1368",
@@ -775,8 +773,8 @@ export async function kickstartStylesheet() {
 
   resolutions.map(async (rez) => {
     // const response = await createData(config.strapi.url, "stylesheets", );
-
-    const response = await axios
+    
+    const response =  axios
       .post(`${config.strapi.url}/api/stylesheets/`, {
         data: rez,
       })
@@ -945,7 +943,9 @@ now set the declarations to the object/stylesheet on end on both resizable and m
 // NOW DO THE LINE 4
 
 export function updateDeclaration(selectedId, declarations) {
-  const parsedCSS = parse(document.querySelector(".activatedStyle").textContent);
+  const parsedCSS = parse(
+    document.querySelector(".activatedStyle").textContent,
+  );
   /* if there is no declarations for this id*/
   if (!isSelectorExistInContainers(parsedCSS, selectedId)) {
     // get the rule with the
