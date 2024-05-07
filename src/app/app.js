@@ -31,12 +31,17 @@ import {
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
 import { saveAllStylesheet } from "./modules/stylesheet.js";
+import { zooming } from "./modules/preview.js";
 
 startApp();
 
 // list all the things
 //Event and binds
 function listeners() {
+  // zoom system
+
+  zooming();
+
   //show hide montage
   document.querySelector("#showMontage").addEventListener("click", () => {
     showHideBlock(montageScreen);
@@ -65,8 +70,8 @@ function listeners() {
 
   // deselect when click the deselect button
   buttonDeselectAsset.addEventListener("click", function(event) {
-    deselect(".asset-selected")
-  })
+    deselect(".asset-selected");
+  });
 
   document.querySelector("#duplicatePlan").addEventListener("click", () => {
     const sequenceId = Number(
@@ -106,7 +111,6 @@ function listeners() {
 
       const assetId = e.target.dataset.assetid;
 
-
       let strapisResponse = await connectObjectToPlan(
         config.strapi.url,
         planNumber,
@@ -126,7 +130,6 @@ function listeners() {
       }
     }
   });
-
 
   // select object if it’s an image
   preview.addEventListener("click", (event) => {

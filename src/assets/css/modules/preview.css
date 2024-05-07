@@ -14,14 +14,14 @@
 
 #previewNext {
   position: absolute;
-  right: 0;
+  right: -5em;
   top: 48%;
   z-index: 1000;
 }
 
 #previewPrevious {
   position: absolute;
-  left: 0;
+  left: -5em;
   top: 48%;
   z-index: 1000;
 }
@@ -32,8 +32,6 @@
   /* opacity: .9; */
 }
 
-
-
 .activeStylesheet {
   font-weight: 800;
 }
@@ -43,7 +41,20 @@
   color: red;
 }
 
+main {
+  overflow-x: scroll;
+  max-width: 100%;
+  background: orange;
+}
+
 #previewScreen {
   container-name: preview;
   container-type: size;
+}
+
+#preview {
+    transform:  scale(var(--zoom-factor, 1));
+}
+#zoombuttons {
+  position: fixed;
 }
