@@ -106,7 +106,8 @@ export {
 async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
   return axios
     .get(
-      `${serverUrl}/api/${collection}/${id}${populatedeep ? `?populate=deep,5` : ``
+      `${serverUrl}/api/${collection}/${id}${
+        populatedeep ? `?populate=deep,5` : ``
       }`,
     )
     .then((response) => {
@@ -119,7 +120,7 @@ async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
 }
 
 export function zooming() {
-  document.querySelector("#zoomin").addEventListener("click", function() {
+  document.querySelector("#zoomin").addEventListener("click", function () {
     document
       .querySelector("main")
       .style.setProperty(
@@ -130,9 +131,14 @@ export function zooming() {
             .style.getPropertyValue("--zoom-factor"),
         ) + 0.1,
       );
+    previewScreen.scrollIntoView({
+      behavior: "auto",
+      block: "center",
+      inline: "center",
+    });
   });
 
-  document.querySelector("#zoomout").addEventListener("click", function() {
+  document.querySelector("#zoomout").addEventListener("click", function () {
     document
       .querySelector("main")
       .style.setProperty(
@@ -143,14 +149,19 @@ export function zooming() {
             .style.getPropertyValue("--zoom-factor"),
         ) - 0.1,
       );
+    previewScreen.scrollIntoView({
+      behavior: "auto",
+      block: "center",
+      inline: "center",
+    });
   });
 
-  document.querySelector("#zoomreset").addEventListener("click", function() {
-    document
-      .querySelector("main")
-      .style.setProperty(
-        "--zoom-factor",
-        1
-      );
+  document.querySelector("#zoomreset").addEventListener("click", function () {
+    document.querySelector("main").style.setProperty("--zoom-factor", 1);
+    previewScreen.scrollIntoView({
+      behavior: "auto",
+      block: "center",
+      inline: "center",
+    });
   });
 }
