@@ -83,18 +83,11 @@ main#appWrap {
 
 /* pelure d’oignon */
 
-.showPrevious #previewScreen article.oldshown {
+.showPrevious .plan:has(+ .shown) {
   display: block !important;
-}
-
-.showPrevious #previewScreen article.oldshown * {
+  background: orange;
   opacity: 0.4;
-  /* background: cyan; */
   mix-blend-mode: multiply;
-}
-
-.showPrevious .oldshown+.shown {
-  opacity: 0.6;
 }
 
 /*keep the button up.*/

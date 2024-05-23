@@ -32,13 +32,14 @@ function toggleToolbars() {
           toggleToolbar(document.querySelector("#styleWrapper"));
           break;
         case "showPelure":
-          if (document.querySelector(".oldShow")) {
-            document.querySelector(".oldshown")?.classList.remove(".oldshown");
-          }
-          document.querySelector("main").classList.toggle("showPrevious");
-          document
-            .querySelector(".shown")
-            .previousElementSibling?.classList.add("oldshown");
+          document.querySelector("#previewScreen").classList.toggle("showPrevious")
+          // if (document.querySelector(".oldShow")) {
+          //   document.querySelector(".oldshown")?.classList.remove(".oldshown");
+          // }
+          // document.querySelector("main").classList.toggle("showPrevious");
+          // document
+          //   .querySelector(".shown")
+          //   .previousElementSibling?.classList.add("oldshown");
           break;
         default:
           console.log(event.target.id);
