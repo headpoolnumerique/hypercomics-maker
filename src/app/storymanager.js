@@ -32,6 +32,7 @@ async function start() {
   window.deleteProject = deleteProject;
   window.addSequence = addSequence;
   window.deleteSequence = deleteSequence;
+  window.selectToDelete = selectToDelete;
 }
 
 // load project
@@ -44,8 +45,16 @@ function loadProjects(data) {
   });
 }
 
+//confirmation to remove the existing project
+function selectToDelete(id,title) {
+  document.querySelector(".deletemodal").querySelector(".projectid").textContent = id;  
+  document.querySelector(".deletemodal").querySelector(".title").textContent = title;  
+  document.querySelector(".deletemodal").showModal()
+}
+
 // delete project
 function deleteProject(id) {
+  // are you sure?
   // archive on strapi
   archiveProject(id);
   // remove the project
@@ -59,13 +68,10 @@ async function renderProject(project) {
   // insert project in the project list
   projectsList.insertAdjacentHTML(
     "beforeend",
-    ` <li> <datetime>${renderDate(
-      project.attributes.updatedAt
-    )}</datetime> <a href="#project${project.id}">${
-      project.attributes.title
-    }</a> 
-    <button onclick="deleteProject(${project.id})">remove project</button>
-    </li>`
+    ` <li data-title="${project.attributes.title}"><datetime>${renderDate( project.attributes.updatedAt,)}</datetime>
+        <a href="#project${project.id}">${project.attributes.title}</a> 
+        <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">remove project</button>
+      </li>`,
   );
 
   // project for each sequence: create a list imenm
@@ -74,17 +80,15 @@ async function renderProject(project) {
     return generateSequence(sequence, project);
   });
 
-  const projectSequenceContent = `<section id="project${
-    project.id
-  }" class="project">
+  const projectSequenceContent = `<section id="project${project.id
+    }" class="project">
   <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
   <button  data-projectid="${project.id}"
 onclick="addSequence(${project.id})"
 class="createSequence" >Add a sequence</button>
-  <ul class="sequences-list" id="sequenceList${
-    project.id
-  }">${renderedSequences.join("")}</ul>
+  <ul class="sequences-list" id="sequenceList${project.id
+    }">${renderedSequences.join("")}</ul>
   </section>`;
 
   projectSequence.innerHTML += projectSequenceContent;
@@ -115,12 +119,12 @@ async function addSequence(projectNumber) {
 <a href="reader.html?sequence=${newSeq.data.data.id}">preview</a>
 <button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})" >delete</button>
 </div> 
-</li>`
+</li>`,
   );
 }
 
 async function deleteSequence(projectId, sequenceId) {
   removeSequenceFromProject(projectId, sequenceId).then(
-    event.target.closest("li").remove()
+    event.target.closest("li").remove(),
   );
 }

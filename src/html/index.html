@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title></title>
@@ -7,6 +7,7 @@
     <link href="css/storymanager.css" rel="stylesheet" />
     <script type="module" src="/js/storymanager.js"></script>
   </head>
+
   <body>
     <aside id="loading">
       <div class="box">
@@ -55,5 +56,14 @@
         <input type="submit" id="submit" value="submit" />
       </form>
     </section>
+
+    <dialog class="deletemodal">
+      <p class="text">
+        Do you want to delete project <span class="projectid"></span>:
+        <strong class="title"></strong>
+      </p>
+      <button id="deleteProject">Remove project</button>
+      <button onclick="this.closest('.deletemodal').close()">Cancel</button>
+    </dialog>
   </body>
 </html>

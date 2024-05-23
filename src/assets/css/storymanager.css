@@ -101,6 +101,7 @@ header h1 {
   display: block;
   scroll-margin: 5em;
 }
+
 .project input {
   display: block;
   margin-bottom: 2em;
@@ -129,10 +130,12 @@ datetime {
   gap: 2em 0;
   grid-template-columns: [id-start] 4ch [id-end title-start] 70% [title-end buttons-start] 1fr [buttons-end];
 }
+
 .project ul span.sequence-id {
   font-size: 0.8em;
   margin-right: 4ch;
 }
+
 .project ul span.sequence-title {
   font-weight: 500;
 }
@@ -142,5 +145,15 @@ datetime {
   margin-bottom: 2em;
   color: inherit;
   text-decoration: none;
+}
+
+
+.deletemodal {
+  background:white;
+  padding: 1rem;
+}
+
+::backdrop {
+  background: black;
 }
 
