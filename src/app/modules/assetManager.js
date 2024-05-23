@@ -48,9 +48,12 @@ function replaceAsset(asset) {
 //   })
 // }
 
+
+
 export function liveSearch() {
   let elements = document.querySelectorAll("#assetsList li");
   let elementList = document.querySelector("#assetsList");
+
 
   let search_query = document.querySelector("#assetsFilter").value;
   if (search_query.length < 1) {
@@ -66,7 +69,7 @@ export function liveSearch() {
   //Use textContent for including hidden elements
   for (var i = 0; i < elements.length; i++) {
     console.log(elements[i].textContent);
-    console.log(search_query.toLowerCase());
+    console.log(search_query.toLowerCase().trim());
     console.log(
       elements[i].textContent
         .toLowerCase()
@@ -82,4 +85,7 @@ export function liveSearch() {
   }
 }
 
+
+
 // upload when dropping the files in the content
+
