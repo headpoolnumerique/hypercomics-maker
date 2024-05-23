@@ -7,7 +7,7 @@ import {
   sequenceNumber,
   sequencePreview,
 } from "./selectors.js";
-import { addAssetToTheAssetManager } from "./assetManager";
+import { addAssetToTheAssetManager, liveSearch } from "./assetManager";
 import {
   moveToolbars,
   resizeMontagePaneVertically,
@@ -52,7 +52,16 @@ async function startup(url = document.location.href) {
   updatefromui();
   handleVisilibity();
   await stylesheetmanager(response.data);
-  
+
+  //filters to put in their own function
+  document.querySelector("#filterreset").addEventListener("click", (e) => {
+    document.querySelector("#assetsFilter").value = "";
+    liveSearch();
+  });
+  document.querySelector("#assetsFilter").addEventListener("change", (e) => {
+    liveSearch();
+  });
+
   //lol
   // document.querySelector("#anchorTop").addEventListener("click", function() {
   //   setPropertyInStylesheet(document.querySelector(".asset-selected"), document.querySelector(".activatedStylesheet"), "--funz", "test")
@@ -114,22 +123,18 @@ async function fillPlan(plan) {
 
       planToFill.insertAdjacentHTML(
         "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-          object.id
+        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id
         }" data-planid="${plan.id}"
         data-assetid="${asset.id}" src="${asset.attributes.location}"
-        data-anchor-horizontal="${
-          asset.attributes.anchorVertical
-            ? asset.attributes.anchorVertical
-            : "left"
+        data-anchor-horizontal="${asset.attributes.anchorVertical
+          ? asset.attributes.anchorVertical
+          : "left"
         }" 
-        data-anchor-vertical="${
-          asset.attributes.anchorHorizontal
-            ? asset.attributes.anchorHorizontal
-            : "top"
+        data-anchor-vertical="${asset.attributes.anchorHorizontal
+          ? asset.attributes.anchorHorizontal
+          : "top"
         }"
         class= "asset" >`,
-
       );
     });
   });
@@ -138,6 +143,3 @@ async function fillPlan(plan) {
 }
 
 export { startup, fillPlan };
-
-
-

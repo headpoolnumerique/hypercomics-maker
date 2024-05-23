@@ -10,7 +10,6 @@
   min-height: 400px;
   max-height: 70vh;
   overflow: auto;
-
 }
 
 #assets #assetsList {
@@ -32,7 +31,7 @@
   border-bottom: 1px solid grey;
   gap: 0 2ch;
   align-items: end;
-  padding-bottom: .4em;
+  padding-bottom: 0.4em;
 }
 
 #assets #assetsList li img {
@@ -40,4 +39,27 @@
   border: 1px solid grey;
   cursor: pointer;
   max-height: 100px;
+}
+
+#assets h3 {
+  font-size: 1em;
+  margin-top: 2em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+#filterreset {
+  display: none;
+}
+
+#filterreset:has(+ .searchmode) {
+  display: inline;
+}
+
+.searchmode li {
+  display: none !important;
+}
+
+.searchmode .is-found {
+  display: grid !important;
 }
