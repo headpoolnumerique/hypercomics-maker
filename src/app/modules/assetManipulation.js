@@ -261,9 +261,11 @@ function moveToLayer(object, plan, position) {
 deteleAsset
 @params domObject asset - the removedasset 
 */
-async function deleteObject() {
+export async function deleteObject() {
   const plan = document.querySelector("#previewScreen article.shown");
   const object = document.querySelector(".asset-selected");
+
+  console.log(object)
   // send info to strapi
   removeObjectFromPlan(
     config.strapi.url,
@@ -388,7 +390,7 @@ export function updateTheUI(element) {
   //hide element if the object is set bottom / right?
 }
 
-export { deleteObject, interactObject, moveToLayer };
+export { interactObject, moveToLayer };
 
 // TO DO: resize from the bottom/right edge should stick to the right move
 // this may be impossible. THe example use the translate to define the location. maybe we should keep it.

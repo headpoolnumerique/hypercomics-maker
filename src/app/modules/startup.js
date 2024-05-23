@@ -21,7 +21,7 @@ import {
 import { handleDelays } from "./delay.js";
 import { handleVisilibity, updatefromui } from "./objectManipulations";
 import { setPropertyInStylesheet, stylesheetmanager } from "./stylesheet.js";
-import { setAnchor } from "./assetManipulation.js";
+import { deleteObject, setAnchor } from "./assetManipulation.js";
 
 async function startup(url = document.location.href) {
   // use parameters to define the url of the project
@@ -52,6 +52,10 @@ async function startup(url = document.location.href) {
   updatefromui();
   handleVisilibity();
   await stylesheetmanager(response.data);
+
+  document
+    .querySelector("#deleteObject")
+    .addEventListener("click", deleteObject);
 
   //filters to put in their own function
   document.querySelector("#filterreset").addEventListener("click", (e) => {
