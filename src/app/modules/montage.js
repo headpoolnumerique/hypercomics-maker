@@ -27,7 +27,7 @@ function dragAndPlanReorder(wrappingElement, sequenceNumber) {
     selectedClass: "toDrag",
     multiDragKey: "shift", // Key that must be down for items to be selected
     avoidImplicitDeselect: true, // true - if you don't want to deselect items on outside click
-    onEnd: function (event) {
+    onEnd: function(event) {
       resetOrder(wrappingElement);
       // reorder the sequence preview
 
@@ -136,7 +136,7 @@ export async function deletePlan() {
       //show previousPlan if it exists
       if (previousPlan) {
         activatePlan(previousPlan);
-        updateLayers()
+        updateLayers();
       }
     })
     .catch((err) => {
@@ -199,29 +199,25 @@ async function addPlan(montageList, select = true) {
   if (!referencePlan) {
     montageList.insertAdjacentHTML(
       "beforeend",
-      `<li id="link-${response.data.data.id}"><a class=${
-        select ? "selected" : ""
+      `<li id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
       } href="#plan-${response.data.data.id}" >
     </a></li>`,
     );
     sequencePreview.insertAdjacentHTML(
       "beforeend",
-      `<article class="${select ? "shown" : ""}" id="plan-${
-        response.data.data.id
+      `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
       }" data-strap-id="${response.data.data.id}"></article>`,
     );
   } else {
     referencePlanLink.closest("li").insertAdjacentHTML(
       "afterend",
-      `<li  id="link-${response.data.data.id}"><a class=${
-        select ? "selected" : ""
+      `<li  id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
       } href="#plan-${response.data.data.id}" >
     </a></li>`,
     );
     referencePlan.insertAdjacentHTML(
       "afterend",
-      `<article class="${select ? "shown" : ""}" id="plan-${
-        response.data.data.id
+      `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
       }" data-strap-id="${response.data.data.id}"></article>`,
     );
   }
@@ -244,8 +240,7 @@ export async function duplicatePlan(
   sequenceId,
   select = true,
 ) {
-
-  document.querySelector("#loading").classList.remove("hide")
+  document.querySelector("#loading").classList.remove("hide");
 
   // show the loading
   //
@@ -305,40 +300,51 @@ export async function duplicatePlan(
         },
       };
 
-      await updateData(
-        config.strapi.url,
-        "sequences",
-        updatedData,
-        Number(sequenceNumber.textContent),
-      );
+      await axios
+        .put(
+          `${config.strapi.url}/api/sequences/${sequenceId}`,
+          {
+            data: { updatedData },
+          },
+        )
+        .then((response) => {
+          // console.log(response)
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+          return err;
+        });
+      // await updateData(
+      //   config.strapi.url,
+      //   "sequences",
+      //   updatedData,
+      //   Number(sequenceNumber.textContent),
+      // );
 
       // insert the new plan at the end, unless there is a position
       if (!referencePlan) {
         montageList.insertAdjacentHTML(
           "beforeend",
-          `<li  id="link-${response.data.data.id}"><a class=${
-            select ? "selected" : ""
+          `<li  id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
           } href="#plan-${response.data.data.id}" >
     </a></li>`,
         );
         sequencePreview.insertAdjacentHTML(
           "beforeend",
-          `<article class="${select ? "shown" : ""}" id="plan-${
-            response.data.data.id
+          `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
           }" data-strap-id="${response.data.data.id}"></article>`,
         );
       } else {
         referencePlanLink.closest("li").insertAdjacentHTML(
           "afterend",
-          `<li  id="link-${response.data.data.id}"><a class=${
-            select ? "selected" : ""
+          `<li  id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
           } href="#plan-${response.data.data.id}" >
     </a></li>`,
         );
         referencePlan.insertAdjacentHTML(
           "afterend",
-          `<article class="${select ? "shown" : ""}" id="plan-${
-            response.data.data.id
+          `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
           }" data-strap-id="${response.data.data.id}"></article>`,
         );
       }
@@ -350,7 +356,7 @@ export async function duplicatePlan(
   // 2. load all object with filter of the previous plan ID,
   const objectsOfThePlan = await axios
     .get(
-      `${config.strapi.url}/api/objects?populate=deep,5&filters[plan]=${planToDuplicateId}`,
+      `${config.strapi.url}/api/objects?populate=deep,3&filters[plan]=${planToDuplicateId}`,
     )
     .then((response) => {
       return response;
@@ -383,7 +389,7 @@ export async function duplicatePlan(
   });
 
   await axios
-    .get(`${config.strapi.url}/api/plans/${newPlanId}?populate=deep,5`)
+    .get(`${config.strapi.url}/api/plans/${newPlanId}?populate=deep,3`)
     .then((response) => {
       let plan = response.data.data;
       let planToFill = preview.querySelector(`#plan-${plan.id}`);
@@ -416,7 +422,7 @@ export async function duplicatePlan(
   });
   saveAllStylesheet();
 
-  document.querySelector("#loading").classList.add("hide")
+  document.querySelector("#loading").classList.add("hide");
   // previousAssets.forEach((entry, index) =>{
   //
   //
@@ -444,8 +450,7 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert a link to the plan in the montage panel
   montageList.insertAdjacentHTML(
     "beforeend",
-    `<li  id="link-${plan.id}"><a class="${
-      select ? "selected" : ""
+    `<li  id="link-${plan.id}"><a class="${select ? "selected" : ""
     }" href="#plan-${plan.id}"> 
 
   </a></li>`,
@@ -454,8 +459,7 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert the plan in the preview plan
   sequencePreview.insertAdjacentHTML(
     "beforeend",
-    `<article data-strap-id=${plan.id} class="plan ${
-      select ? "shown" : ""
+    `<article data-strap-id=${plan.id} class="plan ${select ? "shown" : ""
     }" id="plan-${plan.id}">
     </article>`,
   );
@@ -463,10 +467,4 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
 
 // move plan using drag and drop
 
-export {
-  addPlan,
-  deleteAllPlans,
-  selectLink,
-  renderPlan,
-  dragAndPlanReorder,
-};
+export { addPlan, deleteAllPlans, selectLink, renderPlan, dragAndPlanReorder };

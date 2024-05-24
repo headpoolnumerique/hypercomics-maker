@@ -73,11 +73,11 @@ function listeners() {
     deselect(".asset-selected");
   });
 
-  document.querySelector("#duplicatePlan").addEventListener("click", () => {
+  document.querySelector("#duplicatePlan").addEventListener("click", async () => {
     const sequenceId = Number(
       document.querySelector("#sequenceNumber").textContent,
     );
-    duplicatePlan(
+    await duplicatePlan(
       montageList,
       document.querySelector(".shown")?.dataset.strapId,
       sequenceId,
