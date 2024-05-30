@@ -56,7 +56,7 @@ function selectLayer(layerWrapper = "layerList", id) {
 
 function layerInteract(layerWrapper = layerList) {
   // layer buttons
-  zindexInteraction?.addEventListener("click", function(event) {
+  zindexInteraction?.addEventListener("click", function (event) {
     const asset = previewScreen.querySelector(".asset-selected"),
       plan = previewScreen.querySelector(".shown");
     switch (event.target.id) {
@@ -78,7 +78,7 @@ function layerInteract(layerWrapper = layerList) {
   });
 
   // layer selection, hide/show,. deletion
-  layerWrapper.addEventListener("click", function(e) {
+  layerWrapper.addEventListener("click", function (e) {
     deselect(".selectedLayer");
     const target = e.target;
 
@@ -162,7 +162,7 @@ function reorderLayer(wrappingElement) {
     handle: ".moveIcon", //handle for the sorting block
 
     // reorder layer and push the new list to the db
-    onEnd: function(event) {
+    onEnd: function (event) {
       console.log(event);
       saveLayerOrder(
         config.strapi.url,
@@ -207,17 +207,22 @@ function saveLayerOrder(strapiUrl, planId, layerWrapper) {
     "plans",
     data,
     Number(plan.dataset.strapId),
-  ).then((response) => {
-    if (response.status == 200) {
-      // reorder on screen when the response is ok
-      orderedObjs.forEach((assetInOrder) => {
-        const element = plan.querySelector(
-          `.asset[data-objectid="${assetInOrder}"]`,
-        );
-        plan.appendChild(element);
-      });
-    }
-  });
+    false,
+  )
+    .then((response) => {
+      if (response.status == 200) {
+        // reorder on screen when the response is ok
+        orderedObjs.forEach((assetInOrder) => {
+          const element = plan.querySelector(
+            `.asset[data-objectid="${assetInOrder}"]`,
+          );
+          plan.appendChild(element);
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   // get the plan id
   // rest the pln order
