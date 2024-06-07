@@ -238,7 +238,6 @@ block-ui h3 {
   display: block;
 }
 
-
 /*show the contextual id only if an element is selected.*/
 
 #contextualUI {
@@ -246,41 +245,35 @@ block-ui h3 {
 }
 
 :has(.asset-selected) #contextualUI {
-  visibility: visible
+  visibility: visible;
 }
 
 #selectedId {
   display: none;
 }
+
 :has(.asset-selected) #selectedId {
   display: block;
 }
 
-:root{
-  --hidden-opacity: .01;
+:root {
+  --hidden-opacity: 0.01;
 }
 
-.asset-selected
-
-.asset-selected:hover {
-  --hidden-opacity: .9;
-
+.asset-selected .asset-selected:hover {
+  --hidden-opacity: 0.9;
 }
 
-
-
-/*visibility when active*/ 
-
-
+/*visibility when active*/
 
 #deselectAsset {
   display: none;
-  position:absolute;
+  position: absolute;
   bottom: 3em;
   left: 50%;
   margin-left: -4%;
   height: 2em;
-  z-index:999999999 ;
+  z-index: 999999999;
 }
 
 &:has(.asset-selected) #deselectAsset {

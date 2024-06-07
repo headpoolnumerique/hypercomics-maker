@@ -1006,7 +1006,7 @@ export function cloneStylesheetRules(stylesheetObj, previousId, newId) {
   parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
     if (!rule.selectors.includes(`#${previousId}`)) return;
     rule.declarations.forEach((declaration) => {
-      console.log(declaration);
+      // console.log(declaration);
       declarations.push(declaration);
     });
   });

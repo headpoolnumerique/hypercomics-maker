@@ -240,39 +240,40 @@ export async function duplicatePlan(
   sequenceId,
   select = true,
 ) {
+  //  what needs to happen
+  //  1. create a new plan and put it on the page
+  //  2. store all the objects on the plan
+  //  3. for each obj.
+  //     => create a new element in strapi with the exaxt same data
+  //     => put that element on the screen
+  //     => the stored object include the styles.
+  //  3. for each object, add the element on the panel,
+  //  3. create a new
+
+  // show the loading while we duplicate because there may be a bit of back and forth
   document.querySelector("#loading").classList.remove("hide");
 
-  // show the loading
-  //
+  // 1. backup the elements
 
-  // backup the styles for all the existing element of the plan to use at the end
-  //
-  const previousAssets = [];
-  document.querySelectorAll(".shown .asset").forEach((a) => {
-    previousAssets.push(a);
-  });
-
-  console.log(previousAssets);
-
-  // find the position of the plan in the listing
+  // 1. duplicate the plan and put it at its right place
   let position;
-
-  // get the element to find the positions
-  let referencePlanLink = document.querySelector(".selected");
   let referencePlan = document.querySelector(".shown");
+  let referencePlanLink = document.querySelector(".selected");
   if (!referencePlan) {
+    console.log(referencePlan);
     //if no reference, add at the end
     position = { end: true };
   } else {
     position = { after: Number(referencePlan.dataset.strapId) };
   }
+
+  //deselect all block
   if (select) {
     deselect(".selected");
     deselect(".shown");
   }
 
   // create a new plan and connect it right after the plan you’re ducplicating
-  // 1. load the plan
   let data = {
     data: {
       sequence: sequenceId,
@@ -283,44 +284,41 @@ export async function duplicatePlan(
   const newPlanId = await axios
     .post(`${config.strapi.url}/api/plans/`, data)
     .then(async (response) => {
-      // find the position of the plan
-      //find the referencePlan: the one we’ll add to
       // define a position
 
       // move the block in the sequence
       // update the order of the plan in the sequence object
       let updatedData = {
-        plans: {
-          connect: [
-            {
-              id: Number(response.data.data.id),
-              position,
-            },
-          ],
+        data: {
+          plans: {
+            connect: [
+              {
+                id: Number(response.data.data.id),
+                position,
+              },
+            ],
+          },
         },
       };
 
-      await axios
-        .put(
-          `${config.strapi.url}/api/sequences/${sequenceId}`,
-          {
-            data: { updatedData },
-          },
-        )
-        .then((response) => {
-          // console.log(response)
-          console.log(response);
-        })
-        .catch((err) => {
-          console.log(err);
-          return err;
-        });
-      // await updateData(
-      //   config.strapi.url,
-      //   "sequences",
-      //   updatedData,
-      //   Number(sequenceNumber.textContent),
-      // );
+      // update the location of the plan if the plan isn’t at the end
+      if (position.end != true) {
+        await axios
+          .put(
+            `${config.strapi.url}/api/sequences/${sequenceId}?populate=deep,3`,
+            {
+              data: { updatedData },
+            },
+          )
+          .then((response) => {
+            // console.log(response)
+            console.log(response);
+          })
+          .catch((err) => {
+            console.log(err);
+            return err;
+          });
+      }
 
       // insert the new plan at the end, unless there is a position
       if (!referencePlan) {
@@ -352,90 +350,105 @@ export async function duplicatePlan(
     });
 
   // console.log('new plan', newPlanId)
+  //
+  //
+  //
+  //
+  //
 
   // 2. load all object with filter of the previous plan ID,
-  const objectsOfThePlan = await axios
-    .get(
-      `${config.strapi.url}/api/objects?populate=deep,3&filters[plan]=${planToDuplicateId}`,
-    )
-    .then((response) => {
-      return response;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  // backup the styles for all the existing element of the plan to use at the end
 
-  objectsOfThePlan.data.data.forEach(async (obj) => {
-    let oldData = obj.attributes;
-    let data = { ...oldData };
-    data.plan = newPlanId;
-    data.assets = [];
+  // object: asset;
+  //   object {
+  //   content ?
+  //   name ?
+  //   type ?
+  //   plan (plan it goes to)
+  //   // anchors are not used anymore
+  // }
 
-    //set assets
-    for (let asset of oldData.assets.data) {
-      data.assets.push(asset.id);
-    }
+  // get the data from the object from the plan
+  // although i just need the id now
 
-    // Push the new objects ! /
+  let objectsOfThePlan = referencePlan.querySelectorAll("img");
+
+  objectsOfThePlan.forEach(async (el) => {
+    const managingData = {
+      data: {
+        plan: newPlanId,
+        assets: el.dataset.assetid,
+
+        previousId: el.id,
+        previousObjectId: el.dataset.objectid,
+        previousPlanId: el.dataset.planid,
+        previousAssetId: el.dataset.assetid,
+        previousAssetLocation: el.src,
+        newPlanId: newPlanId,
+      },
+    };
+
     await axios
-      .post(`${config.strapi.url}/api/objects`, { data })
+      .post(` ${config.strapi.url}/api/objects/?populate=deep,3`, managingData)
       .then((response) => {
         console.log(response);
-      })
+        let newElement = `<img id="inuse-${managingData.data.plan}-${response.data.data.id}" data-objectId="${response.data.data.id}" data-planid="${managingData.data.newPlanId}"
+        data-assetid="${managingData.data.previousAssetId}" src="${managingData.data.previousAssetLocation}" class="asset">`;
 
+        console.log(newElement);
+
+        console.log(managingData);
+        preview
+          .querySelector(`#plan-${newPlanId}`)
+          .insertAdjacentHTML("beforeend", newElement);
+        stylesWrapper.querySelectorAll("style").forEach((styleObj) => {
+          console.log(
+            styleObj,
+            managingData.data.previousId,
+            `inuse-${managingData.data.plan}-${response.data.data.id}`,
+          );
+          cloneStylesheetRules(
+            styleObj,
+            managingData.data.previousId,
+            `inuse-${managingData.data.plan}-${response.data.data.id}`,
+          );
+        });
+      })
       .catch((err) => {
         console.log(err);
       });
   });
 
-  await axios
-    .get(`${config.strapi.url}/api/plans/${newPlanId}?populate=deep,3`)
-    .then((response) => {
-      let plan = response.data.data;
-      let planToFill = preview.querySelector(`#plan-${plan.id}`);
-      let objectsToFillWith = plan.attributes.objects.data;
-
-      // // fill the asset manager with the images
-      objectsToFillWith.forEach((object) => {
-        object.attributes.assets.data.forEach((asset) => {
-          planToFill.insertAdjacentHTML(
-            "beforeend",
-            `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="${asset.attributes.location}" class="asset">`,
-          );
-        });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-
-  //update the layers block
-  updateLayers();
-
-  let newAssets = document.querySelectorAll(".shown .asset");
-
-  stylesWrapper.querySelectorAll("style").forEach((styleObj) => {
-    newAssets.forEach((el, index) => {
-      cloneStylesheetRules(styleObj, previousAssets[index].id, el.id);
-    });
-  });
   saveAllStylesheet();
 
+  updateLayers();
   document.querySelector("#loading").classList.add("hide");
-  // previousAssets.forEach((entry, index) =>{
-  //
-  //
-  //   // console.log(entry)
-  // })
+  // console.log(newObjects);
+  // debugger
 
-  // document.querySelectorAll(".shown .asset").forEach(asset =>{
+  // await axios
+  //   .get(`${config.strapi.url}/api/plans/${newPlanId}?populate=deep,3`)
+  //   .then((response) => {
+  //     // let plan = response.data.data;
+  //     let planToFill = preview.querySelector(`#plan-${plan.id}`);
+  //     let objectsToFillWith = plan.attributes.objects.data;
   //
-  //   const oldid = asset.id
-  //   const new id = asset.
-  //
-  // })
-  //clone the stylesheet
+  //     // // fill the asset manager with the images
+  //     objectsToFillWith.forEach((object) => {
+  //       object.attributes.assets.data.forEach((asset) => {
+  //         planToFill.insertAdjacentHTML(
+  //           "beforeend",
+  //           `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" data-planid="${plan.id}"
+  //       data-assetid="${asset.id}" src="${asset.attributes.location}" class="asset">`,
+  //         );
+  //       });
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
+  //update the layers block
 }
 
 // render a plan when loading up the app
