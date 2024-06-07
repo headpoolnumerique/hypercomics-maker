@@ -246,6 +246,7 @@ export async function duplicatePlan(
   let position;
   let referencePlan = document.querySelector(".shown");
   let referencePlanLink = document.querySelector(".selected");
+  console.log("referencePlan", referencePlan)
   if (!referencePlan) {
     //if no reference, add at the end
     position = { end: true };
@@ -273,30 +274,31 @@ export async function duplicatePlan(
       // TOFIX here!
       // update the order of the plan in the sequence object
       let updatedData = {
-        data: {
-          plans: {
-            connect: [
-              {
-                id: Number(response.data.data.id),
-                position,
-              },
-            ],
-          },
+        plans: {
+          connect: [
+            {
+              id: response.data.data.id,
+              position: position,
+            },
+          ],
         },
       };
 
+      // console.log({ updatedData });
+
       // update the location of the plan if the plan isn’t at the end
-      if (position.end != true) {
+      console.log("is position end ? ", position);
+      if (!position.end) {
         await axios
           .put(
             `${config.strapi.url}/api/sequences/${sequenceId}?populate=deep,3`,
             {
-              data: { updatedData },
+              data: updatedData,
             },
           )
           .then((response) => {
             // console.log(response)
-            console.log(response);
+            // console.log(response);
           })
           .catch((err) => {
             console.log(err);
@@ -353,7 +355,7 @@ export async function duplicatePlan(
     await axios
       .post(` ${config.strapi.url}/api/objects/?populate=deep,3`, managingData)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         let newElement = `<img id="inuse-${managingData.data.plan}-${response.data.data.id}" data-objectId="${response.data.data.id}" data-planid="${managingData.data.newPlanId}"
         data-assetid="${managingData.data.previousAssetId}" src="${managingData.data.previousAssetLocation}" class="asset">`;
 
@@ -361,11 +363,11 @@ export async function duplicatePlan(
           .querySelector(`#plan-${newPlanId}`)
           .insertAdjacentHTML("beforeend", newElement);
         stylesWrapper.querySelectorAll("style").forEach((styleObj) => {
-          console.log(
-            styleObj,
-            managingData.data.previousId,
-            `inuse-${managingData.data.plan}-${response.data.data.id}`,
-          );
+          // console.log(
+          //   styleObj,
+          //   managingData.data.previousId,
+          //   `inuse-${managingData.data.plan}-${response.data.data.id}`,
+          // );
           cloneStylesheetRules(
             styleObj,
             managingData.data.previousId,
@@ -377,6 +379,7 @@ export async function duplicatePlan(
         console.log(err);
       })
       .finally(() => {
+        // whatever happen update the layer and save the stylesheet
         updateLayers();
         saveAllStylesheet();
       });
