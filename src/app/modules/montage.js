@@ -125,7 +125,6 @@ export async function deletePlan() {
     },
   };
 
-  console.log(previousPlan);
   return axios
     .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
       data,
@@ -260,7 +259,6 @@ export async function duplicatePlan(
   let referencePlan = document.querySelector(".shown");
   let referencePlanLink = document.querySelector(".selected");
   if (!referencePlan) {
-    console.log(referencePlan);
     //if no reference, add at the end
     position = { end: true };
   } else {
