@@ -222,16 +222,7 @@ async function addPlan(montageList, select = true) {
   }
 }
 
-// TODO
-// duplicate plan may be more useful:
-// get the same object
-// create a new plan
-// get all the object from the plan and add them again
-//
-//
-//duplicate each rules for each stylesheet
-//
-//
+// duplicate the plan
 // get the data from the plan, create a new one with the exact same data, push it to the UI
 export async function duplicatePlan(
   montageList,
@@ -246,7 +237,7 @@ export async function duplicatePlan(
   let position;
   let referencePlan = document.querySelector(".shown");
   let referencePlanLink = document.querySelector(".selected");
-  console.log("referencePlan", referencePlan)
+  console.log("referencePlan", referencePlan);
   if (!referencePlan) {
     //if no reference, add at the end
     position = { end: true };
@@ -386,32 +377,6 @@ export async function duplicatePlan(
   });
 
   document.querySelector("#loading").classList.add("hide");
-  // console.log(newObjects);
-  // debugger
-
-  // await axios
-  //   .get(`${config.strapi.url}/api/plans/${newPlanId}?populate=deep,3`)
-  //   .then((response) => {
-  //     // let plan = response.data.data;
-  //     let planToFill = preview.querySelector(`#plan-${plan.id}`);
-  //     let objectsToFillWith = plan.attributes.objects.data;
-  //
-  //     // // fill the asset manager with the images
-  //     objectsToFillWith.forEach((object) => {
-  //       object.attributes.assets.data.forEach((asset) => {
-  //         planToFill.insertAdjacentHTML(
-  //           "beforeend",
-  //           `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" data-planid="${plan.id}"
-  //       data-assetid="${asset.id}" src="${asset.attributes.location}" class="asset">`,
-  //         );
-  //       });
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
-
-  //update the layers block
 }
 
 // render a plan when loading up the app
