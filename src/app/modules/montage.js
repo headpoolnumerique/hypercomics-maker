@@ -239,20 +239,8 @@ export async function duplicatePlan(
   sequenceId,
   select = true,
 ) {
-  //  what needs to happen
-  //  1. create a new plan and put it on the page
-  //  2. store all the objects on the plan
-  //  3. for each obj.
-  //     => create a new element in strapi with the exaxt same data
-  //     => put that element on the screen
-  //     => the stored object include the styles.
-  //  3. for each object, add the element on the panel,
-  //  3. create a new
-
   // show the loading while we duplicate because there may be a bit of back and forth
   document.querySelector("#loading").classList.remove("hide");
-
-  // 1. backup the elements
 
   // 1. duplicate the plan and put it at its right place
   let position;
@@ -282,9 +270,7 @@ export async function duplicatePlan(
   const newPlanId = await axios
     .post(`${config.strapi.url}/api/plans/`, data)
     .then(async (response) => {
-      // define a position
-
-      // move the block in the sequence
+      // TOFIX here!
       // update the order of the plan in the sequence object
       let updatedData = {
         data: {
@@ -347,30 +333,8 @@ export async function duplicatePlan(
       return response.data.data.id;
     });
 
-  // console.log('new plan', newPlanId)
-  //
-  //
-  //
-  //
-  //
-
-  // 2. load all object with filter of the previous plan ID,
-  // backup the styles for all the existing element of the plan to use at the end
-
-  // object: asset;
-  //   object {
-  //   content ?
-  //   name ?
-  //   type ?
-  //   plan (plan it goes to)
-  //   // anchors are not used anymore
-  // }
-
-  // get the data from the object from the plan
-  // although i just need the id now
-
+  // manage object
   let objectsOfThePlan = referencePlan.querySelectorAll("img");
-
   objectsOfThePlan.forEach(async (el) => {
     const managingData = {
       data: {
@@ -393,9 +357,6 @@ export async function duplicatePlan(
         let newElement = `<img id="inuse-${managingData.data.plan}-${response.data.data.id}" data-objectId="${response.data.data.id}" data-planid="${managingData.data.newPlanId}"
         data-assetid="${managingData.data.previousAssetId}" src="${managingData.data.previousAssetLocation}" class="asset">`;
 
-        console.log(newElement);
-
-        console.log(managingData);
         preview
           .querySelector(`#plan-${newPlanId}`)
           .insertAdjacentHTML("beforeend", newElement);
@@ -414,12 +375,13 @@ export async function duplicatePlan(
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        updateLayers();
+        saveAllStylesheet();
       });
   });
 
-  saveAllStylesheet();
-
-  updateLayers();
   document.querySelector("#loading").classList.add("hide");
   // console.log(newObjects);
   // debugger
