@@ -505,7 +505,6 @@ export function findAnchors(objID, parsedCSS) {
   parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
     if (rule.selectors && rule.selectors.includes(`#${objID}`)) {
       rule.declarations.forEach((declaration) => {
-        console.log(declaration);
         if (declaration.property == "--anchor-horizontal") {
           anchors.horizontal = declaration.value;
         }
@@ -519,7 +518,6 @@ export function findAnchors(objID, parsedCSS) {
     vertical: anchors.vertical ? anchors.vertical : "top",
     horizontal: anchors.horizontal ? anchors.horizontal : "left",
   };
-  console.log(anchors);
   return anchors;
 }
 
@@ -537,7 +535,8 @@ export function setObjInStylesheet(stylesheet, obj) {
 
   let anchors = findAnchors(obj.id, parsedCSS);
 
-  console.log("anchres", anchors);
+
+  
   //check anchor: if there is a left, if there is a right
 
   const anchorVertical = anchors.vertical;

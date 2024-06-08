@@ -24,6 +24,7 @@ import {
 import {
   findAnchors,
   isSelectorExistInContainers,
+  saveAllStylesheet,
   saveStylesheet,
   setObjInStylesheet,
 } from "./stylesheet.js";
@@ -99,8 +100,8 @@ async function interactObject(object) {
       ],
 
       listeners: {
-        start(event) { },
-        move: function(event) {
+        start(event) {},
+        move: function (event) {
           // parse the css
           // find the location for wisth and height
           // listen to the resize
@@ -127,7 +128,7 @@ async function interactObject(object) {
 
           Object.assign(event.target.dataset, { x, y });
         },
-        end: function(event) {
+        end: function (event) {
           updateTheUI(event.target);
           // add ruel to object
           // addRuleToObject(event.target.dataset.objectid, data);
@@ -265,7 +266,7 @@ export async function deleteObject() {
   const plan = document.querySelector("#previewScreen article.shown");
   const object = document.querySelector(".asset-selected");
 
-  console.log(object)
+  // console.log(object);
   // send info to strapi
   removeObjectFromPlan(
     config.strapi.url,
@@ -310,7 +311,7 @@ export function getValueOf(elementObj, property, parsedCSS) {
 export function setVisibilityUI(element, parsedCSS) {
   let visible = getValueOf(element, "opacity", parsedCSS);
 
-  console.log(visible);
+  // console.log(visible);
 
   if (!visible || visible == 1) {
     inputMakeHidden.classList.remove("hide");
@@ -385,7 +386,7 @@ export function updateTheUI(element) {
     anchorLeft.classList.remove("hide");
   }
 
-  console.log(anchors.vertical);
+  // console.log(anchors.vertical);
   anchors.vertical;
   //hide element if the object is set bottom / right?
 }
@@ -451,7 +452,7 @@ export async function setAnchor() {
   //
   // this is asset manipulation normally
   anchors.forEach((button) => {
-    button.addEventListener("click", async function() {
+    button.addEventListener("click", async function () {
       // make sure an object is selected
       let selected = document.querySelector(".asset-selected");
 
@@ -547,7 +548,7 @@ export async function setAnchor() {
           });
           break;
       }
-      console.log(declarations);
+      // console.log(declarations);
 
       // if the selector doesn’t exist, creates it and set the rule for the anchor?
       // so this is what should be checked:
@@ -556,8 +557,8 @@ export async function setAnchor() {
       // if there is no selector, create it and add the declaration css
       if (!isSelectorExistInContainers(parsedCSS, selected.id)) {
         let newCSS = parsedCSS;
-        console.log(parsedCSS);
-        console.log("noselector exist yet");
+        // console.log(parsedCSS);
+        // console.log("noselector exist yet");
         // get the rule with the
         newCSS.stylesheet.rules[0].rules.push({
           type: "rule",
@@ -664,4 +665,42 @@ export function deepSearchByKey(obj, key, target) {
 
   // If the key is not found anywhere, return false
   return false;
+}
+
+export async function stickElement(element) {
+  // get object asset id;
+  const assetId = element.dataset.assetid;
+  const activatedStyle = stylesWrapper.querySelector(".activatedStyle");
+  let parsedCSS = parse(activatedStyle.textContent);
+  const styleToDuplicate = parsedCSS.stylesheet.rules[0].rules.find((rule) => {
+    // if the rule isn’t the one we’re looking for, return
+    if (!rule.selectors.includes(`#${element.id}`)) return;
+    return rule;
+  });
+
+  // get all the object that have the same id
+  document.querySelectorAll(`[data-assetid="${assetId}"]`).forEach((asset) => {
+    //update the css for each entry
+    let found = parsedCSS.stylesheet.rules[0].rules.find((rule) => {
+      // if the rule isn’t the one we’re looking for, return
+      if (!rule.selectors.includes(`#${asset.id}`)) return;
+      rule.declarations = styleToDuplicate.declarations;
+    });
+
+
+    if (!found) {
+      parsedCSS.stylesheet.rules[0].rules.push({
+        type: "rule",
+        selectors: [`#${asset.id}`],
+        declarations: styleToDuplicate.declarations,
+      });
+    }
+
+    // if the rule doesnt exist create it
+
+    activatedStyle.textContent = stringify(parsedCSS);
+    // apply that css to all the object with the same asset id, but only for one stylesheet
+  });
+  // save the stylesheet
+  saveStylesheet(activatedStyle.dataset.strapid, activatedStyle.textContent);
 }

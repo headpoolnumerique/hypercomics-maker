@@ -45,7 +45,7 @@ async function loadAllProjects(serverUrl) {
   //load with a query
   return axios
     .get(
-      `${serverUrl}/api/projects?populate=deep,5&filters[archived][$eq]=false`,
+      `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false`,
     )
     .then((response) => {
       // console.log(response)

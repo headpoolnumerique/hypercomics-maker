@@ -8,7 +8,11 @@ import { startup } from "./modules/startup.js";
 import { uploadToStrapi } from "./modules/assetNetwork.js";
 import { deselect, selectLink } from "../app/modules/helpers";
 import { showHideBlock } from "./modules/helpers.js";
-import { interactObject, updateTheUI } from "./modules/assetManipulation.js";
+import {
+  interactObject,
+  stickElement,
+  updateTheUI,
+} from "./modules/assetManipulation.js";
 import {
   previewScreen,
   montageScreen,
@@ -20,6 +24,7 @@ import {
   layerList,
   saveStylesheetButton,
   buttonDeselectAsset,
+  buttonStick,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
@@ -69,21 +74,27 @@ function listeners() {
   });
 
   // deselect when click the deselect button
-  buttonDeselectAsset.addEventListener("click", function(event) {
+  buttonDeselectAsset.addEventListener("click", function (event) {
     deselect(".asset-selected");
   });
 
-  document.querySelector("#duplicatePlan").addEventListener("click", async () => {
-    const sequenceId = Number(
-      document.querySelector("#sequenceNumber").textContent,
-    );
-    await duplicatePlan(
-      montageList,
-      document.querySelector(".shown")?.dataset.strapId,
-      sequenceId,
-    );
+  buttonStick.addEventListener("click", function () {
+    stickElement(previewScreen.querySelector(".asset-selected"));
   });
-  imageUpload.addEventListener("click", function(e) {
+
+  document
+    .querySelector("#duplicatePlan")
+    .addEventListener("click", async () => {
+      const sequenceId = Number(
+        document.querySelector("#sequenceNumber").textContent,
+      );
+      await duplicatePlan(
+        montageList,
+        document.querySelector(".shown")?.dataset.strapId,
+        sequenceId,
+      );
+    });
+  imageUpload.addEventListener("click", function (e) {
     e.preventDefault();
     uploadToStrapi(imageUploadInputs);
   });
@@ -163,7 +174,7 @@ function listeners() {
   // show hide/plan
   document
     .querySelector("#previewPrevious")
-    .addEventListener("click", function() {
+    .addEventListener("click", function () {
       let shownPlan = document.querySelector(".shown");
       let shownLink = document.querySelector(".selected");
 
@@ -188,11 +199,11 @@ function listeners() {
     });
 
   //save all styleshett
-  saveStylesheetButton.addEventListener("click", function(event) {
+  saveStylesheetButton.addEventListener("click", function (event) {
     saveAllStylesheet();
   });
 
-  document.querySelector("#previewNext").addEventListener("click", function() {
+  document.querySelector("#previewNext").addEventListener("click", function () {
     let shownPlan = document.querySelector(".shown");
     let shownLink = document.querySelector(".selected");
     if (!shownPlan.nextElementSibling) {
