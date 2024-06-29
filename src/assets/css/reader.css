@@ -83,3 +83,9 @@ a:hover {
 #story img {
   height: auto !important;
 }
+
+#backtostart {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
