@@ -60,7 +60,10 @@ export const inputMakeVisible = document.querySelector("#input-show")
 export const inputMakeHidden = document.querySelector("#input-hide")
 
 
-export const buttonDeselectAsset = document.querySelector("#deselectAsset")
+export const buttonDeselectAsset = document.querySelector("#deselectAsset");
 export const buttonStick = document.querySelector("#button-stick")
 
+
+//grid
+export const buttonShowGrid = document.querySelector("#showgrid");
 

@@ -51,7 +51,8 @@ button,
   /* display: inline; */
 }
 
-.manip label {}
+.manip label {
+}
 
 .manip details {
   margin-bottom: 2em;
@@ -183,7 +184,8 @@ block-ui h3 {
   background: lightgrey;
 }
 
-#styleWrapper {}
+#styleWrapper {
+}
 
 #styleWrapper style:hover::after {
   content: attr(id);
@@ -278,4 +280,17 @@ block-ui h3 {
 
 &:has(.asset-selected) #deselectAsset {
   display: block;
+}
+
+
+/* // css to show the grid at some point */
+#preview #previewScreen.show-grid {
+  --grid-size: 10%;
+  background-image: linear-gradient(
+      to right,
+      rgb(0, 0, 0, 0.3) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgb(0, 0, 0, 0.3) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size); /* creates 10 rows and 10 columns */
 }
