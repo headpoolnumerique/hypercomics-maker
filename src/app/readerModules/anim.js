@@ -3,7 +3,7 @@ async function readingTools() {
 
 	let canMoveForward = true; // Flag variable to track if moveForward is allowed
 	//handling keyboard
-	window.addEventListener("keyup", function (e) {
+	window.addEventListener("keyup", function(e) {
 		const hashElement = document.querySelector(window.location.hash);
 		const delay = hashElement.dataset.storyDelay || 0;
 		console.log(delay);
@@ -36,10 +36,10 @@ async function readingTools() {
 	});
 
 	// on scroll
-	window.addEventListener("wheel", function (e) {
+	window.addEventListener("wheel", function(e) {
 		e.preventDefault();
 		const hashElement = document.querySelector(window.location.hash);
-		const delay = hashElement.dataset.storyDelay || 100;
+		const delay = hashElement.dataset.storyDelay || 10;
 		if (delay && !canMoveForward) {
 			return; // If moveForward is not allowed, exit early
 		}

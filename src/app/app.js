@@ -37,6 +37,7 @@ import {
 import { updateDelayUI } from "./modules/delay.js";
 import { saveAllStylesheet } from "./modules/stylesheet.js";
 import { zooming } from "./modules/preview.js";
+import { keepLogin } from "./api/login.js";
 
 startApp();
 
@@ -74,11 +75,11 @@ function listeners() {
   });
 
   // deselect when click the deselect button
-  buttonDeselectAsset.addEventListener("click", function (event) {
+  buttonDeselectAsset.addEventListener("click", function(event) {
     deselect(".asset-selected");
   });
 
-  buttonStick.addEventListener("click", function () {
+  buttonStick.addEventListener("click", function() {
     stickElement(previewScreen.querySelector(".asset-selected"));
   });
 
@@ -94,7 +95,7 @@ function listeners() {
         sequenceId,
       );
     });
-  imageUpload.addEventListener("click", function (e) {
+  imageUpload.addEventListener("click", function(e) {
     e.preventDefault();
     uploadToStrapi(imageUploadInputs);
   });
@@ -174,7 +175,7 @@ function listeners() {
   // show hide/plan
   document
     .querySelector("#previewPrevious")
-    .addEventListener("click", function () {
+    .addEventListener("click", function() {
       let shownPlan = document.querySelector(".shown");
       let shownLink = document.querySelector(".selected");
 
@@ -199,11 +200,11 @@ function listeners() {
     });
 
   //save all styleshett
-  saveStylesheetButton.addEventListener("click", function (event) {
+  saveStylesheetButton.addEventListener("click", function(event) {
     saveAllStylesheet();
   });
 
-  document.querySelector("#previewNext").addEventListener("click", function () {
+  document.querySelector("#previewNext").addEventListener("click", function() {
     let shownPlan = document.querySelector(".shown");
     let shownLink = document.querySelector(".selected");
     if (!shownPlan.nextElementSibling) {
@@ -223,10 +224,24 @@ function listeners() {
     updateDelayUI();
   });
 }
+
 //start the app
 async function startApp() {
+  // check for the jwt cookie
+  // else login with user name password.
+  // if username / password is done and jwt is ok,
+  // start the app, and you’ll be ok everywhere
+
+  // check for jwt.
+  // followting https://forum.strapi.io/t/how-to-set-jwt-expiration-to-years/5490 we can have the jwt last for 10 days?
+  // and force the login every 7 days could be an interesting solution
+
+  if (await keepLogin()) {
+    return console.log("sorry, can’t connect to the db");
+  } else {
+    console.log("you’re now connected and ready to make your story");
+  }
+
   await startup();
   listeners();
 }
-// updateLayers();
-//
