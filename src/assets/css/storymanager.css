@@ -147,13 +147,11 @@ datetime {
   text-decoration: none;
 }
 
-
 .deletemodal {
-  background:white;
+  background: white;
   padding: 1rem;
 }
 
 ::backdrop {
-  background: black;
+  background: #333333cc;
 }
-

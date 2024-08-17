@@ -1,5 +1,72 @@
 TODO NOW
 
+
+0 add authorization to all axios call now like the following example. (maybe only authorize the project page? someone will still be able to break it but it may be ok somehow?)
+
+Then use random number when creating the project id, and use that number instead of the numbers following. 
+
+Only the accepted user will be able to access the content anyway. (for now)
+
+```
+    const { data } = await axios.get('http://localhost:1337/whatever', {
+      headers: {
+        Authorization:
+          `Bearer ${getCookie("hc_login_token")}`,
+      },
+    });
+    console.log(data);
+```
+
+
+
+0. backend: add stories to the users
+   user role: author
+
+   each author has multiple stories
+   and each story has multiple author
+
+1. create  user? (let’s create the user from the strapi.)
+   invitational
+
+
+
+
+2. load user, and load its stories.
+
+3. only show those.
+
+4. upload needs to have the authorizations up and running to be usable to load / create / update
+
+
+the checking for jwt
+
+Every time you reconnect, it checks the cookie and set it up for another week.
+
+
+
+
+
+ assets: 
+
+ replace assets with another.
+ upload to a plan by handling an image on it.
+
+ dropzone()
+
+
+copy/move elements from plan to others.
+move element to another plan? 
+
+
+how to se
+
+
+
+kkkk
+
+
+
+
 1. update the backend api for the stylesheet
 2. automatically create a stylesheet if empty
 3. set it!
@@ -26,7 +93,7 @@ TODO NOW
 
 
 
-
+ 
 
 
 

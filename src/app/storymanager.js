@@ -6,15 +6,20 @@ import {
   removeSequenceFromProject,
 } from "./api/api-projects.js";
 import { createSequence } from "./api/api-sequences.js";
+import { isLoggedIn, loginButton } from "./api/login.js";
 import config from "./config/config.js";
 import { renderDate } from "./modules/helpers.js";
+if (isLoggedIn()) {
+  console.log("are you logged in?", isLoggedIn());
+  start();
+} else {
+  //hide the loading bit and show the modal
+  document.querySelector("#loading").classList.add("hide");
+  document.querySelector("#login").showModal();
+  loginButton();
+}
 
-start();
-
-let projectsList = document.querySelector("#projects-list");
-let projectSequence = document.querySelector("#projectSequences");
-
-async function start() {
+export async function start() {
   // load all projects
   let projects = await loadAllProjects(config.strapi.url);
 
@@ -37,6 +42,8 @@ async function start() {
 
 // load project
 function loadProjects(data) {
+  let projectsList = document.querySelector("#projects-list");
+  let projectSequence = document.querySelector("#projectSequences");
   let projects = data.data.data;
   projectsList.innerHTML = "";
   projects.forEach((es) => {
@@ -46,10 +53,13 @@ function loadProjects(data) {
 }
 
 //confirmation to remove the existing project
-function selectToDelete(id,title) {
-  document.querySelector(".deletemodal").querySelector(".projectid").textContent = id;  
-  document.querySelector(".deletemodal").querySelector(".title").textContent = title;  
-  document.querySelector(".deletemodal").showModal()
+function selectToDelete(id, title) {
+  document
+    .querySelector(".deletemodal")
+    .querySelector(".projectid").textContent = id;
+  document.querySelector(".deletemodal").querySelector(".title").textContent =
+    title;
+  document.querySelector(".deletemodal").showModal();
 }
 
 // delete project
@@ -65,10 +75,12 @@ function deleteProject(id) {
 
 // render the project
 async function renderProject(project) {
+  let projectsList = document.querySelector("#projects-list");
+  let projectSequence = document.querySelector("#projectSequences");
   // insert project in the project list
   projectsList.insertAdjacentHTML(
     "beforeend",
-    ` <li data-title="${project.attributes.title}"><datetime>${renderDate( project.attributes.updatedAt,)}</datetime>
+    ` <li data-title="${project.attributes.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
         <a href="#project${project.id}">${project.attributes.title}</a> 
         <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">remove project</button>
       </li>`,
@@ -80,15 +92,17 @@ async function renderProject(project) {
     return generateSequence(sequence, project);
   });
 
-  const projectSequenceContent = `<section id="project${project.id
-    }" class="project">
+  const projectSequenceContent = `<section id="project${
+    project.id
+  }" class="project">
   <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
   <button  data-projectid="${project.id}"
 onclick="addSequence(${project.id})"
 class="createSequence" >Add a sequence</button>
-  <ul class="sequences-list" id="sequenceList${project.id
-    }">${renderedSequences.join("")}</ul>
+  <ul class="sequences-list" id="sequenceList${
+    project.id
+  }">${renderedSequences.join("")}</ul>
   </section>`;
 
   projectSequence.innerHTML += projectSequenceContent;
