@@ -24,13 +24,13 @@ async function createProject() {
 
     axios
       .post(`${config.strapi.url}/api/projects/`, { data: data })
-      .then(function(response) {
+      .then(function (response) {
         // console.log("new", response.data.data);
         renderEmptyProject(response.data.data);
         return response;
       })
-      .then(function(response) {
-        window.location.hash = `#project${response.data.data.id}`
+      .then(function (response) {
+        window.location.hash = `#project${response.data.data.id}`;
       })
 
       // open the new project
@@ -66,7 +66,7 @@ async function removeSequenceFromProject(projectId, sequenceId) {
         },
       },
     })
-    .then(function(response) {
+    .then(function (response) {
       return response;
     })
     .catch((error) => {
@@ -80,7 +80,8 @@ async function renderEmptyProject(project) {
     "beforeend",
     ` <li> <datetime>${renderDate(
       project.attributes.updatedAt,
-    )}</datetime> <a href="#project${project.id}">${project.attributes.title
+    )}</datetime> <a href="#project${project.id}">${
+      project.attributes.title
     }</a> 
 
     <button onclick="deleteProject(${project.id})">remove project</button>

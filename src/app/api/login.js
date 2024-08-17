@@ -42,26 +42,27 @@ export function logout() {
 
 export async function login(username, password) {
   let loggedIn = false;
-  axios
+  await axios
     .post(`${config.strapi.url}/api/auth/local`, {
       identifier: username,
       password: password,
     })
     .then(async function (response) {
-      document.cookie = `hc_login_token=${response.data.jwt}`;
-      // document.querySelector(".form").remove();
-      if (response) {
-        console.log("login token added");
+      console.log(response, response.data.jwt);
+      if (response && response.data.jwt) {
+        document.cookie = `hc_login_token=${response.data.jwt}`;
+        // document.querySelector(".form").remove();
+        loggedIn = true;
       }
-      loggedIn = false;
     })
     .catch(function (error) {
       console.log("error", error);
       document.querySelector(`.login-error`).innerHTML =
         `<p class="error">Sorry mate can’t connect, forgot you pass again? Then you need to contact your administrator.</p>`;
+      deleteCookie("hc_login_token");
       loggedIn = false;
-      // return false;
     });
+  console.log("loggedIn", loggedIn);
   return loggedIn;
 }
 
@@ -109,14 +110,17 @@ export function loginButton() {
       // const logged = await login(username, password);
       // check if ther is the doci
       // let token = getCookie("hc_login_token");
-      await login(
+      const letsgo = await login(
         document.querySelector("#username").value,
         document.querySelector("#password").value,
       );
-      {
-        start();
-        hideLogin();
-        // error in the connexion
+      console.log("letsto", letsgo);
+      if (letsgo) {
+        {
+          start();
+          hideLogin();
+          // error in the connexion
+        }
       }
     });
 }
