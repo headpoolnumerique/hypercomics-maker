@@ -1,6 +1,7 @@
 import config from "../config/config.js";
 import axios from "axios";
 import { renderDate } from "../modules/helpers.js";
+import { getCookie } from "./login.js";
 
 // selectors
 let projectsList = document.querySelector("#projects-list");
@@ -43,9 +44,13 @@ async function createProject() {
 
 async function loadAllProjects(serverUrl) {
   //load with a query
+  console.log(getCookie("hc_login_username"));
   return axios
     .get(
-      `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false`,
+      `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false&filters[author][$eq]=${getCookie("hc_login_username")}`,
+      {
+        headers: { Authorization: `Bearer ${getCookie("hc_login_token")}` },
+      },
     )
     .then((response) => {
       // console.log(response)

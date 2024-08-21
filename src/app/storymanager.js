@@ -6,7 +6,7 @@ import {
   removeSequenceFromProject,
 } from "./api/api-projects.js";
 import { createSequence } from "./api/api-sequences.js";
-import { isLoggedIn, login, hideLogin } from "./api/login.js";
+import { isLoggedIn, login, hideLogin, getCookie } from "./api/login.js";
 import config from "./config/config.js";
 import { renderDate } from "./modules/helpers.js";
 
@@ -42,6 +42,11 @@ function loginButton() {
     });
 }
 export async function start() {
+  if (getCookie("hc_login_username")) {
+    const authorInput = document.querySelector("input[name=author]");
+    authorInput.value = getCookie("hc_login_username");
+    authorInput.setAttribute("disabled", "disabled");
+  }
   // load all projects
   let projects = await loadAllProjects(config.strapi.url);
 
@@ -64,6 +69,8 @@ export async function start() {
 
 // load project
 function loadProjects(data) {
+  console.log(data);
+  if (!data.data.data) return console.log("no project yet");
   let projectsList = document.querySelector("#projects-list");
   let projectSequence = document.querySelector("#projectSequences");
   let projects = data.data.data;

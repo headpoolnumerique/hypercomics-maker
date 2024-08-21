@@ -20,6 +20,7 @@ export function logout() {
   if (getCookie("hc_login_token")) {
     // remove the cookie by setting its date to a previous year!
     deleteCookie("hc_login_token");
+    deleteCookie("hc_login_username");
   }
 }
 
@@ -43,6 +44,7 @@ export async function login(username, password) {
       console.log(response, response.data.jwt);
       if (response && response.data.jwt) {
         document.cookie = `hc_login_token=${response.data.jwt}`;
+        document.cookie = `hc_login_username=${username}`;
         loggedIn = true;
       }
     })
@@ -51,6 +53,7 @@ export async function login(username, password) {
       document.querySelector(`.login-error`).innerHTML =
         `<p class="error">Sorry mate can’t connect, forgot you pass again? Then you need to contact your administrator.</p>`;
       deleteCookie("hc_login_token");
+      deleteCookie("hc_login_username");
       loggedIn = false;
     });
   console.log("loggedIn", loggedIn);
