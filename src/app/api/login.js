@@ -2,7 +2,7 @@ import axios from "axios";
 import config from "../config/config";
 import { start } from "../storymanager";
 
-export function isLoggedIn(username, password) {
+export function isLoggedIn() {
   // warning, the cookie on localhost is shared with a lot other!
   if (getCookie("hc_login_token")) {
     // TODO check the token validation, if unvalid remake one
