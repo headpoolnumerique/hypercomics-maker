@@ -6,9 +6,10 @@ import {
   removeSequenceFromProject,
 } from "./api/api-projects.js";
 import { createSequence } from "./api/api-sequences.js";
-import { isLoggedIn, loginButton } from "./api/login.js";
+import { isLoggedIn, login, hideLogin } from "./api/login.js";
 import config from "./config/config.js";
 import { renderDate } from "./modules/helpers.js";
+
 if (isLoggedIn()) {
   console.log("are you logged in?", isLoggedIn());
   start();
@@ -19,6 +20,27 @@ if (isLoggedIn()) {
   loginButton();
 }
 
+function loginButton() {
+  document
+    .querySelector("#submit")
+    .addEventListener("click", async function () {
+      // const logged = await login(username, password);
+      // check if ther is the doci
+      // let token = getCookie("hc_login_token");
+      const letsgo = await login(
+        document.querySelector("#username").value,
+        document.querySelector("#password").value,
+      );
+      if (letsgo) {
+        {
+          // this start only work if you’re in the start
+          start();
+          hideLogin();
+          // error in the connexion
+        }
+      }
+    });
+}
 export async function start() {
   // load all projects
   let projects = await loadAllProjects(config.strapi.url);

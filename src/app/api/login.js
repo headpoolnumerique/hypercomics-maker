@@ -1,6 +1,5 @@
 import axios from "axios";
 import config from "../config/config";
-import { startup } from "../modules/startup";
 import { start } from "../storymanager";
 
 export function isLoggedIn(username, password) {
@@ -12,11 +11,6 @@ export function isLoggedIn(username, password) {
     return false;
   }
 }
-// this idea:
-//
-//
-//
-//
 
 export function deleteCookie(name) {
   document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -32,8 +26,6 @@ export function logout() {
 // once authenticated, user is allowed to do anything
 // authenticated allows to access its own system
 // authenticated means you can access any project on the system
-//
-//
 
 // if the cookie is set up you’re logged
 // check cookie
@@ -51,7 +43,6 @@ export async function login(username, password) {
       console.log(response, response.data.jwt);
       if (response && response.data.jwt) {
         document.cookie = `hc_login_token=${response.data.jwt}`;
-        // document.querySelector(".form").remove();
         loggedIn = true;
       }
     })
@@ -100,28 +91,6 @@ export function createUser(username, email, password) {
     })
     .catch((error) => {
       console.log("An error occurred:", error.response);
-    });
-}
-
-export function loginButton() {
-  document
-    .querySelector("#submit")
-    .addEventListener("click", async function (e) {
-      // const logged = await login(username, password);
-      // check if ther is the doci
-      // let token = getCookie("hc_login_token");
-      const letsgo = await login(
-        document.querySelector("#username").value,
-        document.querySelector("#password").value,
-      );
-      console.log("letsto", letsgo);
-      if (letsgo) {
-        {
-          start();
-          hideLogin();
-          // error in the connexion
-        }
-      }
     });
 }
 

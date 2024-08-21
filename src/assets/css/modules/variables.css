@@ -7,10 +7,22 @@
   font-style: normal italic;
 }
 
+@font-face {
+  font-family: monaspace;
+  src: url("../fonts/monaspaceradonvarvf[wght\,wdth\,slnt].ttf");
+  font-weight: 200 800;
+}
+
+body {
+  /*   font-variation-settings: "wdth" 100, "slnt" 0; */
+  font-weight: 400;
+}
+
 /* variables */
 :root {
   --color-main: rgb(215, 105, 140, 1);
   --color-body: #121212;
+  /* --font-interface: "monaspace"; */
   --font-interface: "inter";
   /*screen minimal size*/
   --min-height: 800px;
