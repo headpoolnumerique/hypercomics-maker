@@ -44,7 +44,6 @@ async function createProject() {
 
 async function loadAllProjects(serverUrl) {
   //load with a query
-  console.log(getCookie("hc_login_username"));
   return axios
     .get(
       `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false&filters[author][$eq]=${getCookie("hc_login_username")}`,
@@ -99,7 +98,7 @@ async function renderEmptyProject(project) {
   const projectSequenceContent = `<section id="project${project.id}" class="project">
   <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
-  <button  data-projectid="${project.id}" onclick="addSequence(${project.id})" class="createSequence" >Add a sequence</button>
+  <button  data-projectid="${project.id}" onclick="addSequence(${project.id}, ${window.username})" class="createSequence" >Add a sequence</button>
   <ul class="sequences-list"></ul>
   </section>`;
 

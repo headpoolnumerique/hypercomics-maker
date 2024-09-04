@@ -282,7 +282,6 @@ block-ui h3 {
   display: block;
 }
 
-
 /* // css to show the grid at some point */
 #preview #previewScreen.show-grid {
   --grid-size: 10%;
@@ -293,4 +292,8 @@ block-ui h3 {
     ),
     linear-gradient(to bottom, rgb(0, 0, 0, 0.3) 1px, transparent 1px);
   background-size: var(--grid-size) var(--grid-size); /* creates 10 rows and 10 columns */
+}
+
+.meta > span {
+  display: block;
 }

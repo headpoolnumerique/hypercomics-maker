@@ -61,6 +61,7 @@ export async function start() {
   // addSequences();
   // deleteSequences();
 
+  window.username = getCookie("hc_login_username");
   window.deleteProject = deleteProject;
   window.addSequence = addSequence;
   window.deleteSequence = deleteSequence;
@@ -127,8 +128,8 @@ async function renderProject(project) {
   <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
   <button  data-projectid="${project.id}"
-onclick="addSequence(${project.id})"
-class="createSequence" >Add a sequence</button>
+onclick="addSequence(${project.id}, window.username)"
+class="createSequence">Add a sequence</button>
   <ul class="sequences-list" id="sequenceList${
     project.id
   }">${renderedSequences.join("")}</ul>
@@ -149,9 +150,9 @@ function generateSequence(sequence, project) {
 </li>`;
 }
 
-async function addSequence(projectNumber) {
+async function addSequence(projectNumber, author) {
   let button = event.target;
-  let newSeq = await createSequence(projectNumber);
+  let newSeq = await createSequence(projectNumber, author);
   button.nextElementSibling.insertAdjacentHTML(
     "beforeend",
     `<li>
