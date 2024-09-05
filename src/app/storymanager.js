@@ -44,8 +44,11 @@ function loginButton() {
 export async function start() {
   if (getCookie("hc_login_username")) {
     const authorInput = document.querySelector("input[name=author]");
-    authorInput.value = getCookie("hc_login_username");
-    authorInput.setAttribute("disabled", "disabled");
+    if (authorInput) {
+      authorInput.value = getCookie("hc_login_username");
+
+      authorInput.setAttribute("disabled", "disabled");
+    }
   }
   // load all projects
   let projects = await loadAllProjects(config.strapi.url);
