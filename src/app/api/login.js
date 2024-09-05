@@ -1,6 +1,5 @@
 import axios from "axios";
 import config from "../config/config";
-import { start } from "../storymanager";
 
 export function isLoggedIn() {
   // warning, the cookie on localhost is shared with a lot other!
