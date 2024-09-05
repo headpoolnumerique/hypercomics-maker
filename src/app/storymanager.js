@@ -5,7 +5,7 @@ import {
   loadAllProjects,
   removeSequenceFromProject,
 } from "./api/api-projects.js";
-import { createSequence } from "./api/api-sequences.js";
+import { createSequence, renameSequences } from "./api/api-sequences.js";
 import { isLoggedIn, login, hideLogin, getCookie } from "./api/login.js";
 import config from "./config/config.js";
 import { renderDate } from "./modules/helpers.js";
@@ -58,6 +58,8 @@ export async function start() {
 
   loadProjects(projects);
   createProject();
+
+  renameSequences();
   // addSequences();
   // deleteSequences();
 
@@ -157,7 +159,7 @@ async function addSequence(projectNumber, author) {
     "beforeend",
     `<li>
 <span class="sequence-id">${newSeq.data.data.id}</span>
-<span class="sequence-title">${newSeq.data.data.attributes.title}</span> 
+<span class="sequence-title" contenteditable>${newSeq.data.data.attributes.title}</span> 
 <div class="buttons"> 
 <a href="editor.html?sequence=${newSeq.data.data.id}">edit</a> 
 <a href="reader.html?sequence=${newSeq.data.data.id}">preview</a>
@@ -171,4 +173,8 @@ async function deleteSequence(projectId, sequenceId) {
   removeSequenceFromProject(projectId, sequenceId).then(
     event.target.closest("li").remove(),
   );
+}
+
+export async function renameSequence(sequenceId, sequenceTitle) {
+  console.log("rename the sequecne");
 }

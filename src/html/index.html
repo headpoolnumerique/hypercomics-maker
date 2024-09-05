@@ -93,6 +93,16 @@
       </form>
     </section>
 
+    <!-- // rename modal -->
+    <dialog class="renameModal">
+      <p class="text">
+        Rename the sequence <span id="rename-sequence-id">0000</span>:
+        <input id="rename-sequence-title"></input>
+      </p>
+      <button id="renameProject">Rename project</button>
+      <button onclick="this.closest('.renameModal').close()">Close</button>
+    </dialog>
+
     <dialog class="deletemodal">
       <p class="text">
         Do you want to delete project <span class="projectid"></span>:
