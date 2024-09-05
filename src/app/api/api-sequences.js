@@ -59,6 +59,7 @@ export async function renameSequences() {
           );
           console.log(newName);
           seq.textContent = newName.data.data.attributes.title;
+          document.querySelector(".renameModal").close();
         });
     }
   });
