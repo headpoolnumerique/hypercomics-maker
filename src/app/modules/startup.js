@@ -112,7 +112,7 @@ async function updateSequenceMeta(id, title, authorname) {
     sequenceNumber: document.querySelector("#sequenceNumber"),
     authorname: document.querySelector("#authorName"),
   };
-  meta.projectId = id;
+  meta.sequenceNumber.innerHTML = id;
   meta.projectName.innerHTML = title;
   meta.authorname.innerHTML = authorname;
 }
