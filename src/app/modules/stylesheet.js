@@ -1,4 +1,5 @@
 import axios from "axios";
+import { hideLogin } from "../api/login.js";
 import config from "../config/config.js";
 import { parse, stringify } from "../vendors/css/css.js";
 import { deepSearchByKey } from "./assetManipulation.js";
@@ -31,6 +32,8 @@ export async function stylesheetmanager(obj) {
   // if there is no style sheet, create 4 basics
   if (orderedStylesheets.length == 0) {
     await kickstartStylesheet();
+
+    hideLogin();
   }
 
   activateFirstStylesheet();
