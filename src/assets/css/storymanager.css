@@ -1,6 +1,7 @@
 @import url("./modules/reset.css");
 @import url("./modules/variables.css");
 @import url("./modules/loading.css");
+@import url("./modules/ui.css");
 
 html {
   font-size: 18px;
@@ -150,8 +151,4 @@ datetime {
 .deletemodal {
   background: white;
   padding: 1rem;
-}
-
-::backdrop {
-  background: #333333cc;
 }

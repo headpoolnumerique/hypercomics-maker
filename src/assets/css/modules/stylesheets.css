@@ -36,7 +36,7 @@
   border-bottom: 1px solid gray;
   display: grid;
   gap: 1ch;
-  padding: .8em 0 .2em;
+  padding: 0.8em 0 0.2em;
   grid-template-columns: repeat(5, 1fr);
 }
 
@@ -44,14 +44,16 @@
   color: red;
 }
 
-
 .stylesheet:hover {
-  background:var(--color-main);
+  background: var(--color-main);
 }
-
 
 /*hide the styles when there are images in here on it*/
 #screen-ui:has(.stylesheet) #populateStylesheet {
   display: none;
   /* background:blue; */
+}
+
+#login * {
+  color: blue !important;
 }
