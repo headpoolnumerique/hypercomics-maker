@@ -37,7 +37,7 @@ import {
 import { updateDelayUI } from "./modules/delay.js";
 import { saveAllStylesheet } from "./modules/stylesheet.js";
 import { zooming } from "./modules/preview.js";
-// import { isLoggedIn } from "./api/login.js";
+import { isLoggedIn } from "./api/login.js";
 
 startApp();
 
@@ -237,8 +237,11 @@ async function startApp() {
 
   // if not connected, dont show anything? or create an account?
 
-  // if (isLoggedIn()) {
-  await startup();
-  listeners();
-  // }
+  if (isLoggedIn()) {
+    // if not logged, go back to home page
+    await startup();
+    listeners();
+  } else {
+    window.location = config.appurl;
+  }
 }

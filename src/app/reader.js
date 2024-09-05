@@ -1,9 +1,9 @@
 import { readingTools } from "./readerModules/anim.js";
 import { generateStory } from "./readerModules/generateStory.js";
 
-start();
+beginRead();
 
-async function start() {
+async function beginRead() {
   await generateStory();
   await readingTools();
   document.querySelector("#loading")?.remove();
