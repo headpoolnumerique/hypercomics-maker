@@ -1,17 +1,38 @@
+import { assetsList, sequenceNumber } from "./selectors";
+
 // uploading image
-export function addAssetToTheAssetManager(url, assetid, filename, assetList) {
+export function addAssetToTheAssetManager(
+  url,
+  assetid,
+  filename,
+  assetList,
+  used = true,
+) {
   if (assetList.querySelector(`[data-filename="${filename}"]`)) {
     return;
   } else {
     assetList.insertAdjacentHTML(
       `afterbegin`,
-      `<li>
+      `<li class="${used ? "used" : "unused"}">
       <img data-filename="${filename}" data-assetId="${assetid}" src="${url}" id="assetlink-${assetid}" />
       <span class="asset-filename">${filename}</span>
-      
       </li>`,
     );
   }
+}
+
+export function addUnusedAssetToTheAssetManager(sequencedata) {
+  sequencedata.data?.attributes.assets.data.forEach((data) => {
+    console.log(data.attributes.objects);
+    if (data.attributes.objects.data.length > 0) return;
+    addAssetToTheAssetManager(
+      data.attributes.location,
+      data.id,
+      data.attributes.filename,
+      assetsList,
+      false,
+    );
+  });
 }
 
 function replaceAsset(asset) {
@@ -48,12 +69,9 @@ function replaceAsset(asset) {
 //   })
 // }
 
-
-
 export function liveSearch() {
   let elements = document.querySelectorAll("#assetsList li");
   let elementList = document.querySelector("#assetsList");
-
 
   let search_query = document.querySelector("#assetsFilter").value;
   if (search_query.length < 1) {
@@ -85,7 +103,4 @@ export function liveSearch() {
   }
 }
 
-
-
 // upload when dropping the files in the content
-
