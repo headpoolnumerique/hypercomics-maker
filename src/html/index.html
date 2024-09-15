@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title></title>
+    <title>hypercomics - story manager</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="css/storymanager.css" rel="stylesheet" />
@@ -22,50 +22,23 @@
         <p>please wait, we’re loading your panels</p>
     </aside>
 
-    <form method="dialog">
-        <button onclick="document.querySelector('#login').showModal();">
-            login
+    <form id="form-login" method="dialog">
+        <button id="button-login" onclick="document.querySelector('#login').showModal();">
+            Login
         </button>
-        <button onclick="
+        <button id="button-logout" onclick="
   document.cookie = 'hc_login_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         location.reload()">
-            logout
+            Logout
         </button>
     </form>
-    <dialog id="login">
-
-        <div class="introtext">
-            <h2>Welcome to hypercomic</h2>
-            <!-- <p class="connected">you’re connected!</p> -->
-            <p>While in alpha, <em>hypercomics</em> access is limited to invites. If you want to try the app, and make
-                responsive comics, simply ask <a href="mailto:contact@hypercomics.org">contact@hypercomics.org</a></p>
-        </div>
-
-        <form class="form">
-            <label>
-                <span>name</span>
-                <input id="username" type="text" />
-            </label>
-            <label>
-                <span>password</span>
-                <input id="password" type="password" />
-            </label>
-
-            <button id="submit" type="button">login</button>
-        </form>
-        <section class="login-error"></section>
-
-
-        <form method="dialog">
-        </form>
-    </dialog>
     <header>
         <h1>hypercomics</h1>
-        <p><a id="newproject-link" href="#new-project">new project</a></p>
     </header>
     <section id="menu">
         <section id="projects">
-            <h3>Projects</h3>
+                <!-- <h2>Projects</h2> -->
+        <p><a id="newproject-link" href="#new-project">create a project</a></p>
             <ul id="projects-list"></ul>
         </section>
     </section>
@@ -110,6 +83,39 @@
         <button id="deleteProject">Remove project</button>
         <button onclick="this.closest('.deletemodal').close()">Cancel</button>
     </dialog>
+
+
+
+
+    <dialog id="login">
+
+        <div class="introtext">
+            <h2>Welcome to hypercomic</h2>
+            <!-- <p class="connected">you’re connected!</p> -->
+            <p>While in alpha, <em>hypercomics</em> access is limited to invites. If you want to try the app, and make
+                responsive comics, simply ask <a href="mailto:contact@hypercomics.org">contact@hypercomics.org</a></p>
+        </div>
+
+        <form class="form">
+            <label>
+                <span>name</span>
+                <input id="username" type="text" />
+            </label>
+            <label>
+                <span>password</span>
+                <input id="password" type="password" />
+            </label>
+
+            <button id="loginsubmit" type="button">login</button>
+        </form>
+        <section class="login-error"></section>
+
+
+        <form method="dialog">
+        </form>
+    </dialog>
 </body>
 
 </html>
+
+

@@ -23,8 +23,9 @@ export const screensList = document.querySelector("#screens");
 export const newScreenUi = document.querySelector("#screen-ui");
 export const newScreenForm = document.querySelector("#screensform");
 export const newScreenButton = document.querySelector("#newscreen");
-export const populateStylesheetButton = document.querySelector("#populateStylesheet");
-
+export const populateStylesheetButton = document.querySelector(
+  "#populateStylesheet",
+);
 
 export const inputLeft = document.querySelector("#input-left");
 export const inputRight = document.querySelector("#input-right");
@@ -45,25 +46,15 @@ export const anchorRight = document.querySelector("#anchorRight");
 
 export const anchors = document.querySelectorAll(".anchorButton");
 
-
 // save the stylesheets!
 export const stylesWrapper = document.querySelector("#styleWrapper");
-export const cleanStylesheetButton = document.querySelector(`#cleanStylesheet`) 
-export const saveStylesheetButton = document.querySelector("#saveStylesheet")
-
-
-
+export const cleanStylesheetButton = document.querySelector(`#cleanStylesheet`);
+export const saveStylesheetButton = document.querySelector("#saveStylesheet");
 
 /*show hide*/
 
-export const inputMakeVisible = document.querySelector("#input-show")
-export const inputMakeHidden = document.querySelector("#input-hide")
-
+export const inputMakeVisible = document.querySelector("#input-show");
+export const inputMakeHidden = document.querySelector("#input-hide");
 
 export const buttonDeselectAsset = document.querySelector("#deselectAsset");
-export const buttonStick = document.querySelector("#button-stick")
-
-
-//grid
-export const buttonShowGrid = document.querySelector("#showgrid");
-
+export const buttonStick = document.querySelector("#button-stick");

@@ -38,8 +38,9 @@ export async function updateSequence(sequenceId, sequenceTitle) {
 
 export async function renameSequences() {
   document.body.addEventListener("click", function (e) {
-    if (e.target.classList.contains("sequence-title")) {
-      const seq = e.target;
+    if (e.target.classList.contains("rename")) {
+      e.preventDefault();
+      const seq = e.target.closest("li").querySelector(".sequence-title");
       const sequenceId = e.target
         .closest("li")
         .querySelector(".sequence-id").textContent;

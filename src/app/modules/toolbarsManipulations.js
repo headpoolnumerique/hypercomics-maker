@@ -1,45 +1,58 @@
 import interact from "interactjs";
+import { previewScreen } from "./selectors";
 
 function toggleToolbars() {
   document
     .querySelector("#homeButtonsList")
-    .addEventListener("click", function (event) {
-      switch (event.target.id) {
+    .addEventListener("click", function (e) {
+      switch (e.target.id) {
         case "showLayers":
           // console.log(event.target.id);
-          toggleToolbar(document.querySelector("#layer-space"));
+          toggleToolbar(e.target, document.querySelector("#layer-space"));
           break;
         case "showScreens":
           // console.log(event.target.id);
-          toggleToolbar(document.querySelector("#screen-ui"));
+          toggleToolbar(e.target, document.querySelector("#screen-ui"));
           break;
         case "showSequence":
           // console.log(event.target.id);
-          toggleToolbar(document.querySelector("#sequence"));
+          toggleToolbar(e.target, document.querySelector("#sequence"));
           break;
+
         case "showContextual":
           // console.log(event.target.id);
-          toggleToolbar(document.querySelector("#contextualUI"));
+          toggleToolbar(e.target, document.querySelector("#contextualUI"));
           break;
         case "showAssets":
           // console.log(event.target.id);
-          toggleToolbar(document.querySelector("#assets"));
+          toggleToolbar(e.target, document.querySelector("#assets"));
           break;
         case "showMontage":
-          toggleToolbar(document.querySelector("#banc-montage"));
+          toggleToolbar(e.target, document.querySelector("#banc-montage"));
           break;
         case "showstylewrapper":
-          toggleToolbar(document.querySelector("#styleWrapper"));
+          toggleToolbar(e.target, document.querySelector("#styleWrapper"));
           break;
         case "showPelure":
-          document.querySelector("#previewScreen").classList.toggle("showPrevious")
-          // if (document.querySelector(".oldShow")) {
-          //   document.querySelector(".oldshown")?.classList.remove(".oldshown");
-          // }
-          // document.querySelector("main").classList.toggle("showPrevious");
-          // document
-          //   .querySelector(".shown")
-          //   .previousElementSibling?.classList.add("oldshown");
+          document
+            .querySelector("#previewScreen")
+            .classList.toggle("showPrevious");
+          if (document.querySelector(".showPrevious")) {
+            e.target.classList.add("active-menu");
+          } else {
+            e.target.classList.remove("active-menu");
+          }
+          break;
+
+        case "showgrid":
+          document
+            .querySelector("#previewScreen")
+            .classList.toggle("show-grid");
+          if (document.querySelector(".showGrid")) {
+            e.target.classList.add("active-menu");
+          } else {
+            e.target.classList.remove("active-menu");
+          }
           break;
         default:
           console.log(event.target.id);
@@ -48,7 +61,8 @@ function toggleToolbars() {
     });
 }
 
-function toggleToolbar(toolbarElement) {
+function toggleToolbar(target, toolbarElement) {
+  target.classList.toggle("active-menu");
   toolbarElement.classList.toggle("hide");
   toolbarElement.style.top = "20%";
   toolbarElement.style.left = "20%";
@@ -73,7 +87,7 @@ function moveToolbars() {
         target.setAttribute("data-y", y);
       },
       onend: function (event) {
-        console.log(event);
+        // console.log(event);
       },
     })
     .allowFrom("h2");

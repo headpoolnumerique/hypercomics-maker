@@ -22,7 +22,7 @@ if (isLoggedIn()) {
 
 function loginButton() {
   document
-    .querySelector("#submit")
+    .querySelector("#loginsubmit")
     .addEventListener("click", async function () {
       // const logged = await login(username, password);
       // check if ther is the doci
@@ -130,7 +130,6 @@ async function renderProject(project) {
   const projectSequenceContent = `<section id="project${
     project.id
   }" class="project">
-  <a id="projectback" href="#projects">Back to projects</a>
   <h2>${project.attributes.title}</h2>
   <button  data-projectid="${project.id}"
 onclick="addSequence(${project.id}, window.username)"
@@ -149,8 +148,9 @@ function generateSequence(sequence, project) {
 <span class="sequence-title">${sequence.attributes.title}</span> 
 <div class="buttons"> 
 <a href="editor.html?sequence=${sequence.id}">edit</a> 
+<a data-sequenceid=${sequence.id} href="#" class="rename" >rename</a> 
 <a href="reader.html?sequence=${sequence.id}">preview</a>
-<button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button>
+<!-- <button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button> -->
 </div> 
 </li>`;
 }

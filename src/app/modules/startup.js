@@ -2,10 +2,8 @@ import config from "../config/config.js";
 import { loadSingle, createData } from "./dataManagement.js";
 import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
 import {
-  buttonShowGrid,
   layerList,
   montageList,
-  previewScreen,
   sequenceNumber,
   sequencePreview,
 } from "./selectors.js";
@@ -38,7 +36,6 @@ async function startup(url = document.location.href) {
 
   // console.log(response);
   //
-  console.log(response.data.data.attributes.project.data.attributes.author);
   updateSequenceMeta(
     response.data?.data?.id,
     response.data?.data?.attributes?.title,
@@ -56,7 +53,6 @@ async function startup(url = document.location.href) {
   setAnchor();
   updatefromui();
   handleVisilibity();
-  toggleGrid();
   await stylesheetmanager(response.data);
 
   document
@@ -76,12 +72,6 @@ async function startup(url = document.location.href) {
   // document.querySelector("#anchorTop").addEventListener("click", function() {
   //   setPropertyInStylesheet(document.querySelector(".asset-selected"), document.querySelector(".activatedStylesheet"), "--funz", "test")
   // })
-}
-
-export function toggleGrid() {
-  buttonShowGrid.addEventListener("click", () => {
-    previewScreen.classList.toggle("show-grid");
-  });
 }
 
 async function fillSequence(plans) {
