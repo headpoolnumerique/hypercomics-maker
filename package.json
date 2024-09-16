@@ -13,7 +13,7 @@
     "watch:manager": "esbuild src/app/storymanager.js --bundle --sourcemap --watch=forever --outfile=public/js/storymanager.js",
     "watch:serve": "browser-sync public --server --watch --port 8080",
     "watch:html": "copy-and-watch --watch src/html/*.{html,json}  public/",
-    "watch:fonts": "copy-and-watch --watch src/assets/fonts/*.*  public/fonts/",
+    "watch:fonts": "copy-and-watch --watch src/assets/fonts/**/*  public/fonts/",
     "build": "npm-run-all --parallel build:*",
     "build:js": "esbuild src/app/app.js --bundle --outfile=public/js/hypercomicsbuilder.js",
     "build:reader": "esbuild src/app/reader.js --bundle --outfile=public/js/hypercomicsreader.js",

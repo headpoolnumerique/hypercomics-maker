@@ -2,12 +2,18 @@ import config from "../config/config.js";
 import { loadSingle, createData } from "./dataManagement.js";
 import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
 import {
+  buttonShowGrid,
   layerList,
   montageList,
+  previewScreen,
   sequenceNumber,
   sequencePreview,
 } from "./selectors.js";
-import { addAssetToTheAssetManager, liveSearch } from "./assetManager";
+import {
+  addAssetToTheAssetManager,
+  addUnusedAssetToTheAssetManager,
+  liveSearch,
+} from "./assetManager";
 import {
   moveToolbars,
   resizeMontagePaneVertically,
@@ -35,17 +41,16 @@ async function startup(url = document.location.href) {
   let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
   // console.log(response);
-  //
   updateSequenceMeta(
     response.data?.data?.id,
     response.data?.data?.attributes?.title,
-    response.data?.data?.attributes.project.data.attributes.author,
   );
 
   fillSequence(response.data.data.attributes.plans);
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
+<<<<<<< HEAD
   reorderLayer(layerList);
   layerInteract();
   resizeMontagePaneVertically();
@@ -68,10 +73,46 @@ async function startup(url = document.location.href) {
     liveSearch();
   });
 
+=======
+
+  reorderLayer(layerList);
+  layerInteract();
+  resizeMontagePaneVertically();
+  handleDelays();
+  setAnchor();
+  updatefromui();
+  handleVisilibity();
+  toggleGrid();
+  await addUnusedAssetToTheAssetManager(response.data);
+  await stylesheetmanager(response.data);
+
+  document
+    .querySelector("#deleteObject")
+    .addEventListener("click", deleteObject);
+
+  //filters to put in their own function
+  document.querySelector("#filterreset").addEventListener("click", (e) => {
+    document.querySelector("#assetsFilter").value = "";
+    liveSearch();
+  });
+  document.querySelector("#assetsFilter").addEventListener("change", (e) => {
+    liveSearch();
+  });
+
+>>>>>>> main
   //lol
   // document.querySelector("#anchorTop").addEventListener("click", function() {
   //   setPropertyInStylesheet(document.querySelector(".asset-selected"), document.querySelector(".activatedStylesheet"), "--funz", "test")
   // })
+<<<<<<< HEAD
+=======
+}
+
+export function toggleGrid() {
+  buttonShowGrid.addEventListener("click", () => {
+    previewScreen.classList.toggle("show-grid");
+  });
+>>>>>>> main
 }
 
 async function fillSequence(plans) {
@@ -96,6 +137,7 @@ async function fillSequence(plans) {
   // check for each plan. add them to the view
 }
 
+<<<<<<< HEAD
 async function updateSequenceMeta(id, title, authorname) {
   const meta = {
     projectName: document.querySelector("#projectName"),
@@ -105,6 +147,15 @@ async function updateSequenceMeta(id, title, authorname) {
   meta.sequenceNumber.innerHTML = id;
   meta.projectName.innerHTML = title;
   meta.authorname.innerHTML = authorname;
+=======
+async function updateSequenceMeta(id, title) {
+  const meta = {
+    projectName: document.querySelector("#projectName"),
+    sequenceNumber: document.querySelector("#sequenceNumber"),
+  };
+  meta.projectName.innerHTML = title;
+  meta.sequenceNumber.innerHTML = id;
+>>>>>>> main
 }
 
 async function fillPlan(plan) {

@@ -32,6 +32,7 @@ export async function stylesheetmanager(obj) {
   // if there is no style sheet, create 4 basics
   if (orderedStylesheets.length == 0) {
     await kickstartStylesheet();
+<<<<<<< HEAD
 
     hideLogin();
   }
@@ -45,6 +46,19 @@ export async function stylesheetmanager(obj) {
   //follow the resizing of the screen
   getSize();
 
+=======
+  }
+
+  activateFirstStylesheet();
+
+  // listen to the style stylesheet inputs
+  // and the ui to switchstylesheet
+  stylesheetListeners();
+
+  //follow the resizing of the screen
+  getSize();
+
+>>>>>>> main
   cleanStylesheetButton.addEventListener("click", cleanStyleSheet);
 }
 
@@ -268,7 +282,11 @@ export function getSize() {
   const screenSizeObserver = new ResizeObserver((screensizes) => {
     for (const screensize of screensizes) {
       if (!screensList.querySelector(".stylesheet"))
+<<<<<<< HEAD
         return console.log("there is no stylesheet, do nothing");
+=======
+        return console.log("there is no stylesheet, dont try");
+>>>>>>> main
       if (screensize.contentBoxSize) {
         let newWidth = Math.round(screensize.contentBoxSize[0].inlineSize);
         let newHeight = Math.round(screensize.contentBoxSize[0].blockSize);
@@ -588,6 +606,12 @@ export function setObjInStylesheet(stylesheet, obj) {
 }
 
 export async function saveStylesheet(stylesheetId, data) {
+<<<<<<< HEAD
+=======
+  if (stylesheetId == stylesWrapper.querySelector("style").dataset.strapid) {
+    updateDefaultStylesheet();
+  }
+>>>>>>> main
   return await axios
     .put(`${config.strapi.url}/api/stylesheets/${stylesheetId}`, {
       data: {
@@ -848,6 +872,21 @@ function createDefaultStylesheet() {
     stringify(defaultStylesheet);
 
   // = stylesWrapper.querySelector("style").textContent).stylesheet.rules[0]))
+<<<<<<< HEAD
+=======
+}
+
+// update the default stylesheet everytimes the styles get changed?
+// or only if the change happens in the first stylesheet
+export function updateDefaultStylesheet() {
+  let defaultStylesheet = parse(
+    stylesWrapper.querySelector("style").textContent,
+  );
+  defaultStylesheet.stylesheet.rules =
+    defaultStylesheet.stylesheet.rules[0].rules;
+  document.querySelector("#style-default").textContent =
+    stringify(defaultStylesheet);
+>>>>>>> main
 }
 
 /*
