@@ -2,12 +2,17 @@ import config from "../config/config.js";
 import { loadSingle, createData } from "./dataManagement.js";
 import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
 import {
+  buttonShowGrid,
   layerList,
   montageList,
   sequenceNumber,
   sequencePreview,
 } from "./selectors.js";
-import { addAssetToTheAssetManager, liveSearch } from "./assetManager";
+import {
+  addAssetToTheAssetManager,
+  addUnusedAssetToTheAssetManager,
+  liveSearch,
+} from "./assetManager";
 import {
   moveToolbars,
   resizeMontagePaneVertically,
@@ -53,6 +58,8 @@ async function startup(url = document.location.href) {
   setAnchor();
   updatefromui();
   handleVisilibity();
+
+  await addUnusedAssetToTheAssetManager(response.data);
   await stylesheetmanager(response.data);
 
   document
@@ -67,11 +74,12 @@ async function startup(url = document.location.href) {
   document.querySelector("#assetsFilter").addEventListener("change", (e) => {
     liveSearch();
   });
+}
 
-  //lol
-  // document.querySelector("#anchorTop").addEventListener("click", function() {
-  //   setPropertyInStylesheet(document.querySelector(".asset-selected"), document.querySelector(".activatedStylesheet"), "--funz", "test")
-  // })
+export function toggleGrid() {
+  buttonShowGrid.addEventListener("click", () => {
+    previewScreen.classList.toggle("show-grid");
+  });
 }
 
 async function fillSequence(plans) {
