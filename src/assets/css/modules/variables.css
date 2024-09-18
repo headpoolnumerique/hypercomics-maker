@@ -25,6 +25,7 @@ body {
   --color-body: #121212;
   /* --font-interface: "monaspace"; */
   --font-interface: "monaspace";
+  --font-ui: "inter";
   /*screen minimal size*/
   --min-height: 800px;
   --min-width: 400px;

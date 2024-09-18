@@ -290,7 +290,7 @@
       <ol id="planOrder">
         <!-- <li><a href="#plan12">12</a></li> -->
       </ol>
-      <section id="assets" class="moveable block-ui hide">
+      <section id="assets" class="moveable resizable block-ui hide">
         <h2>Assets</h2>
         <div>
           <form id="inputs">
@@ -309,6 +309,11 @@
               placeholder="are you looking for something?"
             />
             <button id="filterreset">reset</button>
+            <!-- show used and not used blocks -->
+            <label for="showUsed">Placed</label>
+            <input id="showUsed" type="checkbox" name="showUsed" />
+            <label for="showUnused">Not placed</label>
+            <input id="showUnused" type="checkbox" name="showUnused" />
             <ul id="assetsList"></ul>
           </div>
         </div>

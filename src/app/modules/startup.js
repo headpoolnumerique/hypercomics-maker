@@ -12,6 +12,7 @@ import {
   addAssetToTheAssetManager,
   addUnusedAssetToTheAssetManager,
   liveSearch,
+  removeAsset,
 } from "./assetManager";
 import {
   moveToolbars,
@@ -74,6 +75,9 @@ async function startup(url = document.location.href) {
   document.querySelector("#assetsFilter").addEventListener("change", (e) => {
     liveSearch();
   });
+
+  // remove asset from a button
+  window.removeAsset = removeAsset;
 }
 
 export function toggleGrid() {

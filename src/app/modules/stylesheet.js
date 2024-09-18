@@ -33,7 +33,7 @@ export async function stylesheetmanager(obj) {
   if (orderedStylesheets.length == 0) {
     await kickstartStylesheet();
 
-    hideLogin();
+    // hideLogin();
   }
 
   activateFirstStylesheet();

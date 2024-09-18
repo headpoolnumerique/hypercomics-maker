@@ -1,3 +1,6 @@
+import axios from "axios";
+import config from "../config/config";
+
 // uploading image
 export function addAssetToTheAssetManager(
   url,
@@ -11,12 +14,35 @@ export function addAssetToTheAssetManager(
   } else {
     assetList.insertAdjacentHTML(
       `afterbegin`,
-      `<li class="${used ? "used" : "unused"}">
+      `<li class="${used ? "used" : "unused"}" strapid="${assetid}">
       <img data-filename="${filename}" data-assetId="${assetid}" src="${url}" id="assetlink-${assetid}" />
       <span class="asset-filename">${filename}</span>
+      <button class="removeAsset" onclick="removeAsset(${assetid}, this)">remove</button>
       </li>`,
     );
   }
+}
+
+export async function removeAsset(assetid, el) {
+  console.log("remove asset " + assetid);
+  console.log(el);
+  // strapi unlink the asset from the asset list and from all plan
+
+  await axios
+    .put(`${config.strapi.url}/api/assets/${assetid}?populate=deep,2`, {
+      data: {
+        sequences: "",
+      },
+    })
+    .then(function (response) {
+      el.closest("li").remove();
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  // once done remove
 }
 
 // add unused assets to the asset manager

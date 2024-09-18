@@ -8,7 +8,7 @@ export async function createSequence(projectId, author) {
     .post(`${config.strapi.url}/api/sequences/?populate=deep`, {
       data: {
         project: projectId,
-        title: "click to rename the sequence",
+        title: "rename me!",
         author: author ? author : "",
       },
     })

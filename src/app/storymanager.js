@@ -99,13 +99,11 @@ function selectToDelete(id, title) {
 
 // delete project
 function deleteProject(id) {
-  // are you sure?
-  // archive on strapi
+  console.log(id);
   archiveProject(id);
-  // remove the project
-  event.target.closest("li").remove();
-  // remove the projectlist
-  document.querySelector(`sequenceList${id}`).remove();
+  document.querySelector(`#project-${id}`).remove();
+  document.querySelector(".deletemodal").close();
+  document.querySelector(`#project${id}`).remove();
 }
 
 // render the project
@@ -115,9 +113,8 @@ async function renderProject(project) {
   // insert project in the project list
   projectsList.insertAdjacentHTML(
     "beforeend",
-    ` <li data-title="${project.attributes.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
+    ` <li id="project-${project.id}" data-title="${project.attributes.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
         <a href="#project${project.id}">${project.attributes.title}</a> 
-        <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">remove project</button>
       </li>`,
   );
 
@@ -131,9 +128,12 @@ async function renderProject(project) {
     project.id
   }" class="project">
   <h2>${project.attributes.title}</h2>
+  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">remove project</button>
+
   <button  data-projectid="${project.id}"
 onclick="addSequence(${project.id}, window.username)"
 class="createSequence">Add a sequence</button>
+
   <ul class="sequences-list" id="sequenceList${
     project.id
   }">${renderedSequences.join("")}</ul>
@@ -148,9 +148,9 @@ function generateSequence(sequence, project) {
 <span class="sequence-title">${sequence.attributes.title}</span> 
 <div class="buttons"> 
 <a href="editor.html?sequence=${sequence.id}">edit</a> 
-<a data-sequenceid=${sequence.id} href="#" class="rename" >rename</a> 
+<a data-sequenceid=${sequence.id} href="#" class="rename">rename</a> 
 <a href="reader.html?sequence=${sequence.id}">preview</a>
-<!-- <button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button> -->
+<button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button>
 </div> 
 </li>`;
 }
@@ -162,11 +162,13 @@ async function addSequence(projectNumber, author) {
     "beforeend",
     `<li>
 <span class="sequence-id">${newSeq.data.data.id}</span>
-<span class="sequence-title" contenteditable>${newSeq.data.data.attributes.title}</span> 
+<span class="sequence-title" >${newSeq.data.data.attributes.title}</span> 
 <div class="buttons"> 
+
 <a href="editor.html?sequence=${newSeq.data.data.id}">edit</a> 
+<a data-sequenceid=${newSeq.data.data.id} href="#" class="rename">rename</a> 
 <a href="reader.html?sequence=${newSeq.data.data.id}">preview</a>
-<button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})" >delete</button>
+<button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})">delete</button>
 </div> 
 </li>`,
   );
