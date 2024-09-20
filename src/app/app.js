@@ -241,7 +241,7 @@ async function startApp() {
     // if not logged, go back to home page
     await startup();
     listeners();
-    document.querySelector("#loading")?.remove();
+    document.querySelector("#loading")?.classList.add("hide");
   } else {
     window.location = config.appurl;
   }

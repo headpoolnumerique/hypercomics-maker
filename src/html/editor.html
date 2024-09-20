@@ -274,22 +274,21 @@
         <ul id="layers"></ul>
       </section>
 
-      <section id="banc-montage" class="show moveable block-ui hide">
-        <h2>montage</h2>
-        <div>
+      <section id="banc-montage" class="">
+        <div class="subuttons">
           <button id="addPlan">add plan</button>
-          <button id="deletePlan">delete plan</button>
           <button id="duplicatePlan">duplicate plan</button>
+          <button id="deletePlan">delete plan</button>
           <div id="delay-tools">
             <label for="minimaldelay">scroll delay in millisecond</label>
             <input id="minimaldelay" type="number" name="minimaldelay" />
           </div>
         </div>
+        <ol id="planOrder">
+          <!-- <li><a href="#plan12">12</a></li> -->
+        </ol>
       </section>
 
-      <ol id="planOrder">
-        <!-- <li><a href="#plan12">12</a></li> -->
-      </ol>
       <section id="assets" class="moveable resizable block-ui hide">
         <h2>Assets</h2>
         <div>
@@ -311,9 +310,9 @@
             <button id="filterreset">reset</button>
             <!-- show used and not used blocks -->
             <label for="showUsed">Placed</label>
-            <input id="showUsed" type="checkbox" name="showUsed" />
+            <input id="showUsed" checked type="checkbox" name="showUsed" />
             <label for="showUnused">Not placed</label>
-            <input id="showUnused" type="checkbox" name="showUnused" />
+            <input id="showUnused" checked type="checkbox" name="showUnused" />
             <ul id="assetsList"></ul>
           </div>
         </div>

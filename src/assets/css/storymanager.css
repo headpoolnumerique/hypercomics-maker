@@ -2,9 +2,10 @@
 @import url("./modules/variables.css");
 @import url("./modules/loading.css");
 @import url("./modules/ui.css");
+
 html {
   color: var(--color-body);
-  font-family: var(--font-interface);
+  font-family: var(--font-ui);
   scrollbar-gutter: stable;
   /* height: 100vh; */
 }

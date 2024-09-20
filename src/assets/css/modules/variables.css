@@ -1,6 +1,13 @@
 /* fonts */
 
 @font-face {
+  font-family: "bricolage";
+  src: url("../fonts/bricolagegrotesque[opsz\,wdth\,wght].ttf");
+  font-weight: 100 900;
+  font-style: normal italic;
+}
+
+@font-face {
   font-family: "inter";
   src: url("../fonts/inter.var.woff2") format("woff2");
   font-weight: 100 900;
@@ -13,19 +20,16 @@
   font-weight: 200 800;
 }
 
-body {
-  /*   font-variation-settings: "wdth" 100, "slnt" 0; */
-  font-weight: 400;
-}
-
 /* variables */
 :root {
   --color-main: rgb(215, 105, 140, 1);
+  --color-main: rgb(30, 88, 178);
   --color-main-light: rgb(215, 105, 140, 0.3);
   --color-body: #121212;
   /* --font-interface: "monaspace"; */
   --font-interface: "monaspace";
   --font-ui: "inter";
+  --font-ui: "bricolage";
   /*screen minimal size*/
   --min-height: 800px;
   --min-width: 400px;

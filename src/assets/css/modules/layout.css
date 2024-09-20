@@ -106,28 +106,34 @@ main#appWrap {
 
 /*II. montage*/
 
+/* #banc-monwage { */
+/*   background: var(--color-montage-order, white); */
+/*   max-width: 800px; */
+/* } */
+/**/
+/* #banc-montage.show { */
+/*   display: unset; */
+/*   min-height: 200px; */
+/* } */
+
 #banc-montage {
-  background: var(--color-montage-order, white);
-  max-width: 800px;
-}
-
-#banc-montage.show {
-  display: unset;
-  min-height: 200px;
-}
-
-#planOrder {
   position: fixed;
   bottom: 0;
+  width: 100%;
+  & .subbutton {
+    display: block;
+  }
+}
+#planOrder {
   list-style-type: none;
-  display: flex;
+  /* display: flex; */
   padding-left: 0;
   margin: 0 auto;
   gap: 1ch;
   flex-wrap: wrap;
-  width: 100%;
+
+  display: flex;
   align-items: space-around;
-  height: 3em;
   /* overflow-y: auto; */
   font-size: 0.8em;
   padding-top: 12px;
