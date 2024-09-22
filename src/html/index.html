@@ -54,7 +54,7 @@
     </section>
     <!-- for each project do this -->
     <section id="projectSequences">
-      <h2>Sequences</h2>
+      <!-- <h2>Sequences</h2> -->
     </section>
 
     <section id="new-project" class="project">
@@ -93,6 +93,8 @@
         <span id="projectToRemove" class="projectid"></span>:
         <strong class="title"></strong>
       </p>
+      copy paste the name of the project here to remove it.
+      <input type="text" id="remove-project-name" />
       <button
         id="deleteProject"
         onclick="deleteProject(document.querySelector(`#projectToRemove`).textContent)"
@@ -118,11 +120,11 @@
       <form class="form">
         <label>
           <span>name</span>
-          <input id="username" type="text" />
+          <input placeholder="ninasimone" id="username" type="text" />
         </label>
         <label>
           <span>password</span>
-          <input id="password" type="password" />
+          <input placeholder="* * * * * *" id="password" type="password" />
         </label>
 
         <button id="loginsubmit" type="button">login</button>

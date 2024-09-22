@@ -46,8 +46,9 @@ export async function renameSequences() {
         .querySelector(".sequence-id").textContent;
       document.querySelector(".renameModal").showModal();
 
-      document.querySelector("#rename-sequence-title").value =
-        e.target.textContent;
+      document.querySelector("#rename-sequence-title").value = e.target
+        .closest("li")
+        .querySelector(".sequence-title").textContent;
 
       document.querySelector("#rename-sequence-id").textContent = sequenceId;
 

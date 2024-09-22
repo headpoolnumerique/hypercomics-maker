@@ -47,11 +47,6 @@ function listeners() {
   // zoom system
   zooming();
 
-  //show hide montage
-  document.querySelector("#showMontage").addEventListener("click", () => {
-    showHideBlock(montageScreen);
-  });
-
   //show hide contextual id
   document
     .querySelectorAll("#showContextualUI, #closeContextualUI")

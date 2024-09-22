@@ -27,7 +27,7 @@ function dragAndPlanReorder(wrappingElement, sequenceNumber) {
     selectedClass: "toDrag",
     multiDragKey: "shift", // Key that must be down for items to be selected
     avoidImplicitDeselect: true, // true - if you don't want to deselect items on outside click
-    onEnd: function(event) {
+    onEnd: function (event) {
       resetOrder(wrappingElement);
       // reorder the sequence preview
 
@@ -198,25 +198,29 @@ async function addPlan(montageList, select = true) {
   if (!referencePlan) {
     montageList.insertAdjacentHTML(
       "beforeend",
-      `<li id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
+      `<li id="link-${response.data.data.id}"><a class=${
+        select ? "selected" : ""
       } href="#plan-${response.data.data.id}" >
     </a></li>`,
     );
     sequencePreview.insertAdjacentHTML(
       "beforeend",
-      `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
+      `<article class="${select ? "shown" : ""}" id="plan-${
+        response.data.data.id
       }" data-strap-id="${response.data.data.id}"></article>`,
     );
   } else {
     referencePlanLink.closest("li").insertAdjacentHTML(
       "afterend",
-      `<li  id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
+      `<li  id="link-${response.data.data.id}"><a class=${
+        select ? "selected" : ""
       } href="#plan-${response.data.data.id}" >
     </a></li>`,
     );
     referencePlan.insertAdjacentHTML(
       "afterend",
-      `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
+      `<article class="${select ? "shown" : ""}" id="plan-${
+        response.data.data.id
       }" data-strap-id="${response.data.data.id}"></article>`,
     );
   }
@@ -301,25 +305,29 @@ export async function duplicatePlan(
       if (!referencePlan) {
         montageList.insertAdjacentHTML(
           "beforeend",
-          `<li  id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
+          `<li  id="link-${response.data.data.id}"><a class=${
+            select ? "selected" : ""
           } href="#plan-${response.data.data.id}" >
     </a></li>`,
         );
         sequencePreview.insertAdjacentHTML(
           "beforeend",
-          `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
+          `<article class="${select ? "shown" : ""}" id="plan-${
+            response.data.data.id
           }" data-strap-id="${response.data.data.id}"></article>`,
         );
       } else {
         referencePlanLink.closest("li").insertAdjacentHTML(
           "afterend",
-          `<li  id="link-${response.data.data.id}"><a class=${select ? "selected" : ""
+          `<li  id="link-${response.data.data.id}"><a class=${
+            select ? "selected" : ""
           } href="#plan-${response.data.data.id}" >
     </a></li>`,
         );
         referencePlan.insertAdjacentHTML(
           "afterend",
-          `<article class="${select ? "shown" : ""}" id="plan-${response.data.data.id
+          `<article class="${select ? "shown" : ""}" id="plan-${
+            response.data.data.id
           }" data-strap-id="${response.data.data.id}"></article>`,
         );
       }
@@ -391,7 +399,8 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert a link to the plan in the montage panel
   montageList.insertAdjacentHTML(
     "beforeend",
-    `<li  id="link-${plan.id}"><a class="${select ? "selected" : ""
+    `<li  id="link-${plan.id}"><a class="${
+      select ? "selected" : ""
     }" href="#plan-${plan.id}"> 
 
   </a></li>`,
@@ -400,12 +409,17 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert the plan in the preview plan
   sequencePreview.insertAdjacentHTML(
     "beforeend",
-    `<article data-strap-id=${plan.id} class="plan ${select ? "shown" : ""
+    `<article data-strap-id=${plan.id} class="plan ${
+      select ? "shown" : ""
     }" id="plan-${plan.id}">
     </article>`,
   );
 }
 
 // move plan using drag and drop
+
+export function switchMontageModel(model) {
+  return model;
+}
 
 export { addPlan, deleteAllPlans, selectLink, renderPlan, dragAndPlanReorder };

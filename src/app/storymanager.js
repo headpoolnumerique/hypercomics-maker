@@ -99,6 +99,15 @@ function selectToDelete(id, title) {
 
 // delete project
 function deleteProject(id) {
+  console.log(document.querySelector(".deletemodal .title"));
+  if (
+    document.querySelector("#remove-project-name").value !=
+    document.querySelector(".deletemodal .title").textContent
+  ) {
+    document.querySelector("#remove-project-name").value =
+      "replace me with the project name";
+    return console.log("can’t remove");
+  }
   console.log(id);
   archiveProject(id);
   document.querySelector(`#project-${id}`).remove();
@@ -127,13 +136,12 @@ async function renderProject(project) {
   const projectSequenceContent = `<section id="project${
     project.id
   }" class="project">
+<header>
   <h2>${project.attributes.title}</h2>
-  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">remove project</button>
 
-  <button  data-projectid="${project.id}"
-onclick="addSequence(${project.id}, window.username)"
-class="createSequence">Add a sequence</button>
-
+  <button  data-projectid="${project.id}" onclick="addSequence(${project.id}, window.username)" class="createSequence">Add a sequence</button>
+  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">Remove project</button>
+</header>
   <ul class="sequences-list" id="sequenceList${
     project.id
   }">${renderedSequences.join("")}</ul>
@@ -158,9 +166,12 @@ function generateSequence(sequence, project) {
 async function addSequence(projectNumber, author) {
   let button = event.target;
   let newSeq = await createSequence(projectNumber, author);
-  button.nextElementSibling.insertAdjacentHTML(
-    "beforeend",
-    `<li>
+  button
+    .closest(".project")
+    .querySelector("ul")
+    .insertAdjacentHTML(
+      "beforeend",
+      `<li>
 <span class="sequence-id">${newSeq.data.data.id}</span>
 <span class="sequence-title" >${newSeq.data.data.attributes.title}</span> 
 <div class="buttons"> 
@@ -171,7 +182,7 @@ async function addSequence(projectNumber, author) {
 <button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})">delete</button>
 </div> 
 </li>`,
-  );
+    );
 }
 
 async function deleteSequence(projectId, sequenceId) {

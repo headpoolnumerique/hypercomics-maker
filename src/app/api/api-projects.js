@@ -92,9 +92,11 @@ export async function renderEmptyProject(project) {
   // project for each sequence: create a list imenm
 
   const projectSequenceContent = `<section id="project${project.id}" class="project">
+<header>
   <h2>${project.attributes.title}</h2>
-  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">remove project</button>
   <button data-projectid="${project.id}" onclick="addSequence(${project.id}, window.username)" class="createSequence">Add a sequence</button>
+  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">Remove project</button>
+</header>
   <ul class="sequences-list"></ul>
   </section>`;
 

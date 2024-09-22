@@ -27,9 +27,9 @@ function toggleToolbars() {
           // console.log(event.target.id);
           toggleToolbar(e.target, document.querySelector("#assets"));
           break;
-        case "showMontage":
-          toggleToolbar(e.target, document.querySelector("#banc-montage"));
-          break;
+        // case "showMontage":
+        // toggleToolbar(e.target, document.querySelector("#banc-montage"));
+        // break;
         case "showstylewrapper":
           toggleToolbar(e.target, document.querySelector("#styleWrapper"));
           break;

@@ -111,13 +111,14 @@ export function liveSearch() {
   //Use innerText if all contents are visible
   //Use textContent for including hidden elements
   for (var i = 0; i < elements.length; i++) {
-    console.log(elements[i].textContent);
-    console.log(search_query.toLowerCase().trim());
-    console.log(
-      elements[i].textContent
-        .toLowerCase()
-        .includes(search_query.toLowerCase()),
-    );
+    // no needs for log
+    // console.log(elements[i].textContent);
+    // console.log(search_query.toLowerCase().trim());
+    // console.log(
+    //   elements[i].textContent
+    //     .toLowerCase()
+    //     .includes(search_query.toLowerCase()),
+    // );
     if (
       elements[i].textContent.toLowerCase().includes(search_query.toLowerCase())
     ) {

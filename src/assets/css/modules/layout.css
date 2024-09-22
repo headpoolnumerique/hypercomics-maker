@@ -117,11 +117,18 @@ main#appWrap {
 /* } */
 
 #banc-montage {
+  border-top: 3px dashed grey;
   position: fixed;
   bottom: 0;
+  background: white;
   width: 100%;
-  & .subbutton {
-    display: block;
+  & .subbuttons {
+    gap: 3ch;
+    display: flex;
+    padding: 0 3ch;
+    & button {
+      border: 0;
+    }
   }
 }
 #planOrder {
@@ -138,7 +145,6 @@ main#appWrap {
   font-size: 0.8em;
   padding-top: 12px;
   border-top: 1px solid grey;
-  background: white;
   overflow-y: scroll;
 }
 

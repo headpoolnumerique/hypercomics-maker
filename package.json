@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "watch": "npm-run-all --parallel watch:*",
-    "watch:css": "postcss --watch src/assets/css/main.css -m -o public/css/styles.css ",
-    "watch:managagercss": "postcss --watch src/assets/css/storymanager.css -m -o public/css/storymanager.css ",
-    "watch:readercss": "postcss --watch src/assets/css/reader.css -m -o public/css/reader.css ",
+    "watch:css": "postcss --map --watch src/assets/css/main.css -m -o public/css/styles.css ",
+    "watch:managagercss": "postcss --map --watch src/assets/css/storymanager.css -m -o public/css/storymanager.css ",
+    "watch:readercss": "postcss --map --watch src/assets/css/reader.css -m -o public/css/reader.css ",
     "watch:js": "esbuild src/app/app.js --bundle --sourcemap --watch=forever --outfile=public/js/hypercomicsbuilder.js",
     "watch:reader": "esbuild src/app/reader.js --bundle --sourcemap --watch=forever --outfile=public/js/hypercomicsreader.js",
     "watch:manager": "esbuild src/app/storymanager.js --bundle --sourcemap --watch=forever --outfile=public/js/storymanager.js",
