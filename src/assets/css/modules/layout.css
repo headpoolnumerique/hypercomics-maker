@@ -117,21 +117,25 @@ main#appWrap {
 /* } */
 
 #banc-montage {
-  border-top: 3px dashed grey;
+  background: transparent;
   position: fixed;
   bottom: 0;
-  background: white;
   width: 100%;
   & .subbuttons {
     gap: 3ch;
     display: flex;
-    padding: 0 3ch;
+    padding: 0 3ch 0.5em;
+
     & button {
       border: 0;
+      border-radius: 16px;
+      font-size: 0.8em;
+      text-transform: uppercase;
     }
   }
 }
 #planOrder {
+  background: white;
   list-style-type: none;
   /* display: flex; */
   padding-left: 0;

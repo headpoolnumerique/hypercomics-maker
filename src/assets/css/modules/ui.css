@@ -177,6 +177,13 @@ button,
     padding: 0.3em 2ch;
     position: sticky;
     top: 0;
+    & button {
+      position: absolute;
+      right: 0;
+      color: white;
+      background: transparent;
+      border: none;
+    }
   }
 
   & h3 {

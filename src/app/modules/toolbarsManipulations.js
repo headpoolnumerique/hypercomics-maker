@@ -94,7 +94,7 @@ function moveToolbars() {
 }
 
 function resizeMontagePaneVertically() {
-  const pane = document.querySelector("#banc-montage");
+  const pane = document.querySelector("#planOrder");
   interact(pane).resizable({
     // only allow resizing from the top edge
     edges: { top: true },

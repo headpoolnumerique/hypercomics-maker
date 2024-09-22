@@ -270,7 +270,12 @@
       </section>
 
       <section id="layer-space" class="hide moveable block-ui">
-        <h2>Layers</h2>
+        <h2>
+          Layers
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+        </h2>
         <ul id="layers"></ul>
       </section>
 
@@ -290,7 +295,12 @@
       </section>
 
       <section id="assets" class="moveable resizable block-ui hide">
-        <h2>Assets</h2>
+        <h2>
+          Assets
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+        </h2>
         <div>
           <form id="inputs">
             <label for="assetsUpload">upload images:</label>
