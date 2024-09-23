@@ -183,6 +183,9 @@ main#appWrap {
   font-weight: 900;
 }
 
+#planOrder li.created {
+  animation: showoff 2s;
+}
 /* 3. the contextual menu */
 
 #contextualUI {
@@ -210,4 +213,14 @@ main#appWrap {
 .moveButton {
   position: absolute;
   top: 50%;
+}
+
+@keyframes showoff {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100%;
+  }
 }

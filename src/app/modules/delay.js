@@ -1,10 +1,10 @@
 import config from "../config/config";
 import { updateData } from "./dataManagement";
+import { plandelay } from "./selectors";
 
 async function handleDelays() {
   // debounce to make sure we’re not pushing too much to the server
 
-  const plandelay = document.querySelector("#minimaldelay");
   plandelay.addEventListener("input", async (event) => {
     const value = event.target.value;
     if (!value || isNaN(value)) return console.log("the delay is not a number");
@@ -16,16 +16,18 @@ async function handleDelays() {
     const data = {
       delay: value,
     };
+    console.log(plan);
 
     console.log(
-      updateData(config.strapi.url, "plans", data, plan.dataset.strapId)
+      await updateData(config.strapi.url, "plans", data, plan.dataset.strapId),
     );
     await updateData(
       config.strapi.url,
       "plans",
       data,
-      plan.dataset.strapId
+      plan.dataset.strapId,
     ).then((response) => {
+      console.log(plan.dataset.delay);
       console.log(response);
       plan.dataset.delay = value;
     });
@@ -38,7 +40,7 @@ async function handleDelays() {
 function debounce(callback, delay) {
   let timeoutId;
 
-  return async function(...args) {
+  return async function (...args) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       callback.apply(this, args);

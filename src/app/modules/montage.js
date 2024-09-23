@@ -6,6 +6,7 @@ import {
   montageList,
   previewScreen,
   stylesWrapper,
+  plandelay,
 } from "./selectors.js";
 import { createData, updateData } from "./dataManagement.js";
 import axios from "axios";
@@ -26,7 +27,7 @@ function dragAndPlanReorder(wrappingElement, sequenceNumber) {
     multiDrag: true, // Enable the pluginsortable
     selectedClass: "toDrag",
     multiDragKey: "shift", // Key that must be down for items to be selected
-    avoidImplicitDeselect: true, // true - if you don't want to deselect items on outside click
+    avoidImplicitDeselect: false, // true - if you don't want to deselect items on outside click
     onEnd: function (event) {
       resetOrder(wrappingElement);
       // reorder the sequence preview
@@ -43,6 +44,12 @@ function dragAndPlanReorder(wrappingElement, sequenceNumber) {
       // reorder the plan in the top bar
     },
   });
+}
+
+export function updateDelayUI() {
+  plandelay.value = document.querySelector(".shown")
+    ? document.querySelector(".shown").dataset.delay
+    : "";
 }
 
 function resetOrder(wrappingElement) {
@@ -198,7 +205,7 @@ async function addPlan(montageList, select = true) {
   if (!referencePlan) {
     montageList.insertAdjacentHTML(
       "beforeend",
-      `<li id="link-${response.data.data.id}"><a class=${
+      `<li class="created" id="link-${response.data.data.id}"><a class=${
         select ? "selected" : ""
       } href="#plan-${response.data.data.id}" >
     </a></li>`,
@@ -212,18 +219,19 @@ async function addPlan(montageList, select = true) {
   } else {
     referencePlanLink.closest("li").insertAdjacentHTML(
       "afterend",
-      `<li  id="link-${response.data.data.id}"><a class=${
+      `<li class="created" id="link-${response.data.data.id}"><a class=${
         select ? "selected" : ""
       } href="#plan-${response.data.data.id}" >
     </a></li>`,
     );
     referencePlan.insertAdjacentHTML(
       "afterend",
-      `<article class="${select ? "shown" : ""}" id="plan-${
+      `<article  class="created${select ? "shown" : ""}" id="plan-${
         response.data.data.id
       }" data-strap-id="${response.data.data.id}"></article>`,
     );
   }
+  updateDelayUI();
 }
 
 // duplicate the plan
@@ -305,7 +313,7 @@ export async function duplicatePlan(
       if (!referencePlan) {
         montageList.insertAdjacentHTML(
           "beforeend",
-          `<li  id="link-${response.data.data.id}"><a class=${
+          `<li class="created" id="link-${response.data.data.id}"><a class=${
             select ? "selected" : ""
           } href="#plan-${response.data.data.id}" >
     </a></li>`,
@@ -319,7 +327,7 @@ export async function duplicatePlan(
       } else {
         referencePlanLink.closest("li").insertAdjacentHTML(
           "afterend",
-          `<li  id="link-${response.data.data.id}"><a class=${
+          `<li  class="created" id="link-${response.data.data.id}"><a class=${
             select ? "selected" : ""
           } href="#plan-${response.data.data.id}" >
     </a></li>`,
@@ -384,6 +392,7 @@ export async function duplicatePlan(
       });
   });
 
+  updateDelayUI();
   document.querySelector("#loading").classList.add("hide");
 }
 
@@ -399,7 +408,7 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
   // insert a link to the plan in the montage panel
   montageList.insertAdjacentHTML(
     "beforeend",
-    `<li  id="link-${plan.id}"><a class="${
+    `<li class="created"  id="link-${plan.id}"><a class="${
       select ? "selected" : ""
     }" href="#plan-${plan.id}"> 
 
@@ -411,7 +420,8 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
     "beforeend",
     `<article data-strap-id=${plan.id} class="plan ${
       select ? "shown" : ""
-    }" id="plan-${plan.id}">
+    }" id="plan-${plan.id}"
+       data-delay="${plan.attributes.delay}">
     </article>`,
   );
 }
