@@ -1,5 +1,7 @@
 import axios from "axios";
 import config from "../config/config";
+import { assetsList, sequenceNumber } from "./selectors";
+
 
 // uploading image
 export function addAssetToTheAssetManager(
@@ -14,10 +16,12 @@ export function addAssetToTheAssetManager(
   } else {
     assetList.insertAdjacentHTML(
       `afterbegin`,
+
       `<li class="${used ? "used" : "unused"}" strapid="${assetid}">
       <img data-filename="${filename}" data-assetId="${assetid}" src="${url}" id="assetlink-${assetid}" />
       <span class="asset-filename">${filename}</span>
       <button class="removeAsset" onclick="removeAsset(${assetid}, this)">remove</button>
+
       </li>`,
     );
   }
@@ -46,6 +50,7 @@ export async function removeAsset(assetid, el) {
 }
 
 // add unused assets to the asset manager
+
 export function addUnusedAssetToTheAssetManager(sequencedata) {
   sequencedata.data?.attributes.assets.data.forEach((data) => {
     console.log(data.attributes.objects);

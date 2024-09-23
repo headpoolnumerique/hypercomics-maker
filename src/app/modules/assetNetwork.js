@@ -38,7 +38,9 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
       console.log(response.data);
 
       response.data.forEach((file) => {
+        console.log(sequenceNumber.textContent);
         // then add the img db
+        // add the file to the sequence to keep a list of unused object in the app.
         axios
           .post(`${strapiurl}/api/assets?populate=deep,2`, {
             data: {

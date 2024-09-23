@@ -5,6 +5,7 @@ import {
   buttonShowGrid,
   layerList,
   montageList,
+  previewScreen,
   sequenceNumber,
   sequencePreview,
 } from "./selectors.js";
@@ -46,12 +47,14 @@ async function startup(url = document.location.href) {
     response.data?.data?.id,
     response.data?.data?.attributes?.title,
     response.data?.data?.attributes.project.data.attributes.author,
+
   );
 
   fillSequence(response.data.data.attributes.plans);
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
+
   reorderLayer(layerList);
   layerInteract();
   resizeMontagePaneVertically();
@@ -59,6 +62,10 @@ async function startup(url = document.location.href) {
   setAnchor();
   updatefromui();
   handleVisilibity();
+
+
+
+  toggleGrid();
 
   await addUnusedAssetToTheAssetManager(response.data);
   await stylesheetmanager(response.data);
@@ -76,8 +83,10 @@ async function startup(url = document.location.href) {
     liveSearch();
   });
 
+
   // remove asset from a button
   window.removeAsset = removeAsset;
+
 }
 
 export function toggleGrid() {

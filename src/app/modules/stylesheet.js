@@ -32,7 +32,7 @@ export async function stylesheetmanager(obj) {
   // if there is no style sheet, create 4 basics
   if (orderedStylesheets.length == 0) {
     await kickstartStylesheet();
-
+ 
     // hideLogin();
   }
 
@@ -45,7 +45,7 @@ export async function stylesheetmanager(obj) {
   //follow the resizing of the screen
   getSize();
 
-  cleanStylesheetButton.addEventListener("click", cleanStyleSheet);
+   cleanStylesheetButton.addEventListener("click", cleanStyleSheet);
 }
 
 /** event listener for the stylesheet ui
@@ -268,8 +268,9 @@ export function getSize() {
   const screenSizeObserver = new ResizeObserver((screensizes) => {
     for (const screensize of screensizes) {
       if (!screensList.querySelector(".stylesheet"))
+
         return console.log("there is no stylesheet, do nothing");
-      if (screensize.contentBoxSize) {
+       if (screensize.contentBoxSize) {
         let newWidth = Math.round(screensize.contentBoxSize[0].inlineSize);
         let newHeight = Math.round(screensize.contentBoxSize[0].blockSize);
 
@@ -588,6 +589,11 @@ export function setObjInStylesheet(stylesheet, obj) {
 }
 
 export async function saveStylesheet(stylesheetId, data) {
+
+  if (stylesheetId == stylesWrapper.querySelector("style").dataset.strapid) {
+    updateDefaultStylesheet();
+  }
+
   return await axios
     .put(`${config.strapi.url}/api/stylesheets/${stylesheetId}`, {
       data: {
@@ -848,6 +854,18 @@ function createDefaultStylesheet() {
     stringify(defaultStylesheet);
 
   // = stylesWrapper.querySelector("style").textContent).stylesheet.rules[0]))
+}
+
+// update the default stylesheet everytimes the styles get changed?
+// or only if the change happens in the first stylesheet
+export function updateDefaultStylesheet() {
+  let defaultStylesheet = parse(
+    stylesWrapper.querySelector("style").textContent,
+  );
+  defaultStylesheet.stylesheet.rules =
+    defaultStylesheet.stylesheet.rules[0].rules;
+  document.querySelector("#style-default").textContent =
+    stringify(defaultStylesheet);
 }
 
 /*
