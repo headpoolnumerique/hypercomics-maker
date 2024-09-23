@@ -421,3 +421,17 @@ input:is([type="text"], [type="password"]) {
   border-bottom: 2px dotted var(--color-body);
   color: var(--color-main);
 }
+
+#delay-tools {
+  background: white;
+  padding: 0.5em 2ch;
+  border: 2px solid var(--color-body);
+  border-radius: 32px;
+  margin-left: auto;
+  & input {
+    border: none;
+    border-bottom: 1px solid grey;
+    color: var(--color-main);
+    max-width: 9ch;
+  }
+}

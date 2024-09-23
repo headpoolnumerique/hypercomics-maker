@@ -121,19 +121,25 @@ main#appWrap {
   position: fixed;
   bottom: 0;
   width: 100%;
+
   & .subbuttons {
     gap: 3ch;
     display: flex;
     padding: 0 3ch 0.5em;
+    align-items: center;
 
     & button {
+      height: auto;
       border: 0;
       border-radius: 16px;
+      border: 2px solid black;
       font-size: 0.8em;
       text-transform: uppercase;
+      padding: 0.1em 2ch;
     }
   }
 }
+
 #planOrder {
   background: white;
   list-style-type: none;
