@@ -141,6 +141,11 @@ function listeners() {
   preview.addEventListener("click", (event) => {
     if (event.target.tagName == "IMG") {
       deselect(".confirm");
+      document.querySelector("#deselectAsset").style.left =
+        `${event.target.offsetWidth / 2}px`;
+      document.querySelector("#deselectAsset").style.top =
+        `${event.target.offsetTop - 40}px`;
+
       if (
         event.target.dataset.objectid !=
         document.querySelector(".selectedLayer")?.dataset.objectid

@@ -37,9 +37,6 @@
     </aside>
     <style id="preview-styles"></style>
 
-    <!-- /to deselect thing -->
-    <button id="deselectAsset">deselect</button>
-
     <!-- // new system for the changes of styles and css -->
     <!-- // when change, update the content  -->
     <!-- // maybe back to content editable rttight? -->
@@ -145,15 +142,16 @@
 
       <section id="contextualUI" class="moveable block-ui">
         <h2>
-          Object <span id="selectedId">id</span>
-
           <button onclick="this.closest('.block-ui').classList.toggle('hide')">
             x
           </button>
+          Object <span id="selectedId">id</span>
         </h2>
 
         <!-- // contextual should be hidden and moved next to the element the user is moving -->
-        <section id="main">
+        <section class="block-ui-main">
+          <!-- /to deselect thing -->
+          <button id="deselectAsset">deselect</button>
           <h3>visibility</h3>
           <button id="input-show" data-property="opacity" data-value="1">
             make visible

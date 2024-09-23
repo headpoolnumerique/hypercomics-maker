@@ -1,3 +1,7 @@
+* {
+  user-select: none;
+}
+
 .moveable {
   position: fixed;
   border: 2px solid var(--color-body);
@@ -239,6 +243,9 @@ button,
   background: grey;
 }
 
+#contextualUI > section {
+  margin: 0 2ch 1em;
+}
 #contextualUI .block {
   display: grid;
   grid-template-rows: repeat(3, 10ch);
@@ -251,6 +258,8 @@ button,
 #contextualUI input {
   max-width: 10ch;
   display: block;
+  border: 0;
+  border-bottom: 3px solid grey;
 }
 
 .input-left {
@@ -316,12 +325,12 @@ button,
 
 #deselectAsset {
   display: none;
-  position: absolute;
-  bottom: 3em;
-  left: 50%;
-  margin-left: -4%;
-  height: 2em;
-  z-index: 999999999;
+  /* position: fixed; */
+  /* margin-top: max-content; */
+  /* background: var(--color-main); */
+  /* text-transform: uppercase; */
+  /* height: 2em; */
+  /* z-index: 999999999; */
 }
 
 &:has(.asset-selected) #deselectAsset {
