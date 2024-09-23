@@ -13,6 +13,7 @@ import {
   addAssetToTheAssetManager,
   addUnusedAssetToTheAssetManager,
   liveSearch,
+  removeAsset,
 } from "./assetManager";
 import {
   moveToolbars,
@@ -41,9 +42,12 @@ async function startup(url = document.location.href) {
   let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
   // console.log(response);
+  //
   updateSequenceMeta(
     response.data?.data?.id,
     response.data?.data?.attributes?.title,
+    response.data?.data?.attributes.project.data.attributes.author,
+
   );
 
   fillSequence(response.data.data.attributes.plans);
@@ -58,7 +62,11 @@ async function startup(url = document.location.href) {
   setAnchor();
   updatefromui();
   handleVisilibity();
+
+
+
   toggleGrid();
+
   await addUnusedAssetToTheAssetManager(response.data);
   await stylesheetmanager(response.data);
 
@@ -75,10 +83,10 @@ async function startup(url = document.location.href) {
     liveSearch();
   });
 
-  //lol
-  // document.querySelector("#anchorTop").addEventListener("click", function() {
-  //   setPropertyInStylesheet(document.querySelector(".asset-selected"), document.querySelector(".activatedStylesheet"), "--funz", "test")
-  // })
+
+  // remove asset from a button
+  window.removeAsset = removeAsset;
+
 }
 
 export function toggleGrid() {
@@ -109,13 +117,15 @@ async function fillSequence(plans) {
   // check for each plan. add them to the view
 }
 
-async function updateSequenceMeta(id, title) {
+async function updateSequenceMeta(id, title, authorname) {
   const meta = {
     projectName: document.querySelector("#projectName"),
     sequenceNumber: document.querySelector("#sequenceNumber"),
+    authorname: document.querySelector("#authorName"),
   };
-  meta.projectName.innerHTML = title;
   meta.sequenceNumber.innerHTML = id;
+  meta.projectName.innerHTML = title;
+  meta.authorname.innerHTML = authorname;
 }
 
 async function fillPlan(plan) {

@@ -50,6 +50,8 @@ async function interactObject(object) {
 
   let position = { x: object.offsetLeft, y: object.offsetTop };
 
+  // TODO: in case of a small element, add an icon to resize and one to move
+
   interact(object)
     .draggable({
       listeners: {
@@ -88,10 +90,9 @@ async function interactObject(object) {
     .resizable({
       edges: { top: true, left: true, bottom: true, right: true },
       invert: "reposition",
-
       modifiers: [
         interact.modifiers.aspectRatio({
-          // make sure the ratio is preserved
+          // this is supposed to help making sure the ratio is preserved
           // why not aspect ratio from the css height auto?
           // and use only the width of the element?
           // ratio: "preserve",
@@ -686,7 +687,6 @@ export async function stickElement(element) {
       if (!rule.selectors.includes(`#${asset.id}`)) return;
       rule.declarations = styleToDuplicate.declarations;
     });
-
 
     if (!found) {
       parsedCSS.stylesheet.rules[0].rules.push({

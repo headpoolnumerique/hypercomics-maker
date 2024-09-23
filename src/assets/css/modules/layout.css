@@ -106,33 +106,55 @@ main#appWrap {
 
 /*II. montage*/
 
-#banc-montage {
-  background: var(--color-montage-order, white);
-  max-width: 800px;
-}
+/* #banc-monwage { */
+/*   background: var(--color-montage-order, white); */
+/*   max-width: 800px; */
+/* } */
+/**/
+/* #banc-montage.show { */
+/*   display: unset; */
+/*   min-height: 200px; */
+/* } */
 
-#banc-montage.show {
-  display: unset;
-  min-height: 200px;
+#banc-montage {
+  background: transparent;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+
+  & .subbuttons {
+    gap: 3ch;
+    display: flex;
+    padding: 0 3ch 0.5em;
+    align-items: center;
+
+    & button {
+      height: auto;
+      border: 0;
+      border-radius: 16px;
+      border: 2px solid black;
+      font-size: 0.8em;
+      text-transform: uppercase;
+      padding: 0.1em 2ch;
+    }
+  }
 }
 
 #planOrder {
-  position: fixed;
-  bottom: 0;
+  background: white;
   list-style-type: none;
-  display: flex;
+  /* display: flex; */
   padding-left: 0;
   margin: 0 auto;
   gap: 1ch;
   flex-wrap: wrap;
-  width: 100%;
+
+  display: flex;
   align-items: space-around;
-  height: 3em;
   /* overflow-y: auto; */
   font-size: 0.8em;
   padding-top: 12px;
   border-top: 1px solid grey;
-  background: white;
   overflow-y: scroll;
 }
 
@@ -161,6 +183,9 @@ main#appWrap {
   font-weight: 900;
 }
 
+#planOrder li.created {
+  animation: showoff 2s;
+}
 /* 3. the contextual menu */
 
 #contextualUI {
@@ -188,4 +213,14 @@ main#appWrap {
 .moveButton {
   position: absolute;
   top: 50%;
+}
+
+@keyframes showoff {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100%;
+  }
 }

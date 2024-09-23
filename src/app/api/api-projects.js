@@ -1,12 +1,13 @@
 import config from "../config/config.js";
 import axios from "axios";
 import { renderDate } from "../modules/helpers.js";
+import { getCookie } from "./login.js";
 
 // selectors
 let projectsList = document.querySelector("#projects-list");
 let projectSequence = document.querySelector("#projectSequences");
 
-async function createProject() {
+export async function createProject() {
   // set up form
   const formElement = document.querySelector("#form");
 
@@ -24,13 +25,13 @@ async function createProject() {
 
     axios
       .post(`${config.strapi.url}/api/projects/`, { data: data })
-      .then(function(response) {
+      .then(function (response) {
         // console.log("new", response.data.data);
         renderEmptyProject(response.data.data);
         return response;
       })
-      .then(function(response) {
-        window.location.hash = `#project${response.data.data.id}`
+      .then(function (response) {
+        window.location.hash = `#project${response.data.data.id}`;
       })
 
       // open the new project
@@ -41,11 +42,14 @@ async function createProject() {
   });
 }
 
-async function loadAllProjects(serverUrl) {
+export async function loadAllProjects(serverUrl) {
   //load with a query
   return axios
     .get(
-      `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false`,
+      `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false&filters[author][$eq]=${getCookie("hc_login_username")}`,
+      {
+        headers: { Authorization: `Bearer ${getCookie("hc_login_token")}` },
+      },
     )
     .then((response) => {
       // console.log(response)
@@ -56,7 +60,7 @@ async function loadAllProjects(serverUrl) {
     });
 }
 
-async function removeSequenceFromProject(projectId, sequenceId) {
+export async function removeSequenceFromProject(projectId, sequenceId) {
   // set up form
   await axios
     .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
@@ -66,7 +70,7 @@ async function removeSequenceFromProject(projectId, sequenceId) {
         },
       },
     })
-    .then(function(response) {
+    .then(function (response) {
       return response;
     })
     .catch((error) => {
@@ -74,33 +78,32 @@ async function removeSequenceFromProject(projectId, sequenceId) {
     });
 }
 
-async function renderEmptyProject(project) {
+export async function renderEmptyProject(project) {
   // console.log(project);
   projectsList.insertAdjacentHTML(
     "beforeend",
-    ` <li> <datetime>${renderDate(
+    `<li id="project-${project.id}"><datetime>${renderDate(
       project.attributes.updatedAt,
-    )}</datetime> <a href="#project${project.id}">${project.attributes.title
-    }</a> 
-
-    <button onclick="deleteProject(${project.id})">remove project</button>
-
-</li> `,
+    )}</datetime> <a href="#project${project.id}">${
+      project.attributes.title
+    }</a></li>`,
   );
 
   // project for each sequence: create a list imenm
 
   const projectSequenceContent = `<section id="project${project.id}" class="project">
-  <a id="projectback" href="#projects">Back to projects</a>
+<header>
   <h2>${project.attributes.title}</h2>
-  <button  data-projectid="${project.id}" onclick="addSequence(${project.id})" class="createSequence" >Add a sequence</button>
+  <button data-projectid="${project.id}" onclick="addSequence(${project.id}, window.username)" class="createSequence">Add a sequence</button>
+  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">Remove project</button>
+</header>
   <ul class="sequences-list"></ul>
   </section>`;
 
   projectSequence.innerHTML += projectSequenceContent;
 }
 
-async function archiveProject(id) {
+export async function archiveProject(id) {
   return axios
     .put(`${config.strapi.url}/api/projects/${id}`, {
       data: { archived: true },
@@ -112,10 +115,3 @@ async function archiveProject(id) {
       return err;
     });
 }
-
-export {
-  archiveProject,
-  createProject,
-  loadAllProjects,
-  removeSequenceFromProject,
-};

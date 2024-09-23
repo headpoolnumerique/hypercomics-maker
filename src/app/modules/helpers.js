@@ -23,9 +23,10 @@ function updateInteractiveUI(interactiveUI, data) {
 }
 
 function activatePlan(planId) {
-  console.log("activatePlan" + planId)
+  console.log("activatePlan" + planId);
   document.querySelector(`#plan-${planId}`).classList.add("shown");
   document.querySelector(`#link-${planId} a`).classList.add("selected");
+  updateDelayUI();
 }
 
 /*
@@ -81,7 +82,6 @@ function updateDataset(element, obj) {
     element.dataset[key] = obj[key];
   });
 }
-
 
 /*percentage calculator*/
 function percentage(partialValue, totalValue) {

@@ -51,7 +51,6 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
             },
           })
           .then((response) => {
-            console.log(response);
             /* Create the asset in the asset list */
             addAssetToTheAssetManager(
               response.data.data.attributes.location,

@@ -1,211 +1,330 @@
 <!doctype html>
 
 <html lang="en">
-
-<head>
-  <title>hypercomics | Editor</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="css/styles.css" rel="stylesheet" />
-  <script type="module" src="js/hypercomicsbuilder.js"></script>
-  <div id="styleWrapper" class="block-ui hide resizable moveable">
-    <h2>output stylesheet</h2>
-    <button id="cleanStylesheet">clean all stylesheets</button>
-    <button id="saveStylesheet">save stylesheets</button>
-  </div>
-</head>
-
-<body>
-  <!-- // this style element is gonna be hidden and will contains everything so people can add more stuff. -->
-  <!-- // maybe we can add ai api for it too, so people doesnt need css ? -->
-
-  <aside id="loading">
-    <div class="box">
-      <div id="dots">
-        <div id="dot1" class="dot"></div>
-        <div id="dot2" class="dot"></div>
-        <div id="dot3" class="dot"></div>
-      </div>
+  <head>
+    <title>hypercomics | Editor</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script type="module" src="./js/hypercomicsbuilder.js"></script>
+  </head>
+  <body>
+    <div id="styleWrapper" class="block-ui hide resizable moveable">
+      <h2>output stylesheet</h2>
+      <button id="cleanStylesheet">clean all stylesheets</button>
+      <button id="saveStylesheet">save stylesheets</button>
     </div>
-  </aside>
-  <style id="preview-styles"></style>
 
+    <!-- // this style element is gonna be hidden and will contains everything so people can add more stuff. -->
+    <!-- // maybe we can add ai api for it too, so people doesnt need css ? -->
 
+    <a id="returnhome" href="/">close</a>
+    <button
+      id="show-tools"
+      onclick="document.querySelector('#homeButtonsList').classList.toggle('hide')"
+    >
+      tools
+    </button>
+    <!-- // loading zone -->
+    <aside id="loading">
+      <div class="box">
+        <div id="dots">
+          <div id="dot1" class="dot"></div>
+          <div id="dot2" class="dot"></div>
+          <div id="dot3" class="dot"></div>
+        </div>
+      </div>
+    </aside>
+    <style id="preview-styles"></style>
 
+    <!-- // new system for the changes of styles and css -->
+    <!-- // when change, update the content  -->
+    <!-- // maybe back to content editable rttight? -->
+    <!-- <style id="sequenceStyles"></style> -->
+    <main id="appWrap" style="--zoom-factor: 1">
+      <section id="zoombuttons">
+        <h2>zoom</h2>
+        <button id="zoomin">+</button>
+        <button id="zoomreset">reset</button>
+        <button id="zoomout">—</button>
+      </section>
+      <section id="homeButtonsList" class="moveable block-ui resizable">
+        <h2 id="tools-title">
+          tools
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+        </h2>
+        <button id="showSequence">sequence</button>
+        <hr />
+        <button id="showScreens">ratios</button>
+        <button id="showLayers">layers</button>
+        <!-- <button id="showContextual">object</button> -->
+        <button id="showAssets">assets</button>
+        <hr />
+        <!-- <button id="showMontage">montage</button> -->
+        <!---->
+        <!-- <hr /> -->
+        <button id="showgrid">background grid</button>
+        <button id="showPelure">Onion skinning</button>
 
+        <hr />
+        <button id="showstylewrapper">show css</button>
+      </section>
 
-  <!-- /to deselect thing -->
-  <button id="deselectAsset">deselect</button>
+      <section
+        id="screen-ui"
+        style="top: 30%; left: 30%"
+        class="moveable block-ui resizable hide"
+      >
+        <h2>
+          Ratios
 
-
-  <!-- // new system for the changes of styles and css -->
-  <!-- // when change, update the content  -->
-  <!-- // maybe back to content editable rttight? -->
-  <!-- <style id="sequenceStyles"></style> -->
-  <main id="appWrap" style="--zoom-factor: 1;">
-    <section id="zoombuttons">
-      <button id="zoomin">+</button>
-      <button id="zoomreset">0</button>
-      <button id="zoomout">—</button>
-    </section>
-    <section id="homeButtonsList">
-
-
-      <!-- <button id="playPreview">playPreview</button> -->
-
-      <button id="showgrid">show grid</button>
-      <button id="showstylewrapper">show css</button>
-      <button id="showSequence">sequence</button>
-      <button id="showLayers">Layers</button>
-      <button id="showContextual">object</button>
-      <button id="showMontage">montage</button>
-      <button id="showAssets">assets</button>
-      <button id="showPelure">show previous</button>
-      <button id="showScreens">show screens</button>
-      <a id="returnhome" href="/">return to home</a>
-    </section>
-
-    <section id="screen-ui" style="top: 30%; left: 30%" class="moveable block-ui resizable hide">
-      <h2>Stylesheets</h2>
-
-      <!-- <button id="orientationChanger">change orientation</button> -->
-      <!-- <button id="fullPageWatcher">fullpage</button> -->
-
-      <form id="screensform">
-        <label for="screenwidth">
-          <span>Width</span>
-          <input min="200" type="number" name="screenwidth" id="screenWidth" />
-        </label>
-        <label for="screenHeight"><span>Default height</span>
-          <input type="number" name="screenHeight" id="screenHeight" />
-        </label>
-        <label for="screenRatio"><span> Max ratio</span>
-          <input name="screenRatio" id="screenRatio" disabled />
-        </label>
-        <button type="submit" id="newscreen">add screen</button>
-        </label>
-      </form>
-      <button id="populateStylesheet">create standards screen</button>
-      <ul id="screens">
-        <li class="header">
-          <span>name</span>
-          <span>width</span>
-          <span>height</span>
-          <span>active</span>
-        </li>
-      </ul>
-    </section>
-
-    <section id="sequence" class="moveable block-ui resizable hide">
-      <h2>Sequence</h2>
-      <p class="meta">
-        project: <span id="projectName">projname</span>, sequence:
-        <span id="sequenceNumber">seqnum</span>
-      </p>
-    </section>
-
-    <section id="contextualUI" class=" moveable block-ui">
-      <h2>Object <span id="selectedId">id</span></h2>
-
-      <!-- // contextual should be hidden and moved next to the element the user is moving -->
-      <section id="main">
-        <h3>visibility</h3>
-        <button id="input-show" data-property="opacity" data-value="1">make visible</button>
-        <button id="input-hide" data-property="opacity" data-value="var(--hidden-opacity)">hide</button>
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+        </h2>
 
         <div>
-          <label for="visibilityOffset">opacity of hidden element (only for preview)</label>
-          <input type="range" min="0" max="1" step="0.05" id="visibilityOffset">
+          <!-- <button id="orientationChanger">change orientation</button> -->
+          <!-- <button id="fullPageWatcher">fullpage</button> -->
+
+          <form id="screensform">
+            <label for="screenWidth">
+              <span>Width</span>
+              <input
+                min="200"
+                type="number"
+                name="screenwidth"
+                id="screenWidth"
+              />
+            </label>
+            <label for="screenHeight"
+              ><span>Default height</span>
+              <input type="number" name="screenHeight" id="screenHeight" />
+            </label>
+            <label for="screenRatio"
+              ><span> Max ratio</span>
+              <input name="screenRatio" id="screenRatio" disabled />
+            </label>
+            <button type="submit" id="newscreen">add screen</button>
+          </form>
+          <button id="populateStylesheet">create standards screen</button>
+          <ul id="screens">
+            <li class="header">
+              <span>name</span>
+              <span>width</span>
+              <span>height</span>
+              <span>active</span>
+            </li>
+          </ul>
         </div>
-        <!-- button#input-show -->
+      </section>
 
-        <h3>Size</h3>
-        <label for="input-width">Width</label>
-        <input id="input-width" name="input-width" type="number" step="0.01" />
+      <section id="sequence" class="moveable block-ui resizable hide">
+        <h2>
+          Sequence
 
-        <label for="input-height">Height</label>
-        <input id="input-height" name="input-height" type="number" step="0.01" />
-
-        <!-- Locations and anchors -->
-        <div class="block">
-          <div class="input-top">
-            <button class="anchorButton" id="anchorTop">set anchor top</button>
-            <label for="input-top">top</label>
-            <input id="input-top" name="input-top" type="number" step="0.01" />
-          </div>
-
-          <div class="input-left">
-            <button class="anchorButton" id="anchorLeft">set anchor left</button>
-            <label for="input-left">Left</label>
-            <input id="input-left" name="input-left" type="number" step="0.01" />
-          </div>
-
-          <div id="input-element"></div>
-
-          <div class="input-right">
-            <button class="anchorButton" id="anchorRight">set anchor right</button>
-            <label for="input-right">Right</label>
-            <input id="input-right" name="input-right" type="number" step="0.01" />
-          </div>
-          <div class="input-bottom">
-            <button class="anchorButton" id="anchorBottom">set anchor bottom</button>
-            <label for="input-bottom">bottom</label>
-            <input id="input-bottom" name="input-bottom" type="number" step="0.01" />
-          </div>
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+        </h2>
+        <div>
+          <p class="meta">
+            <span> project: <span id="projectName">projectname</span> </span>
+            <span>
+              sequence: <span id="sequenceNumber">sequenceNumber</span></span
+            >
+            <span> author: <span id="authorName">author</span> </span>
+          </p>
         </div>
+      </section>
+
+      <section id="contextualUI" class="moveable block-ui">
+        <h2>
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+          Object <span id="selectedId">id</span>
+        </h2>
+
+        <!-- // contextual should be hidden and moved next to the element the user is moving -->
+        <section class="block-ui-main">
+          <!-- /to deselect thing -->
+          <button id="deselectAsset">deselect</button>
+          <h3>visibility</h3>
+          <button id="input-show" data-property="opacity" data-value="1">
+            make visible
+          </button>
+          <button
+            id="input-hide"
+            data-property="opacity"
+            data-value="var(--hidden-opacity)"
+          >
+            hide
+          </button>
+
+          <div>
+            <label for="visibilityOffset"
+              >opacity of hidden element (only for preview)</label
+            >
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              id="visibilityOffset"
+            />
+          </div>
+          <!-- button#input-show -->
+
+          <h3>Size</h3>
+          <label for="input-width">Width</label>
+          <input
+            id="input-width"
+            name="input-width"
+            type="number"
+            step="0.01"
+          />
+
+          <label for="input-height">Height</label>
+          <input
+            id="input-height"
+            name="input-height"
+            type="number"
+            step="0.01"
+          />
+
+          <!-- Locations and anchors -->
+          <div class="block">
+            <div class="input-top">
+              <button class="anchorButton" id="anchorTop">
+                set anchor top
+              </button>
+              <label for="input-top">top</label>
+              <input
+                id="input-top"
+                name="input-top"
+                type="number"
+                step="0.01"
+              />
+            </div>
+
+            <div class="input-left">
+              <button class="anchorButton" id="anchorLeft">
+                set anchor left
+              </button>
+              <label for="input-left">Left</label>
+              <input
+                id="input-left"
+                name="input-left"
+                type="number"
+                step="0.01"
+              />
+            </div>
+
+            <div id="input-element"></div>
+
+            <div class="input-right">
+              <button class="anchorButton" id="anchorRight">
+                set anchor right
+              </button>
+              <label for="input-right">Right</label>
+              <input
+                id="input-right"
+                name="input-right"
+                type="number"
+                step="0.01"
+              />
+            </div>
+            <div class="input-bottom">
+              <button class="anchorButton" id="anchorBottom">
+                set anchor bottom
+              </button>
+              <label for="input-bottom">bottom</label>
+              <input
+                id="input-bottom"
+                name="input-bottom"
+                type="number"
+                step="0.01"
+              />
+            </div>
+          </div>
 
           <button id="button-stick">stick</button>
 
           <!-- /put the delete somewhere else, it’s too dangerous here (but it’s easy to bring it back)/ -->
-          <hr>
+          <hr />
 
-        <section>
-          <button id="deleteObject">Delete Object</button>
+          <section>
+            <button id="deleteObject">Delete Object</button>
+          </section>
         </section>
       </section>
-    </section>
-    <section id="preview">
-      <button class="moveButton" id="previewPrevious">&lt;</button>
-      <button class="moveButton" id="previewNext">&gt;</button>
-      <section class="screen" id="previewScreen"></section>
-    </section>
+      <section id="preview">
+        <button class="moveButton" id="previewPrevious">&lt;</button>
+        <button class="moveButton" id="previewNext">&gt;</button>
+        <section class="screen" id="previewScreen"></section>
+      </section>
 
-    <section id="layer-space" class="hide moveable block-ui">
-      <h2>Layers</h2>
-      <ul id="layers"></ul>
-    </section>
+      <section id="layer-space" class="hide moveable block-ui">
+        <h2>
+          Layers
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+        </h2>
+        <ul id="layers"></ul>
+      </section>
 
-    <section id="banc-montage" class="show moveable block-ui hide">
-      <h2>montage</h2>
-      <button id="addPlan">add plan</button>
-      <button id="deletePlan">delete plan</button>
-      <button id="duplicatePlan">duplicate plan</button>
-      <div>
-        <label for="minimaldelay">scroll delay in millisecond</label>
-        <input id="minimaldelay" type="number" name="minimaldelay" />
-      </div>
-    </section>
+      <section id="banc-montage" class="">
+        <div class="subbuttons">
+          <button id="addPlan">add plan</button>
+          <button id="duplicatePlan">duplicate plan</button>
+          <button id="deletePlan">delete plan</button>
+          <div id="delay-tools">
+            <label for="minimaldelay">Scroll delay (ms)</label>
+            <input id="minimaldelay" type="number" name="minimaldelay" />
+          </div>
+        </div>
+        <ol id="planOrder">
+          <!-- <li><a href="#plan12">12</a></li> -->
+        </ol>
+      </section>
 
-    <ol id="planOrder">
-      <!-- <li><a href="#plan12">12</a></li> -->
-    </ol>
-    <section id="assets" class="moveable block-ui hide">
-      <h2>Assets</h2>
-      <form id="inputs">
-        <label for="assetsUpload">upload images:</label>
-        <input id="assetsUpload" name="assetsUpload" type="file" multiple />
-        <button id="submitAssets">upload</button>
-      </form>
+      <section id="assets" class="moveable resizable block-ui hide">
+        <h2>
+          Assets
+          <button onclick="this.closest('.block-ui').classList.toggle('hide')">
+            x
+          </button>
+        </h2>
+        <div>
+          <form id="inputs">
+            <label for="assetsUpload">upload images:</label>
+            <input id="assetsUpload" name="assetsUpload" type="file" multiple />
+            <button id="submitAssets">upload</button>
+          </form>
 
-      <div>
-        <h3>filters</h3>
-        <label for="assetsFilter">Filter by name</label>
-        <input id="assetsFilter" name="assetsFilter" type="text" placeholder="are you looking for something?" />
-        <button id="filterreset">reset</button>
-        <ul id="assetsList"></ul>
-      </div>
-    </section>
-  </main>
-</body>
-
+          <div>
+            <h3>filters</h3>
+            <label for="assetsFilter">Filter by name</label>
+            <input
+              id="assetsFilter"
+              name="assetsFilter"
+              type="text"
+              placeholder="are you looking for something?"
+            />
+            <button id="filterreset">reset</button>
+            <!-- show used and not used blocks -->
+            <label for="showUsed">Placed</label>
+            <input id="showUsed" checked type="checkbox" name="showUsed" />
+            <label for="showUnused">Not placed</label>
+            <input id="showUnused" checked type="checkbox" name="showUnused" />
+            <ul id="assetsList"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
 </html>

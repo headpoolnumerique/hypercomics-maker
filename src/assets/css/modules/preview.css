@@ -1,4 +1,4 @@
-#previewScreen article>* {
+#previewScreen article > * {
   position: absolute;
 }
 
@@ -53,9 +53,23 @@ main {
 }
 
 #preview {
-    transform:  scale(var(--zoom-factor, 1));
+  transform: scale(var(--zoom-factor, 1));
 }
 #zoombuttons {
   position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 1em;
+  margin: 0 auto;
+  font-size: 0.7em;
   z-index: 50000;
+
+  h2 {
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+  & button {
+    border-radius: 50px;
+  }
 }

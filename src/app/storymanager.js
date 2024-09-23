@@ -5,16 +5,51 @@ import {
   loadAllProjects,
   removeSequenceFromProject,
 } from "./api/api-projects.js";
-import { createSequence } from "./api/api-sequences.js";
+import { createSequence, renameSequences } from "./api/api-sequences.js";
+import { isLoggedIn, login, hideLogin, getCookie } from "./api/login.js";
 import config from "./config/config.js";
 import { renderDate } from "./modules/helpers.js";
 
-start();
+if (isLoggedIn()) {
+  console.log("are you logged in?", isLoggedIn());
+  start();
+} else {
+  //hide the loading bit and show the modal
+  document.querySelector("#loading").classList.add("hide");
+  document.querySelector("#login").showModal();
+  loginButton();
+}
 
-let projectsList = document.querySelector("#projects-list");
-let projectSequence = document.querySelector("#projectSequences");
+function loginButton() {
+  document
+    .querySelector("#loginsubmit")
+    .addEventListener("click", async function () {
+      // const logged = await login(username, password);
+      // check if ther is the doci
+      // let token = getCookie("hc_login_token");
+      const letsgo = await login(
+        document.querySelector("#username").value,
+        document.querySelector("#password").value,
+      );
+      if (letsgo) {
+        {
+          // this start only work if you’re in the start
+          start();
+          hideLogin();
+          // error in the connexion
+        }
+      }
+    });
+}
+export async function start() {
+  if (getCookie("hc_login_username")) {
+    const authorInput = document.querySelector("input[name=author]");
+    if (authorInput) {
+      authorInput.value = getCookie("hc_login_username");
 
-async function start() {
+      authorInput.setAttribute("disabled", "disabled");
+    }
+  }
   // load all projects
   let projects = await loadAllProjects(config.strapi.url);
 
@@ -26,9 +61,12 @@ async function start() {
 
   loadProjects(projects);
   createProject();
+
+  renameSequences();
   // addSequences();
   // deleteSequences();
 
+  window.username = getCookie("hc_login_username");
   window.deleteProject = deleteProject;
   window.addSequence = addSequence;
   window.deleteSequence = deleteSequence;
@@ -37,6 +75,10 @@ async function start() {
 
 // load project
 function loadProjects(data) {
+  console.log(data);
+  if (!data.data.data) return console.log("no project yet");
+  let projectsList = document.querySelector("#projects-list");
+  let projectSequence = document.querySelector("#projectSequences");
   let projects = data.data.data;
   projectsList.innerHTML = "";
   projects.forEach((es) => {
@@ -46,31 +88,42 @@ function loadProjects(data) {
 }
 
 //confirmation to remove the existing project
-function selectToDelete(id,title) {
-  document.querySelector(".deletemodal").querySelector(".projectid").textContent = id;  
-  document.querySelector(".deletemodal").querySelector(".title").textContent = title;  
-  document.querySelector(".deletemodal").showModal()
+function selectToDelete(id, title) {
+  document
+    .querySelector(".deletemodal")
+    .querySelector(".projectid").textContent = id;
+  document.querySelector(".deletemodal").querySelector(".title").textContent =
+    title;
+  document.querySelector(".deletemodal").showModal();
 }
 
 // delete project
 function deleteProject(id) {
-  // are you sure?
-  // archive on strapi
+  console.log(document.querySelector(".deletemodal .title"));
+  if (
+    document.querySelector("#remove-project-name").value !=
+    document.querySelector(".deletemodal .title").textContent
+  ) {
+    document.querySelector("#remove-project-name").value =
+      "replace me with the project name";
+    return console.log("can’t remove");
+  }
+  console.log(id);
   archiveProject(id);
-  // remove the project
-  event.target.closest("li").remove();
-  // remove the projectlist
-  document.querySelector(`sequenceList${id}`).remove();
+  document.querySelector(`#project-${id}`).remove();
+  document.querySelector(".deletemodal").close();
+  document.querySelector(`#project${id}`).remove();
 }
 
 // render the project
 async function renderProject(project) {
+  let projectsList = document.querySelector("#projects-list");
+  let projectSequence = document.querySelector("#projectSequences");
   // insert project in the project list
   projectsList.insertAdjacentHTML(
     "beforeend",
-    ` <li data-title="${project.attributes.title}"><datetime>${renderDate( project.attributes.updatedAt,)}</datetime>
+    ` <li id="project-${project.id}" data-title="${project.attributes.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
         <a href="#project${project.id}">${project.attributes.title}</a> 
-        <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">remove project</button>
       </li>`,
   );
 
@@ -80,15 +133,18 @@ async function renderProject(project) {
     return generateSequence(sequence, project);
   });
 
-  const projectSequenceContent = `<section id="project${project.id
-    }" class="project">
-  <a id="projectback" href="#projects">Back to projects</a>
+  const projectSequenceContent = `<section id="project${
+    project.id
+  }" class="project">
+<header>
   <h2>${project.attributes.title}</h2>
-  <button  data-projectid="${project.id}"
-onclick="addSequence(${project.id})"
-class="createSequence" >Add a sequence</button>
-  <ul class="sequences-list" id="sequenceList${project.id
-    }">${renderedSequences.join("")}</ul>
+
+  <button  data-projectid="${project.id}" onclick="addSequence(${project.id}, window.username)" class="createSequence">Add a sequence</button>
+  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">Remove project</button>
+</header>
+  <ul class="sequences-list" id="sequenceList${
+    project.id
+  }">${renderedSequences.join("")}</ul>
   </section>`;
 
   projectSequence.innerHTML += projectSequenceContent;
@@ -100,31 +156,41 @@ function generateSequence(sequence, project) {
 <span class="sequence-title">${sequence.attributes.title}</span> 
 <div class="buttons"> 
 <a href="editor.html?sequence=${sequence.id}">edit</a> 
+<a data-sequenceid=${sequence.id} href="#" class="rename">rename</a> 
 <a href="reader.html?sequence=${sequence.id}">preview</a>
 <button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button>
 </div> 
 </li>`;
 }
 
-async function addSequence(projectNumber) {
+async function addSequence(projectNumber, author) {
   let button = event.target;
-  let newSeq = await createSequence(projectNumber);
-  button.nextElementSibling.insertAdjacentHTML(
-    "beforeend",
-    `<li>
+  let newSeq = await createSequence(projectNumber, author);
+  button
+    .closest(".project")
+    .querySelector("ul")
+    .insertAdjacentHTML(
+      "beforeend",
+      `<li>
 <span class="sequence-id">${newSeq.data.data.id}</span>
-<span class="sequence-title">${newSeq.data.data.attributes.title}</span> 
+<span class="sequence-title" >${newSeq.data.data.attributes.title}</span> 
 <div class="buttons"> 
+
 <a href="editor.html?sequence=${newSeq.data.data.id}">edit</a> 
+<a data-sequenceid=${newSeq.data.data.id} href="#" class="rename">rename</a> 
 <a href="reader.html?sequence=${newSeq.data.data.id}">preview</a>
-<button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})" >delete</button>
+<button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})">delete</button>
 </div> 
 </li>`,
-  );
+    );
 }
 
 async function deleteSequence(projectId, sequenceId) {
   removeSequenceFromProject(projectId, sequenceId).then(
     event.target.closest("li").remove(),
   );
+}
+
+export async function renameSequence(sequenceId, sequenceTitle) {
+  console.log("rename the sequecne");
 }

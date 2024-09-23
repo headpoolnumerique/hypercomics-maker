@@ -1,14 +1,15 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title></title>
+    <title>hypercomics - story manager</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="css/storymanager.css" rel="stylesheet" />
     <script type="module" src="/js/storymanager.js"></script>
   </head>
 
-  <body>
+  <body class="storymanager">
+    <!-- the loading box -->
     <aside id="loading">
       <div class="box">
         <div id="dots">
@@ -19,18 +20,42 @@
       </div>
       <p>please wait, we’re loading your panels</p>
     </aside>
+
+    <!-- /header -->
     <header>
       <h1>hypercomics</h1>
-      <p><a id="newproject-link" href="#new-project">new project</a></p>
+      <p>responsive visual narrative</p>
+      <form id="form-login" method="dialog">
+        <button
+          id="button-login"
+          onclick="document.querySelector('#login').showModal();"
+        >
+          Login
+        </button>
+        <button
+          id="button-logout"
+          onclick="document.cookie = 'hc_login_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; location.reload()"
+        >
+          Logout
+        </button>
+      </form>
     </header>
+
+    <!-- //login form -->
+
     <section id="menu">
       <section id="projects">
-        <h3>Projects</h3>
+        <header>
+          <h2>Projects</h2>
+          <p><a id="newproject-link" href="#new-project">Create</a></p>
+        </header>
         <ul id="projects-list"></ul>
       </section>
     </section>
     <!-- for each project do this -->
-    <section id="projectSequences"></section>
+    <section id="projectSequences">
+      <!-- <h2>Sequences</h2> -->
+    </section>
 
     <section id="new-project" class="project">
       <h2>Create a new project</h2>
@@ -44,26 +69,69 @@
           <input class="usedvalue" type="text" name="author" />
         </label>
         <label style="opacity: var(--hidden)">
-          <span>don’t fill</span>
-          <input
-            type="hidden"
-            autocomplete="off"
-            name="enrico"
-            aria-label="Please do not fill this in"
-            class="nah"
-          />
+          <span>don’t fill that one</span>
+          <input type="hidden" name="enrico" class="nah" />
         </label>
         <input type="submit" id="submit" value="submit" />
       </form>
     </section>
 
+    <!-- // rename modal -->
+    <dialog class="renameModal">
+      <p class="text">
+        Rename the sequence <span id="rename-sequence-id">0000</span>:
+        <input id="rename-sequence-title" />
+      </p>
+      <button id="renameProject">Rename project</button>
+      <button onclick="this.closest('.renameModal').close()">Close</button>
+    </dialog>
+
+    <!-- // modal -->
     <dialog class="deletemodal">
       <p class="text">
-        Do you want to delete project <span class="projectid"></span>:
+        Do you want to delete project
+        <span id="projectToRemove" class="projectid"></span>:
         <strong class="title"></strong>
       </p>
-      <button id="deleteProject">Remove project</button>
+      copy paste the name of the project here to remove it.
+      <input type="text" id="remove-project-name" />
+      <button
+        id="deleteProject"
+        onclick="deleteProject(document.querySelector(`#projectToRemove`).textContent)"
+      >
+        Remove project
+      </button>
       <button onclick="this.closest('.deletemodal').close()">Cancel</button>
+    </dialog>
+
+    <!-- //modal -->
+    <dialog id="login">
+      <div class="introtext">
+        <h2>Welcome to hypercomic</h2>
+        <!-- <p class="connected">you’re connected!</p> -->
+        <p>
+          While in alpha, <em>hypercomics</em> access is limited to invites. If
+          you want to try the app, and make responsive comics, simply ask
+          <a href="mailto:contact@hypercomics.org">contact@hypercomics.org</a>
+        </p>
+        <p>If you have an invitation, please login below</p>
+      </div>
+
+      <form class="form">
+        <label>
+          <span>name</span>
+          <input placeholder="ninasimone" id="username" type="text" />
+        </label>
+        <label>
+          <span>password</span>
+          <input placeholder="* * * * * *" id="password" type="password" />
+        </label>
+
+        <button id="loginsubmit" type="button">login</button>
+      </form>
+      <section class="login-error"></section>
+
+      <form method="dialog"></form>
     </dialog>
   </body>
 </html>

@@ -36,22 +36,37 @@
   border-bottom: 1px solid gray;
   display: grid;
   gap: 1ch;
-  padding: .8em 0 .2em;
+  padding: 0.8em 0 0.2em;
   grid-template-columns: repeat(5, 1fr);
 }
 
-.toremove {
-  color: red;
-}
-
-
 .stylesheet:hover {
-  background:var(--color-main);
+  background: var(--color-main-light);
 }
-
 
 /*hide the styles when there are images in here on it*/
 #screen-ui:has(.stylesheet) #populateStylesheet {
   display: none;
   /* background:blue; */
+}
+
+#login * {
+  color: blue !important;
+}
+
+.remove {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  background: black;
+  color: white;
+  max-width: max-content;
+  padding: 0.2em 1ch 0 1ch;
+  cursor: pointer;
+  &:hover {
+    background: var(--color-main);
+  }
+}
+
+.toremove .remove {
+  background: red;
 }

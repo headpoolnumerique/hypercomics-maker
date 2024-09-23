@@ -1,4 +1,7 @@
+import axios from "axios";
+import config from "../config/config";
 import { assetsList, sequenceNumber } from "./selectors";
+
 
 // uploading image
 export function addAssetToTheAssetManager(
@@ -13,13 +16,40 @@ export function addAssetToTheAssetManager(
   } else {
     assetList.insertAdjacentHTML(
       `afterbegin`,
-      `<li class="${used ? "used" : "unused"}">
+
+      `<li class="${used ? "used" : "unused"}" strapid="${assetid}">
       <img data-filename="${filename}" data-assetId="${assetid}" src="${url}" id="assetlink-${assetid}" />
       <span class="asset-filename">${filename}</span>
+      <button class="removeAsset" onclick="removeAsset(${assetid}, this)">remove</button>
+
       </li>`,
     );
   }
 }
+
+export async function removeAsset(assetid, el) {
+  console.log("remove asset " + assetid);
+  console.log(el);
+  // strapi unlink the asset from the asset list and from all plan
+
+  await axios
+    .put(`${config.strapi.url}/api/assets/${assetid}?populate=deep,2`, {
+      data: {
+        sequences: "",
+      },
+    })
+    .then(function (response) {
+      el.closest("li").remove();
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  // once done remove
+}
+
+// add unused assets to the asset manager
 
 export function addUnusedAssetToTheAssetManager(sequencedata) {
   sequencedata.data?.attributes.assets.data.forEach((data) => {
@@ -86,13 +116,14 @@ export function liveSearch() {
   //Use innerText if all contents are visible
   //Use textContent for including hidden elements
   for (var i = 0; i < elements.length; i++) {
-    console.log(elements[i].textContent);
-    console.log(search_query.toLowerCase().trim());
-    console.log(
-      elements[i].textContent
-        .toLowerCase()
-        .includes(search_query.toLowerCase()),
-    );
+    // no needs for log
+    // console.log(elements[i].textContent);
+    // console.log(search_query.toLowerCase().trim());
+    // console.log(
+    //   elements[i].textContent
+    //     .toLowerCase()
+    //     .includes(search_query.toLowerCase()),
+    // );
     if (
       elements[i].textContent.toLowerCase().includes(search_query.toLowerCase())
     ) {

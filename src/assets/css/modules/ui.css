@@ -1,3 +1,7 @@
+* {
+  user-select: none;
+}
+
 .moveable {
   position: fixed;
   border: 2px solid var(--color-body);
@@ -23,21 +27,59 @@ button,
 }
 
 #homeButtonsList {
-  font-size: 0.8em;
-  display: flex;
+  resize: unset;
+  padding: 0;
+  background: white;
+  font-size: 0.7em;
+  height: 8em;
+  width: max-content;
+  left: 10vw;
+  top: 20em;
   position: fixed;
-  top: 1em;
-  right: 1em;
+  /* top: 1em; */
+  /* right: 1em; */
   z-index: 999999998;
-}
+  font-size: 0.8em;
+  height: max-content;
 
-#homeButtonsList :is(button, #returnhome) {
-  text-decoration: none;
-  text-transform: uppercase;
-  font-weight: 800;
-  margin-left: 4ch;
-  /* border: 2px solid black; */
-  /* border-bottom: 6px solid black; */
+  & h2 {
+    margin: 0;
+    & > button {
+      position: absolute;
+      margin-left: auto;
+      font-size: 1em;
+      width: 2ch;
+      right: 1ch;
+      top: 0.1em;
+      text-align: center;
+      background: unset;
+      color: white;
+      cursor: pointer;
+      &:hover {
+        color: white;
+        background: unset;
+        font-weight: 800;
+      }
+    }
+  }
+  & button {
+    border: none;
+    margin: 0;
+    text-decoration: none;
+    display: block;
+    text-transform: uppercase;
+    font-weight: 400;
+    width: 100%;
+    text-align: left;
+    background: white;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px dashed grey;
+    }
+
+    /* border: 2px solid black; */
+    /* border-bottom: 6px solid black; */
+  }
 }
 
 .hide {
@@ -109,49 +151,57 @@ button,
 /* ui in blocks */
 
 .block-ui {
-  padding: 0 2ch 2em;
   overflow-y: auto;
   max-height: 80vh;
-}
 
-.block-ui ul {
-  /* margin: 4em 0; */
-  padding: 0;
-}
+  & > div {
+    padding: 1em 2ch;
+  }
 
-.block-ui button {
-  background: #ccc;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.8em;
-  margin: auto;
-}
+  & ul {
+    /* margin: 4em 0; */
+    padding: 0;
+  }
 
-.block-ui h2 {
-  padding: 0.3em 2ch;
-  background: black;
-  font-size: 0.8em;
-  letter-spacing: 0.2ch;
-  text-transform: uppercase;
-  color: white;
-  margin-bottom: 1em;
-  margin-top: 2em;
-  position: sticky;
-  top: 0;
-}
+  button {
+    background: #ccc;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    margin: auto;
+  }
 
-block-ui h3 {
-  text-transform: uppercase;
-  margin-top: 1em;
-  margin-bottom: 0.5em;
-  font-weight: 400;
-}
+  h2 {
+    background: black;
+    font-size: 0.8em;
+    letter-spacing: 0.2ch;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 1em;
+    padding: 0.3em 2ch;
+    position: sticky;
+    top: 0;
+    & button {
+      position: absolute;
+      right: 0;
+      color: white;
+      background: transparent;
+      border: none;
+    }
+  }
 
-.block-ui li.header {
-  font-weight: 800;
-  margin-bottom: 0.3em;
-}
+  & h3 {
+    text-transform: uppercase;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: 400;
+  }
 
+  & li.header {
+    font-weight: 800;
+    margin-bottom: 0.3em;
+  }
+}
 /* /css changes */
 
 #styleWrapper {
@@ -193,6 +243,9 @@ block-ui h3 {
   background: grey;
 }
 
+#contextualUI > section {
+  margin: 0 2ch 1em;
+}
 #contextualUI .block {
   display: grid;
   grid-template-rows: repeat(3, 10ch);
@@ -205,6 +258,8 @@ block-ui h3 {
 #contextualUI input {
   max-width: 10ch;
   display: block;
+  border: 0;
+  border-bottom: 3px solid grey;
 }
 
 .input-left {
@@ -270,18 +325,17 @@ block-ui h3 {
 
 #deselectAsset {
   display: none;
-  position: absolute;
-  bottom: 3em;
-  left: 50%;
-  margin-left: -4%;
-  height: 2em;
-  z-index: 999999999;
+  /* position: fixed; */
+  /* margin-top: max-content; */
+  /* background: var(--color-main); */
+  /* text-transform: uppercase; */
+  /* height: 2em; */
+  /* z-index: 999999999; */
 }
 
 &:has(.asset-selected) #deselectAsset {
   display: block;
 }
-
 
 /* // css to show the grid at some point */
 #preview #previewScreen.show-grid {
@@ -292,5 +346,92 @@ block-ui h3 {
       transparent 1px
     ),
     linear-gradient(to bottom, rgb(0, 0, 0, 0.3) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size); /* creates 10 rows and 10 columns */
+  background-size: var(--grid-size) var(--grid-size);
+  /* creates 10 rows and 10 columns */
+}
+
+.meta > span {
+  display: block;
+}
+
+/*all dialog*/
+dialog {
+  & form {
+    display: block;
+
+    & input {
+      display: block;
+
+      margin-bottom: 2em;
+    }
+  }
+
+  p {
+    margin-top: 2em;
+  }
+}
+
+::backdrop {
+  background: #333333cc;
+}
+
+/* custom dialog */
+#login[open] {
+  max-width: 80ch;
+  gap: 2em;
+  padding: 2em 4ch;
+
+  & .introtext {
+    margin-bottom: 5em;
+    max-width: 40ch;
+  }
+  & input {
+    width: 100%;
+  }
+}
+
+#returnhome {
+  font-size: 0.8em;
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.active-menu {
+  color: orange;
+}
+
+#show-tools {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  position: fixed;
+  top: 1em;
+  left: 1em;
+}
+
+label {
+  font-family: var(--font-ui);
+}
+
+input:is([type="text"], [type="password"]) {
+  font-family: var(--font-interface);
+  border: none;
+  border-bottom: 2px dotted var(--color-body);
+  color: var(--color-main);
+}
+
+#delay-tools {
+  background: white;
+  padding: 0.5em 2ch;
+  border: 2px solid var(--color-body);
+  border-radius: 32px;
+  margin-left: auto;
+  & input {
+    border: none;
+    border-bottom: 1px solid grey;
+    color: var(--color-main);
+    max-width: 9ch;
+  }
 }

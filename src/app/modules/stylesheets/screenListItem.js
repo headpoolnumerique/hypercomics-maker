@@ -9,5 +9,5 @@ id="screen-${data.strapid}">
 <span class="width">Width: ${data.maxwidth}</span>
 <span class="height">Height: ${data.defaultHeight}</span>
 <span class="ratio">Max ratio: ${(data.maxwidth / data.defaultHeight).toFixed(2)} (${data.maxwidth}/${data.defaultHeight})</span>
-<span class="remove">R</span>
+<span class="remove">Delete</span>
 </li>`;

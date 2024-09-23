@@ -10,18 +10,18 @@
   min-height: 400px;
   max-height: 70vh;
   overflow: auto;
-  padding:0;
+  padding: 0;
 
-  & :is(form,  div) {
+  & :is(form, div) {
     margin: 0 2em;
   }
 }
 
 #assets h2 {
- /* position: absolute; */
+  /* position: absolute; */
   position: sticky;
-  top:0;
-  margin:0 0 2em;
+  top: 0;
+  margin: 0 0 2em;
 }
 
 #assets #assetsList {
@@ -44,7 +44,7 @@
   gap: 0 2ch;
   align-items: end;
   padding-bottom: 0.4em;
-    &:hover {
+  &:hover {
     background: lightgrey;
     cursor: pointer;
   }
@@ -54,7 +54,7 @@
   padding: 0.2em 0.4ch;
   /* border: 1px solid grey; */
   cursor: pointer;
-  max-height: 100px;
+  max-height: 50px;
   width: 100%;
 }
 
@@ -79,4 +79,39 @@
 
 .searchmode .is-found {
   display: grid !important;
+}
+
+/* show or hide asset placed or not placed*/
+
+#assets #assetsList li {
+  display: none;
+}
+
+.used {
+  border-bottom: 3px solid grey;
+}
+
+.asset-filename {
+  width: 100%;
+  font-size: 0.8em;
+}
+
+.asset-filename::before {
+  display: inline-block;
+  margin-right: 2ch;
+}
+
+.used .asset-filename::before {
+  content: "[x] ";
+}
+.unused .asset-filename::before {
+  content: "[ ] ";
+}
+
+#assets:has(#showUsed:checked) .used {
+  display: grid;
+}
+
+#assets:has(#showUnused:checked) .unused {
+  display: grid;
 }

@@ -37,6 +37,7 @@ import {
 import { updateDelayUI } from "./modules/delay.js";
 import { saveAllStylesheet } from "./modules/stylesheet.js";
 import { zooming } from "./modules/preview.js";
+import { hideLogin, isLoggedIn } from "./api/login.js";
 
 startApp();
 
@@ -44,13 +45,7 @@ startApp();
 //Event and binds
 function listeners() {
   // zoom system
-
   zooming();
-
-  //show hide montage
-  document.querySelector("#showMontage").addEventListener("click", () => {
-    showHideBlock(montageScreen);
-  });
 
   //show hide contextual id
   document
@@ -107,6 +102,7 @@ function listeners() {
 
       selectLink(e.target);
       updateLayers();
+      updateDelayUI();
       // update the Layers pane
     }
   });
@@ -146,6 +142,7 @@ function listeners() {
   preview.addEventListener("click", (event) => {
     if (event.target.tagName == "IMG") {
       deselect(".confirm");
+
       if (
         event.target.dataset.objectid !=
         document.querySelector(".selectedLayer")?.dataset.objectid
@@ -223,10 +220,26 @@ function listeners() {
     updateDelayUI();
   });
 }
+
 //start the app
 async function startApp() {
-  await startup();
-  listeners();
+  // check for the jwt cookie
+  // else login with user name password.
+  // if username / password is done and jwt is ok,
+  // start the app, and you’ll be ok everywhere
+
+  // check for jwt.
+  // followting https://forum.strapi.io/t/how-to-set-jwt-expiration-to-years/5490 we can have the jwt last for 10 days?
+  // and force the login every 7 days could be an interesting solution
+
+  // if not connected, dont show anything? or create an account?
+
+  if (isLoggedIn()) {
+    // if not logged, go back to home page
+    await startup();
+    listeners();
+    document.querySelector("#loading")?.classList.add("hide");
+  } else {
+    window.location = config.appurl;
+  }
 }
-// updateLayers();
-//
