@@ -50,7 +50,7 @@ async function interactObject(object) {
 
   let position = { x: object.offsetLeft, y: object.offsetTop };
 
-  // TODO: in case of a small element, add an icon to resize and one to move. This should be enought to get started with the smaller text.
+  // TODO: in case of a small element, add an icon to resize and one to move
 
   interact(object)
     .draggable({
@@ -90,8 +90,6 @@ async function interactObject(object) {
     .resizable({
       edges: { top: true, left: true, bottom: true, right: true },
       invert: "reposition",
-      margin: 50,
-
       modifiers: [
         interact.modifiers.aspectRatio({
           // this is supposed to help making sure the ratio is preserved
