@@ -18,7 +18,7 @@
     "build:js": "esbuild src/app/app.js --bundle --outfile=public/js/hypercomicsbuilder.js",
     "build:reader": "esbuild src/app/reader.js --bundle --outfile=public/js/hypercomicsreader.js",
     "build:manager": "esbuild src/app/storymanager.js --bundle --outfile=public/js/storymanager.js",
-    "build:fonts": "copy-and-watch src/assets/fonts/*.*  public/fonts/ ",
+    "build:fonts": "copy-and-watch src/assets/fonts/**/*  public/fonts/ ",
     "build:css": "postcss  src/assets/css/main.css -m -o public/css/styles.css ",
     "build:readercss": "postcss  src/assets/css/reader.css -m -o public/css/reader.css ",
     "build:managercss": "postcss  src/assets/css/storymanager.css -m -o public/css/storymanager.css ",
