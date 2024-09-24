@@ -78,14 +78,47 @@ a:hover {
   container-type: size;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
 
 #story img {
   height: auto !important;
 }
 
-#backtostart {
+.backtostart {
   position: fixed;
   top: 0;
   left: 0;
+  background: black;
+  color: white;
+  border-radius: 16px;
+  border: 2px solid grey;
+  font-family: var(--font-sans);
+  padding: 0.1em 1ch;
+  z-index: 099999;
+}
+
+#story {
+  margin: auto;
+  border: 2px solid grey;
+}
+
+#ratioElement {
+  font-size: 3em;
+  position: fixed;
+  right: 0;
+  opacity: 0;
+
+  top: 0;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
