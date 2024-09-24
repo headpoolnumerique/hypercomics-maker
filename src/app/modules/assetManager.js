@@ -2,7 +2,6 @@ import axios from "axios";
 import config from "../config/config";
 import { assetsList, sequenceNumber } from "./selectors";
 
-
 // uploading image
 export function addAssetToTheAssetManager(
   url,
@@ -104,6 +103,9 @@ export function liveSearch() {
   let elementList = document.querySelector("#assetsList");
 
   let search_query = document.querySelector("#assetsFilter").value;
+
+  console.log(search_query);
+  console.log(elements);
   if (search_query.length < 1) {
     elementList.classList.remove("searchmode");
     document.querySelectorAll(".is-found").forEach((el) => {
@@ -125,7 +127,10 @@ export function liveSearch() {
     //     .includes(search_query.toLowerCase()),
     // );
     if (
-      elements[i].textContent.toLowerCase().includes(search_query.toLowerCase())
+      elements[i]
+        .querySelector(".asset-filename")
+        .textContent.toLowerCase()
+        .includes(search_query.toLowerCase())
     ) {
       elements[i].classList.add("is-found");
     } else {
