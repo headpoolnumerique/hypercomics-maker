@@ -151,8 +151,16 @@ function listeners() {
       }
 
       document.querySelector("#selectedId").textContent = `#${event.target.id}`;
+      // the element is already selected
       if (event.target.classList.contains("asset-selected")) return;
+
       deselect(".asset-selected");
+
+      console.log(event.target.closest(".shown"));
+      if (!event.target.closest(".shown")) {
+        return;
+        // console.log("i can’t move this it’s on the other plan");
+      }
       event.target.classList.add("asset-selected");
 
       updateTheUI(event.target);

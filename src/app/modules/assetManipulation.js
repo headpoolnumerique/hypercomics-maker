@@ -32,7 +32,7 @@ import { parse, stringify } from "../vendors/css/css.js";
 import { setObjFromUi } from "./objectManipulations.js";
 
 async function interactObject(object) {
-  if (!object.classList.contains("asset-selected")) return;
+  // there is a trouble when non selected object are moving
   // get the id of the stylesheet to update
 
   // get the id of the sequence
@@ -59,6 +59,15 @@ async function interactObject(object) {
           position = { x: object.offsetLeft, y: object.offsetTop };
         },
         move(event) {
+          if (!object.classList.contains("asset-selected")) {
+            console.log(object + "will not move mtfk");
+            return;
+          }
+          // dont move the element on the back screen
+          if (!object.closest(".shown")) {
+            console.log(object + "will not move mtfk");
+            return;
+          }
           // ((if anchor is set to bottom, use the bottom else use top))
           // ((if anchor is set to left, use the left else use right))
 

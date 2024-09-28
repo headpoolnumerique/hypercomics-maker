@@ -27,8 +27,8 @@ export function addAssetToTheAssetManager(
 }
 
 export async function removeAsset(assetid, el) {
-  console.log("remove asset " + assetid);
-  console.log(el);
+  // console.log("remove asset " + assetid);
+  // console.log(el);
   // strapi unlink the asset from the asset list and from all plan
 
   await axios
@@ -44,8 +44,6 @@ export async function removeAsset(assetid, el) {
     .catch((error) => {
       console.log(error);
     });
-
-  // once done remove
 }
 
 // add unused assets to the asset manager
