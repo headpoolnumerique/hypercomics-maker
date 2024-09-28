@@ -146,22 +146,24 @@ function changeScreenSize(existingRatios) {
   // 4. Get the element with the ID of 'story'
 
   // 5. Choose the closest value from the array based on the ratio
-  let closestValue = existingRatios.reduce((prev, curr) => {
-    return Math.abs(curr - ratio) < Math.abs(prev - ratio) ? curr : prev;
-  });
+  if (existingRatios.length > 1) {
+    let closestValue = existingRatios.reduce((prev, curr) => {
+      return Math.abs(curr - ratio) < Math.abs(prev - ratio) ? curr : prev;
+    });
 
-  // 6. Determine new width and height for the #story element
-  if (browserWidth / closestValue <= browserHeight) {
-    // Width is the limiting factor
-    let newHeight = browserWidth / closestValue;
-    story.style.width = browserWidth - 200 + "px";
-    story.style.height = newHeight - 200 + "px";
-  } else {
-    // Height is the limiting factor
-    let newWidth = browserHeight * closestValue;
-    story.style.width = newWidth - 200 + "px";
-    story.style.height = browserHeight - 200 + "px";
+    // 6. Determine new width and height for the #story element
+    if (browserWidth / closestValue <= browserHeight) {
+      // Width is the limiting factor
+      let newHeight = browserWidth / closestValue;
+      story.style.width = browserWidth - 48 + "px";
+      story.style.height = newHeight - 48 + "px";
+    } else {
+      // Height is the limiting factor
+      let newWidth = browserHeight * closestValue;
+      story.style.width = newWidth - 48 + "px";
+      story.style.height = browserHeight - 48 + "px";
+    }
+
+    ratioElement.innerHTML = `${ratio} (used: ${closestValue})`;
   }
-
-  ratioElement.innerHTML = `${ratio} (used: ${closestValue})`;
 }

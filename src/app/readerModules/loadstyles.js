@@ -6,6 +6,7 @@ export function loadStylesForPreview(stylesheets) {
 
   let ratioArrays = [];
   sortedStylesheets.forEach((stylesheet, index) => {
+    if (stylesheet?.css == null) return;
     if (stylesheet.attributes.disabled) return;
 
     const defaultStyle = index == 0 ? "default" : "";
