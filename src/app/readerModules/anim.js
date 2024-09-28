@@ -4,7 +4,7 @@ async function readingTools() {
   window.addEventListener("keyup", function (e) {
     const hashElement = document.querySelector(window.location.hash);
     const delay = hashElement.dataset.storyDelay || 100;
-    console.log(delay);
+    canMoveForward = true;
     if (delay && !canMoveForward) {
       console.log(`please wait for ${delay}ms`);
       return; // If moveForward is not allowed, exit early
@@ -28,7 +28,7 @@ async function readingTools() {
     }
 
     // Disable moveForward for 5 seconds
-    let canMoveForward = false;
+    canMoveForward = false;
     setTimeout(() => {
       canMoveForward = true;
     }, delay); // 5 seconds delay

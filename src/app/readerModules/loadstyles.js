@@ -5,8 +5,10 @@ export function loadStylesForPreview(stylesheets) {
   const sortedStylesheets = sortByRatio(stylesheets, true);
 
   let ratioArrays = [];
+
   sortedStylesheets.forEach((stylesheet, index) => {
-    if (stylesheet?.css == null) return;
+    console.log(stylesheet);
+    if (stylesheet?.attributes.cssrules == null) return;
     if (stylesheet.attributes.disabled) return;
 
     const defaultStyle = index == 0 ? "default" : "";

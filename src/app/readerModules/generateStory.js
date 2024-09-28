@@ -17,10 +17,13 @@ async function generateStory() {
     seqnum.projectId,
     seqnum.sequenceId,
   );
+  console.log(sequencedata);
 
   let arrayRatios = loadStylesForPreview(
     sequencedata.data.data.attributes.stylesheets.data,
   );
+
+  console.log(arrayRatios);
 
   // check the ratio on the screen
   screenSizeManipulation(story, arrayRatios);
