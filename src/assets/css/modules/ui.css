@@ -435,3 +435,31 @@ input:is([type="text"], [type="password"]) {
     max-width: 9ch;
   }
 }
+
+#delaytest {
+  --delay-value: 100ms;
+  background: black;
+  animation: showdelay var(--delay-value);
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+  top: 5px;
+}
+
+@keyframes showdelay {
+  0% {
+    background: white;
+  }
+  99% {
+    background: white;
+  }
+  100% {
+    background: black;
+  }
+}
+
+/*if there is no object selected, hide the object panel*/
+/* body :not(:has(.asset-selected)) #showContextual { */
+/* display: none; */
+/* } */

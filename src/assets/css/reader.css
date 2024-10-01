@@ -122,3 +122,11 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.asset {
+  --hidden-opacity: 0;
+}
+img.asset-hidden {
+  opacity: 0;
+  z-index: -100;
+}
