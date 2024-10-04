@@ -412,11 +412,11 @@ dialog {
 }
 
 label {
-  font-family: var(--font-ui);
+  font-family: var(--font-interface);
 }
 
 input:is([type="text"], [type="password"]) {
-  font-family: var(--font-interface);
+  font-family: var(--font-input);
   border: none;
   border-bottom: 2px dotted var(--color-body);
   color: var(--color-main);
@@ -437,25 +437,27 @@ input:is([type="text"], [type="password"]) {
 }
 
 #delaytest {
-  --delay-value: 100ms;
   background: black;
-  animation: showdelay var(--delay-value);
   width: 20px;
   height: 20px;
   display: inline-block;
   position: relative;
   top: 5px;
+  margin-right: 1ch;
+  background: grey;
+  border: 2px solid black;
+  background: conic-gradient(
+    var(--color-main) var(--angle),
+    /*initially, this is set to 0deg. */ white 0 45deg
+  );
+  &.running {
+    animation: fillCircle var(--delay-value) linear;
+  }
 }
 
-@keyframes showdelay {
-  0% {
-    background: white;
-  }
-  99% {
-    background: white;
-  }
-  100% {
-    background: black;
+@keyframes fillCircle {
+  to {
+    --angle: 360deg;
   }
 }
 
@@ -463,3 +465,9 @@ input:is([type="text"], [type="password"]) {
 /* body :not(:has(.asset-selected)) #showContextual { */
 /* display: none; */
 /* } */
+
+@property --angle {
+  syntax: "<angle>"; /* this can be angle or percentage */
+  initial-value: 0deg;
+  inherits: false;
+}

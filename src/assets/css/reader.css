@@ -124,9 +124,6 @@ body {
 }
 
 .asset {
+  /* if the element has a hidden opacity, then it shouldn’t be seen. */
   --hidden-opacity: 0;
-}
-img.asset-hidden {
-  opacity: 0;
-  z-index: -100;
 }

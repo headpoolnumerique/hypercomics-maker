@@ -27,9 +27,8 @@
   --color-main-light: rgb(215, 105, 140, 0.3);
   --color-body: #121212;
   /* --font-interface: "monaspace"; */
-  --font-interface: "monaspace";
-  --font-ui: "inter";
-  --font-ui: "bricolage";
+  --font-interface: "bricolage";
+  --font-input: "monaspace";
   /*screen minimal size*/
   --min-height: 800px;
   --min-width: 400px;

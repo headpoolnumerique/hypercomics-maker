@@ -226,7 +226,7 @@ async function addPlan(montageList, select = true) {
     );
     referencePlan.insertAdjacentHTML(
       "afterend",
-      `<article  class="created${select ? "shown" : ""}" id="plan-${
+      `<article  class="created ${select ? "shown" : ""}" id="plan-${
         response.data.data.id
       }" data-strap-id="${response.data.data.id}"></article>`,
     );

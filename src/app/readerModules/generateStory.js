@@ -17,13 +17,11 @@ async function generateStory() {
     seqnum.projectId,
     seqnum.sequenceId,
   );
-  console.log(sequencedata);
+  // console.log(sequencedata);
 
   let arrayRatios = loadStylesForPreview(
     sequencedata.data.data.attributes.stylesheets.data,
   );
-
-  console.log(arrayRatios);
 
   // check the ratio on the screen
   screenSizeManipulation(story, arrayRatios);
@@ -60,13 +58,14 @@ function fillPlan(plan) {
     // console.log(object)
 
     object.attributes.assets.data.forEach((asset) => {
+      // data.verticalAnchor ="${object.attributes.verticalAnchor ? object.attributes.verticalAnchor : "top"}"
+      // data.horizontalAnchor ="${object.attributes.horizontalAnchor ? object.attributes.horizontalAnchor : "left"}"
+
       planToFill.insertAdjacentHTML(
         "beforeend",
         `<img 
         id="inuse-${plan.id}-${object.id}" 
         data-objectId="${object.id}" data-planid="${plan.id}"
-        data.verticalAnchor ="${object.attributes.verticalAnchor ? object.attributes.verticalAnchor : "top"}"
-        data.horizontalAnchor ="${object.attributes.horizontalAnchor ? object.attributes.horizontalAnchor : "left"}"
         data-assetid="${asset.id}" src="${asset.attributes.location}" class="asset">`,
       );
     });

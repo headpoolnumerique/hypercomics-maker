@@ -8,33 +8,24 @@ async function handleDelays() {
   plandelay.addEventListener("input", async (event) => {
     const value = event.target.value;
     if (!value || isNaN(value)) return console.log("the delay is not a number");
-    console.log("value change");
-    // debounce doesnt seem to work. will try it again
-    // debounce(async (value) => {
+    // console.log("value change");
     const plan = document.querySelector(".shown");
     // Make an Axios request to update the server
     const data = {
       delay: value,
     };
-    console.log(plan);
-
-    console.log(
-      await updateData(config.strapi.url, "plans", data, plan.dataset.strapId),
-    );
     await updateData(
       config.strapi.url,
       "plans",
       data,
       plan.dataset.strapId,
     ).then((response) => {
-      console.log(plan.dataset.delay);
-      console.log(response);
       plan.dataset.delay = value;
     });
-
-    // debounce doesnt seem to work
-    // }, 1000);
   });
+
+  //testing button
+  testdelay();
 }
 
 function debounce(callback, delay) {
@@ -54,3 +45,30 @@ function updateDelayUI() {
 }
 
 export { handleDelays, updateDelayUI };
+
+function testdelay() {
+  document.querySelector("#delaytest").addEventListener(
+    "click",
+    (e) => {
+      let element = e.target;
+
+      e.target.style.setProperty(
+        "--delay-value",
+        `${document.querySelector("#minimaldelay").value}ms`,
+      );
+      // -> removing the class
+      element.classList.remove("running");
+
+      // -> triggering reflow /* The actual magic */
+      // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
+      // Oops! This won't work in strict mode. Thanks Felis Phasma!
+      // element.offsetWidth = element.offsetWidth;
+      // Do this instead:
+      void element.offsetWidth;
+
+      // -> and re-adding the class
+      element.classList.add("running");
+    },
+    false,
+  );
+}
