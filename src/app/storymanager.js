@@ -71,6 +71,7 @@ export async function start() {
   window.addSequence = addSequence;
   window.deleteSequence = deleteSequence;
   window.selectToDelete = selectToDelete;
+  window.exportProject = exportProject;
 }
 
 // load project
@@ -159,7 +160,9 @@ function generateSequence(sequence, project) {
 <a data-sequenceid=${sequence.id} href="#" class="rename">rename</a> 
 <a href="reader.html?sequence=${sequence.id}">preview</a>
 <button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button>
+<button class="export"  data-sequence-id="${sequence.id}" onclick="exportProject(${sequence.id})">publish</button>
 </div> 
+<p id="feedback-${sequence.id}"></p>
 </li>`;
 }
 
@@ -180,7 +183,9 @@ async function addSequence(projectNumber, author) {
 <a data-sequenceid=${newSeq.data.data.id} href="#" class="rename">rename</a> 
 <a href="reader.html?sequence=${newSeq.data.data.id}">preview</a>
 <button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})">delete</button>
+<button class="export"  data-sequence-id="${newSeq.data.data.id}" onclick="exportProject(${newSeq.data.data.id})">publish</button>
 </div> 
+<p id="feedback-${newSeq.data.data.id}"></p>
 </li>`,
     );
 }
@@ -193,4 +198,39 @@ async function deleteSequence(projectId, sequenceId) {
 
 export async function renameSequence(sequenceId, sequenceTitle) {
   console.log("rename the sequecne");
+}
+
+export async function exportProject(seqId) {
+  // Gather form data
+  const feedback = document.querySelector(`#feedback-${seqId}`);
+  console.log(feedback);
+  feedback.innerHTML = "please wait while we’re publishing the sequence";
+  // Create the data object to send to the server
+  const data = { seqId: Number(seqId) };
+
+  const body = JSON.stringify(data);
+  try {
+    // Send a POST request to the server using fetch
+    const response = await fetch(`${config.exporturl}/hc-export`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body, // Send the data as JSON
+    });
+
+    // Parse the JSON response from the server
+    const result = await response.json();
+
+    // Check if the response status is OK (200-299)
+    if (response.ok) {
+      feedback.innerHTML = `Success: <a href="${result.downloadLink}">download your file</a> or here is the <a href="${result.exportLink}">${result.exportLink}</span>`;
+    } else {
+      feedback.textContent = `Error: ${result.erreur || "Something went wrong"}`;
+    }
+  } catch (error) {
+    // If there's a network error or some issue
+    console.log(error.message);
+    feedback.textContent = `Error: ${error.message}`;
+  }
 }

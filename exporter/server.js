@@ -12,15 +12,18 @@ const cors = require("cors");
 // Créer une instance d'Express
 const app = express();
 
+// app.use(cors());
+
 // Utiliser le middleware body-parser pour lire le JSON dans le corps des requêtes
+//
 app.use(bodyParser.json());
 
 // create a folder for the temp
 
-// Définir une route POST qui recevra les données
-//
-//
+// cors
+app.options("*", cors()); // Handle preflight requests for all routes
 app.use(cors());
+
 // serve public folder
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -30,7 +33,24 @@ app.post("/hc-export", async (req, res) => {
     ensureTempFolderExists(`temp/${donnees.seqId}/images/`);
     // createHTML and put it in the folder before zipping it
     const ziplink = await getData(donnees.seqId); // Wait for the ZIP file to be created
-    res.json({ downloadLink: `/${ziplink}` }); // Send the download link to the client
+    // fs.cp("temp/", "../public/", (err) => {
+    //   if (err) throw err;
+    // });
+
+    fs.cp(
+      `temp/${donnees.seqId}`,
+      `../public/stories/${donnees.seqId}/`,
+      { recursive: true },
+      (err) => {
+        if (err) throw err;
+        /* callback */
+      },
+    );
+
+    res.json({
+      downloadLink: `/stories/${ziplink}`,
+      exportLink: `/stories/${donnees.seqId}/`,
+    }); // Send the download link to the client
   } catch (error) {
     console.error("Error in /hc-export:", error);
     res.status(500).json({ error: "Failed to generate the ZIP file" });
@@ -65,7 +85,7 @@ async function getData(seqId) {
     // Create the zip
     const tempFolderPath = path.join(__dirname, `temp/${seqId}/`);
     const zipFileName = `${seqId}.zip`;
-    const zipFilePath = path.join(__dirname, "public", zipFileName);
+    const zipFilePath = path.join(__dirname, "../public/stories/", zipFileName);
 
     await new Promise((resolve, reject) => {
       const output = fs.createWriteStream(zipFilePath);
