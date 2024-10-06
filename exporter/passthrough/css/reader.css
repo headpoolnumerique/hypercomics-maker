@@ -1,0 +1,311 @@
+/* thanks to the one and only Andy Bell */
+
+/* Box sizing rules */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+
+img,
+picture {
+  /* max-width: 100%; */
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+#loading {
+  inset: 0;
+  position: fixed;
+  z-index: 2000;
+  background: rgb(230, 230, 230, 0.9);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  /* justify-content: space-around; */
+  justify-content: space-evenly;
+  flex-direction: column;
+  z-index: 999999999999999999999999999999;
+}
+
+.box {
+  /* margin: auto; */
+  display: flex;
+  background: white;
+  border-radius: 3em;
+  flex-direction: column;
+  /* height: 100px; */
+  position: relative;
+  padding: 1em;
+}
+
+#dots {
+  margin: auto;
+  display: flex;
+  align-items: center;
+}
+
+.box::after {
+  position: absolute;
+  height: 30px;
+  width: 40px;
+  background: white;
+  display: block;
+  bottom: -20px;
+  right: 0;
+  content: "";
+  clip-path: polygon(0 0, 0% 100%, 42% 0);
+  justify-content: space-around;
+}
+
+.dot {
+  opacity: 0;
+  width: 10px;
+  height: 10px;
+  display: block;
+  border-radius: 50%;
+  background: grey;
+  margin: 0 5px;
+  animation: blink 1000ms infinite;
+}
+
+#dot1 {
+  animation-delay: 50ms;
+}
+
+#dot2 {
+  animation-delay: 100ms;
+}
+
+#dot3 {
+  animation-delay: 150ms;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+
+  33% {
+    opacity: 1;
+  }
+  66% {
+    opacity: 1;
+  }
+  /* 80% { */
+  /**/
+  /*  opacity: 1; */
+  /* } */
+  100% {
+    opacity: 0;
+  }
+}
+
+#loading p {
+  
+  font-style: italic;
+  text-align: center;
+}
+
+#loading.hide {
+  display: none;
+}
+
+:root {
+  --color-main: aquamarine;
+  --font-sans: sans-serif;
+}
+
+html {
+  font-size: 18px;
+  color: var(--color-body);
+  font-family: var(--font-interface);
+  scrollbar-gutter: stable;
+  height: 100vh;
+  overflow: hidden;
+}
+
+img {
+  /* // to keep the same idea than the builder */
+  position: absolute;
+  /* object-fit: contain; */
+}
+
+.plan {
+  display: none;
+}
+
+.plan:target {
+  display: block;
+}
+
+.previousPlan,
+.nextPlan {
+  position: fixed;
+  top: 48vh;
+  font-size: 1.3em;
+  background: white;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-main);
+}
+
+.previousPlan {
+  left: 2ch;
+}
+
+.nextPlan {
+  right: 2ch;
+}
+
+/* // toc */
+
+#sequence-toc {
+  font-family: var(--font-sans);
+  width: 100vw;
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  /* background: aquamarine; */
+  bottom: 0;
+  display: flex;
+  font-size: 1.2em;
+  gap: 0 1ch;
+  list-style-type: none;
+}
+
+#sequence-toc .selected {
+  color: orange;
+}
+
+#story {
+  container-name: preview;
+  container-type: size;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#story img {
+  height: auto !important;
+}
+
+.backtostart {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: black;
+  color: white;
+  border-radius: 16px;
+  border: 2px solid grey;
+  font-family: var(--font-sans);
+  padding: 0.1em 1ch;
+  z-index: 099999;
+}
+
+#story {
+  margin: auto;
+  border: 2px solid grey;
+}
+
+#ratioElement {
+  font-size: 3em;
+  position: fixed;
+  right: 0;
+  opacity: 0;
+
+  top: 0;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.asset {
+  /* if the element has a hidden opacity, then it shouldn’t be seen. */
+  --hidden-opacity: 0;
+}
