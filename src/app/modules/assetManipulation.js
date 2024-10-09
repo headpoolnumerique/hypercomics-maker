@@ -713,3 +713,66 @@ export async function stickElement(element) {
   // save the stylesheet
   saveStylesheet(activatedStyle.dataset.strapid, activatedStyle.textContent);
 }
+
+/*apply the styles of an element to all the stylesheet in a direction
+ * @param (HTMLElement) element you want to use the from / to
+ * @param (direction) string: higher ratios, lower ratios*/
+
+export async function applyToOtheRatios(element, direction) {
+  // get object asset id;
+  const assetId = element.dataset.assetid;
+
+  // get the css you want to clone
+  const activatedStyle = stylesWrapper.querySelector(".activatedStyle");
+  let parsedCSS = parse(activatedStyle.textContent);
+  const styleToDuplicate = parsedCSS.stylesheet.rules[0].rules.find((rule) => {
+    // if the rule isn’t the one we’re looking for, return
+    if (!rule.selectors.includes(`#${element.id}`)) return;
+    return rule;
+  });
+
+  let styleToUpdates = [...stylesWrapper.querySelectorAll("style")].filter(
+    (block) => {
+      if (direction == "lower") {
+        return (
+          block.dataset.width / block.dataset.height <
+          activatedStyle.dataset.width / activatedStyle.dataset.height
+        );
+      } else if (direction == "higher") {
+        return (
+          block.dataset.width / block.dataset.height >
+          activatedStyle.dataset.width / activatedStyle.dataset.height
+        );
+      }
+    },
+  );
+
+  styleToUpdates.forEach((styleblock) => {
+    // remove the previous styles and add the new one?
+
+    let parsedBlock = parse(styleblock.textContent);
+
+    let found = parsedBlock.stylesheet.rules[0].rules.find((rule) => {
+      // if the rule isn’t the one we’re looking for, return
+      if (rule.selectors.includes(`#${element.id}`)) {
+        rule.declarations = styleToDuplicate.declarations;
+        return true;
+      }
+    });
+
+    if (!found) {
+      parsedBlock.stylesheet.rules[0].rules.push({
+        type: "rule",
+        selectors: [`#${element.id}`],
+        declarations: styleToDuplicate.declarations,
+      });
+    }
+
+    styleblock.textContent = stringify(parsedBlock);
+    //apply the css to the previous ratio
+
+    // save the stylesheet
+    // saveAllStylesheet();
+    // saveStylesheet(activatedStyle.dataset.strapid, activatedStyle.textContent);
+  });
+}

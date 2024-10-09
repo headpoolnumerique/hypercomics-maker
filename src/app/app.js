@@ -9,6 +9,7 @@ import { uploadToStrapi } from "./modules/assetNetwork.js";
 import { deselect, selectLink } from "../app/modules/helpers";
 import { showHideBlock } from "./modules/helpers.js";
 import {
+  applyToOtheRatios,
   interactObject,
   stickElement,
   updateTheUI,
@@ -25,6 +26,8 @@ import {
   saveStylesheetButton,
   buttonDeselectAsset,
   buttonStick,
+  buttonCloneToLowerRatio,
+  buttonCloneToHigherRatio,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
@@ -75,6 +78,13 @@ function listeners() {
 
   buttonStick.addEventListener("click", function () {
     stickElement(previewScreen.querySelector(".asset-selected"));
+  });
+
+  buttonCloneToLowerRatio.addEventListener("click", function () {
+    applyToOtheRatios(previewScreen.querySelector(".asset-selected"), "lower");
+  });
+  buttonCloneToHigherRatio.addEventListener("click", function () {
+    applyToOtheRatios(previewScreen.querySelector(".asset-selected"), "higher");
   });
 
   document

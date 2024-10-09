@@ -58,6 +58,11 @@ export const inputMakeHidden = document.querySelector("#input-hide");
 
 export const buttonDeselectAsset = document.querySelector("#deselectAsset");
 export const buttonStick = document.querySelector("#button-stick");
-
+export const buttonCloneToLowerRatio = document.querySelector(
+  "#clone-to-lower-ratio",
+);
+export const buttonCloneToHigherRatio = document.querySelector(
+  "#clone-to-higher-ratio",
+);
 //grid
 export const buttonShowGrid = document.querySelector("#showgrid");
