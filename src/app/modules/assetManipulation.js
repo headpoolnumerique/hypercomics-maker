@@ -756,7 +756,6 @@ export async function applyToOtheRatios(element, direction) {
       // if the rule isn’t the one we’re looking for, return
       if (rule.selectors.includes(`#${element.id}`)) {
         rule.declarations = styleToDuplicate.declarations;
-        return true;
       }
     });
 
@@ -768,8 +767,7 @@ export async function applyToOtheRatios(element, direction) {
       });
     }
 
-    styleblock.textContent = stringify(parsedBlock);
-    //apply the css to the previous ratio
+    styleblock.textContent = stringify(parsedBlock); //apply the css to the previous ratio
 
     // save the stylesheet
     // saveAllStylesheet();

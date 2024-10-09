@@ -38,6 +38,7 @@
   gap: 1ch;
   padding: 0.8em 0 0.2em;
   grid-template-columns: repeat(5, 1fr);
+  align-items: center;
 }
 
 .stylesheet:hover {
@@ -62,6 +63,8 @@
   max-width: max-content;
   padding: 0.2em 1ch 0 1ch;
   cursor: pointer;
+  grid-column: 6;
+  height: max-content;
   &:hover {
     background: var(--color-main);
   }
@@ -69,4 +72,16 @@
 
 .toremove .remove {
   background: red;
+}
+.applyStyleToRatio {
+  font-style: italic;
+  color: var(--color-main);
+  margin-right: 4ch;
+}
+.applyStyleToRatio:hover {
+  color: var(--color-main);
+}
+
+.activeStylesheet .applyStyleToRatio {
+  display: none;
 }

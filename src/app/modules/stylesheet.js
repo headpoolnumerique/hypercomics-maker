@@ -32,7 +32,7 @@ export async function stylesheetmanager(obj) {
   // if there is no style sheet, create 4 basics
   if (orderedStylesheets.length == 0) {
     await kickstartStylesheet();
- 
+
     // hideLogin();
   }
 
@@ -45,7 +45,7 @@ export async function stylesheetmanager(obj) {
   //follow the resizing of the screen
   getSize();
 
-   cleanStylesheetButton.addEventListener("click", cleanStyleSheet);
+  cleanStylesheetButton.addEventListener("click", cleanStyleSheet);
 }
 
 /** event listener for the stylesheet ui
@@ -59,6 +59,14 @@ export async function stylesheetListeners() {
     // cancel remove if you click on something else
     if (!event.target.classList.contains("remove")) {
       document.querySelector(".toremove")?.classList.remove("toremove");
+    }
+
+    if (event.target.classList.contains("applyStyleToRatio")) {
+      console.log(event.target.closest("li.stylesheet"));
+      cloneFullStylesheet(
+        event.target.closest("li.stylesheet").dataset.strapid,
+      );
+      // clone the styles
     }
     // remove stylesheet url
     if (event.target.classList == "remove") {
@@ -268,9 +276,8 @@ export function getSize() {
   const screenSizeObserver = new ResizeObserver((screensizes) => {
     for (const screensize of screensizes) {
       if (!screensList.querySelector(".stylesheet"))
-
         return console.log("there is no stylesheet, do nothing");
-       if (screensize.contentBoxSize) {
+      if (screensize.contentBoxSize) {
         let newWidth = Math.round(screensize.contentBoxSize[0].inlineSize);
         let newHeight = Math.round(screensize.contentBoxSize[0].blockSize);
 
@@ -589,7 +596,6 @@ export function setObjInStylesheet(stylesheet, obj) {
 }
 
 export async function saveStylesheet(stylesheetId, data) {
-
   if (stylesheetId == stylesWrapper.querySelector("style").dataset.strapid) {
     updateDefaultStylesheet();
   }
@@ -956,3 +962,26 @@ export function cloneStylesheetRules(stylesheetObj, previousId, newId) {
 
   stylesheetObj.textContent = stringify(parsedCSS);
 }
+
+// apply the active stylesheet to another one
+// @param targetid = strapiid of the target stylesheet
+
+export function cloneFullStylesheet(targetid) {
+  const sourceSheet = parse(
+    stylesWrapper.querySelector(".activatedStyle").textContent,
+  );
+
+  let target = styleWrapper.querySelector(`[data-strapid="${targetid}"]`);
+
+  let targetSheet = parse(target.textContent);
+
+  styleWrapper.querySelector(`[data-strapid="${targetid}"]`).textContent,
+    (targetSheet.stylesheet.rules[0].rules =
+      sourceSheet.stylesheet.rules[0].rules);
+
+  target.textContent = stringify(targetSheet);
+
+  saveStylesheet(targetid, target.textContent);
+}
+
+// clone s

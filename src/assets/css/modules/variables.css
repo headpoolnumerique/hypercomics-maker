@@ -25,6 +25,7 @@
   --color-main: rgb(215, 105, 140, 1);
   --color-main: rgb(30, 88, 178);
   --color-main-light: rgb(215, 105, 140, 0.3);
+  --color-main-light: rgb(200, 221, 255);
   --color-body: #121212;
   /* --font-interface: "monaspace"; */
   --font-interface: "bricolage";
