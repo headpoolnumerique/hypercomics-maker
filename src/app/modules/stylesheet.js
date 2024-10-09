@@ -62,7 +62,6 @@ export async function stylesheetListeners() {
     }
 
     if (event.target.classList.contains("applyStyleToRatio")) {
-      console.log(event.target.closest("li.stylesheet"));
       cloneFullStylesheet(
         event.target.closest("li.stylesheet").dataset.strapid,
       );
