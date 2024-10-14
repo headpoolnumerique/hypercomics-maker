@@ -21,7 +21,9 @@
     <a id="returnhome" href="/">close</a>
     <button
       id="show-tools"
-      onclick="document.querySelector('#homeButtonsList').classList.toggle('hide')"
+      onclick="
+            document.querySelector('#homeButtonsList').classList.toggle('hide'); document.querySelector('#homeButtonsList').style.transform = `` ;
+            document.querySelector('#homeButtonsList').dataset.x = ``;document.querySelector('#homeButtonsList').dataset.y = `` ;"
     >
       tools
     </button>

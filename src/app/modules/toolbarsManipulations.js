@@ -7,6 +7,7 @@ function toggleToolbars() {
     .addEventListener("click", function (e) {
       if (e.target.className == "reset") {
         resetUILocation(`#${e.target.dataset.uiToReset}`);
+        return;
       }
       switch (e.target.id) {
         case "showLayers":
