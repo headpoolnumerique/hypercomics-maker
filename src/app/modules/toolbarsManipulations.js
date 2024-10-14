@@ -5,6 +5,9 @@ function toggleToolbars() {
   document
     .querySelector("#homeButtonsList")
     .addEventListener("click", function (e) {
+      if (e.target.className == "reset") {
+        resetUILocation(`#${e.target.dataset.uiToReset}`);
+      }
       switch (e.target.id) {
         case "showLayers":
           // console.log(event.target.id);
@@ -42,6 +45,11 @@ function toggleToolbars() {
           } else {
             e.target.classList.remove("active-menu");
           }
+          break;
+
+        case "showAssets-reset":
+        case "showSequence-reset":
+          console.log(e.target);
           break;
 
         case "showgrid":
@@ -113,3 +121,9 @@ function resizeMontagePaneVertically() {
 }
 
 export { moveToolbars, toggleToolbars, resizeMontagePaneVertically };
+
+function resetUILocation(selector) {
+  document.querySelector(selector).style.transform = "";
+  document.querySelector(selector).dataset.x = 0;
+  document.querySelector(selector).dataset.y = 0;
+}

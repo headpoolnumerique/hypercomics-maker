@@ -62,23 +62,24 @@ button,
       }
     }
   }
+  & p {
+    border-bottom: 3px solid black;
+    display: grid;
+    grid-template-columns: 1fr 3ch;
+    justify-content: space-between;
+  }
   & button {
     border: none;
     margin: 0;
     text-decoration: none;
-    display: block;
+    display: inline-block;
     text-transform: uppercase;
     font-weight: 400;
-    width: 100%;
     text-align: left;
     background: white;
-
-    &:not(:last-of-type) {
-      border-bottom: 1px dashed grey;
+    &.reset {
+      background: lightgrey;
     }
-
-    /* border: 2px solid black; */
-    /* border-bottom: 6px solid black; */
   }
 }
 
@@ -470,4 +471,7 @@ input:is([type="text"], [type="password"]) {
   syntax: "<angle>"; /* this can be angle or percentage */
   initial-value: 0deg;
   inherits: false;
+}
+
+.reset {
 }
