@@ -97,8 +97,9 @@ async function interactObject(object) {
     })
 
     .resizable({
-      edges: { top: true, left: true, bottom: true, right: true },
-      invert: "reposition",
+      edges: { top: false, left: false, bottom: true, right: true },
+      invert: "none",
+      margin: 4,
       modifiers: [
         interact.modifiers.aspectRatio({
           // this is supposed to help making sure the ratio is preserved
