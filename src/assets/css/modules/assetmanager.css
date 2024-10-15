@@ -39,7 +39,7 @@
   display: grid;
   width: 100%;
   align-items: baseline;
-  grid-template-columns: [img-start] 100px [img-end name-start] 1fr [name-end];
+  grid-template-columns: [img-start] 100px [img-end name-start] 1fr [name-end button-start] 0.3fr [button-end];
   border-bottom: 1px solid grey;
   gap: 0 2ch;
   align-items: end;
