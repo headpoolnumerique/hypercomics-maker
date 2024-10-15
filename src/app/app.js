@@ -41,6 +41,7 @@ import { updateDelayUI } from "./modules/delay.js";
 import { saveAllStylesheet } from "./modules/stylesheet.js";
 import { zooming } from "./modules/preview.js";
 import { hideLogin, isLoggedIn } from "./api/login.js";
+import { reloadAssetsSetup } from "./modules/assetManager.js";
 
 startApp();
 
@@ -49,6 +50,8 @@ startApp();
 function listeners() {
   // zoom system
   zooming();
+
+  reloadAssetsSetup();
 
   //show hide contextual id
   document

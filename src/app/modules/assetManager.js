@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../config/config";
-import { assetsList, sequenceNumber } from "./selectors";
+import { assetsList, buttonRefreshLibrary, sequenceNumber } from "./selectors";
 
 // uploading image
 export function addAssetToTheAssetManager(
@@ -24,6 +24,30 @@ export function addAssetToTheAssetManager(
       </li>`,
     );
   }
+}
+
+export async function reloadAssetsSetup() {
+  const sequenceId = document.querySelector("#sequenceNumber").textContent;
+  buttonRefreshLibrary.addEventListener("click", function (e) {
+    axios
+      .get(
+        `${config.strapi.url}/api/assets?populate=deep,2&filters[sequence][id][$eq]=${sequenceId}`,
+      )
+
+      .then((response) => {
+        console.log(response.data.data);
+        response.data.data.forEach((asset) => {
+          console.log(asset);
+          addAssetToTheAssetManager(
+            asset.attributes.location,
+            asset.id,
+            asset.attributes.filename,
+            assetsList,
+            false,
+          );
+        });
+      });
+  });
 }
 
 export async function removeAsset(assetid, el) {
@@ -138,3 +162,6 @@ export function liveSearch() {
 }
 
 // upload when dropping the files in the content
+//
+//
+//

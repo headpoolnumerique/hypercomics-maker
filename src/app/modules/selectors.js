@@ -66,3 +66,5 @@ export const buttonCloneToHigherRatio = document.querySelector(
 );
 //grid
 export const buttonShowGrid = document.querySelector("#showgrid");
+
+export const buttonRefreshLibrary = document.querySelector("#refreshLibrary");
