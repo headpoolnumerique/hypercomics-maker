@@ -1,0 +1,149 @@
+@import url("./modules/reset.css");
+@import url("./modules/variables.css");
+
+.dropzone {
+  width: 100%;
+  max-width: 300px;
+  /* border: 2px dashed #ccc; */
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+}
+
+:has(.asset) #uploadhere {
+  display: block;
+}
+
+#uploadhere {
+  position: fixed;
+  right: 0;
+  top: 2em;
+  color: white;
+  background: var(--color-main);
+  padding: 1em;
+  display: none;
+  & button {
+    margin: auto;
+    display: inline-block;
+    margin-top: 1em;
+    width: 100%;
+  }
+}
+
+.dropzone.dragover {
+  border-color: #000;
+  background-color: #f0f0f0;
+}
+
+#preview img {
+  max-width: 100px;
+  margin: 10px;
+}
+
+body {
+  font-family: var(--font-interface);
+  margin: 2em;
+  min-height: unset;
+}
+
+header {
+  border-bottom: 1px solid black;
+  margin-bottom: 3em;
+}
+h1 {
+  font-weight: 900;
+}
+
+input[type="text"] {
+  border: 0;
+  font-size: 2em;
+  display: inline-block;
+  text-align: center;
+  margin: 0 3ch;
+  color: var(--color-main);
+  font-family: var(--font-input);
+  border-bottom: 1px solid grey;
+  max-width: 5ch;
+  margin-bottom: 2em;
+}
+
+h2 {
+  font-size: 3em;
+  border-bottom: 1px solid grey;
+  position: sticky;
+  top: 0;
+  & small {
+    font-size: 0.5em;
+    color: var(--color-main);
+    display: block;
+    font-weight: 300;
+  }
+}
+
+#existingassets ul {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em 3ch;
+  /* justify-content: center; */
+  & li {
+    width: clamp(150px, 33%, 300px);
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 3ch;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5em 0;
+    &:hover {
+      background: lightblue;
+    }
+  }
+  & img {
+    width: 100%;
+    height: 2em;
+    object-fit: contain;
+    height: auto;
+    border: 1px solid grey;
+    padding: 0.5em 1ch;
+  }
+}
+
+main {
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  gap: 5ch;
+}
+
+#previewbox {
+  position: sticky;
+  top: 2em;
+  width: 100%;
+  display: grid;
+  grid-column: 100%;
+  gap: 2em;
+  max-height: 100vh;
+  border-right: 2px solid grey;
+  align-content: start;
+  padding: 1em 2ch;
+  /* height: 100%; */
+
+  & img {
+    max-width: 100%;
+    max-height: 40vh;
+    object-fit: cover;
+    object-position: 50% 50;
+    margin: auto;
+    padding: 0.5em 2ch;
+    border: 1px dashed transparent;
+    &:hover {
+      border: 1px dashed grey;
+    }
+  }
+  & .asset-filename {
+    text-align: center;
+  }
+}

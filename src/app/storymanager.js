@@ -159,6 +159,7 @@ function generateSequence(sequence, project) {
 <a href="editor.html?sequence=${sequence.id}">edit</a> 
 <a data-sequenceid=${sequence.id} href="#" class="rename">rename</a> 
 <a href="reader.html?sequence=${sequence.id}">preview</a>
+<a href="library.html?sequence=${sequence.id}">library</a>
 <button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button>
 <button class="export"  data-sequence-id="${sequence.id}" onclick="exportProject(${sequence.id})">publish</button>
 </div> 

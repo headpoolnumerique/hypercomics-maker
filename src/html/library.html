@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>hypercomics library manager</title>
+    <script type="module" src="/js/librarymanager.js"></script>
+    <link rel="stylesheet" href="/css/library.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Hypercomics library manager</h1>
+      <form id="sequenceForm">
+        <label for="sequenceNumber"
+          >Please enter a sequence number to add assets to the library</label
+        >
+        <input name="sequenceNumber" type="text" id="sequenceNumber" />
+        <input type="submit" value="pull content" />
+      </form>
+      <section id="uploadhere">
+        <div id="dropzone" class="dropzone">
+          <p>Drag and drop your images here, or click to select files.</p>
+          <input type="file" id="fileInput" multiple style="display: none" />
+        </div>
+        <button id="uploadBtn">Upload here</button>
+      </section>
+
+      <!-- filters  -->
+      <!-- <p>filters will appear here</p> -->
+
+      <div id="results">
+        <h2></h2>
+      </div>
+    </header>
+
+    <main>
+      <section id="previewbox"></section>
+      <section id="existingassets"></section>
+    </main>
+    <!-- click on an image, show it in the box, where we can add custom data for the asset -->
+
+    <!-- <p> -->
+    <!--   this page should allow you to upload asset to a sequence and then download -->
+    <!--   them easily. -->
+    <!-- </p> -->
+
+    <!-- <div id="preview"></div> -->
+  </body>
+</html>
