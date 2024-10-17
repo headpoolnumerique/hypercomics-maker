@@ -105,6 +105,7 @@ function uploadImages() {
     document.getElementById("uploadBtn").addEventListener("click", () => {
       const sequenceId = document.getElementById("sequenceNumber").value; // Ensure correct dynamic sequenceId
       uploadFiles(sequenceId);
+      document.querySelector("#fileInput").value = "";
     });
 
     async function uploadFiles(sequenceId) {
