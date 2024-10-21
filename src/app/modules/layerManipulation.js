@@ -39,12 +39,12 @@ function appendLayer(id, layerWrapper = layerList, top = false) {
     top ? "beforeend" : "afterbegin",
     `<li data-objectid="${id}">
 <span class="moveIcon">M<span class="popup">move</span></span>
-        <span class="previewTop"><span class="popup">preview on top</span>P</span>
         <span class="identifier">#${id}</span>
-        <span class="hidebutton"><span class="popup">hide</span>S</span>
-        <span class="delete"><span class="popup">delete</span>D</delete>
+        <span class="delete"><span class="popup">delete</span>Delete</delete>
     </li>`,
   );
+  // to add later
+  // <span class="hidebutton"><span class="popup">hide</span>Hide</span>
 }
 function selectLayer(layerWrapper = "layerList", id) {
   deselect(".selectedlayer");
@@ -100,13 +100,8 @@ function layerInteract(layerWrapper = layerList) {
       interactObject(selectedObject);
       selectedObject.classList.add("asset-selected");
       updateTheUI(selectedObject);
-    } else if (target.classList.contains("previewTop")) {
-      const previewObj = document.querySelector(
-        `.shown [data-objectid="${objectid}"]`,
-      );
-      target.closest("li").classList.add("previewedTop");
-      previewObj.classList.toggle("previewTop");
     }
+
     // hide is now done elsewhere
     // else if (target.classList.contains("hidebutton")) {
     //   target.closest("li").classList.add("selectedLayer");

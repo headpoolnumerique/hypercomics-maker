@@ -23,7 +23,16 @@ img {
   border-bottom: 1px solid gray;
   display: grid;
   gap: 1ch;
-  grid-template-columns: 2ch 3ch auto 2ch 2ch ;
+  grid-template-columns: 2ch 3ch 1fr;
+
+  & .delete {
+    text-align: right;
+    align-self: end;
+    &:hover {
+      font-weight: 600;
+      color: var(--color-main);
+    }
+  }
 }
 
 .hidebutton {
@@ -41,7 +50,6 @@ img {
   font-weight: 800;
   color: red;
 }
-
 
 /* hidden */
 .hidden {
@@ -63,4 +71,3 @@ img.asset-hidden.asset-selected {
   z-index: 10000;
   border: 2px dashed grey;
 }
-
