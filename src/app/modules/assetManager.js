@@ -75,7 +75,6 @@ export async function removeAsset(assetid, el) {
 
 export function addUnusedAssetToTheAssetManager(sequencedata) {
   sequencedata.data?.attributes.assets.data.forEach((data) => {
-    console.log(data.attributes.objects);
     if (data.attributes.objects.data.length > 0) return;
     addAssetToTheAssetManager(
       data.attributes.location,

@@ -30,6 +30,7 @@ import {
 } from "./stylesheet.js";
 import { parse, stringify } from "../vendors/css/css.js";
 import { setObjFromUi } from "./objectManipulations.js";
+import { updateLayers } from "./layerManipulation.js";
 
 async function interactObject(object) {
   // there is a trouble when non selected object are moving
@@ -284,6 +285,9 @@ export async function deleteObject() {
     plan.id.split("-")[1],
     object.dataset.objectid,
   ).then(object.remove());
+
+  updateLayers();
+  // remove from the layer block
 }
 
 function addRuleToObject(objectid, data) {

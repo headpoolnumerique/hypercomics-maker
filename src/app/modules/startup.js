@@ -139,7 +139,6 @@ async function fillPlan(plan) {
     // console.log(object)
 
     object.attributes.assets.data.forEach((asset) => {
-      console.log(asset);
       addAssetToTheAssetManager(
         asset.attributes.location,
         asset.id,

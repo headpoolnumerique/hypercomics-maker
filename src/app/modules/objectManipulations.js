@@ -23,6 +23,7 @@ import {
 
 import { parse, stringify } from "../vendors/css/css.js";
 import { setVisibilityUI } from "./assetManipulation.js";
+import { removeObjectFromPlan } from "./dataManagement.js";
 
 export function moveToLayer(object, plan, position) {
   // move any object to a specific layer
@@ -140,8 +141,8 @@ export async function deleteObject() {
   ).then(
     // TODO remove the object from all the stylesheet? or add a clean button?
     // or clean on load?
-
     object.remove(),
+    updateLayers(),
   );
 }
 
