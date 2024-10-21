@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "../config/config";
+
 import { assetsList, buttonRefreshLibrary, sequenceNumber } from "./selectors";
 
 // uploading image
@@ -7,6 +8,7 @@ export function addAssetToTheAssetManager(
   url,
   assetid,
   filename,
+  createdAt,
   assetList,
   used = true,
 ) {
@@ -15,9 +17,8 @@ export function addAssetToTheAssetManager(
   } else {
     assetList.insertAdjacentHTML(
       `afterbegin`,
-
-      `<li class="${used ? "used" : "unused"}" strapid="${assetid}">
-      <img data-filename="${filename}" data-assetId="${assetid}" src="${url}" id="assetlink-${assetid}" />
+      `<li data-filename="${filename}" data-createdAt="${createdAt}" class="${used ? "used" : "unused"}" strapid="${assetid}">
+        <img data-filename="${filename}"  data-assetId="${assetid}" src="${url}" id="assetlink-${assetid}" />
       <span class="asset-filename">${filename}</span>
       <button class="removeAsset" onclick="removeAsset(${assetid}, this)">remove</button>
 
@@ -80,6 +81,7 @@ export function addUnusedAssetToTheAssetManager(sequencedata) {
       data.attributes.location,
       data.id,
       data.attributes.filename,
+      data.attributes.createdAt,
       assetsList,
       false,
     );
@@ -126,8 +128,6 @@ export function liveSearch() {
 
   let search_query = document.querySelector("#assetsFilter").value;
 
-  console.log(search_query);
-  console.log(elements);
   if (search_query.length < 1) {
     elementList.classList.remove("searchmode");
     document.querySelectorAll(".is-found").forEach((el) => {
@@ -160,8 +160,57 @@ export function liveSearch() {
     }
   }
 }
+export function sortAssets() {
+  document
+    .querySelector(".asset-order-by")
+    .addEventListener("click", (event) => {
+      switch (event.target.id) {
+        case "orderbyasc":
+          sortList("data-filename", "asc");
+          break;
+        case "orderbydesc":
+          sortList("data-filename", "desc");
+          break;
+        case "orderbydateasc":
+          sortList("data-createdat", "asc");
+          break;
+        case "orderbydatedesc":
+          sortList("data-createdat", "desc");
+          break;
+        default:
+          break;
+      }
+    });
+}
 
-// upload when dropping the files in the content
-//
-//
-//
+function sortList(sortBy, direction) {
+  const items = Array.from(assetsList.querySelectorAll("li"));
+
+  // Sorting the <li> elements based on either data-date or data-filename
+  items.sort((a, b) => {
+    let valueA = a.getAttribute(sortBy);
+    let valueB = b.getAttribute(sortBy);
+
+    // Handle date sorting if sorting by data-date
+    if (sortBy === "data-createdat") {
+      console.log("data-createdat");
+      valueA = new Date(valueA);
+      valueB = new Date(valueB);
+      if (direction == "asc") {
+        return valueA - valueB; // Sort by ascending date
+      } else if (direction == "desc") {
+        return valueB - valueA; // Sort by ascending date
+      }
+    }
+
+    // Sort filenames alphabetically if sorting by data-filename
+    else if (direction == "asc") {
+      return valueA.localeCompare(valueB);
+    } else {
+      return valueB.localeCompare(valueA);
+    }
+  });
+
+  // Re-append sorted <li> elements back to the <ul>
+  items.forEach((item) => assetsList.appendChild(item));
+}

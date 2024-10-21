@@ -68,3 +68,9 @@ export const buttonCloneToHigherRatio = document.querySelector(
 export const buttonShowGrid = document.querySelector("#showgrid");
 
 export const buttonRefreshLibrary = document.querySelector("#refreshLibrary");
+
+//order in asset manager
+export const orderbyasc = document.querySelector("#orderbyasc");
+export const orderbydsc = document.querySelector("#orderbydsc");
+export const orderbydateasc = document.querySelector("#orderbydateasc");
+export const orderbydatedsc = document.querySelector("#orderbydatedsc");

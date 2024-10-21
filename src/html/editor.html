@@ -336,10 +336,24 @@
             />
             <button id="filterreset">reset</button>
             <!-- show used and not used blocks -->
-            <label for="showUsed">Placed</label>
-            <input id="showUsed" checked type="checkbox" name="showUsed" />
-            <label for="showUnused">Not placed</label>
-            <input id="showUnused" checked type="checkbox" name="showUnused" />
+            <div class="asset-placed">
+              <label for="showUsed">Placed</label>
+              <input id="showUsed" checked type="checkbox" name="showUsed" />
+              <label for="showUnused">Not placed</label>
+              <input
+                id="showUnused"
+                checked
+                type="checkbox"
+                name="showUnused"
+              />
+            </div>
+            <div class="asset-order-by">
+              <button id="orderbyasc">A-Z</button>
+              <button id="orderbydesc">Z-A</button>
+              <button id="orderbydateasc">Latest</button>
+              <button id="orderbydatedesc">Oldest</button>
+            </div>
+
             <ul id="assetsList"></ul>
           </div>
         </div>

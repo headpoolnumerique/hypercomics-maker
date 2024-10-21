@@ -10,6 +10,7 @@ import {
   sequencePreview,
 } from "./selectors.js";
 import {
+  sortAssets,
   addAssetToTheAssetManager,
   addUnusedAssetToTheAssetManager,
   liveSearch,
@@ -47,7 +48,6 @@ async function startup(url = document.location.href) {
     response.data?.data?.id,
     response.data?.data?.attributes?.title,
     response.data?.data?.attributes.project.data.attributes.author,
-
   );
 
   fillSequence(response.data.data.attributes.plans);
@@ -62,8 +62,6 @@ async function startup(url = document.location.href) {
   setAnchor();
   updatefromui();
   handleVisilibity();
-
-
 
   toggleGrid();
 
@@ -83,10 +81,9 @@ async function startup(url = document.location.href) {
     liveSearch();
   });
 
-
+  sortAssets();
   // remove asset from a button
   window.removeAsset = removeAsset;
-
 }
 
 export function toggleGrid() {
@@ -142,10 +139,13 @@ async function fillPlan(plan) {
     // console.log(object)
 
     object.attributes.assets.data.forEach((asset) => {
+      console.log(asset);
       addAssetToTheAssetManager(
         asset.attributes.location,
         asset.id,
         asset.attributes.filename,
+        asset.attributes.createdAt,
+
         document.querySelector("#assetsList"),
       );
       //check if asset is top or bottom
