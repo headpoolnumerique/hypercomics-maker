@@ -40,7 +40,7 @@ function appendLayer(id, layerWrapper = layerList, top = false) {
     `<li data-objectid="${id}">
 <span class="moveIcon">M<span class="popup">move</span></span>
         <span class="identifier">#${id}</span>
-        <span class="delete"><span class="popup">delete</span>Delete</delete>
+        <span class="delete">Delete</delete>
     </li>`,
   );
   // to add later

@@ -27,7 +27,10 @@ img {
 
   & .delete {
     text-align: right;
+    justify-self: end;
     align-self: end;
+    width: max-content;
+
     &:hover {
       font-weight: 600;
       color: var(--color-main);
