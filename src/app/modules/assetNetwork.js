@@ -56,6 +56,7 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
               response.data.data.attributes.location,
               response.data.data.id,
               response.data.data.attributes.filename,
+              response.data.data.attributes.createdAt,
               document.querySelector("#assetsList"),
             );
           })

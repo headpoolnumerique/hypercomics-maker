@@ -9,13 +9,14 @@ export function addAssetToTheAssetManager(
   assetid,
   filename,
   createdAt,
-  assetList,
+  assetsList,
   used = true,
 ) {
-  if (assetList.querySelector(`[data-filename="${filename}"]`)) {
+  console.log(assetsList);
+  if (assetsList.querySelector(`[data-filename="${filename}"]`)) {
     return;
   } else {
-    assetList.insertAdjacentHTML(
+    assetsList.insertAdjacentHTML(
       `afterbegin`,
       `<li data-filename="${filename}" data-createdAt="${createdAt}" class="${used ? "used" : "unused"}" strapid="${assetid}">
         <img data-filename="${filename}"  data-assetId="${assetid}" src="${url}" id="assetlink-${assetid}" />
@@ -43,6 +44,7 @@ export async function reloadAssetsSetup() {
             asset.attributes.location,
             asset.id,
             asset.attributes.filename,
+            asset.attributes.createdAt,
             assetsList,
             false,
           );
