@@ -165,3 +165,43 @@ export function zooming() {
     });
   });
 }
+
+export function resizePreviewBasedOnScreenSize() {
+  document
+    .querySelector("#zoomResizeForScreen")
+    .addEventListener("click", function () {
+      const stylesheet = document.querySelector(".activeStylesheet");
+
+      // Ratio défini en flottant
+      const ratio =
+        stylesheet.dataset.maxwidth / stylesheet.dataset.defaultHeight;
+
+      console.log(ratio);
+
+      // Dimensions de la fenêtre
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      // Calcul des dimensions maximales en fonction du ratio
+      let newWidth = screenWidth;
+      let newHeight = newWidth / ratio;
+
+      // Si la hauteur dépasse l'écran, on ajuste les dimensions
+      if (newHeight > screenHeight) {
+        newHeight = screenHeight;
+        newWidth = newHeight * ratio;
+      }
+
+      // Appliquer les nouvelles dimensions à l'élément
+      previewScreen.style.setProperty("--preview-width", `${newWidth - 180}px`);
+      previewScreen.style.setProperty(
+        "--preview-height",
+        `${newHeight - 180}px`,
+      );
+      previewScreen.scrollIntoView({
+        behavior: "auto",
+        block: "center",
+        inline: "center",
+      });
+    });
+}

@@ -14,14 +14,14 @@
 
 #previewNext {
   position: absolute;
-  right: -5em;
+  right: -2.5em;
   top: 48%;
   z-index: 1000;
 }
 
 #previewPrevious {
   position: absolute;
-  left: -5em;
+  left: -2.5em;
   top: 48%;
   z-index: 1000;
 }

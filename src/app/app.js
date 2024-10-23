@@ -39,7 +39,7 @@ import {
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
 import { saveAllStylesheet } from "./modules/stylesheet.js";
-import { zooming } from "./modules/preview.js";
+import { resizePreviewBasedOnScreenSize, zooming } from "./modules/preview.js";
 import { hideLogin, isLoggedIn } from "./api/login.js";
 import { reloadAssetsSetup } from "./modules/assetManager.js";
 import { startPreviewMode } from "./modules/previewmode.js";
@@ -53,7 +53,7 @@ function listeners() {
   zooming();
   startPreviewMode();
   reloadAssetsSetup();
-
+  resizePreviewBasedOnScreenSize();
   //show hide contextual id
   document
     .querySelectorAll("#showContextualUI, #closeContextualUI")

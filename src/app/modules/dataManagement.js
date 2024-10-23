@@ -1,11 +1,13 @@
-import axios from 'axios'
+import axios from "axios";
 
 export async function updateData(serverUrl, collection, data, id, deep = true) {
-  
   return axios
-    .put(`${serverUrl}/api/${collection}/${id}${deep ? `?populate=deep,5` : "" }`, {
-      data,
-    })
+    .put(
+      `${serverUrl}/api/${collection}/${id}${deep ? `?populate=deep,5` : ""}`,
+      {
+        data,
+      },
+    )
     .then((response) => {
       // console.log(response)
       return response;
@@ -58,7 +60,7 @@ export async function reorderObjectInPlan(
   planId,
   objectId,
   position,
-  relativeTo
+  relativeTo,
 ) {
   let savedPosition;
 
@@ -164,7 +166,12 @@ export async function connectObjectToPlan(serverUrl, planId, assetId) {
 //     })
 // }
 
-export async function loadCollection(serverUrl, collection, query, populatedeep = true) {
+export async function loadCollection(
+  serverUrl,
+  collection,
+  query,
+  populatedeep = true,
+) {
   //load with a query
   return axios
     .get(`${serverUrl}/api/${collection}${query ? "?" + query : ""}`)
@@ -177,19 +184,24 @@ export async function loadCollection(serverUrl, collection, query, populatedeep 
     });
 }
 
-export async function loadSingle(serverUrl, collection, id, populatedeep = true) {
+export async function loadSingle(
+  serverUrl,
+  collection,
+  id,
+  populatedeep = true,
+) {
   return axios
     .get(
       `${serverUrl}/api/${collection}/${id}${
         populatedeep ? `?populate=deep,4` : ``
-      }`
+      }`,
     )
     .then((response) => {
       // console.log(response)
       return response;
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       return err;
     });
 }
@@ -201,4 +213,3 @@ export function getAllImageFromPlan(plan) {
   });
   return imgData;
 }
-
