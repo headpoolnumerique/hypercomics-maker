@@ -127,7 +127,12 @@ main#appWrap {
     display: flex;
     padding: 0 3ch 0.5em;
     align-items: center;
+    height: 0;
 
+    & button,
+    div {
+      margin-top: -3em;
+    }
     & button {
       height: auto;
       border: 0;
