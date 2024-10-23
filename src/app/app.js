@@ -42,6 +42,7 @@ import { saveAllStylesheet } from "./modules/stylesheet.js";
 import { zooming } from "./modules/preview.js";
 import { hideLogin, isLoggedIn } from "./api/login.js";
 import { reloadAssetsSetup } from "./modules/assetManager.js";
+import { startPreviewMode } from "./modules/previewmode.js";
 
 startApp();
 
@@ -50,7 +51,7 @@ startApp();
 function listeners() {
   // zoom system
   zooming();
-
+  startPreviewMode();
   reloadAssetsSetup();
 
   //show hide contextual id

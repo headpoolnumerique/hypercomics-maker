@@ -475,3 +475,10 @@ input:is([type="text"], [type="password"]) {
 
 .reset {
 }
+
+.preview #readerMode {
+  background: var(--color-main-light);
+  color: var(--color-main);
+  border: 5px solid white;
+  box-shadow: none;
+}

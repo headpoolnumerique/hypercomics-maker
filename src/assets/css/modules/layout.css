@@ -180,6 +180,7 @@ main#appWrap {
 
 #planOrder li a.selected {
   color: var(--color-main);
+  background: var(--color-main-light);
   font-weight: 900;
 }
 

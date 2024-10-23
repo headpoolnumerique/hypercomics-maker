@@ -1,4 +1,4 @@
-async function readingTools() {
+export async function readingTools() {
   let canMoveForward = true; // Flag variable to track if moveForward is allowed
   //handling keyboard
   window.addEventListener("keyup", function (e) {
@@ -60,8 +60,6 @@ async function readingTools() {
     }, delay); // 5 seconds delay
   });
 }
-
-export { readingTools };
 
 // move to next plan
 function moveForward() {

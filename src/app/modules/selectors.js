@@ -74,3 +74,5 @@ export const orderbyasc = document.querySelector("#orderbyasc");
 export const orderbydsc = document.querySelector("#orderbydsc");
 export const orderbydateasc = document.querySelector("#orderbydateasc");
 export const orderbydatedsc = document.querySelector("#orderbydatedsc");
+
+export const buttonPreview = document.querySelector("#previewMode");
