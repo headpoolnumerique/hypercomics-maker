@@ -43,6 +43,7 @@ async function readingTools() {
 
         // Effectue le mouvement vers l'avant
         moveForward();
+        resetForwardTimeout(forwardTimeout);
         updateDelayUI();
         updateLayers();
         testdelay();
@@ -51,7 +52,7 @@ async function readingTools() {
 
     // Récupère le délai du nouvel élément visible
     const hashElement = document.querySelector(".shown");
-    delay = hashElement.dataset.delay || 500;
+    delay = hashElement.dataset.delay || 0;
 
     testdelay();
 
@@ -85,15 +86,13 @@ async function readingTools() {
         return; // If moveForward is not allowed, exit early
       }
       moveForward();
+      resetForwardTimeout(forwardTimeout);
       updateDelayUI();
       updateLayers();
     }
 
     const hashElement = document.querySelector(".shown");
-    delay = hashElement.dataset.delay || 500;
-    if (delay == 0 || delay == null) {
-      delay = 500;
-    }
+    delay = hashElement.dataset.delay || 0;
 
     testdelay();
 
