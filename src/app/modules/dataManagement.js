@@ -213,3 +213,19 @@ export function getAllImageFromPlan(plan) {
   });
   return imgData;
 }
+
+export async function loadSequenceData(serverUrl, sequenceId) {
+  // 1/ load the sequence
+  // 2/ get the plan
+  // 3/ get the stylesheets
+  return axios
+    .get(`${serverUrl}/api/sequences/${sequenceId}?populate=deep,3`)
+    .then((response) => {
+      // console.log(response)
+      return response;
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
+}

@@ -1,5 +1,5 @@
 import config from "../config/config.js";
-import { loadSingle, createData } from "./dataManagement.js";
+import { loadSingle, createData, loadSequenceData } from "./dataManagement.js";
 import { addPlan, dragAndPlanReorder, renderPlan } from "./montage.js";
 import {
   buttonShowGrid,
@@ -40,9 +40,19 @@ async function startup(url = document.location.href) {
   document.body.id = `sequence-${sequenceId}`;
 
   // then load the sequence
-  let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
+  //
+  // what if we load the sequence, then the
+  //
 
-  // console.log(response);
+  // console.log(stuff);
+  // debugger;
+  // let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
+
+  let response = await loadSequenceData(config.strapi.url, sequenceId);
+  console.log(response);
+
+  //
+  //
   //
   updateSequenceMeta(
     response.data?.data?.id,
@@ -50,7 +60,10 @@ async function startup(url = document.location.href) {
     response.data?.data?.attributes.project.data.attributes.author,
   );
 
-  fillSequence(response.data.data.attributes.plans);
+  fillSequence(
+    response.data.data.attributes.plans,
+    response.data.data.attributes.assets,
+  );
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
@@ -92,7 +105,7 @@ export function toggleGrid() {
   });
 }
 
-async function fillSequence(plans) {
+async function fillSequence(plans, assets) {
   // let response = await loadSingle(config.strapi.url, "sequences", sequence);
   // let plans = response.data.data.attributes.plans;
   //if there is no plan, create a plan
@@ -108,7 +121,7 @@ async function fillSequence(plans) {
       sequencePreview,
       index + 1 == plans.data.length ? true : false,
     );
-    await fillPlan(plan);
+    await fillPlan(plan, assets);
     updateLayers();
   });
   // check for each plan. add them to the view
@@ -125,7 +138,7 @@ async function updateSequenceMeta(id, title, authorname) {
   meta.authorname.innerHTML = authorname;
 }
 
-async function fillPlan(plan) {
+async function fillPlan(plan, assets) {
   // console.log(`fill the plan ${plan.id} on load from the objects`);
 
   // fill the plan with all the existing images
@@ -137,23 +150,30 @@ async function fillPlan(plan) {
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
     // console.log(object)
+    // console.log(assets);
 
-    object.attributes.assets.data.forEach((asset) => {
-      addAssetToTheAssetManager(
-        asset.attributes.location,
-        asset.id,
-        asset.attributes.filename,
-        asset.attributes.createdAt,
+    let asset = assets.data.filter((a) => {
+      return a.attributes.objects.data.filter((obj) => obj.id == object.id);
+      // return a.attributes.objects.includes(object.id);
+    })[0];
 
-        document.querySelector("#assetsList"),
-      );
-      //check if asset is top or bottom
+    console.log(asset);
+    // object.attributes.assets.data.forEach((assetList[0]) => {
+    addAssetToTheAssetManager(
+      asset.attributes.location,
+      asset.id,
+      asset.attributes.filename,
+      asset.attributes.createdAt,
 
-      planToFill.insertAdjacentHTML(
-        "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-          object.id
-        }" data-planid="${plan.id}"
+      document.querySelector("#assetsList"),
+    );
+    //check if asset is top or bottom
+
+    planToFill.insertAdjacentHTML(
+      "beforeend",
+      `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
+        object.id
+      }" data-planid="${plan.id}"
         data-assetid="${asset.id}" src="${asset.attributes.location}"
         data-anchor-horizontal="${
           asset.attributes.anchorVertical
@@ -166,10 +186,8 @@ async function fillPlan(plan) {
             : "top"
         }"
         class= "asset" >`,
-      );
-    });
+    );
   });
-
   document.querySelector("#loading")?.classList.add("hide");
 }
 
