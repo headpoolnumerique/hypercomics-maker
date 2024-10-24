@@ -177,10 +177,11 @@ export function resizePreviewBasedOnScreenSize() {
         stylesheet.dataset.maxwidth / stylesheet.dataset.defaultHeight;
 
       console.log(ratio);
+      const margin = 50;
 
       // Dimensions de la fenêtre
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
+      const screenWidth = window.innerWidth - 2 * margin;
+      const screenHeight = window.innerHeight - 2 * margin;
 
       // Calcul des dimensions maximales en fonction du ratio
       let newWidth = screenWidth;
@@ -193,11 +194,8 @@ export function resizePreviewBasedOnScreenSize() {
       }
 
       // Appliquer les nouvelles dimensions à l'élément
-      previewScreen.style.setProperty("--preview-width", `${newWidth - 180}px`);
-      previewScreen.style.setProperty(
-        "--preview-height",
-        `${newHeight - 180}px`,
-      );
+      previewScreen.style.setProperty("--preview-width", `${newWidth}px`);
+      previewScreen.style.setProperty("--preview-height", `${newHeight}px`);
       previewScreen.scrollIntoView({
         behavior: "auto",
         block: "center",
