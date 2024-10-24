@@ -137,30 +137,32 @@ async function updateSequenceMeta(id, title, authorname) {
   meta.authorname.innerHTML = authorname;
 }
 
-async function fillPlan(plan, assets) {
+function fillPlan(plan, assets) {
   // console.log(`fill the plan ${plan.id} on load from the objects`);
-
-  // fill the plan with all the existing images
-  // find the plan
   let planToFill = preview.querySelector(`#plan-${plan.id}`);
   let objectsToFillWith = plan.attributes.objects?.data;
-  // console.log(plan.attributes, objectsToFillWith);
-
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
-    // console.log(object)
-    // console.log(assets);
+    // Check if the asset's objects.data contains an object with the same id
+    let foundasset;
+    assets.data.forEach((a) => {
+      a.attributes.objects.data.forEach((obj) => {
+        if (obj.id == object.id) {
+          console.log("fang");
+          foundasset = a;
+        }
+      });
+    });
+    // console.log(a.attributes.objects.data);
+    // (obj) => obj.id === object.id,
 
-    let asset = assets.data.filter((a) => {
-      return a.attributes.objects.data.filter((obj) => obj.id == object.id);
-      // return a.attributes.objects.includes(object.id);
-    })[0];
-
+    console.log(foundasset);
+    if (!foundasset) return;
     addAssetToTheAssetManager(
-      asset.attributes.location,
-      asset.id,
-      asset.attributes.filename,
-      asset.attributes.createdAt,
+      foundasset.attributes.location,
+      foundasset.id,
+      foundasset.attributes.filename,
+      foundasset.attributes.createdAt,
 
       document.querySelector("#assetsList"),
     );
@@ -171,21 +173,11 @@ async function fillPlan(plan, assets) {
       `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
         object.id
       }" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="${asset.attributes.location}"
-        data-anchor-horizontal="${
-          asset.attributes.anchorVertical
-            ? asset.attributes.anchorVertical
-            : "left"
-        }" 
-        data-anchor-vertical="${
-          asset.attributes.anchorHorizontal
-            ? asset.attributes.anchorHorizontal
-            : "top"
-        }"
+        data-assetid="${foundasset.id}" src="${foundasset.attributes.location}"
         class= "asset" >`,
     );
+    document.querySelector("#loading")?.classList.add("hide");
   });
-  document.querySelector("#loading")?.classList.add("hide");
 }
 
 export { startup, fillPlan };

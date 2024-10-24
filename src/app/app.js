@@ -170,7 +170,7 @@ function listeners() {
 
       deselect(".asset-selected");
 
-      console.log(event.target.closest(".shown"));
+      // console.log(event.target.closest(".shown"));
       if (!event.target.closest(".shown")) {
         return;
         // console.log("i can’t move this it’s on the other plan");
