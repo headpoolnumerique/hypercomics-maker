@@ -148,7 +148,6 @@ function fillPlan(plan, assets) {
     assets.data.forEach((a) => {
       a.attributes.objects.data.forEach((obj) => {
         if (obj.id == object.id) {
-          console.log("fang");
           foundasset = a;
         }
       });
@@ -156,7 +155,6 @@ function fillPlan(plan, assets) {
     // console.log(a.attributes.objects.data);
     // (obj) => obj.id === object.id,
 
-    console.log(foundasset);
     if (!foundasset) return;
     addAssetToTheAssetManager(
       foundasset.attributes.location,
