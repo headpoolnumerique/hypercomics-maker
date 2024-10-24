@@ -49,7 +49,6 @@ async function startup(url = document.location.href) {
   // let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
 
   let response = await loadSequenceData(config.strapi.url, sequenceId);
-  console.log(response);
 
   //
   //
@@ -157,8 +156,6 @@ async function fillPlan(plan, assets) {
       // return a.attributes.objects.includes(object.id);
     })[0];
 
-    console.log(asset);
-    // object.attributes.assets.data.forEach((assetList[0]) => {
     addAssetToTheAssetManager(
       asset.attributes.location,
       asset.id,

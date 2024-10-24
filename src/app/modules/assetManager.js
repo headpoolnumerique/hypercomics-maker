@@ -12,7 +12,7 @@ export function addAssetToTheAssetManager(
   assetsList,
   used = true,
 ) {
-  console.log(assetsList);
+  // console.log(assetsList);
   if (assetsList.querySelector(`[data-filename="${filename}"]`)) {
     return;
   } else {
@@ -37,9 +37,9 @@ export async function reloadAssetsSetup() {
       )
 
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         response.data.data.forEach((asset) => {
-          console.log(asset);
+          // console.log(asset);
           addAssetToTheAssetManager(
             asset.attributes.location,
             asset.id,
