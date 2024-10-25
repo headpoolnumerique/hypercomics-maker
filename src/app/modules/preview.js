@@ -167,16 +167,20 @@ export function zooming() {
 }
 
 export function resizePreviewBasedOnScreenSize() {
+  // ((reset the zoom))
+
+  // put the element on the page
   document
     .querySelector("#zoomResizeForScreen")
     .addEventListener("click", function () {
+      document.querySelector("main").style.setProperty("--zoom-factor", 1);
       const stylesheet = document.querySelector(".activeStylesheet");
 
       // Ratio défini en flottant
       const ratio =
         stylesheet.dataset.maxwidth / stylesheet.dataset.defaultHeight;
 
-      console.log(ratio);
+      // console.log(ratio);
       const margin = 50;
 
       // Dimensions de la fenêtre
