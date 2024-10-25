@@ -178,12 +178,49 @@ export function sortAssets() {
         case "orderbydatedesc":
           sortList("data-createdat", "desc");
           break;
+        case "orderbynumasc":
+          sortListNum("data-filename", "asc");
+          break;
+        case "orderbynumdesc":
+          sortListNum("data-filename", "desc");
+          break;
         default:
           break;
       }
     });
 }
 
+function sortListNum(sortBy, direction) {
+  const items = Array.from(assetsList.querySelectorAll("li"));
+
+  // Sorting the <li> elements based on either data-date or data-filename
+
+  // Sorting the <li> elements based on either data-date or data-filename
+  items.sort((a, b) => {
+    // Get attribute values
+    let valueA = a.getAttribute(sortBy);
+    let valueB = b.getAttribute(sortBy);
+
+    // Extract the first number from each string or set to null if no match is found
+    let numA = valueA.match(/\d+/)
+      ? parseInt(valueA.match(/\d+/)[0], 10)
+      : null;
+    let numB = valueB.match(/\d+/)
+      ? parseInt(valueB.match(/\d+/)[0], 10)
+      : null;
+
+    // Logic to handle null values (no number) by pushing them to the end
+    if (numA === null && numB === null) return 0;
+    if (numA === null) return 1; // a goes after b if it has no number
+    if (numB === null) return -1; // b goes after a if it has no number
+
+    // Sorting logic for items with numbers
+    return direction === "asc" ? numA - numB : numB - numA;
+  });
+
+  // Re-append sorted <li> elements back to the <ul>
+  items.forEach((item) => assetsList.appendChild(item));
+}
 function sortList(sortBy, direction) {
   const items = Array.from(assetsList.querySelectorAll("li"));
 
