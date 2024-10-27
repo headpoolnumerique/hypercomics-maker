@@ -3,7 +3,7 @@ import axios from "axios";
 export async function updateData(serverUrl, collection, data, id, deep = true) {
   return axios
     .put(
-      `${serverUrl}/api/${collection}/${id}${deep ? `?populate=deep,5` : ""}`,
+      `${serverUrl}/api/${collection}/${id}${deep ? `?populate=deep,4` : ""}`,
       {
         data,
       },
@@ -19,7 +19,7 @@ export async function updateData(serverUrl, collection, data, id, deep = true) {
 
 export async function createData(serverUrl, collection, data) {
   return axios
-    .post(`${serverUrl}/api/${collection}/?populate=deep,5`, {
+    .post(`${serverUrl}/api/${collection}/?populate=deep,4`, {
       data,
     })
     .then((response) => {
