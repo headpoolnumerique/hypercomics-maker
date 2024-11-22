@@ -864,6 +864,9 @@ function createDefaultStylesheet() {
 // update the default stylesheet everytimes the styles get changed?
 // or only if the change happens in the first stylesheet
 export function updateDefaultStylesheet() {
+  if (!document.querySelector("#style-default")) {
+    createDefaultStylesheet();
+  }
   let defaultStylesheet = parse(
     stylesWrapper.querySelector("style").textContent,
   );
