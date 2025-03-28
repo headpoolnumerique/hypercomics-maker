@@ -54,44 +54,44 @@ async function loadProject(apiUrl, projectId, sequenceId) {
   return await loadSequenceData(apiUrl, sequenceId);
 }
 
+//fill plan
 function fillPlan(plan, assets) {
   // fill the plan with all the existing images
-  // find the plan
   let planToFill = story.querySelector(`#plan-${plan.id}`);
-  // let objectsToFillWith = plan.attributes.objects?.data;
-  //
   let objectsToFillWith = plan.attributes.objects?.data;
-  // console.log("obj", objectsToFillWith);
-  // // fill the asset manager with the images
+
+  // Loop through each object that needs to be filled into the plan
   objectsToFillWith.forEach((object) => {
-    // Check if the asset's objects.data contains an object with the same id
+    // Check if the object has already been added to the plan
+    if (planToFill.querySelector(`#inuse-${plan.id}-${object.id}`)) {
+      return; // Skip adding if the object is already present
+    }
+
+    // Find the corresponding asset for the object
     let foundasset;
     assets.data.forEach((a) => {
       a.attributes.objects?.data.forEach((obj) => {
-        if (obj.id == object.id) {
-          // console.log("obj", obj.id);
+        // If the object ID matches, set the found asset
+        if (obj.id === object.id) {
           foundasset = a;
         }
       });
-
-      // console.log("foundasset", foundasset);
-      if (!foundasset) return;
-      // console.log(plan.attributes, objectsToFillWith);
-
-      planToFill.insertAdjacentHTML(
-        "beforeend",
-        `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-          object.id
-        }" data-planid="${plan.id}"
-        data-assetid="${foundasset.id}" src="${foundasset.attributes.location}"
-        class= "asset" >`,
-      );
     });
+
+    // If no asset was found, log "nothing" and return
+    if (!foundasset) {
+      return console.log("nothing found for object:", object.id);
+    }
+
+    // Insert the image into the plan if the asset is found
+    planToFill.insertAdjacentHTML(
+      "beforeend",
+      `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" 
+      data-planid="${plan.id}" data-assetid="${foundasset.id}" 
+      src="${foundasset.attributes.location}" class="asset">`,
+    );
   });
 }
-
-//
-//
 
 function renderPlans(plans, toc, story, assets) {
   let firstPlan = "";
@@ -193,12 +193,16 @@ function changeScreenSize(existingRatios) {
 }
 
 function fillPlanWithAssets(plan, assets) {
-  // console.log(`fill the plan ${plan.id} on load from the objects`);
   let planToFill = preview.querySelector(`#plan-${plan.id}`);
   let objectsToFillWith = plan.attributes.objects?.data;
-  // // fill the asset manager with the images
+
   objectsToFillWith.forEach((object) => {
-    // Check if the asset's objects.data contains an object with the same id
+    // Check if the object has already been added to the plan
+    if (planToFill.querySelector(`#inuse-${plan.id}-${object.id}`)) {
+      return; // Skip adding if the object is already present
+    }
+
+    // Find the corresponding asset for the object
     let foundasset;
     assets.data.forEach((a) => {
       a.attributes.objects.data.forEach((obj) => {
@@ -207,19 +211,18 @@ function fillPlanWithAssets(plan, assets) {
         }
       });
     });
-    // console.log(a.attributes.objects.data);
-    // (obj) => obj.id === object.id,
 
     if (!foundasset) return;
-    //check if asset is top or bottom
+
+    // Add the image to the plan if the object is not already added
     planToFill.insertAdjacentHTML(
       "beforeend",
-      `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-        object.id
-      }" data-planid="${plan.id}"
-        data-assetid="${foundasset.id}" src="${foundasset.attributes.location}"
-        class= "asset" >`,
+      `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" 
+        data-planid="${plan.id}" data-assetid="${foundasset.id}" 
+        src="${foundasset.attributes.location}" class="asset">`,
     );
+
+    // Hide loading indicator if all objects are filled
     document.querySelector("#loading")?.classList.add("hide");
   });
 }
