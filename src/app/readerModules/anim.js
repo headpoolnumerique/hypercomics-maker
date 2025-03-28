@@ -59,6 +59,16 @@ export async function readingTools() {
       canMoveForward = true;
     }, delay); // 5 seconds delay
   });
+
+  //updatetoc
+  window.addEventListener("hashchange", function (e) {
+    let hash = window.location.hash;
+    document.querySelector(`#${hash.replace("#plan-", "link-")}`);
+    document.querySelector(".selected").classList.remove("selected");
+    document
+      .querySelector(`#${hash.replace("#plan-", "link-")}`)
+      .classList.add("selected");
+  });
 }
 
 // move to next plan
