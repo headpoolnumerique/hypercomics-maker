@@ -61,7 +61,7 @@ function fillPlan(plan, assets) {
   // let objectsToFillWith = plan.attributes.objects?.data;
   //
   let objectsToFillWith = plan.attributes.objects?.data;
-  console.log("obj", objectsToFillWith);
+  // console.log("obj", objectsToFillWith);
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
     // Check if the asset's objects.data contains an object with the same id
@@ -69,12 +69,12 @@ function fillPlan(plan, assets) {
     assets.data.forEach((a) => {
       a.attributes.objects?.data.forEach((obj) => {
         if (obj.id == object.id) {
-          console.log("obj", obj.id);
+          // console.log("obj", obj.id);
           foundasset = a;
         }
       });
 
-      console.log("foundasset", foundasset);
+      // console.log("foundasset", foundasset);
       if (!foundasset) return;
       // console.log(plan.attributes, objectsToFillWith);
 
@@ -166,16 +166,18 @@ function changeScreenSize(existingRatios) {
     let validRatios = existingRatios.filter((r) => r <= ratio);
 
     let closestValue = Math.max(...validRatios);
-    // let closestValue = existingRatios.reduce((prev, curr) => {
-    //   return Math.abs(curr - ratio) < Math.abs(prev - ratio) ? curr : prev;
-    // });
 
-    console.log(closestValue);
+    // use the first ratio if you’re smaller than any existing ratio
+    if (validRatios.length < 1) {
+      closestValue = existingRatios[existingRatios.length - 1];
+    }
 
-    console.log(browserWidth / closestValue);
-    console.log(browserHeight);
-    // 6. Determine new width and height for the #story element
     if (browserWidth / closestValue <= browserHeight) {
+      // let closestValue = existingRatios.reduce((prev, curr) => {
+      //   return Math.abs(curr - ratio) < Math.abs(prev - ratio) ? curr : prev;
+      // });
+
+      // 6. Determine new width and height for the #story element
       // Width is the limiting factor
       let newHeight = browserWidth / closestValue;
       story.style.width = browserWidth - 96 + "px";
@@ -186,8 +188,7 @@ function changeScreenSize(existingRatios) {
       story.style.width = newWidth - 96 + "px";
       story.style.height = browserHeight - 96 + "px";
     }
-
-    ratioElement.innerHTML = `browser-ratio:${ratio} (used: ${closestValue},  ratio story: ${parseFloat(story.style.width) / parseFloat(story.style.height)})`;
+    ratioElement.innerHTML = `browser-ratio:${ratio} (used: ${closestValue},  ratio du cadre: ${parseFloat(story.offsetWidth) / parseFloat(story.offsetHeight)})`;
   }
 }
 
