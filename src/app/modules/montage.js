@@ -320,7 +320,7 @@ export async function duplicatePlan(
         );
         sequencePreview.insertAdjacentHTML(
           "beforeend",
-          `<article class="${select ? "shown" : ""}" id="plan-${
+          `<article class="plan ${select ? "shown" : ""}" id="plan-${
             response.data.data.id
           }" data-strap-id="${response.data.data.id}"></article>`,
         );
@@ -334,7 +334,7 @@ export async function duplicatePlan(
         );
         referencePlan.insertAdjacentHTML(
           "afterend",
-          `<article class="${select ? "shown" : ""}" id="plan-${
+          `<article class="plan ${select ? "shown" : ""}" id="plan-${
             response.data.data.id
           }" data-strap-id="${response.data.data.id}"></article>`,
         );
