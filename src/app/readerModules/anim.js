@@ -34,6 +34,12 @@ export async function readingTools() {
     }, delay); // 5 seconds delay
   });
 
+  document
+    .querySelector("#showfullscreen")
+    ?.addEventListener("click", function () {
+      document.body.classList.toggle("show-fullscreen");
+    });
+
   // on scroll
   window.addEventListener("wheel", function (e) {
     e.preventDefault();
