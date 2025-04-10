@@ -153,42 +153,41 @@ export function screenSizeManipulation(story, existingRatios) {
 }
 
 function changeScreenSize(existingRatios) {
-  // 1. Get the browser ratio (width/height)
   let browserWidth = window.innerWidth;
   let browserHeight = window.innerHeight;
-  let browserRatio = browserWidth / browserHeight; // This is the browser ratio
+  let browserRatio = browserWidth / browserHeight;
 
-  // 2. Store the ratio in a variable
-  let ratio = browserRatio;
+  // Safety check: make sure existingRatios is sorted from highest to lowest
+  existingRatios.sort((a, b) => b - a);
 
-  // 5. Choose the closest value from the array based on the ratio
   if (existingRatios.length > 1) {
-    let validRatios = existingRatios.filter((r) => r <= ratio);
+    let validRatios = existingRatios.filter((r) => r <= browserRatio);
 
-    let closestValue = Math.max(...validRatios);
+    // Choose the closest ratio that fits in the browser
+    let closestValue =
+      validRatios.length > 0
+        ? Math.max(...validRatios)
+        : existingRatios[existingRatios.length - 1]; // fallback to smallest
 
-    // use the first ratio if you’re smaller than any existing ratio
-    if (validRatios.length < 1) {
-      closestValue = existingRatios[existingRatios.length - 1];
-    }
+    // Try fitting by width
+    let tempHeight = browserWidth / closestValue;
 
-    if (browserWidth / closestValue <= browserHeight) {
-      // let closestValue = existingRatios.reduce((prev, curr) => {
-      //   return Math.abs(curr - ratio) < Math.abs(prev - ratio) ? curr : prev;
-      // });
-
-      // 6. Determine new width and height for the #story element
-      // Width is the limiting factor
-      let newHeight = browserWidth / closestValue;
+    if (tempHeight <= browserHeight) {
+      // Width is limiting factor
       story.style.width = browserWidth - 96 + "px";
-      story.style.height = newHeight - 96 + "px";
+      story.style.height = (browserWidth - 96) / closestValue + "px";
     } else {
-      // Height is the limiting factor
-      let newWidth = browserHeight * closestValue;
-      story.style.width = newWidth - 96 + "px";
+      // Height is limiting factor
       story.style.height = browserHeight - 96 + "px";
+      story.style.width = (browserHeight - 96) * closestValue + "px";
     }
-    ratioElement.innerHTML = `browser-ratio:${ratio} (used: ${closestValue},  ratio du cadre: ${parseFloat(story.offsetWidth) / parseFloat(story.offsetHeight)})`;
+
+    // Optional: Show ratio info
+    let finalWidth = parseFloat(story.style.width);
+    let finalHeight = parseFloat(story.style.height);
+    let actualRatio = finalWidth / finalHeight;
+
+    ratioElement.innerHTML = `browser-ratio: ${browserRatio.toFixed(4)} | used: ${closestValue} | story ratio: ${actualRatio.toFixed(4)}`;
   }
 }
 
