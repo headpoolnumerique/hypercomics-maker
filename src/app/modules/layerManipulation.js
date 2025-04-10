@@ -21,6 +21,7 @@ import {
   setPropertyInStylesheet,
 } from "./stylesheet";
 import { stringify } from "../vendors/css/css";
+import { previewLayers } from "./preview";
 
 // how is the layer list created?
 // is it the layer list that maintains everything or is the layer list based on the preview block
@@ -45,7 +46,9 @@ function appendLayer(id, layerWrapper = layerList, top = false) {
   );
   // to add later
   // <span class="hidebutton"><span class="popup">hide</span>Hide</span>
+  previewLayers();
 }
+
 function selectLayer(layerWrapper = "layerList", id) {
   deselect(".selectedlayer");
 

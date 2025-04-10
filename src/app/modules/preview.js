@@ -143,9 +143,11 @@ export function previewLayers() {
   });
   layerList.querySelectorAll(".identifier").forEach((li) => {
     li.addEventListener("mouseout", function (event) {
-      document
-        .querySelector(`.previewObject`)
-        .classList.remove("previewObject");
+      if (document.querySelector(`.previewObject`)) {
+        document
+          .querySelector(`.previewObject`)
+          .classList.remove("previewObject");
+      }
     });
   });
 }
