@@ -154,6 +154,7 @@ button,
 .block-ui {
   overflow-y: auto;
   max-height: 80vh;
+  font-size: 0.8em;
 
   & > div {
     padding: 1em 2ch;
@@ -341,11 +342,8 @@ button,
 /* // css to show the grid at some point */
 #preview #previewScreen.show-grid {
   --grid-size: 10%;
-  background-image: linear-gradient(
-      to right,
-      rgb(0, 0, 0, 0.3) 1px,
-      transparent 1px
-    ),
+  background-image:
+    linear-gradient(to right, rgb(0, 0, 0, 0.3) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(0, 0, 0, 0.3) 1px, transparent 1px);
   background-size: var(--grid-size) var(--grid-size);
   /* creates 10 rows and 10 columns */
@@ -481,4 +479,10 @@ input:is([type="text"], [type="password"]) {
   color: var(--color-main);
   border: 5px solid white;
   box-shadow: none;
+}
+
+.previewObject {
+  box-shadow: 0 0 0 2px solid red;
+  mix-blend-mode: exclusion;
+  background: red;
 }

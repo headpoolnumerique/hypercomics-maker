@@ -13,6 +13,7 @@ import {
   previewScreen,
   screensList,
   sequenceNumber,
+  layerList,
 } from "./selectors";
 
 const serverUrl = config.strapi.url;
@@ -117,6 +118,36 @@ async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
     .catch((err) => {
       return err;
     });
+}
+
+export function previewLayers() {
+  layerList.querySelectorAll(".identifier").forEach((li) => {
+    li.addEventListener("mouseenter", function (event) {
+      console.log(event.target.closest("li").dataset.objectid);
+      document
+        .querySelector(
+          `[data-objectid="${event.target.closest(`li`).dataset.objectid}"]`,
+        )
+        .classList.add("previewObject");
+    });
+  });
+  layerList.querySelectorAll(".identifier").forEach((li) => {
+    li.addEventListener("mouseover", function (event) {
+      console.log(event.target.closest("li").dataset.objectid);
+      document
+        .querySelector(
+          `[data-objectid="${event.target.closest(`li`).dataset.objectid}"]`,
+        )
+        .classList.add("previewObject");
+    });
+  });
+  layerList.querySelectorAll(".identifier").forEach((li) => {
+    li.addEventListener("mouseout", function (event) {
+      document
+        .querySelector(`.previewObject`)
+        .classList.remove("previewObject");
+    });
+  });
 }
 
 export function zooming() {

@@ -39,7 +39,11 @@ import {
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
 import { saveAllStylesheet } from "./modules/stylesheet.js";
-import { resizePreviewBasedOnScreenSize, zooming } from "./modules/preview.js";
+import {
+  previewLayers,
+  resizePreviewBasedOnScreenSize,
+  zooming,
+} from "./modules/preview.js";
 import { hideLogin, isLoggedIn } from "./api/login.js";
 import { reloadAssetsSetup } from "./modules/assetManager.js";
 import { startPreviewMode } from "./modules/previewmode.js";
@@ -49,6 +53,7 @@ startApp();
 // list all the things
 //Event and binds
 function listeners() {
+  previewLayers();
   // zoom system
   zooming();
   startPreviewMode();
