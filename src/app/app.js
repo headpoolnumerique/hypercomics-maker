@@ -28,6 +28,7 @@ import {
   buttonStick,
   buttonCloneToLowerRatio,
   buttonCloneToHigherRatio,
+  stylesWrapper,
 } from "./modules/selectors.js";
 import { addImg } from "./modules/createPreviewElement.js";
 import { connectObjectToPlan } from "./modules/dataManagement.js";
@@ -38,7 +39,6 @@ import {
   updateLayers,
 } from "./modules/layerManipulation.js";
 import { updateDelayUI } from "./modules/delay.js";
-import { saveAllStylesheet } from "./modules/stylesheet.js";
 import {
   previewLayers,
   resizePreviewBasedOnScreenSize,
@@ -47,6 +47,9 @@ import {
 import { hideLogin, isLoggedIn } from "./api/login.js";
 import { reloadAssetsSetup } from "./modules/assetManager.js";
 import { startPreviewMode } from "./modules/previewmode.js";
+import { addRuleToObject } from "./modules/objectManipulations.js";
+import { parse, stringify } from "./vendors/css/css.js";
+import { saveAllStylesheet, saveStylesheet } from "./modules/stylesheet.js";
 
 startApp();
 
@@ -145,13 +148,66 @@ function listeners() {
 
       if (strapisResponse) {
         // console.log(strapisResponse);
-        addImg(
+        let objid = addImg(
           e.target,
           document.querySelector(".selected").hash,
           strapisResponse.data.data.id,
           strapisResponse.data.data,
         );
 
+        // create the css here for the image.
+        // create img with a width of 50%;
+        let declarations = [
+          {
+            type: "declaration",
+            property: "top",
+            value: `unset`,
+          },
+          {
+            type: "declaration",
+            property: "width",
+            value: `unset`,
+          },
+          {
+            type: "declaration",
+            property: "height",
+            value: `unset`,
+          },
+          {
+            type: "declaration",
+            property: "bottom",
+            value: `unset`,
+          },
+          {
+            type: "declaration",
+            property: "left",
+            value: `unset`,
+          },
+          {
+            type: "declaration",
+            property: "right",
+            value: `unset`,
+          },
+        ];
+
+        let style = stylesWrapper.querySelector("style");
+
+        let parsedCSS = parse(style.textContent);
+
+        // find the css and append the new rule, then send the css
+        // save stylesheet
+
+        parsedCSS.stylesheet.rules[0].rules.push({
+          type: "rule",
+          selectors: [`#${objid}`],
+          declarations: declarations,
+        });
+
+        style.textContent = stringify(parsedCSS);
+
+        await saveStylesheet(style.dataset.strapid, style.textContent);
+
+        // select the image, create the css
         appendLayer(strapisResponse.data.data.id, layerList, false);
       }
     }

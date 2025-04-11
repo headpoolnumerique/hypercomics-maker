@@ -15,4 +15,5 @@ export function addImg(img, planId, objectId, metadata) {
   newImg.src = img.src;
   newImg.classList.add("asset");
   document.querySelector(planId).insertAdjacentElement("beforeend", newImg);
+  return newImg.id;
 }
