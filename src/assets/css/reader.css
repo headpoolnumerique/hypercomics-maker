@@ -127,6 +127,7 @@ body {
 .asset {
   /* if the element has a hidden opacity, then it shouldn’t be seen. */
   --hidden-opacity: 0;
+  transform: rotate(var(--rotate));
 }
 
 #showfullscreen {

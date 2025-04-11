@@ -16,6 +16,7 @@ import {
   inputMakeHidden,
   inputMakeVisible,
   inputRight,
+  inputRotate,
   inputTop,
   inputWidth,
   previewScreen,
@@ -178,6 +179,7 @@ export function updatefromui() {
     inputBottom,
     inputHeight,
     inputWidth,
+    inputRotate,
   ].forEach((el) => {
     el.addEventListener("change", (event) => {
       let selected = document.querySelector(".asset-selected");
@@ -271,15 +273,10 @@ export function getValueOfNestedProperty(obj, key) {
 export function setObjFromUi(stylesheet, obj) {
   let parsedCSS = parse(stylesheet.textContent);
 
-  console.log(obj);
-  console.log(obj.id);
-  // find vertical anchor
-
+  // find vertical and horizontal anchors
   let anchors = findAnchors(obj.id, parsedCSS);
 
-  console.log("anchres", anchors);
   //check anchor: if there is a left, if there is a right
-
   const anchorVertical = anchors.vertical;
   const anchorHorizontal = anchors.horizontal;
 
@@ -291,15 +288,17 @@ export function setObjFromUi(stylesheet, obj) {
     },
     {
       type: "declaration",
+      property: "--rotate",
+      value: `${inputRotate.value ? inputRotate.value : "0"}deg`,
+    },
+    {
+      type: "declaration",
       property: "height",
       value: `${inputHeight.value}cqh`,
     },
   ];
 
   // find the verticalanchor and horizontalanchor
-  //
-
-  //check anchor vertical
 
   switch (anchorVertical) {
     case "top":
@@ -385,6 +384,19 @@ export function setObjFromUi(stylesheet, obj) {
     //
     parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
       if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
+        // if property doewsn exit what to do
+
+        //to have quick and dirty rotation
+        if (inputRotate.value) {
+          if (!rule.declarations.find((a) => a.declaration == "--rotate")) {
+            rule.declarations.push({
+              type: "declaration",
+              property: "--rotate",
+              value: `${inputRotate.value ? inputRotate.value : 0}deg`,
+            });
+          }
+        }
+
         // Update existing declarations for the selectorToUpdate
         rule.declarations.forEach((declaration) => {
           declarations.forEach((updatedDeclaration) => {

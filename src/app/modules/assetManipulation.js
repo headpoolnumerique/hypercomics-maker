@@ -12,6 +12,7 @@ import {
   inputBottom,
   inputRight,
   inputWidth,
+  inputRotate,
   inputHeight,
   previewScreen,
   stylesWrapper,
@@ -369,6 +370,11 @@ export function updateTheUI(element) {
     );
   inputWidth.value = percentage(element.width, previewScreenSize.width);
   inputHeight.value = percentage(element.height, previewScreenSize.height);
+
+  inputRotate.value = window
+    .getComputedStyle(element)
+    .getPropertyValue("--transform")
+    .replace("deg", "");
 
   if (anchors.vertical == "top") {
     inputTop.previousElementSibling.classList.remove("hide");

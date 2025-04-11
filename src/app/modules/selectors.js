@@ -32,6 +32,7 @@ export const inputRight = document.querySelector("#input-right");
 export const inputTop = document.querySelector("#input-top");
 export const inputBottom = document.querySelector("#input-bottom");
 export const inputWidth = document.querySelector("#input-width");
+export const inputRotate = document.querySelector("#input-rotate");
 export const inputHeight = document.querySelector("#input-height");
 export const anchorTop = document.querySelector("#anchorTop");
 export const anchorBottom = document.querySelector("#anchorBottom");
