@@ -123,24 +123,24 @@ main#appWrap {
   width: 100%;
 
   & .subbuttons {
+    background: grey;
     gap: 3ch;
     display: flex;
-    padding: 0 3ch 0.5em;
+    padding: 0 3ch;
     align-items: center;
-    height: 0;
 
-    & button,
-    div {
-      margin-top: -3em;
-    }
+    /* & button, */
+    /* div { */
+    /*   /* margin-top: -3em; */
+    /* } */
     & button {
       height: auto;
       border: 0;
-      border-radius: 16px;
-      border: 2px solid black;
+      /* border-radius: 16px; */
+      /* border: 2px solid black; */
       font-size: 0.8em;
       text-transform: uppercase;
-      padding: 0.1em 2ch;
+      /* padding: 0.1em 2ch; */
     }
   }
 }
@@ -150,6 +150,7 @@ main#appWrap {
   list-style-type: none;
   /* display: flex; */
   padding-left: 0;
+  padding-bottom: 0.5em;
   margin: 0 auto;
   gap: 1ch;
   flex-wrap: wrap;

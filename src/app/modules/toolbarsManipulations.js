@@ -103,7 +103,9 @@ function moveToolbars() {
 }
 
 function resizeMontagePaneVertically() {
-  const pane = document.querySelector("#planOrder");
+  const pane = document.querySelector("#banc-montage");
+  let toolbar = pane.querySelector(".subbuttons").offsetHeight;
+  console.log(toolbar);
   interact(pane).resizable({
     // only allow resizing from the top edge
     edges: { top: true },
@@ -111,12 +113,14 @@ function resizeMontagePaneVertically() {
     preserveAspectRatio: false,
     // set a minimum height for the element
     restrictSize: {
-      min: { height: 50 },
+      min: { height: 50 + toolbar + 10 },
+      max: { height: 500 + toolbar + 10 },
     },
     // on each resize event, update the height of the element
     onmove: (event) => {
       const height = event.rect.height;
-      pane.style.height = `${height}px`;
+
+      pane.querySelector("#planOrder").style.height = `${height - toolbar}px`;
     },
   });
 }

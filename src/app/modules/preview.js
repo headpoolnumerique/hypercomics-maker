@@ -200,7 +200,7 @@ export function zooming() {
 }
 
 export function resizePreviewBasedOnScreenSize() {
-  // ((reset the zoom))
+  // Get the exact ratio of the elements
 
   // put the element on the page
   document
@@ -215,10 +215,12 @@ export function resizePreviewBasedOnScreenSize() {
 
       // console.log(ratio);
       const margin = 50;
+      // get the height of the #banc-montage
 
+      const banc = document.querySelector("#banc-montage").offsetHeight;
       // Dimensions de la fenêtre
       const screenWidth = window.innerWidth - 2 * margin;
-      const screenHeight = window.innerHeight - 2 * margin;
+      const screenHeight = window.innerHeight - 2 * margin - banc;
 
       // Calcul des dimensions maximales en fonction du ratio
       let newWidth = screenWidth;
