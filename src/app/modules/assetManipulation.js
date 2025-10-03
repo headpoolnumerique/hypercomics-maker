@@ -354,6 +354,7 @@ export function updateTheUI(element) {
     height: previewScreen.offsetHeight,
     width: previewScreen.offsetWidth,
   };
+
   inputLeft.value = percentage(element.offsetLeft, previewScreenSize.width);
   inputRight.value =
     100 -
@@ -373,7 +374,7 @@ export function updateTheUI(element) {
 
   inputRotate.value = window
     .getComputedStyle(element)
-    .getPropertyValue("--transform")
+    .getPropertyValue("--rotate")
     .replace("deg", "");
 
   if (anchors.vertical == "top") {
