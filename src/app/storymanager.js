@@ -215,6 +215,7 @@ export async function exportProject(seqId) {
     const response = await fetch(`${config.exporturl}/hc-export`, {
       method: "POST",
       headers: {
+        "Strapi-Response-Format": "v4",
         "Content-Type": "application/json",
       },
       body: body, // Send the data as JSON

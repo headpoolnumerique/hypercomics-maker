@@ -48,7 +48,10 @@ export async function loadAllProjects(serverUrl) {
     .get(
       `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false&filters[author][$eq]=${getCookie("hc_login_username")}`,
       {
-        headers: { Authorization: `Bearer ${getCookie("hc_login_token")}` },
+        headers: {
+          "Strapi-Response-Format": "v4",
+          Authorization: `Bearer ${getCookie("hc_login_token")}`,
+        },
       },
     )
     .then((response) => {
