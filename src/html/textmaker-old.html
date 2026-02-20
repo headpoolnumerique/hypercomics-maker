@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text to Image Generator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+      form {
+        margin-bottom: 20px;
+      }
+      canvas {
+        border: 1px solid #000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Text to Image Generator</h1>
+
+    <form id="textForm">
+      <label for="textInput">Enter your text:</label>
+      <input type="text" id="textInput" required />
+      <br /><br />
+
+      <label for="fontSizeInput">Enter font size (px):</label>
+      <input type="number" id="fontSizeInput" min="10" max="100" required />
+      <br /><br />
+
+      <label for="colorInput">Choose text color:</label>
+      <input type="color" id="colorInput" value="#000000" />
+      <br /><br />
+
+      <label for="canvasWidthInput">Set canvas width (px):</label>
+      <input
+        type="number"
+        id="canvasWidthInput"
+        min="100"
+        max="1000"
+        value="500"
+        required
+      />
+      <br /><br />
+
+      <button type="submit">Generate Image</button>
+    </form>
+
+    <canvas id="textCanvas"></canvas>
+
+    <script>
+      document
+        .getElementById("textForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const text = document.getElementById("textInput").value;
+          const fontSize = parseInt(
+            document.getElementById("fontSizeInput").value,
+          ); // Ensure fontSize is an integer
+          const color = document.getElementById("colorInput").value;
+          const canvasWidth = document.getElementById("canvasWidthInput").value;
+          const canvas = document.getElementById("textCanvas");
+          const ctx = canvas.getContext("2d");
+
+          // Set the canvas width
+          canvas.width = canvasWidth;
+
+          // Ensure font size is applied properly
+          ctx.font = `${fontSize}px Arial`;
+          ctx.fillStyle = color;
+
+          // Function to wrap text and calculate number of lines
+          function wrapTextAndCalculateHeight(
+            context,
+            text,
+            maxWidth,
+            lineHeight,
+          ) {
+            const words = text.split(" ");
+            let line = "";
+            let lines = [];
+            let y = lineHeight;
+
+            for (let n = 0; n < words.length; n++) {
+              let testLine = line + words[n] + " ";
+              let testWidth = context.measureText(testLine).width;
+
+              if (testWidth > maxWidth && n > 0) {
+                lines.push(line);
+                line = words[n] + " ";
+                y += lineHeight;
+              } else {
+                line = testLine;
+              }
+            }
+            lines.push(line); // Add the last line
+
+            // Return the lines and total height required
+            return { lines, totalHeight: y + lineHeight };
+          }
+
+          // Set the line height dynamically based on the font size
+          const lineHeight = fontSize * 1.2;
+
+          // Get wrapped lines and calculate the required canvas height
+          const { lines, totalHeight } = wrapTextAndCalculateHeight(
+            ctx,
+            text,
+            canvas.width - 20,
+            lineHeight,
+          ); // 20px padding
+
+          // Adjust the canvas height based on the text content
+          canvas.height = totalHeight;
+
+          // Clear the canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Set the starting X and Y positions for drawing
+          const x = 10; // Padding from left
+          let y = fontSize + 10; // Start from top + font size padding
+
+          // Draw the wrapped text line by line
+          lines.forEach(function (line) {
+            ctx.fillText(line, x, y);
+            y += lineHeight;
+          });
+        });
+    </script>
+  </body>
+</html>

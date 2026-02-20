@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wrapped Text in SVG</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+      form {
+        margin-bottom: 20px;
+      }
+      #svgContainer {
+        margin-top: 20px;
+      }
+      svg {
+        border: 1px solid black;
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Wrapped Text in SVG</h1>
+
+    <form id="textForm">
+      <label for="textInput">Enter your text:</label>
+      <textarea id="textInput" rows="4" cols="50" required></textarea>
+      <br /><br />
+
+      <label for="fontSizeInput">Enter font size (px):</label>
+      <input
+        type="number"
+        id="fontSizeInput"
+        min="10"
+        max="100"
+        value="20"
+        required
+      />
+      <br /><br />
+
+      <label for="colorInput">Choose text color:</label>
+      <input type="color" id="colorInput" value="#000000" />
+      <br /><br />
+
+      <label for="blockWidthInput">Set block width (px):</label>
+      <input
+        type="number"
+        id="blockWidthInput"
+        min="100"
+        max="800"
+        value="400"
+        required
+      />
+      <br /><br />
+
+      <button type="submit">Generate SVG</button>
+    </form>
+
+    <div id="svgContainer"></div>
+
+    <script>
+      document
+        .getElementById("textForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          // Get input values
+          const text = document.getElementById("textInput").value;
+          const fontSize = document.getElementById("fontSizeInput").value;
+          const color = document.getElementById("colorInput").value;
+          const blockWidth = document.getElementById("blockWidthInput").value;
+
+          // Prepare SVG container
+          const svgContainer = document.getElementById("svgContainer");
+          svgContainer.innerHTML = ""; // Clear any previous SVG
+
+          // Create SVG element
+          const svgNS = "http://www.w3.org/2000/svg";
+          const svg = document.createElementNS(svgNS, "svg");
+          svg.setAttribute("width", blockWidth);
+          svg.setAttribute("height", "auto"); // Height will adjust as needed
+
+          // Create <text> element
+          const textElement = document.createElementNS(svgNS, "text");
+          textElement.setAttribute("x", "10"); // Padding from left
+          textElement.setAttribute("y", fontSize); // Padding from top
+          textElement.setAttribute("font-size", fontSize);
+          textElement.setAttribute("fill", color);
+          textElement.setAttribute("font-family", "Arial");
+
+          // Add text to SVG, wrapping it manually
+          const words = text.split(" ");
+          let line = "";
+          let y = parseInt(fontSize);
+          const lineHeight = parseInt(fontSize) * 1.2; // Dynamic line height
+          let maxWidth = blockWidth - 20; // Account for padding
+
+          words.forEach((word) => {
+            let testLine = line + word + " ";
+            let testElem = document.createElementNS(svgNS, "tspan");
+            testElem.textContent = testLine;
+            testElem.setAttribute("x", "10");
+            testElem.setAttribute("y", y);
+
+            // Append to the SVG to measure its width
+            textElement.appendChild(testElem);
+            let testWidth = testElem.getComputedTextLength();
+
+            if (testWidth > maxWidth && line !== "") {
+              // Line is too wide, add a new line (create a tspan)
+              y += lineHeight; // Move to the next line
+              line = word + " "; // Start a new line with the current word
+            } else {
+              // Continue the current line
+              line = testLine;
+            }
+
+            // Remove temporary test element
+            textElement.removeChild(testElem);
+          });
+
+          // Add the last line
+          const tspan = document.createElementNS(svgNS, "tspan");
+          tspan.setAttribute("x", "10");
+          tspan.setAttribute("y", y);
+          tspan.textContent = line;
+          textElement.appendChild(tspan);
+
+          // Append text to SVG
+          svg.appendChild(textElement);
+
+          // Append the SVG to the container
+          svgContainer.appendChild(svg);
+        });
+    </script>
+  </body>
+</html>
