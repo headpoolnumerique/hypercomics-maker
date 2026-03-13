@@ -46,7 +46,7 @@ export async function loadAllProjects(serverUrl) {
   //load with a query
   return axios
     .get(
-      `${serverUrl}/api/projects?populate=deep,2&filters[archived][$eq]=false&filters[author][$eq]=${getCookie("hc_login_username")}`,
+      `${serverUrl}/api/projects?pLevel=2&filters[archived][$eq]=false&filters[author][$eq]=${getCookie("hc_login_username")}`,
       {
         headers: {
           "Strapi-Response-Format": "v4",
@@ -86,19 +86,17 @@ export async function renderEmptyProject(project) {
   projectsList.insertAdjacentHTML(
     "beforeend",
     `<li id="project-${project.id}"><datetime>${renderDate(
-      project.attributes.updatedAt,
-    )}</datetime> <a href="#project${project.id}">${
-      project.attributes.title
-    }</a></li>`,
+      project.updatedAt,
+    )}</datetime> <a href="#project${project.id}">${project.title}</a></li>`,
   );
 
   // project for each sequence: create a list imenm
 
   const projectSequenceContent = `<section id="project${project.id}" class="project">
 <header>
-  <h2>${project.attributes.title}</h2>
+  <h2>${project.title}</h2>
   <button data-projectid="${project.id}" onclick="addSequence(${project.id}, window.username)" class="createSequence">Add a sequence</button>
-  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">Remove project</button>
+  <button onclick="selectToDelete(${project.id}, '${project.title}')">Remove project</button>
 </header>
   <ul class="sequences-list"></ul>
   </section>`;

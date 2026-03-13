@@ -123,7 +123,7 @@ async function renderProject(project) {
   // insert project in the project list
   projectsList.insertAdjacentHTML(
     "beforeend",
-    ` <li id="project-${project.id}" data-title="${project.attributes.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
+    ` <li id="project-${project.id}" data-title="${project.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
         <a href="#project${project.id}">${project.attributes.title}</a> 
       </li>`,
   );
@@ -169,7 +169,9 @@ function generateSequence(sequence, project) {
 
 async function addSequence(projectNumber, author) {
   let button = event.target;
+  // console.log(projectNumber, author);
   let newSeq = await createSequence(projectNumber, author);
+  console.log(newSeq);
   button
     .closest(".project")
     .querySelector("ul")
@@ -177,7 +179,7 @@ async function addSequence(projectNumber, author) {
       "beforeend",
       `<li>
 <span class="sequence-id">${newSeq.data.data.id}</span>
-<span class="sequence-title" >${newSeq.data.data.attributes.title}</span> 
+<span class="sequence-title" >${newSeq.data.data.title}</span> 
 <div class="buttons"> 
 
 <a href="editor.html?sequence=${newSeq.data.data.id}">edit</a> 
