@@ -1,5 +1,5 @@
-export const screenListItem = (data, itemclasses, newest) => `
-<li
+export const screenListItem = (data, itemclasses, newest) => {
+  return `<li
 data-strapid="${data.strapid}" 
 data-maxwidth="${data.maxwidth}"
 data-default-height="${data.defaultHeight}"
@@ -12,3 +12,4 @@ id="screen-${data.strapid}">
 <span class="applyStyleToRatio">Apply current style to ratio</span>
 <span class="remove">Delete</span>
 </li>`;
+};

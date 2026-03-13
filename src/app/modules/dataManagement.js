@@ -1,13 +1,11 @@
 import axios from "axios";
+import qs from "qs";
 
 export async function updateData(serverUrl, collection, data, id, deep = true) {
   return axios
-    .put(
-      `${serverUrl}/api/${collection}/${id}${deep ? `?populate=deep,4` : ""}`,
-      {
-        data,
-      },
-    )
+    .put(`${serverUrl}/api/${collection}/${id}${deep ? `?pLevel=4` : ""}`, {
+      data,
+    })
     .then((response) => {
       // console.log(response)
       return response;
@@ -19,7 +17,7 @@ export async function updateData(serverUrl, collection, data, id, deep = true) {
 
 export async function createData(serverUrl, collection, data) {
   return axios
-    .post(`${serverUrl}/api/${collection}/?populate=deep,4`, {
+    .post(`${serverUrl}/api/${collection}/?pLevel=4`, {
       data,
     })
     .then((response) => {
@@ -137,7 +135,7 @@ export async function connectObjectToPlan(serverUrl, planId, assetId) {
 //
 //
 //   let newObject = await axios
-//     .post(`${serverUrl}/api/objects/?populate=deep,5`, {
+//     .post(`${serverUrl}/api/objects/?pLevel=5`, {
 //       data
 //     })
 //     .then((response) => {
@@ -192,9 +190,7 @@ export async function loadSingle(
 ) {
   return axios
     .get(
-      `${serverUrl}/api/${collection}/${id}${
-        populatedeep ? `?populate=deep,4` : ``
-      }`,
+      `${serverUrl}/api/${collection}/${id}${populatedeep ? `?pLevel=4` : ``}`,
     )
     .then((response) => {
       // console.log(response)
@@ -215,17 +211,34 @@ export function getAllImageFromPlan(plan) {
 }
 
 export async function loadSequenceData(serverUrl, sequenceId) {
-  // 1/ load the sequence
-  // 2/ get the plan
-  // 3/ get the stylesheets
-  return axios
-    .get(`${serverUrl}/api/sequences/${sequenceId}?populate=deep,3`)
-    .then((response) => {
-      // console.log(response)
-      return response;
-    })
-    .catch((err) => {
-      console.log(err);
-      return err;
-    });
+  console.log(sequenceId);
+  const query = qs.stringify(
+    {
+      filters: { id: { $eq: sequenceId } },
+      populate: {
+        project: "true", // top-level relation
+        assets: "true", // top-level relation
+        stylesheets: "true", // top-level relation
+        plans: {
+          populate: {
+            objects: {
+              populate: {
+                assets: "true", // nested relation inside objects
+              },
+            },
+          },
+        },
+      },
+    },
+    { encodeValuesOnly: true },
+  );
+
+  try {
+    const response = await axios.get(`${serverUrl}/api/sequences?${query}`);
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    throw err;
+  }
 }

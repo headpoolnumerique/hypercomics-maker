@@ -1,3 +1,6 @@
+
+Main problem: we nee| to change all ID to use DOUMNET ID; which is an impossible thing to work with imho, as it give complex and not valid name for html and css i believe
+
 TODO NOW
 
 
@@ -10,6 +13,7 @@ Only the accepted user will be able to access the content anyway. (for now)
 ```
     const { data } = await axios.get('http://localhost:1337/whatever', {
       headers: {
+        "Strapi-Response-Format": "v4",
         Authorization:
           `Bearer ${getCookie("hc_login_token")}`,
       },

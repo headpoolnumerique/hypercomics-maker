@@ -4,12 +4,11 @@ import config from "../config/config";
 export async function createSequence(projectId, author) {
   // set up form
   return await axios
-
-    .post(`${config.strapi.url}/api/sequences/?populate=deep`, {
+    .post(`${config.strapi.url}/api/sequences/`, {
       data: {
         project: projectId,
         title: "rename me!",
-        author: author ? author : "",
+        author: author ? author : "anonymous",
       },
     })
     .then(function (response) {
@@ -21,6 +20,7 @@ export async function createSequence(projectId, author) {
 }
 
 export async function updateSequence(sequenceId, sequenceTitle) {
+  console.log(sequenceId, sequenceTitle);
   return await axios
     .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
       data: {
@@ -28,7 +28,6 @@ export async function updateSequence(sequenceId, sequenceTitle) {
       },
     })
     .then(function (response) {
-      console.log(response);
       return response;
     })
     .catch((error) => {
@@ -59,6 +58,7 @@ export async function renameSequences() {
             sequenceId,
             document.querySelector("#rename-sequence-title").value,
           );
+          console.log(newName);
           console.log(newName);
           seq.textContent = newName.data.data.attributes.title;
           document.querySelector(".renameModal").close();

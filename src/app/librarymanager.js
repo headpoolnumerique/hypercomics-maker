@@ -19,7 +19,7 @@ async function manage() {
 
       try {
         const response = await fetch(
-          `${config.strapi.url}/api/assets?populate=deep,2&filters[sequence][id][$eq]=${sequenceId}`,
+          `${config.strapi.url}/api/assets?pLevel=2&filters[sequence][id][$eq]=${sequenceId}`,
         );
         if (!response.ok) {
           throw new Error("Could not fetch data");
@@ -128,7 +128,7 @@ function uploadImages() {
         uploadedFiles.forEach(async (file) => {
           try {
             const assetResponse = await axios.post(
-              `${config.strapi.url}/api/assets?populate=deep,2`,
+              `${config.strapi.url}/api/assets?pLevel=2`,
               {
                 data: {
                   title: `asset-${file.name}`,

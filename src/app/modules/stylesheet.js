@@ -23,7 +23,7 @@ import { screenListItem } from "./stylesheets/screenListItem";
  * @obj = stylesheet object
  */
 export async function stylesheetmanager(obj) {
-  let stylesheets = obj.data.attributes.stylesheets.data;
+  let stylesheets = obj[0].stylesheets;
   const orderedStylesheets = sortByRatio(stylesheets);
 
   // load the stylesheets: add the style element and the screen object
@@ -135,7 +135,7 @@ export async function stylesheetListeners() {
         previewScreen.dataset.screensize = strapid;
         responsedata.strapid = response.data.data.id;
 
-        responsedata.attributes.strapid = responsedata.id;
+        responsedata.strapid = responsedata.id;
 
         console.log("now", responsedata);
         // reorder the <style, following the ratio after added an element?
@@ -195,9 +195,9 @@ function activateFirstStylesheet() {
 function insertStylesheetToList(data) {
   // deactivate the stylesheet and active the new one
   deselect(".activeStylesheet");
-  const itemclasses = data.attributes.disabled ? "disabled" : "";
+  const itemclasses = data.disabled ? "disabled" : "";
 
-  const ratio = data.attributes.maxwidth / data.attributes.defaultHeight;
+  const ratio = data.maxwidth / data.defaultHeight;
 
   let ratioBefore = [...screensList.querySelectorAll(".stylesheet")].findLast(
     (el) => {
@@ -206,34 +206,30 @@ function insertStylesheetToList(data) {
   );
 
   if (!ratioBefore) {
-    // include the element at the beginning of the block
     screensList
       .querySelector("li")
-      .insertAdjacentHTML(
-        "afterend",
-        screenListItem(data.attributes, itemclasses, true),
-      );
+      .insertAdjacentHTML("afterend", screenListItem(data.itemclasses, true));
   } else {
     ratioBefore.insertAdjacentHTML(
       "afterend",
-      screenListItem(data.attributes, itemclasses, true),
+      screenListItem(data.itemclasses, true),
     );
   }
 }
 
 /** add the stylesheet to the list UI */
 export function addStyleSheetToList(data) {
-  // console.log(data.attributes.disabled);
-  const itemclasses = data.attributes.disabled ? "disabled" : "";
+  // console.log(data.id);
+  const itemclasses = data.disabled ? "disabled" : "";
   /*if the stylesheet has been disabled*/
   if (data.disabled) return;
 
-  data.attributes.strapid = data.id;
+  data.strapid = data.id;
 
   //add the stylesheet to the stylesheet block
   screensList.insertAdjacentHTML(
     "beforeend",
-    screenListItem(data.attributes, itemclasses),
+    screenListItem(data, data.itemclasses),
   );
 
   //set the whole thing
@@ -351,15 +347,15 @@ export function createStyleElement(stylesheet) {
 
   // console.log(stylesheet);
   // if the stylesheet is deactivated
-  if (stylesheet.attributes.disabled) return;
+  if (stylesheet.disabled) return;
   // prev,next
   /* the style element */
 
   const styleEl = `<style class="activatedStyle"  data-strapid="${stylesheet.id}" type="text/css" contenteditable id="style-${stylesheet.id}" 
-data-height="${stylesheet.attributes.defaultHeight}"
-data-width="${stylesheet.attributes.maxwidth}">
+data-height="${stylesheet.defaultHeight}"
+data-width="${stylesheet.maxwidth}">
 
-${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : `@container preview (max-aspect-ratio: ${getRatioFromStylesheet(stylesheet)}) {  }`} </style>`;
+${stylesheet.cssrules?.length > 1 ? stylesheet.cssrules : `@container preview (max-aspect-ratio: ${getRatioFromStylesheet(stylesheet)}) {  }`} </style>`;
 
   const stylelist = stylesWrapper.querySelectorAll("style");
 
@@ -369,7 +365,7 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
         // return el.dataset.maxwidth / el.dataset.defaultHeight > ratio;
         return (
           style.dataset.width / style.dataset.height <
-          stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight
+          stylesheet.maxwidth / stylesheet.defaultHeight
         );
       },
     );
@@ -385,23 +381,17 @@ ${stylesheet.attributes.cssrules?.length > 1 ? stylesheet.attributes.cssrules : 
 }
 
 export function getRatioFromStylesheet(stylesheet) {
-  return (
-    stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight +
-    0.01
-  ).toFixed(2);
+  return (stylesheet.maxwidth / stylesheet.defaultHeight + 0.01).toFixed(2);
 }
 
 export function sortByRatio(stylesheets, reverse) {
   const sortedStylesheets = stylesheets
     .filter((sheet) => {
-      return !sheet.attributes.disabled;
+      return !sheet.disabled;
     })
     .sort((a, b) => {
       // sort by ratio
-      if (
-        a.attributes.maxwidth / a.attributes.defaultHeight <
-        b.attributes.maxwidth / b.attributes.defaultHeight
-      ) {
+      if (a.maxwidth / a.defaultHeight < b.maxwidth / b.defaultHeight) {
         return -1;
       } else {
         return 1;
@@ -709,7 +699,8 @@ export async function kickstartStylesheet() {
       .then((response) => {
         console.log("things got saved");
 
-        const responsedata = response.data.data.attributes;
+        const responsedata = response.data.data;
+        console.log(responsedata);
         const strapid = response.data.data.id;
 
         previewScreen.dataset.screensize = strapid;
@@ -977,9 +968,9 @@ export function cloneFullStylesheet(targetid) {
 
   let targetSheet = parse(target.textContent);
 
-  styleWrapper.querySelector(`[data-strapid="${targetid}"]`).textContent,
+  (styleWrapper.querySelector(`[data-strapid="${targetid}"]`).textContent,
     (targetSheet.stylesheet.rules[0].rules =
-      sourceSheet.stylesheet.rules[0].rules);
+      sourceSheet.stylesheet.rules[0].rules));
 
   target.textContent = stringify(targetSheet);
 

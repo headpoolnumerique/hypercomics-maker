@@ -44,25 +44,22 @@ async function startup(url = document.location.href) {
   // what if we load the sequence, then the
   //
 
-  // console.log(stuff);
   // debugger;
   // let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
+  //
 
   let response = await loadSequenceData(config.strapi.url, sequenceId);
 
-  //
-  //
-  //
-  updateSequenceMeta(
-    response.data?.data?.id,
-    response.data?.data?.attributes?.title,
-    response.data?.data?.attributes.project.data.attributes.author,
-  );
+  // sequence data in an object
 
-  fillSequence(
-    response.data.data.attributes.plans,
-    response.data.data.attributes.assets,
-  );
+  let seqData = response.data[0];
+
+  updateSequenceMeta(seqData.id, seqData.title, seqData.author);
+
+  //seqDataClean
+  let newData = cleanData(seqData);
+
+  fillSequence(seqData.plans, seqData.assets);
   moveToolbars();
   toggleToolbars();
   dragAndPlanReorder(montageList, sequenceNumber);
@@ -108,19 +105,21 @@ async function fillSequence(plans, assets) {
   // let response = await loadSingle(config.strapi.url, "sequences", sequence);
   // let plans = response.data.data.attributes.plans;
   //if there is no plan, create a plan
-  if (plans.data.length < 1) {
+  if (plans.length < 1) {
     addPlan(montageList, sequence);
   }
   //create the plan
-  plans.data.forEach(async (plan, index) => {
-    // console.log("renderPlan", plan);
+  plans.forEach(async (plan, index) => {
     await renderPlan(
       plan,
       montageList,
       sequencePreview,
-      index + 1 == plans.data.length ? true : false,
+      index + 1 == plans.length ? true : false,
     );
-    await fillPlan(plan, assets);
+
+    //let’s try to move things around
+
+    fillPlan(plan, assets);
     updateLayers();
   });
   // check for each plan. add them to the view
@@ -138,24 +137,28 @@ async function updateSequenceMeta(id, title, authorname) {
 }
 
 function fillPlan(plan, assets) {
-  // console.log(`fill the plan ${plan.id} on load from the objects`);
   let planToFill = preview.querySelector(`#plan-${plan.id}`);
-  let objectsToFillWith = plan.attributes.objects?.data;
+
+  let objectsToFillWith = plan.objects;
+
   // // fill the asset manager with the images
+
   objectsToFillWith.forEach((object) => {
     // Check if the asset's objects.data contains an object with the same id
     let foundasset;
-    assets.data.forEach((a) => {
-      a.attributes.objects.data.forEach((obj) => {
-        if (obj.id == object.id) {
-          foundasset = a;
-        }
-      });
+
+    console.log(object);
+
+    assets.forEach((a) => {
+      if (a.id == object.id) {
+        foundasset = a;
+      }
     });
-    // console.log(a.attributes.objects.data);
-    // (obj) => obj.id === object.id,
+
+    console.foundasset;
 
     if (!foundasset) return;
+
     addAssetToTheAssetManager(
       foundasset.attributes.location,
       foundasset.id,
@@ -176,6 +179,23 @@ function fillPlan(plan, assets) {
     );
     document.querySelector("#loading")?.classList.add("hide");
   });
+}
+
+function cleanData(seqData) {
+  let newData = seqData;
+
+  // rebuild the data in here i think it’s eqasier
+
+  // seqData.plans.forEach((plan) => {
+  //
+  //
+  //
+  //   console.log(plan.id);
+  //   seqData.objects.forEach((obj) => {
+  //     console.log(obj.id);
+  //   });
+  // });
+  return newData;
 }
 
 export { startup, fillPlan };

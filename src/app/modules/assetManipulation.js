@@ -293,7 +293,7 @@ export async function deleteObject() {
 
 function addRuleToObject(objectid, data) {
   return axios
-    .put(`${config.strapi.url}/api/objects/${objectid}?populate=deep,5`, {
+    .put(`${config.strapi.url}/api/objects/${objectid}?pLevel=5`, {
       data,
     })
     .then((response) => {
@@ -421,7 +421,7 @@ export { interactObject, moveToLayer };
 async function isThereDeclaration(stylesheetId, objectId) {
   try {
     const response = await axios.get(
-      `${config.strapi.url}/api/declarations?filters[stylesheet][id][$eq]=${stylesheetId}&filters[object][id][$eq]=${objectId}&populate=deep,8`,
+      `${config.strapi.url}/api/declarations?filters[stylesheet][id][$eq]=${stylesheetId}&filters[object][id][$eq]=${objectId}&pLevel=8`,
     );
 
     if (response.data.meta.pagination.total > 1) {

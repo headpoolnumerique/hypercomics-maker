@@ -33,7 +33,7 @@ export async function reloadAssetsSetup() {
   buttonRefreshLibrary.addEventListener("click", function (e) {
     axios
       .get(
-        `${config.strapi.url}/api/assets?populate=deep,2&filters[sequence][id][$eq]=${sequenceId}`,
+        `${config.strapi.url}/api/assets?pLevel=2&filters[sequence][id][$eq]=${sequenceId}`,
       )
 
       .then((response) => {
@@ -59,7 +59,7 @@ export async function removeAsset(assetid, el) {
   // strapi unlink the asset from the asset list and from all plan
 
   await axios
-    .put(`${config.strapi.url}/api/assets/${assetid}?populate=deep,2`, {
+    .put(`${config.strapi.url}/api/assets/${assetid}?pLevel=2`, {
       data: {
         sequences: "",
       },
@@ -76,13 +76,16 @@ export async function removeAsset(assetid, el) {
 // add unused assets to the asset manager
 
 export function addUnusedAssetToTheAssetManager(sequencedata) {
-  sequencedata.data?.attributes.assets.data.forEach((data) => {
-    if (data.attributes.objects.data.length > 0) return;
+  sequencedata[0].assets.forEach((data) => {
+    if (!data.objects) {
+      console.log("error: no sequencedata found");
+    }
+    if (data.objects?.length > 0) return;
     addAssetToTheAssetManager(
-      data.attributes.location,
+      data.location,
       data.id,
-      data.attributes.filename,
-      data.attributes.createdAt,
+      data.filename,
+      data.createdAt,
       assetsList,
       false,
     );

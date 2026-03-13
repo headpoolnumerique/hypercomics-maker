@@ -63,7 +63,6 @@ function resetOrder(wrappingElement) {
       previewScreen.querySelector(`#plan-${id}`),
     );
   });
-  // console.log(updatedOrder);
   let data = {
     plans: {
       set: updatedOrder,
@@ -120,7 +119,6 @@ export async function deletePlan() {
   let previousPlan = document
     .querySelector(".shown")
     .previousElementSibling.id.split("-")[1];
-  console.log(previousPlan);
   let planId = Number(document.querySelector(".shown").dataset.strapId);
   let data = {
     plans: {
@@ -133,7 +131,7 @@ export async function deletePlan() {
   };
 
   return axios
-    .put(`${config.strapi.url}/api/sequences/${sequenceId}`, {
+    .put(`${config.strapi.url}/api/sequences/${documentId}`, {
       data,
     })
     .then((response) => {
@@ -166,8 +164,6 @@ async function addPlan(montageList, select = true) {
   }
 
   //find out the reference plan and the position, check if we’re at the right place
-  // console.log("referencePlan", referencePlan);
-  // console.log("position", position);
 
   if (select) {
     deselect(".selected");
@@ -249,7 +245,6 @@ export async function duplicatePlan(
   let position;
   let referencePlan = document.querySelector(".shown");
   let referencePlanLink = document.querySelector(".selected");
-  console.log("referencePlan", referencePlan);
   if (!referencePlan) {
     //if no reference, add at the end
     position = { end: true };
@@ -287,18 +282,13 @@ export async function duplicatePlan(
         },
       };
 
-      // console.log({ updatedData });
-
       // update the location of the plan if the plan isn’t at the end
       console.log("is position end ? ", position);
       if (!position.end) {
         await axios
-          .put(
-            `${config.strapi.url}/api/sequences/${sequenceId}?populate=deep,3`,
-            {
-              data: updatedData,
-            },
-          )
+          .put(`${config.strapi.url}/api/sequences/${sequenceId}?pLevel=3`, {
+            data: updatedData,
+          })
           .then((response) => {
             // console.log(response)
             // console.log(response);
@@ -360,7 +350,7 @@ export async function duplicatePlan(
     };
 
     await axios
-      .post(` ${config.strapi.url}/api/objects/?populate=deep,3`, managingData)
+      .post(` ${config.strapi.url}/api/objects/?pLevel=3`, managingData)
       .then((response) => {
         // console.log(response);
         let newElement = `<img id="inuse-${managingData.data.plan}-${response.data.data.id}" data-objectId="${response.data.data.id}" data-planid="${managingData.data.newPlanId}"
@@ -396,13 +386,13 @@ export async function duplicatePlan(
   document.querySelector("#loading").classList.add("hide");
 }
 
-// render a plan when loading up the app
+// render a plan when loading up the app: add it to the preview, and the sequence bar
 async function renderPlan(plan, montageList, sequencePreview, select = false) {
   let previewedPlan = document.createElement(`article`);
   previewedPlan.id = `plan-${plan.id}`;
   previewedPlan.insertAdjacentHTML(
     "afterbegin",
-    `<span class="plan-name">${plan.attributes.order}</span>`,
+    `<span class="plan-name">${plan.order}</span>`,
   );
 
   // insert a link to the plan in the montage panel
@@ -421,7 +411,7 @@ async function renderPlan(plan, montageList, sequencePreview, select = false) {
     `<article data-strap-id=${plan.id} class="plan ${
       select ? "shown" : ""
     }" id="plan-${plan.id}"
-       data-delay="${plan.attributes.delay}">
+       data-delay="${plan.delay}">
     </article>`,
   );
 }

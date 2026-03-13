@@ -6,7 +6,7 @@ import axios from 'axios'
 
 async function createEntry(serverUrl, collection, data) {
   return axios
-    .post(`${serverUrl}/api/${collection}/?populate=deep,5`, {
+    .post(`${serverUrl}/api/${collection}/?pLevel=5`, {
       data,
     })
     .then((response) => {
@@ -78,7 +78,7 @@ async function loadSingleEntry(serverUrl, collection, id, populatedeep = true) {
   return axios
     .get(
       `${serverUrl}/api/${collection}/${id}${
-        populatedeep ? `?populate=deep,5` : ``
+        populatedeep ? `?pLevel=5` : ``
       }`
     )
     .then((response) => {

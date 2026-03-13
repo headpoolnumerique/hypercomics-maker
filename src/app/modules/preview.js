@@ -107,9 +107,7 @@ export {
 async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
   return axios
     .get(
-      `${serverUrl}/api/${collection}/${id}${
-        populatedeep ? `?populate=deep,5` : ``
-      }`,
+      `${serverUrl}/api/${collection}/${id}${populatedeep ? `?pLevel=5` : ``}`,
     )
     .then((response) => {
       // console.log(response)

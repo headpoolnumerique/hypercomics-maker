@@ -73,7 +73,7 @@ async function getData(seqId) {
   });
   try {
     const response = await axios.get(
-      `${strapiConfig.url}/api/sequences/${seqId}?populate=deep,4`,
+      `${strapiConfig.url}/api/sequences/${seqId}?pLevel=4`,
     );
 
     // Save the data and images
@@ -120,14 +120,14 @@ function saveAsJson(data, seqId) {
   let filename = `temp/${seqId}/story.json`;
   let content = JSON.stringify(data);
 
-  fs.writeFileSync(filename, content),
+  (fs.writeFileSync(filename, content),
     "utf-8",
     function (err) {
       if (err) {
         return console.log(err);
       }
       console.log("we saved the data!");
-    };
+    });
 }
 async function getAllImgs(data, seqId) {
   for (const img of data) {
