@@ -102,9 +102,7 @@ function listeners() {
   document
     .querySelector("#duplicatePlan")
     .addEventListener("click", async () => {
-      const sequenceId = Number(
-        document.querySelector("#sequenceNumber").textContent,
-      );
+      const sequenceId = document.querySelector("#sequenceNumber").textContent;
       await duplicatePlan(
         montageList,
         document.querySelector(".shown")?.dataset.strapId,
@@ -147,12 +145,12 @@ function listeners() {
       );
 
       if (strapisResponse) {
-        // console.log(strapisResponse);
+        console.log(strapisResponse.data.documentId);
         let objid = addImg(
           e.target,
           document.querySelector(".selected").hash,
-          strapisResponse.data.data.id,
-          strapisResponse.data.data,
+          strapisResponse.data.documentId,
+          strapisResponse.data,
         );
 
         // create the css here for the image.
@@ -208,7 +206,7 @@ function listeners() {
         await saveStylesheet(style.dataset.strapid, style.textContent);
 
         // select the image, create the css
-        appendLayer(strapisResponse.data.data.id, layerList, false);
+        appendLayer(strapisResponse.data.documentId, layerList, false);
       }
     }
   });
@@ -243,6 +241,8 @@ function listeners() {
       selectLayer(layerList, event.target.dataset.objectid);
 
       interactObject(event.target);
+
+      FindInCss(document.querySelector(".activatedStyle"), event.target);
     } else {
       document.querySelector("#selectedId").textContent = ``;
       deselect(".asset-selected");
@@ -325,4 +325,21 @@ async function startApp() {
   } else {
     window.location = config.appurl;
   }
+}
+
+//find in the css and scroll
+function FindInCss(container, element) {
+  const selector = `#${element.id}`;
+  const index = container.textContent.indexOf(selector);
+  if (index === -1) return;
+
+  const textNode = container.firstChild;
+
+  const range = document.createRange();
+  range.setStart(textNode, index);
+  range.setEnd(textNode, index + selector.length);
+
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
 }

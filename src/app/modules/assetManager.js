@@ -41,10 +41,10 @@ export async function reloadAssetsSetup() {
         response.data.data.forEach((asset) => {
           // console.log(asset);
           addAssetToTheAssetManager(
-            asset.attributes.location,
-            asset.id,
-            asset.attributes.filename,
-            asset.attributes.createdAt,
+            asset.location,
+            asset.documentId,
+            asset.filename,
+            asset.createdAt,
             assetsList,
             false,
           );
@@ -59,7 +59,7 @@ export async function removeAsset(assetid, el) {
   // strapi unlink the asset from the asset list and from all plan
 
   await axios
-    .put(`${config.strapi.url}/api/assets/${assetid}?pLevel=2`, {
+    .put(`${config.strapi.url}/api/assets/${assetid}`, {
       data: {
         sequences: "",
       },
@@ -78,12 +78,12 @@ export async function removeAsset(assetid, el) {
 export function addUnusedAssetToTheAssetManager(sequencedata) {
   sequencedata[0].assets.forEach((data) => {
     if (!data.objects) {
-      console.log("error: no sequencedata found");
+      // objects are not visibles
     }
     if (data.objects?.length > 0) return;
     addAssetToTheAssetManager(
       data.location,
-      data.id,
+      data.documentId,
       data.filename,
       data.createdAt,
       assetsList,
@@ -168,7 +168,7 @@ export function sortAssets() {
   document
     .querySelector(".asset-order-by")
     .addEventListener("click", (event) => {
-      switch (event.target.id) {
+      switch (event.target.documentId) {
         case "orderbyasc":
           sortList("data-filename", "asc");
           break;

@@ -22,8 +22,7 @@ import { screenListItem } from "./stylesheets/screenListItem";
 /** stylesheet manager: create stylesheet listeners, load the existing stylesheet
  * @obj = stylesheet object
  */
-export async function stylesheetmanager(obj) {
-  let stylesheets = obj[0].stylesheets;
+export async function stylesheetmanager(stylesheets) {
   const orderedStylesheets = sortByRatio(stylesheets);
 
   // load the stylesheets: add the style element and the screen object
@@ -128,14 +127,10 @@ export async function stylesheetListeners() {
         data,
       })
       .then((response) => {
-        console.log(response);
         const responsedata = response.data.data;
-        const strapid = response.data.data.id;
+        const strapid = responsedata.documentId;
         // set the screensize id on the preview to know where to save the data
         previewScreen.dataset.screensize = strapid;
-        responsedata.strapid = response.data.data.id;
-
-        responsedata.strapid = responsedata.id;
 
         console.log("now", responsedata);
         // reorder the <style, following the ratio after added an element?
@@ -193,6 +188,8 @@ function activateFirstStylesheet() {
 // because we send to strapi before adding it, so the content we have
 // is the final one
 function insertStylesheetToList(data) {
+  console.log(data);
+
   // deactivate the stylesheet and active the new one
   deselect(".activeStylesheet");
   const itemclasses = data.disabled ? "disabled" : "";
@@ -208,7 +205,7 @@ function insertStylesheetToList(data) {
   if (!ratioBefore) {
     screensList
       .querySelector("li")
-      .insertAdjacentHTML("afterend", screenListItem(data.itemclasses, true));
+      .insertAdjacentHTML("afterend", screenListItem(data, itemclasses, true));
   } else {
     ratioBefore.insertAdjacentHTML(
       "afterend",
@@ -219,12 +216,11 @@ function insertStylesheetToList(data) {
 
 /** add the stylesheet to the list UI */
 export function addStyleSheetToList(data) {
-  // console.log(data.id);
   const itemclasses = data.disabled ? "disabled" : "";
   /*if the stylesheet has been disabled*/
   if (data.disabled) return;
 
-  data.strapid = data.id;
+  data.strapid = data.documentId;
 
   //add the stylesheet to the stylesheet block
   screensList.insertAdjacentHTML(
@@ -247,7 +243,6 @@ export async function removeStylesheet(target) {
       data,
     })
     .then((response) => {
-      // console.log(response);
       return response;
     })
     .catch((err) => {
@@ -317,7 +312,6 @@ function activateStylesheet(stylesheet) {
 
 function selectScreen(ratio) {
   // deselect(".closeTo");
-  // console.log(ratio);
   deselect(".activeStylesheet");
 
   let toActivate = [...screensList.querySelectorAll(".stylesheet")].findLast(
@@ -345,13 +339,12 @@ export function createStyleElement(stylesheet) {
   deselect(".activatedStyle");
   // check if the stylesheet is the first. if true= then max-aspect needs to become min-from before
 
-  // console.log(stylesheet);
   // if the stylesheet is deactivated
   if (stylesheet.disabled) return;
   // prev,next
   /* the style element */
 
-  const styleEl = `<style class="activatedStyle"  data-strapid="${stylesheet.id}" type="text/css" contenteditable id="style-${stylesheet.id}" 
+  const styleEl = `<style class="activatedStyle"  data-strapid="${stylesheet.documentId}" type="text/css" contenteditable id="style-${stylesheet.documentId}" 
 data-height="${stylesheet.defaultHeight}"
 data-width="${stylesheet.maxwidth}">
 
@@ -448,8 +441,6 @@ export function findAnchors(objID, parsedCSS) {
 export function setObjInStylesheet(stylesheet, obj) {
   let parsedCSS = parse(stylesheet.textContent);
 
-  // console.log(obj);
-  // console.log(obj.id);
   // find vertical anchor
 
   let anchors = findAnchors(obj.id, parsedCSS);
@@ -550,7 +541,6 @@ export function setObjInStylesheet(stylesheet, obj) {
     //   // return the stylesheet without the inuse block;
     //   return rule.selectors.includes(obj.id);
     // });
-    // console.log(parsedCSS.stylesheet.rules[0].rules)
     //
     parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
       if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
@@ -700,13 +690,10 @@ export async function kickstartStylesheet() {
         console.log("things got saved");
 
         const responsedata = response.data.data;
-        console.log(responsedata);
-        const strapid = response.data.data.id;
+        const strapid = response.data.data.documentId;
 
         previewScreen.dataset.screensize = strapid;
-        responsedata.strapid = response.data.data.id;
-        // create styleElement and stylesheet
-        // console.log(response.data.data);
+        responsedata.strapid = response.data.data.documentId;
         createStyleElement(response.data.data);
         insertStylesheetToList(response.data.data);
 
@@ -728,14 +715,21 @@ export function cleanStyleSheet() {
   stylesWrapper.querySelectorAll("style").forEach((style) => {
     const styles = parse(style.textContent);
 
-    styles.stylesheet.rules[0].rules = styles.stylesheet.rules[0].rules.filter(
-      (rule) => {
-        if (!document.querySelector(rule.selectors[0])) {
-          return false; // Remove this rule
+    const rules = styles.stylesheet.rules[0].rules;
+
+    styles.stylesheet.rules[0].rules = rules
+      .filter((rule) => {
+        if (!document.querySelector(rule.selectors?.[0])) {
+          return false;
         }
-        return true; // Keep other rules
-      },
-    );
+        return true;
+      })
+      .map((rule) => {
+        if (rule.declarations) {
+          rule.declarations = keepLastDeclaration(rule.declarations);
+        }
+        return rule;
+      });
 
     // clean the content
     style.textContent = stringify(styles);
@@ -846,10 +840,10 @@ function createDefaultStylesheet() {
   defaultStylesheet.stylesheet.rules =
     defaultStylesheet.stylesheet.rules[0].rules;
 
-  document.querySelector("#style-default").textContent =
-    stringify(defaultStylesheet);
-
-  // = stylesWrapper.querySelector("style").textContent).stylesheet.rules[0]))
+  if (document.querySelector("#style-default")) {
+    document.querySelector("#style-default").textContent =
+      stringify(defaultStylesheet);
+  }
 }
 
 // update the default stylesheet everytimes the styles get changed?
@@ -863,8 +857,9 @@ export function updateDefaultStylesheet() {
   );
   defaultStylesheet.stylesheet.rules =
     defaultStylesheet.stylesheet.rules[0].rules;
-  document.querySelector("#style-default").textContent =
-    stringify(defaultStylesheet);
+  document.querySelector("#style-default").textContent = defaultStylesheet
+    ? stringify(defaultStylesheet)
+    : "";
 }
 
 /*
@@ -978,3 +973,25 @@ export function cloneFullStylesheet(targetid) {
 }
 
 // clone s
+//
+function keepLastDeclaration(declarations) {
+  const seen = new Set();
+  const result = [];
+
+  // iterate backwards so the last property wins
+  for (let i = declarations.length - 1; i >= 0; i--) {
+    const decl = declarations[i];
+
+    if (decl.type !== "declaration") {
+      result.unshift(decl);
+      continue;
+    }
+
+    if (!seen.has(decl.property)) {
+      seen.add(decl.property);
+      result.unshift(decl);
+    }
+  }
+
+  return result;
+}

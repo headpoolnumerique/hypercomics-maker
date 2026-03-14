@@ -12,7 +12,7 @@ export function loadStylesForPreview(stylesheets) {
     if (stylesheet.attributes.disabled) return;
 
     const defaultStyle = index == 0 ? "default" : "";
-    const styleEl = `<style class="story-styles ${defaultStyle ? "defaut-style" : ""}" data-strapid="${stylesheet.id}" type="text/css" id="style-${stylesheet.id}" data-height="${stylesheet.attributes.defaultHeight}" data-width="${stylesheet.attributes.maxwidth}">${stylesheet.attributes.cssrules}</style>`;
+    const styleEl = `<style class="story-styles ${defaultStyle ? "defaut-style" : ""}" data-strapid="${stylesheet.documentId}" type="text/css" id="style-${stylesheet.documentId}" data-height="${stylesheet.attributes.defaultHeight}" data-width="${stylesheet.attributes.maxwidth}">${stylesheet.attributes.cssrules}</style>`;
 
     if (defaultStyle) {
       let defaultStylesheet = parse(stylesheet.attributes.cssrules);

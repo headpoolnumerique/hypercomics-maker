@@ -31,7 +31,7 @@ export async function createProject() {
         return response;
       })
       .then(function (response) {
-        window.location.hash = `#project${response.data.data.id}`;
+        window.location.hash = `#project${response.data.data.documentId}`;
       })
 
       // open the new project
@@ -85,18 +85,18 @@ export async function renderEmptyProject(project) {
   // console.log(project);
   projectsList.insertAdjacentHTML(
     "beforeend",
-    `<li id="project-${project.id}"><datetime>${renderDate(
+    `<li id="project-${project.documentId}"><datetime>${renderDate(
       project.updatedAt,
-    )}</datetime> <a href="#project${project.id}">${project.title}</a></li>`,
+    )}</datetime> <a href="#project${project.documentId}">${project.title}</a></li>`,
   );
 
   // project for each sequence: create a list imenm
 
-  const projectSequenceContent = `<section id="project${project.id}" class="project">
+  const projectSequenceContent = `<section id="project${project.documentId}" class="project">
 <header>
   <h2>${project.title}</h2>
-  <button data-projectid="${project.id}" onclick="addSequence(${project.id}, window.username)" class="createSequence">Add a sequence</button>
-  <button onclick="selectToDelete(${project.id}, '${project.title}')">Remove project</button>
+  <button data-projectid="${project.documentId}" onclick="addSequence(${project.documentId}, window.username)" class="createSequence">Add a sequence</button>
+  <button onclick="selectToDelete(${project.documentId}, '${project.title}')">Remove project</button>
 </header>
   <ul class="sequences-list"></ul>
   </section>`;

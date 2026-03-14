@@ -37,12 +37,10 @@ async function startup(url = document.location.href) {
   // find what to load here
   let sequenceUrl = new URL(url);
   const sequenceId = sequenceUrl.searchParams.get("sequence");
-  document.body.id = `sequence-${sequenceId}`;
+  document.body.documentId = `sequence-${sequenceId}`;
 
   // then load the sequence
-  //
   // what if we load the sequence, then the
-  //
 
   // debugger;
   // let response = await loadSingle(config.strapi.url, `sequences`, sequenceId);
@@ -54,10 +52,7 @@ async function startup(url = document.location.href) {
 
   let seqData = response.data[0];
 
-  updateSequenceMeta(seqData.id, seqData.title, seqData.author);
-
-  //seqDataClean
-  let newData = cleanData(seqData);
+  updateSequenceMeta(seqData.documentId, seqData.title, seqData.author);
 
   fillSequence(seqData.plans, seqData.assets);
   moveToolbars();
@@ -74,8 +69,9 @@ async function startup(url = document.location.href) {
 
   toggleGrid();
 
-  await addUnusedAssetToTheAssetManager(response.data);
-  await stylesheetmanager(response.data);
+  addUnusedAssetToTheAssetManager(response.data);
+
+  await stylesheetmanager(response.data[0].stylesheets);
 
   document
     .querySelector("#deleteObject")
@@ -137,48 +133,38 @@ async function updateSequenceMeta(id, title, authorname) {
 }
 
 function fillPlan(plan, assets) {
-  let planToFill = preview.querySelector(`#plan-${plan.id}`);
+  const planToFill = preview.querySelector(`#plan-${plan.documentId}`);
+  if (!planToFill) return;
 
-  let objectsToFillWith = plan.objects;
+  const assetsList = document.querySelector("#assetsList");
 
-  // // fill the asset manager with the images
-
-  objectsToFillWith.forEach((object) => {
-    // Check if the asset's objects.data contains an object with the same id
-    let foundasset;
-
-    console.log(object);
-
-    assets.forEach((a) => {
-      if (a.id == object.id) {
-        foundasset = a;
-      }
+  plan.objects.forEach((object) => {
+    const foundasset = assets.find((a) => {
+      return a.documentId == object.assets[0].documentId;
     });
-
-    console.foundasset;
 
     if (!foundasset) return;
 
     addAssetToTheAssetManager(
-      foundasset.attributes.location,
-      foundasset.id,
-      foundasset.attributes.filename,
-      foundasset.attributes.createdAt,
-
-      document.querySelector("#assetsList"),
+      foundasset.location,
+      foundasset.documentId,
+      foundasset.filename,
+      foundasset.createdAt,
+      assetsList,
     );
-    //check if asset is top or bottom
 
     planToFill.insertAdjacentHTML(
       "beforeend",
-      `<img id="inuse-${plan.id}-${object.id}" data-objectId="${
-        object.id
-      }" data-planid="${plan.id}"
-        data-assetid="${foundasset.id}" src="${foundasset.attributes.location}"
-        class= "asset" >`,
+      `<img id="inuse-${plan.documentId}-${object.documentId}"
+        data-objectId="${object.documentId}"
+        data-planid="${plan.documentId}"
+        data-assetid="${foundasset.documentId}"
+        src="${foundasset.location}"
+        class="asset">`,
     );
-    document.querySelector("#loading")?.classList.add("hide");
   });
+
+  document.querySelector("#loading")?.classList.add("hide");
 }
 
 function cleanData(seqData) {
@@ -190,9 +176,8 @@ function cleanData(seqData) {
   //
   //
   //
-  //   console.log(plan.id);
   //   seqData.objects.forEach((obj) => {
-  //     console.log(obj.id);
+  //     console.log(obj.documentId);
   //   });
   // });
   return newData;

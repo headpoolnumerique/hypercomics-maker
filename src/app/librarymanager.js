@@ -159,8 +159,8 @@ function generateAssetList(data) {
   list.className = "all-assets";
   data.forEach((item) => {
     list.innerHTML += `
-      <li class="${item.attributes.used ? "used" : "unused"} asset" strapid="${item.id}">
-        <img data-filename="${item.attributes.filename}" data-assetId="${item.id}" src="${item.attributes.location}" id="assetlink-${item.id}" />
+      <li class="${item.attributes.used ? "used" : "unused"} asset" strapid="${item.documentId}">
+        <img data-filename="${item.attributes.filename}" data-assetId="${item.documentId}" src="${item.attributes.location}" id="assetlink-${item.documentId}" />
         <span class="asset-filename">${item.attributes.filename}</span>
       </li>`;
   });
@@ -171,8 +171,8 @@ function generateAssetList(data) {
 function addAssetToAssetList(item) {
   document.querySelector("#existingassets ul").insertAdjacentHTML(
     "afterbegin",
-    `<li class="${item.attributes.used ? "used" : "unused"} asset" strapid="${item.id}">
-      <img data-filename="${item.attributes.filename}" data-assetId="${item.id}" src="${item.attributes.location}" id="assetlink-${item.id}" />
+    `<li class="${item.attributes.used ? "used" : "unused"} asset" strapid="${item.documentId}">
+      <img data-filename="${item.attributes.filename}" data-assetId="${item.documentId}" src="${item.attributes.location}" id="assetlink-${item.documentId}" />
       <span class="asset-filename">${item.attributes.filename}</span>
     </li>`,
   );

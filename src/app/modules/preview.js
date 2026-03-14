@@ -119,7 +119,7 @@ async function loadSingle(serverUrl, sequenceid, populatedeep = true) {
 }
 
 export function previewLayers() {
-  layerList.querySelectorAll(".identifier").forEach((li) => {
+  layerList.querySelectorAll(".documentIdentifier").forEach((li) => {
     li.addEventListener("mouseenter", function (event) {
       console.log(event.target.closest("li").dataset.objectid);
       document
@@ -129,7 +129,7 @@ export function previewLayers() {
         .classList.add("previewObject");
     });
   });
-  layerList.querySelectorAll(".identifier").forEach((li) => {
+  layerList.querySelectorAll(".documentIdentifier").forEach((li) => {
     li.addEventListener("mouseover", function (event) {
       console.log(event.target.closest("li").dataset.objectid);
       document
@@ -139,7 +139,7 @@ export function previewLayers() {
         .classList.add("previewObject");
     });
   });
-  layerList.querySelectorAll(".identifier").forEach((li) => {
+  layerList.querySelectorAll(".documentIdentifier").forEach((li) => {
     li.addEventListener("mouseout", function (event) {
       if (document.querySelector(`.previewObject`)) {
         document

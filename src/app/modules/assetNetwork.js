@@ -38,15 +38,14 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
       console.log(response.data);
 
       response.data.forEach((file) => {
-        console.log(sequenceNumber.textContent);
-
         // then add the img db
         // add the file to the sequence to keep a list of unused object in the app.
         axios
-          .post(`${strapiurl}/api/assets?pLevel=2`, {
+          .post(`${strapiurl}/api/assets`, {
             data: {
               title: `asset-${file.name}`,
               filename: file.name,
+              //todo change teh url system to have a more stable system
               location: config.strapi.url + file.url,
               sequence: sequenceNumber.textContent,
             },
@@ -54,11 +53,12 @@ async function uploadToStrapi(input, strapiurl = config.strapi.url) {
           .then((response) => {
             console.log(response);
             /* Create the asset in the asset list */
+            console.log(response.data);
             addAssetToTheAssetManager(
-              response.data.data.attributes.location,
-              response.data.data.id,
-              response.data.data.attributes.filename,
-              response.data.data.attributes.createdAt,
+              response.data.data.location,
+              response.data.data.documentId,
+              response.data.data.filename,
+              response.data.data.createdAt,
               document.querySelector("#assetsList"),
             );
           })

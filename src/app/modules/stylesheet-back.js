@@ -42,12 +42,12 @@ function loadStylesheet(stylesheetId) {
 function genereateStyleElement(stylesheet) {
   // create style and include the content of the css of the stylesheet
   const style = document.createElement("style");
-  style.id = stylesheet.id;
+  style.documentId = stylesheet.documentId;
   style.textContent = stylesheet.css;
   const newdataset = {
     width: stylesheet.maxwidth,
     height: stylesheet.defaultHeight,
-    strapid: stylesheet.id,
+    strapid: stylesheet.documentId,
   };
 
   updateDataset(newdataset, style);
@@ -75,7 +75,7 @@ const orderedstylesheets = stylesheets.sort((a, b) => {
   return a.attributes.maxwidth - b.attributes.maxwidth;
 });
 orderedstylesheets.forEach((stylesheet, index) => {
-  stylesheet.attributes.strapid = stylesheet.id;
+  stylesheet.attributes.strapid = stylesheet.documentId;
   // add the stylesheets to the list
   // console.log("noe", stylesheet)
   addStyleSheetToList(stylesheet.attributes);

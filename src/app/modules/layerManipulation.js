@@ -31,7 +31,7 @@ import { previewLayers } from "./preview";
 // so the code should be this: everytime there is a plan loaded: on screen, the layer pane gets updated
 
 function addLayer(asset) {
-  appendLayer(asset.id);
+  appendLayer(asset.documentId);
 }
 
 function appendLayer(id, layerWrapper = layerList, top = false) {
@@ -63,7 +63,7 @@ function layerInteract(layerWrapper = layerList) {
   zindexInteraction?.addEventListener("click", function (event) {
     const asset = previewScreen.querySelector(".asset-selected"),
       plan = previewScreen.querySelector(".shown");
-    switch (event.target.id) {
+    switch (event.target.documentId) {
       case "moveFarther":
         moveToLayer(asset, plan, "farther");
         break;

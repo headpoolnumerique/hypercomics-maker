@@ -23,8 +23,10 @@ async function readingTools() {
   let forwardTimeout = null; // Variable pour stocker la référence du setTimeout
   //handling keyboard
   window.addEventListener("keyup", function (e) {
+    console.log(document.activeElement);
     //dont move
     if (document.activeElement.tagName === "INPUT") return;
+    if (document.activeElement.tagname === "STYLE") return;
     switch (e.code) {
       case "ArrowLeft":
       case "ArrowUp":

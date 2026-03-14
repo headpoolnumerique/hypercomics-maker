@@ -373,7 +373,7 @@ export function updateTheUI(element) {
 
   inputRotate.value = window
     .getComputedStyle(element)
-    .getPropertyValue("--transform")
+    .getPropertyValue("--rotate")
     .replace("deg", "");
 
   if (anchors.vertical == "top") {

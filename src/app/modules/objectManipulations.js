@@ -384,11 +384,16 @@ export function setObjFromUi(stylesheet, obj) {
     //
     parsedCSS.stylesheet.rules[0].rules.forEach((rule) => {
       if (rule.selectors && rule.selectors.includes(`#${obj.id}`)) {
+        console.log("yesh");
         // if property doewsn exit what to do
 
         //to have quick and dirty rotation
         if (inputRotate.value) {
-          if (!rule.declarations.find((a) => a.declaration == "--rotate")) {
+          if (
+            !rule.declarations.find((a) => {
+              return a.property == "--rotate";
+            })
+          ) {
             rule.declarations.push({
               type: "declaration",
               property: "--rotate",
@@ -400,6 +405,7 @@ export function setObjFromUi(stylesheet, obj) {
         // Update existing declarations for the selectorToUpdate
         rule.declarations.forEach((declaration) => {
           declarations.forEach((updatedDeclaration) => {
+            console.log(updatedDeclaration);
             if (declaration.property === updatedDeclaration.property) {
               declaration.value = updatedDeclaration.value;
             }

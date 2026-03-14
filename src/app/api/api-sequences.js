@@ -54,13 +54,13 @@ export async function renameSequences() {
       document
         .querySelector("#renameProject")
         .addEventListener("click", async function (e) {
+          console.log(sequenceId);
           let newName = await updateSequence(
             sequenceId,
             document.querySelector("#rename-sequence-title").value,
           );
-          console.log(newName);
-          console.log(newName);
-          seq.textContent = newName.data.data.attributes.title;
+
+          seq.textContent = newName.data.data.title;
           document.querySelector(".renameModal").close();
         });
     }

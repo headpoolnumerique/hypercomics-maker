@@ -3,7 +3,7 @@ import qs from "qs";
 
 export async function updateData(serverUrl, collection, data, id, deep = true) {
   return axios
-    .put(`${serverUrl}/api/${collection}/${id}${deep ? `?pLevel=4` : ""}`, {
+    .put(`${serverUrl}/api/${collection}/${id}`, {
       data,
     })
     .then((response) => {
@@ -34,22 +34,27 @@ export async function removeObjectFromPlan(serverUrl, planId, objectId) {
     objects: {
       disconnect: [
         {
-          id: objectId,
+          documentId: objectId,
         },
       ],
     },
   };
 
-  return axios
-    .put(`${serverUrl}/api/plans/${planId}`, {
-      data,
-    })
-    .then((response) => {
-      return response;
-    })
-    .catch((err) => {
-      return err;
-    });
+  console.log(planId);
+  return (
+    axios
+      // .put(`${serverUrl}/api/plans?[documentId][eq]${planId}`, {
+
+      .put(`${serverUrl}/api/plans/${planId}`, {
+        data,
+      })
+      .then((response) => {
+        return response;
+      })
+      .catch((err) => {
+        return err;
+      })
+  );
 }
 
 // remove object from the plan in strapi
@@ -102,24 +107,41 @@ export async function reorderObjectInPlan(
     });
 }
 
+/**
+ * Creates an object and safely connects plan and assets.
+ * Handles one-to-one, many-to-one, and many-to-many relations.
+ */
 export async function connectObjectToPlan(serverUrl, planId, assetId) {
-  let data = {
-    plan: planId,
-    assets: assetId,
-  };
+  try {
+    // 1️⃣ Create the main object first (without relations)
+    const createResponse = await axios.post(
+      `${serverUrl}/api/objects?populate=*`,
+      {
+        data: {}, // you can add other fields here if needed
+      },
+    );
 
-  const newObject = await axios
-    .post(`${serverUrl}/api/objects/`, {
-      data,
-    })
-    .then((response) => {
-      // console.log(response);
-      return response;
-    })
-    .catch((err) => {
-      return err;
-    });
-  return newObject;
+    const objectId = createResponse.data.data.documentId;
+
+    // 2️⃣ Connect plan and assets
+    const updateData = {
+      plan: planId, // many-to-one / one-to-one
+      assets: assetId, // many-to-many
+    };
+
+    const updateResponse = await axios.put(
+      `${serverUrl}/api/objects/${objectId}`,
+      { data: updateData },
+    );
+
+    return updateResponse.data;
+  } catch (err) {
+    console.error(
+      "Error creating or connecting object:",
+      err.response?.data || err.message,
+    );
+    return null;
+  }
 }
 
 // async function connectObjectToPlan(serverUrl, planId, objectId, position) {
@@ -174,7 +196,6 @@ export async function loadCollection(
   return axios
     .get(`${serverUrl}/api/${collection}${query ? "?" + query : ""}`)
     .then((response) => {
-      // console.log(response)
       return response;
     })
     .catch((err) => {
@@ -193,7 +214,6 @@ export async function loadSingle(
       `${serverUrl}/api/${collection}/${id}${populatedeep ? `?pLevel=4` : ``}`,
     )
     .then((response) => {
-      // console.log(response)
       return response;
     })
     .catch((err) => {
@@ -205,16 +225,15 @@ export async function loadSingle(
 export function getAllImageFromPlan(plan) {
   const imgData = [];
   plan.querySelectorAll("img").forEach((img) => {
-    imgData.push(Number(img.id.split("-")[1]));
+    imgData.push(Number(img.documentId.split("-")[1]));
   });
   return imgData;
 }
 
 export async function loadSequenceData(serverUrl, sequenceId) {
-  console.log(sequenceId);
   const query = qs.stringify(
     {
-      filters: { id: { $eq: sequenceId } },
+      filters: { documentId: { $eq: sequenceId } },
       populate: {
         project: "true", // top-level relation
         assets: "true", // top-level relation
@@ -223,7 +242,11 @@ export async function loadSequenceData(serverUrl, sequenceId) {
           populate: {
             objects: {
               populate: {
-                assets: "true", // nested relation inside objects
+                assets: {
+                  populate: {
+                    objects: true,
+                  },
+                },
               },
             },
           },
@@ -235,7 +258,6 @@ export async function loadSequenceData(serverUrl, sequenceId) {
 
   try {
     const response = await axios.get(`${serverUrl}/api/sequences?${query}`);
-    console.log(response.data);
     return response.data;
   } catch (err) {
     console.error(err.response?.data || err.message);

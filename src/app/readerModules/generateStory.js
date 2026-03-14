@@ -57,13 +57,13 @@ async function loadProject(apiUrl, projectId, sequenceId) {
 //fill plan
 function fillPlan(plan, assets) {
   // fill the plan with all the existing images
-  let planToFill = story.querySelector(`#plan-${plan.id}`);
+  let planToFill = story.querySelector(`#plan-${plan.documentId}`);
   let objectsToFillWith = plan.attributes.objects?.data;
 
   // Loop through each object that needs to be filled into the plan
   objectsToFillWith.forEach((object) => {
     // Check if the object has already been added to the plan
-    if (planToFill.querySelector(`#inuse-${plan.id}-${object.id}`)) {
+    if (planToFill.querySelector(`#inuse-${plan.documentId}-${object.documentId}`)) {
       return; // Skip adding if the object is already present
     }
 
@@ -72,7 +72,7 @@ function fillPlan(plan, assets) {
     assets.data.forEach((a) => {
       a.attributes.objects?.data.forEach((obj) => {
         // If the object ID matches, set the found asset
-        if (obj.id === object.id) {
+        if (obj.documentId === object.documentId) {
           foundasset = a;
         }
       });
@@ -80,14 +80,14 @@ function fillPlan(plan, assets) {
 
     // If no asset was found, log "nothing" and return
     if (!foundasset) {
-      return console.log("nothing found for object:", object.id);
+      return console.log("nothing found for object:", object.documentId);
     }
 
     // Insert the image into the plan if the asset is found
     planToFill.insertAdjacentHTML(
       "beforeend",
-      `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" 
-      data-planid="${plan.id}" data-assetid="${foundasset.id}" 
+      `<img id="inuse-${plan.documentId}-${object.documentId}" data-objectId="${object.documentId}" 
+      data-planid="${plan.documentId}" data-assetid="${foundasset.documentId}" 
       src="${foundasset.attributes.location}" class="asset">`,
     );
   });
@@ -97,23 +97,23 @@ function renderPlans(plans, toc, story, assets) {
   let firstPlan = "";
   plans.forEach((plan, index) => {
     if (index === 0) {
-      firstPlan = `#plan-${plan.id}`;
+      firstPlan = `#plan-${plan.documentId}`;
     }
     let newPlan = document.createElement(`article`);
     newPlan.classList.add("plan");
-    newPlan.id = `plan-${plan.id}`;
+    newPlan.documentId = `plan-${plan.documentId}`;
 
     const previousPlan = plans[index - 1]
-      ? `#plan-${plans[index - 1].id}`
+      ? `#plan-${plans[index - 1].documentId}`
       : false;
-    const nextPlan = plans[index + 1] ? `#plan-${plans[index + 1].id}` : false;
+    const nextPlan = plans[index + 1] ? `#plan-${plans[index + 1].documentId}` : false;
 
     // insert a link to the plan in the montage panel
     toc.insertAdjacentHTML(
       "beforeend",
       `<li ${index == 0 ? `class="selected"` : ""} id="link-${
-        plan.id
-      }"><a class="" href="#plan-${plan.id}">${index + 1}</a></li>`,
+        plan.documentId
+      }"><a class="" href="#plan-${plan.documentId}">${index + 1}</a></li>`,
     );
 
     // insert the plan in the preview plan
@@ -123,7 +123,7 @@ function renderPlans(plans, toc, story, assets) {
         plan.attributes.delay
           ? `data-story-delay="${plan.attributes.delay}"`
           : ""
-      } data-strap-id="${plan.id}" class="plan" id="plan-${plan.id}">
+      } data-strap-id="${plan.documentId}" class="plan" id="plan-${plan.documentId}">
         ${
           previousPlan
             ? `<a class="previousPlan" href="${previousPlan}">←</a>`
@@ -192,12 +192,12 @@ function changeScreenSize(existingRatios) {
 }
 
 function fillPlanWithAssets(plan, assets) {
-  let planToFill = preview.querySelector(`#plan-${plan.id}`);
+  let planToFill = preview.querySelector(`#plan-${plan.documentId}`);
   let objectsToFillWith = plan.attributes.objects?.data;
 
   objectsToFillWith.forEach((object) => {
     // Check if the object has already been added to the plan
-    if (planToFill.querySelector(`#inuse-${plan.id}-${object.id}`)) {
+    if (planToFill.querySelector(`#inuse-${plan.documentId}-${object.documentId}`)) {
       return; // Skip adding if the object is already present
     }
 
@@ -205,7 +205,7 @@ function fillPlanWithAssets(plan, assets) {
     let foundasset;
     assets.data.forEach((a) => {
       a.attributes.objects.data.forEach((obj) => {
-        if (obj.id == object.id) {
+        if (obj.documentId == object.documentId) {
           foundasset = a;
         }
       });
@@ -216,8 +216,8 @@ function fillPlanWithAssets(plan, assets) {
     // Add the image to the plan if the object is not already added
     planToFill.insertAdjacentHTML(
       "beforeend",
-      `<img id="inuse-${plan.id}-${object.id}" data-objectId="${object.id}" 
-        data-planid="${plan.id}" data-assetid="${foundasset.id}" 
+      `<img id="inuse-${plan.documentId}-${object.documentId}" data-objectId="${object.documentId}" 
+        data-planid="${plan.documentId}" data-assetid="${foundasset.documentId}" 
         src="${foundasset.attributes.location}" class="asset">`,
     );
 

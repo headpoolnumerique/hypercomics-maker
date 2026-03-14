@@ -123,8 +123,8 @@ async function renderProject(project) {
   // insert project in the project list
   projectsList.insertAdjacentHTML(
     "beforeend",
-    ` <li id="project-${project.id}" data-title="${project.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
-        <a href="#project${project.id}">${project.attributes.title}</a> 
+    ` <li id="project-${project.documentId}" data-title="${project.title}"><datetime>${renderDate(project.attributes.updatedAt)}</datetime>
+        <a href="#project${project.documentId}">${project.attributes.title}</a> 
       </li>`,
   );
 
@@ -135,16 +135,16 @@ async function renderProject(project) {
   });
 
   const projectSequenceContent = `<section id="project${
-    project.id
+    project.documentId
   }" class="project">
 <header>
   <h2>${project.attributes.title}</h2>
 
-  <button  data-projectid="${project.id}" onclick="addSequence(${project.id}, window.username)" class="createSequence">Add a sequence</button>
-  <button onclick="selectToDelete(${project.id}, '${project.attributes.title}')">Remove project</button>
+  <button  data-projectid="${project.documentId}" onclick="addSequence(${project.documentId}, window.username)" class="createSequence">Add a sequence</button>
+  <button onclick="selectToDelete(${project.documentId}, '${project.attributes.title}')">Remove project</button>
 </header>
   <ul class="sequences-list" id="sequenceList${
-    project.id
+    project.documentId
   }">${renderedSequences.join("")}</ul>
   </section>`;
 
@@ -153,17 +153,17 @@ async function renderProject(project) {
 
 function generateSequence(sequence, project) {
   return `<li>
-<span class="sequence-id">${sequence.id}</span>
+<span class="sequence-id">${sequence.documentId}</span>
 <span class="sequence-title">${sequence.attributes.title}</span> 
 <div class="buttons"> 
-<a href="editor.html?sequence=${sequence.id}">edit</a> 
-<a data-sequenceid=${sequence.id} href="#" class="rename">rename</a> 
-<a href="reader.html?sequence=${sequence.id}">preview</a>
-<a href="library.html?sequence=${sequence.id}">library</a>
-<button class="deleteSeq" data-project-id="${project.id}" data-sequence-id="${sequence.id}" onclick="deleteSequence(${project.id}, ${sequence.id})">delete</button>
-<button class="export"  data-sequence-id="${sequence.id}" onclick="exportProject(${sequence.id})">publish</button>
+<a href="editor.html?sequence=${sequence.documentId}">edit</a> 
+<a data-sequenceid=${sequence.documentId} href="#" class="rename">rename</a> 
+<a href="reader.html?sequence=${sequence.documentId}">preview</a>
+<a href="library.html?sequence=${sequence.documentId}">library</a>
+<button class="deleteSeq" data-project-id="${project.documentId}" data-sequence-id="${sequence.documentId}" onclick="deleteSequence(${project.documentId}, ${sequence.documentId})">delete</button>
+<button class="export"  data-sequence-id="${sequence.documentId}" onclick="exportProject(${sequence.documentId})">publish</button>
 </div> 
-<p id="feedback-${sequence.id}"></p>
+<p id="feedback-${sequence.documentId}"></p>
 </li>`;
 }
 
@@ -178,17 +178,17 @@ async function addSequence(projectNumber, author) {
     .insertAdjacentHTML(
       "beforeend",
       `<li>
-<span class="sequence-id">${newSeq.data.data.id}</span>
+<span class="sequence-id">${newSeq.data.data.documentId}</span>
 <span class="sequence-title" >${newSeq.data.data.title}</span> 
 <div class="buttons"> 
 
-<a href="editor.html?sequence=${newSeq.data.data.id}">edit</a> 
-<a data-sequenceid=${newSeq.data.data.id} href="#" class="rename">rename</a> 
-<a href="reader.html?sequence=${newSeq.data.data.id}">preview</a>
-<button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.id}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.id})">delete</button>
-<button class="export"  data-sequence-id="${newSeq.data.data.id}" onclick="exportProject(${newSeq.data.data.id})">publish</button>
+<a href="editor.html?sequence=${newSeq.data.data.documentId}">edit</a> 
+<a data-sequenceid=${newSeq.data.data.documentId} href="#" class="rename">rename</a> 
+<a href="reader.html?sequence=${newSeq.data.data.documentId}">preview</a>
+<button class="deleteSeq" data-project-id="${projectNumber}" data-sequence-id="${newSeq.data.data.documentId}" onclick="deleteSequence(${projectNumber}, ${newSeq.data.data.documentId})">delete</button>
+<button class="export"  data-sequence-id="${newSeq.data.data.documentId}" onclick="exportProject(${newSeq.data.data.documentId})">publish</button>
 </div> 
-<p id="feedback-${newSeq.data.data.id}"></p>
+<p id="feedback-${newSeq.data.data.documentId}"></p>
 </li>`,
     );
 }
