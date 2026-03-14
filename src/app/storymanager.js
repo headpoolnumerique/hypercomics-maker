@@ -161,7 +161,7 @@ function generateSequence(sequence, project) {
 <a href="reader.html?sequence=${sequence.documentId}">preview</a>
 <a href="library.html?sequence=${sequence.documentId}">library</a>
 <button class="deleteSeq" data-project-id="${project.documentId}" data-sequence-id="${sequence.documentId}" onclick="deleteSequence(${project.documentId}, ${sequence.documentId})">delete</button>
-<button class="export"  data-sequence-id="${sequence.documentId}" onclick="exportProject(${sequence.documentId})">publish</button>
+<button class="export"  data-sequence-id="${sequence.documentId}" onclick="exportProject('${sequence.documentId}')">publish</button>
 </div> 
 <p id="feedback-${sequence.documentId}"></p>
 </li>`;
@@ -209,7 +209,7 @@ export async function exportProject(seqId) {
   console.log(feedback);
   feedback.innerHTML = "please wait while we’re publishing the sequence";
   // Create the data object to send to the server
-  const data = { seqId: Number(seqId) };
+  const data = { seqId: seqId };
 
   const body = JSON.stringify(data);
   try {

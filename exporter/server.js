@@ -1,4 +1,6 @@
 // Importer les dépendances
+//
+const qs = require("qs");
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -37,7 +39,7 @@ app.post("/hc-export", async (req, res) => {
     //   if (err) throw err;
     // });
 
-    fs.cp(
+    await fs.promises.cp(
       `temp/${donnees.seqId}`,
       `../public/stories/${donnees.seqId}/`,
       { recursive: true },
@@ -72,20 +74,26 @@ async function getData(seqId) {
     /* callback */
   });
   try {
-    const response = await axios.get(
-      `${strapiConfig.url}/api/sequences/${seqId}?pLevel=4`,
-    );
+    // const response = await axios.get(
+    //   `${strapiConfig.url}/api/sequences/${seqId}`,
+    // );
+
+    const response = await loadSequenceData(strapiConfig.url, seqId);
 
     // Save the data and images
-    saveAsJson(response.data.data, seqId);
-    await writeHTMLFile(seqId, `index`, await createHTML(response.data.data));
+    saveAsJson(response.data[0], seqId);
+    await writeHTMLFile(seqId, `index`, await createHTML(response.data[0]));
 
-    await getAllImgs(response.data.data.attributes.assets.data, seqId);
+    await getAllImgs(response.data[0].assets, seqId);
 
     // Create the zip
     const tempFolderPath = path.join(__dirname, `temp/${seqId}/`);
+
+    const storiesFolder = path.join(__dirname, "../public/stories/");
+    await fs.promises.mkdir(storiesFolder, { recursive: true });
+
     const zipFileName = `${seqId}.zip`;
-    const zipFilePath = path.join(__dirname, "../public/stories/", zipFileName);
+    const zipFilePath = path.join(storiesFolder, zipFileName);
 
     await new Promise((resolve, reject) => {
       const output = fs.createWriteStream(zipFilePath);
@@ -95,16 +103,13 @@ async function getData(seqId) {
         console.log(
           `ZIP file ${zipFileName} created with ${archive.pointer()} total bytes`,
         );
-
-        // deleteTempFolder(tempFolderPath);
-
         resolve();
       });
 
       archive.on("error", (err) => reject(err));
 
       archive.pipe(output);
-      archive.directory(tempFolderPath, false); // Zip the entire temp folder
+      archive.directory(tempFolderPath, false);
       archive.finalize();
     });
 
@@ -116,34 +121,29 @@ async function getData(seqId) {
   }
 }
 
-function saveAsJson(data, seqId) {
-  let filename = `temp/${seqId}/story.json`;
-  let content = JSON.stringify(data);
-
-  (fs.writeFileSync(filename, content),
-    "utf-8",
-    function (err) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log("we saved the data!");
-    });
+//save as json
+async function saveAsJson(data, seqId) {
+  const filename = `temp/${seqId}/story.json`;
+  const content = JSON.stringify(data, null, 2);
+  try {
+    await fs.promises.writeFile(filename, content, "utf-8");
+    console.log("we saved the data!");
+  } catch (err) {
+    console.error("Error saving JSON:", err);
+  }
 }
+
+// get all images
 async function getAllImgs(data, seqId) {
   for (const img of data) {
     try {
       await downloadImage(
-        img.attributes.location,
-        img.attributes.location.split("/")[
-          img.attributes.location.split("/").length - 1
-        ],
+        img.location,
+        img.location.split("/")[img.location.split("/").length - 1],
         `temp/${seqId}/images/`,
       );
     } catch (error) {
-      console.error(
-        `Error downloading image: ${img.attributes.filename}`,
-        error,
-      );
+      console.error(`Error downloading image: ${img.filename}`, error);
     }
   }
   console.log("All images have been downloaded.");
@@ -208,18 +208,18 @@ function deleteTempFolder(folderPath) {
 }
 
 async function writeHTMLFile(seqId, filename, html) {
-  fs.writeFileSync(`temp/${seqId}/${filename}.html`, html, (err) => {
+  fs.writeFile(`temp/${seqId}/${filename}.html`, html, (err) => {
     if (err) throw err;
   });
 }
 
 async function createHTML(data) {
   //fill those with the content and save it a html
-  const stylesheets = renderstylesheet(data.attributes.stylesheets);
+  const stylesheets = renderstylesheet(data.stylesheets);
   // const projectToc = "";
-  const sequenceToc = renderToc(data.attributes.plans);
+  const sequenceToc = renderToc(data.plans);
   // const storyContent = "";
-  const storyContent = renderSequence(data.attributes.plans);
+  const storyContent = renderSequence(data.plans);
   const html = `<!doctype html>
 <html lang="en">
   <head>
@@ -265,21 +265,23 @@ ${sequenceToc}
 function fillPlan(plan) {
   // fill the plan with all the existing images
   // find the plan
-  let objectsToFillWith = plan.attributes.objects?.data;
-  // console.log(plan.attributes, objectsToFillWith);
+  let objectsToFillWith = plan.objects;
+  //
+
+  console.log("tofill", objectsToFillWith);
 
   let fillingObjects = "";
   // // fill the asset manager with the images
   objectsToFillWith.forEach((object) => {
     // console.log(object)
 
-    object.attributes.assets.data.forEach((asset) => {
+    object.assets.forEach((asset) => {
       fillingObjects =
         fillingObjects +
         `<img 
-        id="inuse-${plan.id}-${object.id}" 
-        data-objectId="${object.id}" data-planid="${plan.id}"
-        data-assetid="${asset.id}" src="images/${asset.attributes.location.split("/")[asset.attributes.location.split("/").length - 1]}" class="asset">`;
+        id="inuse-${plan.documentId}-${object.documentId}" 
+        data-objectId="${object.documentId}" data-planid="${plan.documentId}"
+        data-assetid="${asset.documentId}" src="images/${asset.location.split("/")[asset.location.split("/").length - 1]}" class="asset">`;
     });
   });
   return fillingObjects;
@@ -288,11 +290,11 @@ function fillPlan(plan) {
 function renderstylesheet(stylesheetdata) {
   let styleblock = "";
 
-  stylesheetdata.data.forEach((stylesheet) => {
+  stylesheetdata.forEach((stylesheet) => {
     styleblock =
       styleblock +
       "\n" +
-      `<style data-styleid="${stylesheet.id}" data-ratio="${(stylesheet.attributes.maxwidth / stylesheet.attributes.defaultHeight).toFixed(2)}">${stylesheet.attributes.cssrules}</style>\n`;
+      `<style data-styleid="${stylesheet.documentId}" data-ratio="${(stylesheet.maxwidth / stylesheet.defaultHeight).toFixed(2)}">${stylesheet.cssrules}</style>\n`;
   });
   return styleblock;
 }
@@ -300,12 +302,12 @@ function renderstylesheet(stylesheetdata) {
 //render the toc form the plandata
 function renderToc(plansdata) {
   let toc = "";
-  plansdata.data.forEach((plan, index) => {
+  plansdata.forEach((plan, index) => {
     toc =
       toc +
       `<li ${index == 0 ? `class="selected"` : ""} id="link-${
-        plan.id
-      }"><a class="" href="#plan-${plan.id}">${index + 1}</a></li>`;
+        plan.documentId
+      }"><a class="" href="#plan-${plan.documentId}">${index + 1}</a></li>`;
   });
   return toc;
 }
@@ -313,26 +315,24 @@ function renderToc(plansdata) {
 //render the story form the plandata
 function renderSequence(plansdata) {
   let story = "";
-  plansdata.data.forEach((plan, index) => {
+  plansdata.forEach((plan, index) => {
     // find the first plan and add the following system
     if (index === 0) {
-      firstPlan = `#plan-${plan.id}`;
+      firstPlan = `#plan-${plan.documentId}`;
     }
 
     const previousPlan = plansdata[index - 1]
-      ? `#plan-${plansdata[index - 1].id}`
+      ? `#plan-${plansdata[index - 1].documentId}`
       : false;
     const nextPlan = plansdata[index + 1]
-      ? `#plan-${plansdata[index + 1].id}`
+      ? `#plan-${plansdata[index + 1].documentId}`
       : false;
 
     story =
       story +
       `<article ${
-        plan.attributes.delay
-          ? `data-story-delay="${plan.attributes.delay}"`
-          : ""
-      } data-strap-id="${plan.id}" class="plan" id="plan-${plan.id}">
+        plan.delay ? `data-story-delay="${plan.delay}"` : ""
+      } data-strap-id="${plan.documentId}" class="plan" id="plan-${plan.documentId}">
         ${
           previousPlan
             ? `<a class="previousPlan" href="${previousPlan}">←</a>`
@@ -345,4 +345,39 @@ function renderSequence(plansdata) {
     </article>`;
   });
   return story;
+}
+
+async function loadSequenceData(serverUrl, sequenceId) {
+  const query = qs.stringify(
+    {
+      filters: { documentId: { $eq: sequenceId } },
+      populate: {
+        project: "true", // top-level relation
+        assets: "true", // top-level relation
+        stylesheets: "true", // top-level relation
+        plans: {
+          populate: {
+            objects: {
+              populate: {
+                assets: {
+                  populate: {
+                    objects: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    { encodeValuesOnly: true },
+  );
+
+  try {
+    const response = await axios.get(`${serverUrl}/api/sequences?${query}`);
+    return response.data;
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    throw err;
+  }
 }
