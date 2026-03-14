@@ -88,7 +88,7 @@ export async function reorderObjectInPlan(
     objects: {
       connect: [
         {
-          id: Number(objectId),
+          id: objectId,
           position: savedPosition,
         },
       ],
@@ -225,7 +225,7 @@ export async function loadSingle(
 export function getAllImageFromPlan(plan) {
   const imgData = [];
   plan.querySelectorAll("img").forEach((img) => {
-    imgData.push(Number(img.documentId.split("-")[1]));
+    imgData.push(img.documentId.split("-")[1]);
   });
   return imgData;
 }

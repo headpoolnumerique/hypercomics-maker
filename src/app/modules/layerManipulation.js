@@ -201,13 +201,7 @@ function saveLayerOrder(strapiUrl, planId, layerWrapper) {
     },
   };
 
-  updateData(
-    config.strapi.url,
-    "plans",
-    data,
-    Number(plan.dataset.strapId),
-    false,
-  )
+  updateData(config.strapi.url, "plans", data, plan.dataset.strapId, false)
     .then((response) => {
       if (response.status == 200) {
         // reorder on screen when the response is ok

@@ -372,7 +372,8 @@ export async function duplicatePlan(
           // );
           cloneStylesheetRules(
             styleObj,
-            managingData.data.previousId,
+            //where is the previous ID of the element
+            newData.previousId,
             `inuse-${managingData.data.plan}-${response.data.data.documentId}`,
           );
         });
