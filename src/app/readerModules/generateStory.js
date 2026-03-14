@@ -19,24 +19,16 @@ export async function generateStory() {
   );
   // console.log(sequencedata);
 
-  let arrayRatios = loadStylesForPreview(
-    sequencedata.data.data.attributes.stylesheets.data,
-  );
+  console.log(sequencedata.data[0].stylesheets);
+  let arrayRatios = loadStylesForPreview(sequencedata.data[0].stylesheets);
 
   // check the ratio on the screen
   screenSizeManipulation(story, arrayRatios);
 
   // get the data for the plans (with the weirdest ui from strapi. maybe filtering would make more sense.)
-  const plans = sequencedata.data.data.attributes.plans.data;
+  const plans = sequencedata.data[0].plans;
 
-  console.log("down sa mère", sequencedata.data.data.attributes.assets);
-
-  let firstPlan = renderPlans(
-    plans,
-    toc,
-    story,
-    sequencedata.data.data.attributes.assets,
-  );
+  let firstPlan = renderPlans(plans, toc, story, sequencedata.data[0].assets);
 
   // show the first plan
   window.location.hash = firstPlan;
@@ -58,26 +50,19 @@ async function loadProject(apiUrl, projectId, sequenceId) {
 function fillPlan(plan, assets) {
   // fill the plan with all the existing images
   let planToFill = story.querySelector(`#plan-${plan.documentId}`);
-  let objectsToFillWith = plan.attributes.objects?.data;
+  let objectsToFillWith = plan.objects;
 
   // Loop through each object that needs to be filled into the plan
   objectsToFillWith.forEach((object) => {
     // Check if the object has already been added to the plan
-    if (planToFill.querySelector(`#inuse-${plan.documentId}-${object.documentId}`)) {
+    if (
+      planToFill.querySelector(`#inuse-${plan.documentId}-${object.documentId}`)
+    ) {
       return; // Skip adding if the object is already present
     }
 
     // Find the corresponding asset for the object
-    let foundasset;
-    assets.data.forEach((a) => {
-      a.attributes.objects?.data.forEach((obj) => {
-        // If the object ID matches, set the found asset
-        if (obj.documentId === object.documentId) {
-          foundasset = a;
-        }
-      });
-    });
-
+    let foundasset = object.assets[0];
     // If no asset was found, log "nothing" and return
     if (!foundasset) {
       return console.log("nothing found for object:", object.documentId);
@@ -88,7 +73,7 @@ function fillPlan(plan, assets) {
       "beforeend",
       `<img id="inuse-${plan.documentId}-${object.documentId}" data-objectId="${object.documentId}" 
       data-planid="${plan.documentId}" data-assetid="${foundasset.documentId}" 
-      src="${foundasset.attributes.location}" class="asset">`,
+      src="${foundasset.location}" class="asset">`,
     );
   });
 }
@@ -106,7 +91,9 @@ function renderPlans(plans, toc, story, assets) {
     const previousPlan = plans[index - 1]
       ? `#plan-${plans[index - 1].documentId}`
       : false;
-    const nextPlan = plans[index + 1] ? `#plan-${plans[index + 1].documentId}` : false;
+    const nextPlan = plans[index + 1]
+      ? `#plan-${plans[index + 1].documentId}`
+      : false;
 
     // insert a link to the plan in the montage panel
     toc.insertAdjacentHTML(
@@ -120,9 +107,7 @@ function renderPlans(plans, toc, story, assets) {
     story.insertAdjacentHTML(
       "beforeend",
       `<article ${
-        plan.attributes.delay
-          ? `data-story-delay="${plan.attributes.delay}"`
-          : ""
+        plan.delay ? `data-story-delay="${plan.delay}"` : ""
       } data-strap-id="${plan.documentId}" class="plan" id="plan-${plan.documentId}">
         ${
           previousPlan
@@ -193,18 +178,20 @@ function changeScreenSize(existingRatios) {
 
 function fillPlanWithAssets(plan, assets) {
   let planToFill = preview.querySelector(`#plan-${plan.documentId}`);
-  let objectsToFillWith = plan.attributes.objects?.data;
+  let objectsToFillWith = plan.objects?.data;
 
   objectsToFillWith.forEach((object) => {
     // Check if the object has already been added to the plan
-    if (planToFill.querySelector(`#inuse-${plan.documentId}-${object.documentId}`)) {
+    if (
+      planToFill.querySelector(`#inuse-${plan.documentId}-${object.documentId}`)
+    ) {
       return; // Skip adding if the object is already present
     }
 
     // Find the corresponding asset for the object
     let foundasset;
     assets.data.forEach((a) => {
-      a.attributes.objects.data.forEach((obj) => {
+      a.objects.data.forEach((obj) => {
         if (obj.documentId == object.documentId) {
           foundasset = a;
         }
@@ -218,7 +205,7 @@ function fillPlanWithAssets(plan, assets) {
       "beforeend",
       `<img id="inuse-${plan.documentId}-${object.documentId}" data-objectId="${object.documentId}" 
         data-planid="${plan.documentId}" data-assetid="${foundasset.documentId}" 
-        src="${foundasset.attributes.location}" class="asset">`,
+        src="${foundasset.location}" class="asset">`,
     );
 
     // Hide loading indicator if all objects are filled

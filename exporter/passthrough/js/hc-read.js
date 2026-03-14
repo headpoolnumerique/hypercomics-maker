@@ -45,7 +45,7 @@ async function readingTools() {
   // on scroll
   window.addEventListener("wheel", function (e) {
     if (!window.location.hash)
-      window.location.hash = `${document.querySelector("article").id}`;
+      window.location.hash = `${document.querySelector("article").documentId}`;
     e.preventDefault();
     const hashElement = document.querySelector(window.location.hash);
     const delay = hashElement.dataset.storyDelay || 10;

@@ -8,14 +8,14 @@ export function loadStylesForPreview(stylesheets) {
 
   sortedStylesheets.forEach((stylesheet, index) => {
     console.log(stylesheet);
-    if (stylesheet?.attributes.cssrules == null) return;
-    if (stylesheet.attributes.disabled) return;
+    if (stylesheet?.cssrules == null) return;
+    if (stylesheet.disabled) return;
 
     const defaultStyle = index == 0 ? "default" : "";
-    const styleEl = `<style class="story-styles ${defaultStyle ? "defaut-style" : ""}" data-strapid="${stylesheet.documentId}" type="text/css" id="style-${stylesheet.documentId}" data-height="${stylesheet.attributes.defaultHeight}" data-width="${stylesheet.attributes.maxwidth}">${stylesheet.attributes.cssrules}</style>`;
+    const styleEl = `<style class="story-styles ${defaultStyle ? "defaut-style" : ""}" data-strapid="${stylesheet.documentId}" type="text/css" id="style-${stylesheet.documentId}" data-height="${stylesheet.defaultHeight}" data-width="${stylesheet.maxwidth}">${stylesheet.cssrules}</style>`;
 
     if (defaultStyle) {
-      let defaultStylesheet = parse(stylesheet.attributes.cssrules);
+      let defaultStylesheet = parse(stylesheet.cssrules);
       defaultStylesheet.stylesheet.rules =
         defaultStylesheet.stylesheet.rules[0].rules;
       document.querySelector("#default-styles").textContent =
@@ -25,7 +25,7 @@ export function loadStylesForPreview(stylesheets) {
     }
     let regex = /max-aspect-ratio:\s*([\d.]+)/;
     const ratio = parse(
-      stylesheet.attributes.cssrules,
+      stylesheet.cssrules,
     ).stylesheet.rules[0].container.match(regex)[1];
     ratioArrays.push(ratio);
   });
