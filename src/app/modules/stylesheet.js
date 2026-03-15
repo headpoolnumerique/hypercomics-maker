@@ -203,13 +203,14 @@ function insertStylesheetToList(data) {
   );
 
   if (!ratioBefore) {
+    console.log("now", data);
     screensList
       .querySelector("li")
       .insertAdjacentHTML("afterend", screenListItem(data, itemclasses, true));
   } else {
     ratioBefore.insertAdjacentHTML(
       "afterend",
-      screenListItem(data.itemclasses, true),
+      screenListItem(data, itemclasses, true),
     );
   }
 }
@@ -336,6 +337,7 @@ function selectScreen(ratio) {
 }
 
 export function createStyleElement(stylesheet) {
+  console.log(stylesheet);
   deselect(".activatedStyle");
   // check if the stylesheet is the first. if true= then max-aspect needs to become min-from before
 
