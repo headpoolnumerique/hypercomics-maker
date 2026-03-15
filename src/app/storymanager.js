@@ -140,7 +140,7 @@ async function renderProject(project) {
 <header>
   <h2>${project.attributes.title}</h2>
 
-  <button  data-projectid="${project.documentId}" onclick="addSequence(${project.documentId}, window.username)" class="createSequence">Add a sequence</button>
+  <button  data-projectid="${project.documentId}" onclick="addSequence('${project.documentId}', window.username)" class="createSequence">Add a sequence</button>
   <button onclick="selectToDelete(${project.documentId}, '${project.attributes.title}')">Remove project</button>
 </header>
   <ul class="sequences-list" id="sequenceList${
